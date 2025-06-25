@@ -33,6 +33,7 @@ enum {
     MON_DATA_NICKNAME10,
     MON_DATA_SPECIES,
     MON_DATA_HELD_ITEM,
+    MON_DATA_HELD_ITEM_BERRY,
     MON_DATA_MOVE1,
     MON_DATA_MOVE2,
     MON_DATA_MOVE3,
@@ -124,15 +125,14 @@ struct PokemonSubstruct0
     u16 species:11; // 2047 species.
     u16 teraType:5; // 30 types.
     u16 heldItem:10; // 1023 items.
-    u16 unused_02:6;
+    u16 pokeball:6; // 63 balls.
     u32 experience:21;
     u32 nickname11:8; // 11th character of nickname.
     u32 unused_04:3;
     u8 ppBonuses;
     u8 friendship;
-    u16 pokeball:6; // 63 balls.
     u16 nickname12:8; // 12th character of nickname.
-    u16 unused_0A:2;
+    u16 heldItemBerry:8;
 };
 
 struct PokemonSubstruct1
@@ -330,7 +330,7 @@ struct BattlePokemon
     /*0x2B*/ u8 level;
     /*0x2C*/ u8 friendship;
     /*0x2D*/ u16 maxHP;
-    /*0x2F*/ u16 item;
+    /*0x2F*/ u16 items[MAX_MON_ITEMS];
     /*0x31*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
     /*0x3C*/ u8 ppBonuses;
     /*0x3D*/ u8 otName[PLAYER_NAME_LENGTH + 1];
@@ -341,6 +341,7 @@ struct BattlePokemon
     /*0x55*/ u32 otId;
     /*0x59*/ u8 metLevel;
     /*0x5A*/ bool8 isShiny;
+    u16 item;
 };
 
 struct Evolution
@@ -809,5 +810,10 @@ u32 CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler);
 uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier);
 u32 GetRegionalFormByRegion(u32 species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion);
+// Multi Items
+u8 MonItemHasHoldEffect(struct Pokemon *mon, u16 holdEffect);
+u8 BoxMonItemHasHoldEffect(struct BoxPokemon *mon, u16 holdEffect);
+u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon *candidate, u16 holdEffect);
+u8 GetNumOfHeldItems(struct Pokemon *mon);
 
 #endif // GUARD_POKEMON_H

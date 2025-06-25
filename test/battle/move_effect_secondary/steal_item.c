@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_HYPER_POTION); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -22,8 +22,8 @@ SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_HYPER_POTION);
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_HYPER_POTION);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
 
@@ -43,8 +43,8 @@ SINGLE_BATTLE_TEST("Thief and Covet steal player's held item if opponent is a tr
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, player);
     } THEN {
-        EXPECT_EQ(opponent->item, ITEM_HYPER_POTION);
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_HYPER_POTION);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -64,8 +64,8 @@ WILD_BATTLE_TEST("Thief and Covet don't steal player's held item if opponent is 
         HP_BAR(player);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, player);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_HYPER_POTION);
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_HYPER_POTION);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
 
@@ -84,8 +84,8 @@ SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if user is ho
         HP_BAR(opponent);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_POTION);
-        EXPECT_EQ(opponent->item, ITEM_HYPER_POTION);
+        EXPECT_EQ(player->items[0], ITEM_POTION);
+        EXPECT_EQ(opponent->items[0], ITEM_HYPER_POTION);
     }
 }
 
@@ -123,7 +123,27 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
+
+// SINGLE_BATTLE_TEST("Thief and Covet steal target's second held item")
+// {
+//     u32 move;
+//     PARAMETRIZE { move = MOVE_THIEF; }
+//     PARAMETRIZE { move = MOVE_COVET; }
+//     GIVEN {
+//         PLAYER(SPECIES_WOBBUFFET);
+//         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_ORAN_BERRY); }
+//     } WHEN {
+//         TURN { MOVE(player, move); }
+//     } SCENE {
+//         ANIMATION(ANIM_TYPE_MOVE, move, player);
+//         HP_BAR(opponent);
+//         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+//     } THEN {
+//         EXPECT_EQ(player->items[1], ITEM_ORAN_BERRY - BERRY_OFFSET);
+//         EXPECT_EQ(opponent->items[1], ITEM_NONE);
+//     }
+// }

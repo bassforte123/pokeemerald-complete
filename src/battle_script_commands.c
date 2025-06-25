@@ -331,7 +331,7 @@ static void PutMonIconOnLvlUpBanner(void);
 static void DrawLevelUpBannerText(void);
 static void SpriteCB_MonIconOnLvlUpBanner(struct Sprite *sprite);
 static bool32 CriticalCapture(u32 odds);
-static void BestowItem(u32 battlerAtk, u32 battlerDef);
+static void BestowItem(u32 battlerAtk, u32 battlerDef, u8 slot);
 static bool8 IsFinalStrikeEffect(u32 moveEffect);
 static void TryUpdateRoundTurnOrder(void);
 static bool32 ChangeOrderTargetAfterAttacker(void);
@@ -454,6 +454,7 @@ static void Cmd_yesnobox(void);
 static void Cmd_cancelallactions(void);
 static void Cmd_setgravity(void);
 static void Cmd_removeitem(void);
+static void Cmd_removeitemwitheffect(void);
 static void Cmd_atknameinbuff1(void);
 static void Cmd_drawlvlupbox(void);
 static void Cmd_resetsentmonsvalue(void);
@@ -600,7 +601,7 @@ static void Cmd_settelekinesis(void);
 static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_jumpifoppositegenders(void);
-static void Cmd_unused(void);
+//static void Cmd_unused(void);
 static void Cmd_tryworryseed(void);
 static void Cmd_callnative(void);
 
@@ -859,7 +860,7 @@ void (* const gBattleScriptingCommandsTable[])(void) =
     Cmd_swapstatstages,                          //0xFA
     Cmd_averagestats,                            //0xFB
     Cmd_jumpifoppositegenders,                   //0xFC
-    Cmd_unused,                                  //0xFD
+    Cmd_removeitemwitheffect,                    //0xFD
     Cmd_tryworryseed,                            //0xFE
     Cmd_callnative,                              //0xFF
 };
@@ -1486,8 +1487,8 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
 {
     u32 calc, moveAcc;
     s8 buff, accStage, evasionStage;
-    u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
-    u32 defParam = GetBattlerHoldEffectParam(battlerDef);
+    //u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
+    //u32 defParam = GetBattlerHoldEffectParam(battlerDef);
     u32 atkAlly = BATTLE_PARTNER(battlerAtk);
     u32 atkAllyAbility = GetBattlerAbility(atkAlly);
 
@@ -1565,24 +1566,18 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
     }
 
     // Attacker's hold effect
-    switch (atkHoldEffect)
-    {
-    case HOLD_EFFECT_WIDE_LENS:
-        calc = (calc * (100 + atkParam)) / 100;
-        break;
-    case HOLD_EFFECT_ZOOM_LENS:
+    if(BattlerHeldItemHasEffect(battlerAtk, HOLD_EFFECT_ZOOM_LENS, TRUE)){
         if (GetBattlerTurnOrderNum(battlerAtk) > GetBattlerTurnOrderNum(battlerDef))
-            calc = (calc * (100 + atkParam)) / 100;
-        break;
+            calc = (calc * (100 + GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHeldItemWithEffect(battlerAtk, HOLD_EFFECT_ZOOM_LENS, TRUE)))) / 100;
+    }
+
+    if(BattlerHeldItemHasEffect(battlerAtk, HOLD_EFFECT_WIDE_LENS, TRUE)){
+        calc = (calc * (100 + GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHeldItemWithEffect(battlerAtk, HOLD_EFFECT_WIDE_LENS, TRUE)))) / 100;
     }
 
     // Target's hold effect
-    switch (defHoldEffect)
-    {
-    case HOLD_EFFECT_EVASION_UP:
-        calc = (calc * (100 - defParam)) / 100;
-        break;
-    }
+    if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_EVASION_UP, TRUE))
+        calc = (calc * (100 - GetBattlerItemHoldEffectParam(battlerDef, GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_EVASION_UP, TRUE)))) / 100;
 
     if (gBattleStruct->battlerState[battlerAtk].usedMicleBerry)
     {
@@ -1607,7 +1602,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
 static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr, u16 move)
 {
     u32 abilityAtk;
-    u32 holdEffectAtk;
+    //u32 holdEffectAtk;
 
     if (move == ACC_CURR_MOVE)
         move = gCurrentMove;
@@ -1615,7 +1610,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     u32 effect = GetMoveEffect(move);
 
     abilityAtk = GetBattlerAbility(gBattlerAttacker);
-    holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+    //holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
 
     if (move == NO_ACC_CALC_CHECK_LOCK_ON)
     {
@@ -1635,7 +1630,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
     }
     else if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_2ND_HIT
         || (gSpecialStatuses[gBattlerAttacker].multiHitOn
-        && (abilityAtk == ABILITY_SKILL_LINK || holdEffectAtk == HOLD_EFFECT_LOADED_DICE
+        && (abilityAtk == ABILITY_SKILL_LINK || BattlerHeldItemHasEffect(gBattlerAttacker, HOLD_EFFECT_LOADED_DICE, TRUE)
         || !(effect == EFFECT_TRIPLE_KICK || effect == EFFECT_POPULATION_BOMB))))
     {
         // No acc checks for second hit of Parental Bond or multi hit moves, except Triple Kick/Triple Axel/Population Bomb
@@ -1665,15 +1660,15 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
                                             move,
                                             abilityAtk,
                                             GetBattlerAbility(battlerDef),
-                                            holdEffectAtk,
-                                            GetBattlerHoldEffect(battlerDef, TRUE));
+                                            0,
+                                            0);
 
             if (!RandomPercentage(RNG_ACCURACY, accuracy))
             {
                 gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_MISSED;
                 gBattleStruct->missStringId[battlerDef] = gBattleCommunication[MISS_TYPE] = B_MSG_MISSED;
 
-                if (holdEffectAtk == HOLD_EFFECT_BLUNDER_POLICY)
+                if (BattlerHeldItemHasEffect(gBattlerAttacker, HOLD_EFFECT_BLUNDER_POLICY, TRUE))
                     gBattleStruct->blunderPolicy = TRUE;    // Only activates from missing through acc/evasion checks
 
                 if (effect == EFFECT_DRAGON_DARTS
@@ -1804,7 +1799,7 @@ static inline u32 GetCriticalHitOdds(u32 critChance)
 
 static inline u32 IsBattlerLeekAffected(u32 battler, u32 holdEffect)
 {
-    if (holdEffect == HOLD_EFFECT_LEEK)
+    if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_LEEK, TRUE))
     {
         return GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_FARFETCHD
             || gBattleMons[battler].species == SPECIES_SIRFETCHD;
@@ -1816,23 +1811,14 @@ static inline u32 GetHoldEffectCritChanceIncrease(u32 battler, u32 holdEffect)
 {
     u32 critStageIncrease = 0;
 
-    switch (holdEffect)
-    {
-    case HOLD_EFFECT_SCOPE_LENS:
-        critStageIncrease = 1;
-        break;
-    case HOLD_EFFECT_LUCKY_PUNCH:
+    if(BattlerHeldItemHasEffect(battler, HOLD_EFFECT_SCOPE_LENS, TRUE))
+        critStageIncrease = critStageIncrease + 1;
+    if(BattlerHeldItemHasEffect(battler, HOLD_EFFECT_LUCKY_PUNCH, TRUE)){
         if (gBattleMons[battler].species == SPECIES_CHANSEY)
-            critStageIncrease = 2;
-        break;
-    case HOLD_EFFECT_LEEK:
-        if (IsBattlerLeekAffected(battler, holdEffect))
-            critStageIncrease = 2;
-        break;
-    default:
-        critStageIncrease = 0;
-        break;
+            critStageIncrease = critStageIncrease + 2;
     }
+    if (IsBattlerLeekAffected(battler, holdEffect))
+        critStageIncrease = 2;
 
     return critStageIncrease;
 }
@@ -1910,7 +1896,7 @@ s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
     else if (gBattleMons[battlerAtk].status2 & STATUS2_DRAGON_CHEER)
         critChance *= 2;
 
-    if (holdEffectCritStage > 0)
+    if (holdEffectCritStage > 0) //This may break some hold effects with multiple items but I doubt we plan to use Gen 1 formulas for anything
         critChance *= 4 * holdEffectCritStage;
 
     if (abilityAtk == ABILITY_SUPER_LUCK)
@@ -2080,13 +2066,16 @@ static void Cmd_adjustdamage(void)
 {
     CMD_ARGS();
 
-    u8 holdEffect, param;
+    //u8 holdEffect param;
     u32 battlerDef;
+    u32 heldGem = ITEM_NONE;
     u32 rand = Random() % 100;
     u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     u32 moveEffect = GetMoveEffect(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
+    u16 battlerItems[MAX_MON_ITEMS];
+    STORE_BATTLER_ITEMS(gBattlerTarget);
 
     for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
@@ -2123,14 +2112,15 @@ static void Cmd_adjustdamage(void)
         if (gBattleMons[gBattlerTarget].hp > gBattleStruct->moveDamage[battlerDef])
             continue;
 
-        holdEffect = GetBattlerHoldEffect(battlerDef, TRUE);
-        param = GetBattlerHoldEffectParam(battlerDef);
+        //holdEffect = GetBattlerHoldEffect(battlerDef, TRUE);
+        //param = GetBattlerHoldEffectParam(battlerDef);
 
         gPotentialItemEffectBattler = battlerDef;
 
-        if (holdEffect == HOLD_EFFECT_FOCUS_BAND && rand < param)
+        if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND) && rand < SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND))
         {
-            RecordItemEffectBattle(battlerDef, holdEffect);
+            gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND);
+            RecordItemEffectBattle(battlerDef, HOLD_EFFECT_FOCUS_BAND);
             gSpecialStatuses[battlerDef].focusBanded = TRUE;
         }
         else if (B_STURDY >= GEN_5 && GetBattlerAbility(battlerDef) == ABILITY_STURDY && IsBattlerAtMaxHp(battlerDef))
@@ -2138,9 +2128,10 @@ static void Cmd_adjustdamage(void)
             RecordAbilityBattle(battlerDef, ABILITY_STURDY);
             gSpecialStatuses[battlerDef].sturdied = TRUE;
         }
-        else if (holdEffect == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(battlerDef))
+        else if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH) && IsBattlerAtMaxHp(battlerDef))
         {
-            RecordItemEffectBattle(battlerDef, holdEffect);
+            gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH);
+            RecordItemEffectBattle(battlerDef, HOLD_EFFECT_FOCUS_SASH);
             gSpecialStatuses[battlerDef].focusSashed = TRUE;
         }
         else if (B_AFFECTION_MECHANICS == TRUE && GetBattlerSide(battlerDef) == B_SIDE_PLAYER && affectionScore >= AFFECTION_THREE_HEARTS)
@@ -2170,7 +2161,11 @@ static void Cmd_adjustdamage(void)
         else if (gSpecialStatuses[battlerDef].focusBanded || gSpecialStatuses[battlerDef].focusSashed)
         {
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
-            gLastUsedItem = gBattleMons[battlerDef].item;
+            //gLastUsedItem = gBattleMons[battlerDef].item;
+            if(gSpecialStatuses[battlerDef].focusSashed)
+                gLastUsedItem = GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_FOCUS_SASH, TRUE);
+            else
+                gLastUsedItem = GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_FOCUS_BAND, TRUE);
             gSpecialStatuses[battlerDef].focusBanded = FALSE;
             gSpecialStatuses[battlerDef].focusSashed = FALSE;
         }
@@ -2189,16 +2184,28 @@ static void Cmd_adjustdamage(void)
         gBattleStruct->calculatedDamageDone = TRUE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 
-    if (gSpecialStatuses[gBattlerAttacker].gemBoost
-        && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
-        && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-        && gBattleMons[gBattlerAttacker].item
-        && moveEffect != EFFECT_PLEDGE
-        && gCurrentMove != MOVE_STRUGGLE)
+    if (gSpecialStatuses[gBattlerAttacker].gemBoost)
     {
-        BattleScriptPushCursor();
-        gBattlescriptCurrInstr = BattleScript_GemActivates;
-        gLastUsedItem = gBattleMons[gBattlerAttacker].item;
+        for(int i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetBattlerItemHoldEffect(gBattlerAttacker, gBattleMons[gBattlerAttacker].items[i]) == HOLD_EFFECT_GEMS
+            && GetBattleMoveType(gCurrentMove) == ItemId_GetSecondaryId(gBattleMons[gBattlerAttacker].items[i]))
+                {
+                    heldGem = gBattleMons[gBattlerAttacker].items[i];
+                    break;
+                }
+        }
+
+        if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+            && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+            && heldGem != ITEM_NONE
+            && moveEffect != EFFECT_PLEDGE
+            && gCurrentMove != MOVE_STRUGGLE)
+        {
+            gLastUsedItem = heldGem;
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_GemActivates;
+        }
     }
 }
 
@@ -2222,7 +2229,10 @@ static void Cmd_multihitresultmessage(void)
         }
         else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
         {
-            gLastUsedItem = gBattleMons[gBattlerTarget].item;
+            if (IsBattlerAtMaxHp(gBattlerTarget))
+                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
+            if (gLastUsedItem == ITEM_NONE)
+                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
             gPotentialItemEffectBattler = gBattlerTarget;
             gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_HUNG_ON);
             gSpecialStatuses[gBattlerTarget].focusBanded = FALSE; // Delete this line to make Focus Band last for the duration of the whole move turn.
@@ -2320,11 +2330,11 @@ static inline bool32 TryTeraShellDistortTypeMatchups(u32 battlerDef)
 // It doesn't have any impact on gameplay and is only a visual thing which can be adjusted later.
 static inline bool32 TryActivateWeakenessBerry(u32 battlerDef)
 {
-    if (gSpecialStatuses[battlerDef].berryReduced && gBattleMons[battlerDef].item != ITEM_NONE)
+    if (gSpecialStatuses[battlerDef].berryReduced && BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_RESIST_BERRY, TRUE))
     {
         gSpecialStatuses[battlerDef].berryReduced = FALSE;
         gBattleScripting.battler = battlerDef;
-        gLastUsedItem = gBattleMons[battlerDef].item;
+        gLastUsedItem = GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_RESIST_BERRY, TRUE);
         gBattleStruct->ateBerry[battlerDef & BIT_SIDE] |= 1u << gBattlerPartyIndexes[battlerDef];
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_BerryReduceDmg;
@@ -2886,7 +2896,10 @@ static void Cmd_resultmessage(void)
             }
             break;
         case MOVE_RESULT_FOE_HUNG_ON:
-            gLastUsedItem = gBattleMons[gBattlerTarget].item;
+            if (IsBattlerAtMaxHp(gBattlerTarget))
+                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
+            if (gLastUsedItem == ITEM_NONE)
+                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
             gPotentialItemEffectBattler = gBattlerTarget;
             *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
             BattleScriptPushCursor();
@@ -2919,7 +2932,9 @@ static void Cmd_resultmessage(void)
             }
             else if (*moveResultFlags & MOVE_RESULT_FOE_HUNG_ON)
             {
-                gLastUsedItem = gBattleMons[gBattlerTarget].item;
+                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
+                    if (gLastUsedItem == ITEM_NONE)
+                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
                 gPotentialItemEffectBattler = gBattlerTarget;
                 *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
                 BattleScriptPushCursor();
@@ -3051,10 +3066,10 @@ static void CheckSetUnburden(u8 battler)
 }
 
 // battlerStealer steals the item of battlerItem
-void StealTargetItem(u8 battlerStealer, u8 battlerItem)
+void StealTargetItem(u8 battlerStealer, u8 battlerItem, u8 slot)
 {
-    gLastUsedItem = gBattleMons[battlerItem].item;
-    gBattleMons[battlerItem].item = ITEM_NONE;
+    gLastUsedItem = gBattleMons[battlerItem].items[slot];
+    gBattleMons[battlerItem].items[slot] = ITEM_NONE;
 
     if (B_STEAL_WILD_ITEMS >= GEN_9
      && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
@@ -3066,22 +3081,22 @@ void StealTargetItem(u8 battlerStealer, u8 battlerItem)
     else
     {
         RecordItemEffectBattle(battlerStealer, ItemId_GetHoldEffect(gLastUsedItem));
-        gBattleMons[battlerStealer].item = gLastUsedItem;
+        gBattleMons[battlerStealer].items[slot] = gLastUsedItem;
 
         gDisableStructs[battlerStealer].unburdenActive = FALSE;
-        BtlController_EmitSetMonData(battlerStealer, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
+        BtlController_EmitSetMonData(battlerStealer, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gLastUsedItem), &gLastUsedItem); // set attacker item
         MarkBattlerForControllerExec(battlerStealer);
     }
 
     RecordItemEffectBattle(battlerItem, ITEM_NONE);
     CheckSetUnburden(battlerItem);
 
-    BtlController_EmitSetMonData(battlerItem, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[battlerItem].item);  // remove target item
+    BtlController_EmitSetMonData(battlerItem, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[gBattlerTarget].items[slot]), &gBattleMons[battlerItem].items[slot]);  // remove target item
     MarkBattlerForControllerExec(battlerItem);
 
     gBattleStruct->choicedMove[battlerItem] = 0;
 
-    TrySaveExchangedItem(battlerItem, gLastUsedItem);
+    TrySaveExchangedItem(battlerItem, gLastUsedItem, slot);
 }
 
 static inline bool32 TrySetReflect(u32 battler)
@@ -3149,6 +3164,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
     u32 flags = 0;
     u32 battlerAbility;
     bool8 activateAfterFaint = FALSE;
+    u8 index, slot, targetableSlots[MAX_MON_ITEMS];
 
     // NULL move effect
     if (gBattleScripting.moveEffect == 0)
@@ -3780,12 +3796,23 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 break;
             case MOVE_EFFECT_STEAL_ITEM:
                 {
-                    if (!CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
-                        || gBattleMons[gBattlerAttacker].item != ITEM_NONE
-                        || gBattleMons[gBattlerTarget].item == ITEM_NONE)
+    index = 0;
+    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+                    for (i = 0; i < MAX_MON_ITEMS; i++) //Gather all stealable item slots
                     {
-                        gBattlescriptCurrInstr++;
+                        if (CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].items[i])
+                         && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE
+                         && gBattleMons[gBattlerTarget].items[i] != ITEM_NONE)
+                        {
+                            if (targetableSlots[0] != MAX_MON_ITEMS)
+                                index++;
+                            targetableSlots[index] = i;
+                        }
                     }
+
+                    if (targetableSlots[0] == MAX_MON_ITEMS) //No valid slots found
+                        gBattlescriptCurrInstr++;
                     else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
                     {
                         BattleScriptPush(gBattlescriptCurrInstr + 1);
@@ -3796,13 +3823,15 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     }
                     else
                     {
-                        StealTargetItem(gBattlerAttacker, gBattlerTarget);  // Attacker steals target item
+                        slot = gLastItemSlot = GetSlot(targetableSlots, index);
+
+                        StealTargetItem(gBattlerAttacker, gBattlerTarget, slot);  // Attacker steals target item
 
                         if (!(B_STEAL_WILD_ITEMS >= GEN_9
                          && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
                         {
-                            gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
-                            gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
+                            gBattleMons[gBattlerAttacker].items[slot] = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
+                            gBattleStruct->changedItems[gBattlerAttacker][slot] = gLastUsedItem; // Stolen item to be assigned later
                         }
                         BattleScriptPush(gBattlescriptCurrInstr + 1);
                         gBattlescriptCurrInstr = BattleScript_ItemSteal;
@@ -3930,29 +3959,57 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                 gBattlescriptCurrInstr++;
                 break;
             case MOVE_EFFECT_INCINERATE:
-                if ((gBattleMons[gEffectBattler].item >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].item <= LAST_BERRY_INDEX)
-                 || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(gEffectBattler, FALSE) == HOLD_EFFECT_GEMS))
+                index = 0;
+                targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+                for (i = 0; i < MAX_MON_ITEMS; i++)
                 {
-                    gLastUsedItem = gBattleMons[gEffectBattler].item;
-                    gBattleMons[gEffectBattler].item = 0;
+                    if ((gBattleMons[gEffectBattler].items[i] >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].items[i] <= LAST_BERRY_INDEX) //Gather all valid item slots
+                     || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(gEffectBattler, FALSE) == HOLD_EFFECT_GEMS))
+                    {
+                        if (targetableSlots[0] != MAX_MON_ITEMS)
+                            index++;
+                        targetableSlots[index] = i;
+                    }
+                }
+
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                {
+                    slot = gLastItemSlot = GetSlot(targetableSlots, index);
+                    gLastUsedItem = gBattleMons[gEffectBattler].items[slot];
+                    gBattleMons[gEffectBattler].items[slot] = 0;
                     CheckSetUnburden(gEffectBattler);
 
-                    BtlController_EmitSetMonData(gEffectBattler, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gEffectBattler].item), &gBattleMons[gEffectBattler].item);
+                    BtlController_EmitSetMonData(gEffectBattler, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[gEffectBattler].items[slot]), &gBattleMons[gEffectBattler].items[slot]);
                     MarkBattlerForControllerExec(gEffectBattler);
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
                     gBattlescriptCurrInstr = BattleScript_MoveEffectIncinerate;
                 }
                 break;
             case MOVE_EFFECT_BUG_BITE:
-                if (ItemId_GetPocket(gBattleMons[gEffectBattler].item) == POCKET_BERRIES
-                    && battlerAbility != ABILITY_STICKY_HOLD)
+                index = 0;
+                targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+                for (i = 0; i < MAX_MON_ITEMS; i++)
                 {
+                    if (ItemId_GetPocket(gBattleMons[gEffectBattler].items[i]) == POCKET_BERRIES //Gather all berry item slots
+                    && battlerAbility != ABILITY_STICKY_HOLD)
+                    {
+                        if (targetableSlots[0] != MAX_MON_ITEMS)
+                            index++;
+                        targetableSlots[index] = i;
+                    }
+                }
+
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                {
+                    slot = gLastItemSlot = GetSlot(targetableSlots, index);
                     // target loses their berry
-                    gLastUsedItem = gBattleMons[gEffectBattler].item;
-                    gBattleMons[gEffectBattler].item = 0;
+                    gLastUsedItem = SlotToItemId(gBattleMons[gEffectBattler].items[slot], slot);
+                    gBattleMons[gEffectBattler].items[slot] = 0;
                     CheckSetUnburden(gEffectBattler);
 
-                    BtlController_EmitSetMonData(gEffectBattler, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gEffectBattler].item), &gBattleMons[gEffectBattler].item);
+                    BtlController_EmitSetMonData(gEffectBattler, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[gEffectBattler].items[slot]), &gBattleMons[gEffectBattler].items[slot]);
                     MarkBattlerForControllerExec(gEffectBattler);
                     BattleScriptPush(gBattlescriptCurrInstr + 1);
                     gBattlescriptCurrInstr = BattleScript_MoveEffectBugBite;
@@ -5009,7 +5066,7 @@ static bool32 BattleTypeAllowsExp(void)
         return TRUE;
 }
 
-static u32 GetMonHoldEffect(struct Pokemon *mon)
+static UNUSED u32 GetMonHoldEffect(struct Pokemon *mon)
 {
     u32 holdEffect;
     u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
@@ -5030,7 +5087,7 @@ static void Cmd_getexp(void)
 {
     CMD_ARGS(u8 battler);
 
-    u32 holdEffect;
+    //u32 holdEffect;
     s32 i; // also used as stringId
     u8 *expMonId = &gBattleStruct->expGetterMonId;
 
@@ -5068,8 +5125,8 @@ static void Cmd_getexp(void)
                 if ((1u << i) & sentInBits)
                     viaSentIn++;
 
-                holdEffect = GetMonHoldEffect(&gPlayerParty[i]);
-                if (holdEffect == HOLD_EFFECT_EXP_SHARE || IsGen6ExpShareEnabled())
+				//holdEffect = GetMonHoldEffect(&gPlayerParty[i]);
+                if (MonItemHasHoldEffect(&gPlayerParty[i], HOLD_EFFECT_EXP_SHARE) || IsGen6ExpShareEnabled())
                 {
                     expShareBits |= 1u << i;
                     viaExpShare++;
@@ -5136,9 +5193,9 @@ static void Cmd_getexp(void)
         if (gBattleControllerExecFlags == 0)
         {
             bool32 wasSentOut = (gBattleStruct->expSentInMons & (1u << *expMonId)) != 0;
-            holdEffect = GetMonHoldEffect(&gPlayerParty[*expMonId]);
-
-            if ((holdEffect != HOLD_EFFECT_EXP_SHARE && !wasSentOut && !IsGen6ExpShareEnabled())
+            //holdEffect = GetMonHoldEffect(&gPlayerParty[*expMonId]);
+            
+            if ((!MonItemHasHoldEffect(&gPlayerParty[*expMonId], HOLD_EFFECT_EXP_SHARE) && !wasSentOut && !IsGen6ExpShareEnabled())
              || GetMonData(&gPlayerParty[*expMonId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
             {
                 gBattleScripting.getexpState = 5;
@@ -5173,7 +5230,7 @@ static void Cmd_getexp(void)
                     else
                         gBattleStruct->battlerExpReward = 0;
 
-                    if ((holdEffect == HOLD_EFFECT_EXP_SHARE || IsGen6ExpShareEnabled())
+                    if ((MonItemHasHoldEffect(&gPlayerParty[*expMonId], HOLD_EFFECT_EXP_SHARE) || IsGen6ExpShareEnabled())
                         && (B_SPLIT_EXP < GEN_6 || gBattleStruct->battlerExpReward == 0)) // only give exp share bonus in later gens if the mon wasn't sent out
                     {
                         gBattleStruct->battlerExpReward += GetSoftLevelCapExpValue(gPlayerParty[*expMonId].level, gBattleStruct->expShareExpValue);;
@@ -5226,7 +5283,7 @@ static void Cmd_getexp(void)
                     PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
                     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
 
-                    if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
+                    if (wasSentOut || MonItemHasHoldEffect(&gPlayerParty[*expMonId], HOLD_EFFECT_EXP_SHARE))
                     {
                         PrepareStringBattle(STRINGID_PKMNGAINEDEXP, gBattleStruct->expGetterBattlerId);
                     }
@@ -6041,7 +6098,7 @@ static void Cmd_playstatchangeanimation(void)
                     }
                 }
                 else if (!gSideTimers[GetBattlerSide(battler)].mistTimer
-                        && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_CLEAR_AMULET
+                        && !BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CLEAR_AMULET, TRUE)
                         && ability != ABILITY_CLEAR_BODY
                         && ability != ABILITY_FULL_METAL_BODY
                         && ability != ABILITY_WHITE_SMOKE
@@ -6114,8 +6171,24 @@ static void Cmd_playstatchangeanimation(void)
 
 static bool32 TryKnockOffBattleScript(u32 battlerDef)
 {
-    if (gBattleMons[battlerDef].item != 0
-        && CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerDef].item)
+    u8 slot, i;
+    u8 targetableSlots[MAX_MON_ITEMS];
+    u8 index = 0;
+    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+    
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if ((gBattleMons[battlerDef].items[i] != ITEM_NONE) && CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerDef].items[i]))
+        {
+            if (targetableSlots[0] != MAX_MON_ITEMS)
+                index++;
+            targetableSlots[index] = i;
+        }
+    }
+    
+    slot = gLastItemSlot = GetSlot(targetableSlots, index);    
+
+    if (slot != MAX_MON_ITEMS
         && !NoAliveMonsForEitherParty())
     {
         if (GetBattlerAbility(battlerDef) == ABILITY_STICKY_HOLD && IsBattlerAlive(battlerDef))
@@ -6128,8 +6201,11 @@ static bool32 TryKnockOffBattleScript(u32 battlerDef)
         {
             u32 side = GetBattlerSide(battlerDef);
 
-            gLastUsedItem = gBattleMons[battlerDef].item;
-            gBattleMons[battlerDef].item = 0;
+            gLastUsedItem = gBattleMons[battlerDef].items[slot];
+            gBattleMons[battlerDef].items[slot] = ITEM_NONE;
+            if (slot == 0)
+                gBattleMons[battlerDef].item = ITEM_NONE; //redundancy for vanilla slot
+                
             if (gBattleMons[battlerDef].ability != ABILITY_GORILLA_TACTICS)
                 gBattleStruct->choicedMove[battlerDef] = 0;
             CheckSetUnburden(battlerDef);
@@ -6137,7 +6213,7 @@ static bool32 TryKnockOffBattleScript(u32 battlerDef)
             // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable.
             if (B_KNOCK_OFF_REMOVAL >= GEN_5)
             {
-                BtlController_EmitSetMonData(battlerDef, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battlerDef].item), &gBattleMons[battlerDef].item);
+                BtlController_EmitSetMonData(battlerDef, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[battlerDef].items[slot]), &gBattleMons[battlerDef].items[slot]);
                 MarkBattlerForControllerExec(battlerDef);
             }
             else
@@ -6155,10 +6231,6 @@ static bool32 TryKnockOffBattleScript(u32 battlerDef)
 
 #define SYMBIOSIS_CHECK(battler, ally)                             \
     GetBattlerAbility(ally) == ABILITY_SYMBIOSIS                   \
-    && gBattleMons[battler].item == ITEM_NONE                      \
-    && gBattleMons[ally].item != ITEM_NONE                         \
-    && CanBattlerGetOrLoseItem(battler, gBattleMons[ally].item)    \
-    && CanBattlerGetOrLoseItem(ally, gBattleMons[ally].item)       \
     && IsBattlerAlive(battler)                                     \
     && IsBattlerAlive(ally)
 
@@ -6177,24 +6249,24 @@ static u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
     return battler;
 }
 
-static inline bool32 IsProtectivePadsProtected(u32 battler, u32 holdEffect)
+static inline bool32 IsProtectivePadsProtected(u32 battler)
 {
-    if (holdEffect != HOLD_EFFECT_PROTECTIVE_PADS)
+    if (!BattlerHeldItemHasEffect(battler, HOLD_EFFECT_PROTECTIVE_PADS, TRUE))
         return FALSE;
 
-    RecordItemEffectBattle(battler, holdEffect);
+    RecordItemEffectBattle(battler, HOLD_EFFECT_PROTECTIVE_PADS);
     return TRUE;
 }
 
 static inline bool32 IsProtectEffectAffected(u32 battler, u32 move)
 {
-    u32 holdEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
-    if (IsProtectivePadsProtected(battler, holdEffect))
+    //u32 holdEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+    if (IsProtectivePadsProtected(battler))
         return TRUE;
 
-    if (holdEffect == HOLD_EFFECT_CLEAR_AMULET)
+    if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CLEAR_AMULET, TRUE))
     {
-        RecordItemEffectBattle(battler, holdEffect);
+        RecordItemEffectBattle(battler, HOLD_EFFECT_CLEAR_AMULET);
         return TRUE;
     }
 
@@ -6210,7 +6282,7 @@ static inline bool32 IsProtectEffectAffected(u32 battler, u32 move)
 
 static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, u32 moveEffect)
 {
-    if (GetBattlerHoldEffect(battlerDef, TRUE) == HOLD_EFFECT_EJECT_BUTTON
+    if (BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_EJECT_BUTTON, TRUE)
      && battlerAtk != battlerDef
      && IsBattlerTurnDamaged(battlerDef)
      && IsBattlerAlive(battlerDef)
@@ -6239,13 +6311,14 @@ static void Cmd_moveend(void)
 {
     CMD_ARGS(u8 endMode, u8 endState);
 
-    s32 i;
+    s32 i, j;
     bool32 effect = FALSE;
     u32 moveType = 0;
-    u32 holdEffectAtk = 0;
+    //u32 holdEffectAtk = 0;
     u32 endMode, endState;
     u32 originallyUsedMove;
-
+    u8 slot, index, targetableSlots[MAX_MON_ITEMS];
+                
     if (gChosenMove == MOVE_UNAVAILABLE)
         originallyUsedMove = MOVE_NONE;
     else
@@ -6254,7 +6327,7 @@ static void Cmd_moveend(void)
     endMode = cmd->endMode;
     endState = cmd->endState;
 
-    holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+    //holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
     moveType = GetBattleMoveType(gCurrentMove);
 
     u32 moveEffect = GetMoveEffect(gCurrentMove);
@@ -6271,7 +6344,7 @@ static void Cmd_moveend(void)
             if (gProtectStructs[gBattlerAttacker].touchedProtectLike)
             {
                 if (gProtectStructs[gBattlerTarget].spikyShielded
-                 && !IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker, TRUE))
+                 && !IsProtectivePadsProtected(gBattlerAttacker)
                  && !IsMagicGuardProtected(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
@@ -6299,7 +6372,7 @@ static void Cmd_moveend(void)
                     effect = 1;
                 }
                 else if (gProtectStructs[gBattlerTarget].banefulBunkered
-                      && !IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker, TRUE)))
+                      && !IsProtectivePadsProtected(gBattlerAttacker))
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                     gBattleScripting.moveEffect = MOVE_EFFECT_POISON | MOVE_EFFECT_AFFECTS_USER;
@@ -6335,7 +6408,7 @@ static void Cmd_moveend(void)
                     effect = 1;
                 }
                 else if (gProtectStructs[gBattlerTarget].burningBulwarked
-                      && !IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker, TRUE)))
+                      && !IsProtectivePadsProtected(gBattlerAttacker))
                 {
                     gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                     gBattleScripting.moveEffect = MOVE_EFFECT_BURN | MOVE_EFFECT_AFFECTS_USER;
@@ -6554,7 +6627,7 @@ static void Cmd_moveend(void)
                  && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
                  && gChosenMove != MOVE_STRUGGLE
                  && (*choicedMoveAtk == MOVE_NONE || *choicedMoveAtk == MOVE_UNAVAILABLE)
-                 && (HOLD_EFFECT_CHOICE(holdEffectAtk) || GetBattlerAbility(gBattlerAttacker) == ABILITY_GORILLA_TACTICS))
+                 && (BATTLER_IS_HOLDING_CHOICE_ITEM(gBattlerAttacker) || GetBattlerAbility(gBattlerAttacker) == ABILITY_GORILLA_TACTICS))
                 {
                     if ((moveEffect == EFFECT_BATON_PASS || moveEffect == EFFECT_HEALING_WISH)
                      && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED))
@@ -6579,10 +6652,17 @@ static void Cmd_moveend(void)
         case MOVEEND_CHANGED_ITEMS: // changed held items
             for (i = 0; i < gBattlersCount; i++)
             {
-                if (gBattleStruct->changedItems[i] != ITEM_NONE)
+                for (j = 0; j < MAX_MON_ITEMS; j++)
                 {
-                    gBattleMons[i].item = gBattleStruct->changedItems[i];
-                    gBattleStruct->changedItems[i] = ITEM_NONE;
+                    if (gBattleStruct->changedItems[i][j] != ITEM_NONE)
+                    {
+                        if (j == 1)
+                            gBattleMons[i].items[j] = ItemIdToSlot(gBattleStruct->changedItems[i][j], i);
+                        else
+                            gBattleMons[i].items[j] = gBattleStruct->changedItems[i][j];
+
+                        gBattleStruct->changedItems[i][j] = ITEM_NONE;
+                    }
                 }
             }
             gBattleScripting.moveendState++;
@@ -7021,23 +7101,39 @@ static void Cmd_moveend(void)
         case MOVEEND_MAGICIAN:
             if (GetBattlerAbility(gBattlerAttacker) == ABILITY_MAGICIAN
               && gCurrentMove != MOVE_FLING && gCurrentMove != MOVE_NATURAL_GIFT
-              && gBattleMons[gBattlerAttacker].item == ITEM_NONE
-              && gBattleMons[gBattlerTarget].item != ITEM_NONE
               && IsBattlerAlive(gBattlerAttacker)
               && IsBattlerTurnDamaged(gBattlerTarget)
-              && CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
               && !gSpecialStatuses[gBattlerAttacker].gemBoost   // In base game, gems are consumed after magician would activate.
               && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerTarget)] & (1u << gBattlerPartyIndexes[gBattlerTarget]))
               && !DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove)
               && (GetBattlerAbility(gBattlerTarget) != ABILITY_STICKY_HOLD || !IsBattlerAlive(gBattlerTarget)))
             {
-                StealTargetItem(gBattlerAttacker, gBattlerTarget);
-                gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
-                gEffectBattler = gBattlerTarget;
-                BattleScriptPushCursor();
-                gBattlescriptCurrInstr = BattleScript_MagicianActivates;
-                gSpecialStatuses[gBattlerAttacker].preventLifeOrbDamage = TRUE;
-                effect = TRUE;
+                index = 0;
+                targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+                for (i = 0; i < MAX_MON_ITEMS; i++) //Gather all stealable item slots
+                {
+                    if (CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].items[i])
+                        && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE
+                        && gBattleMons[gBattlerTarget].items[i] != ITEM_NONE)
+                    {
+                        if (targetableSlots[0] != MAX_MON_ITEMS)
+                            index++;
+                        targetableSlots[index] = i;
+                    }
+                }
+
+                if (targetableSlots[0] != MAX_MON_ITEMS) //Valid slots found
+                {
+                    slot = gLastItemSlot = GetSlot(targetableSlots, index);
+                    StealTargetItem(gBattlerAttacker, gBattlerTarget, slot);
+                    gBattleScripting.battler = gBattlerAbility = gBattlerAttacker;
+                    gEffectBattler = gBattlerTarget;
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_MagicianActivates;
+                    gSpecialStatuses[gBattlerAttacker].preventLifeOrbDamage = TRUE;
+                    effect = TRUE;
+                }
             }
             gBattleScripting.moveendState++;
             break;
@@ -7080,7 +7176,7 @@ static void Cmd_moveend(void)
                         continue;
 
                     gBattleScripting.battler = battler;
-                    gLastUsedItem = gBattleMons[battler].item;
+                    gLastUsedItem = BattlerHeldItemHasEffect(battler, HOLD_EFFECT_EJECT_BUTTON, TRUE);
                     if (moveEffect == EFFECT_HIT_ESCAPE)
                         gBattlescriptCurrInstr = BattleScript_MoveEnd;  // Prevent user switch-in selection
 
@@ -7129,7 +7225,7 @@ static void Cmd_moveend(void)
                         continue;
 
                     gBattleScripting.battler = battler;
-                    gLastUsedItem = gBattleMons[battler].item;
+                    gLastUsedItem = BattlerHeldItemHasEffect(battler, HOLD_EFFECT_EJECT_PACK, TRUE);
 
                     if (moveEffect == EFFECT_HIT_ESCAPE)
                         gBattlescriptCurrInstr = BattleScript_MoveEnd;  // Prevent user switch-in selection
@@ -7151,7 +7247,7 @@ static void Cmd_moveend(void)
                 if (!IsBattlerAlive(i))
                     continue;
 
-                if (GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_RESTORE_STATS
+                if (GetBattlerHeldItemWithEffect(i, HOLD_EFFECT_RESTORE_STATS, TRUE)
                  && RestoreWhiteHerbStats(i))
                 {
                     BattleScriptPushCursor();
@@ -7170,7 +7266,7 @@ static void Cmd_moveend(void)
                 {
                     if (i == gBattlerAttacker)
                         continue;
-                    if (GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_RED_CARD)
+                    if (BattlerHeldItemHasEffect(i, HOLD_EFFECT_RED_CARD, TRUE))
                         redCardBattlers |= (1u << i);
                 }
                 if (redCardBattlers
@@ -7194,7 +7290,7 @@ static void Cmd_moveend(void)
                         {
                             effect = TRUE;
                             gBattleScripting.moveendState = MOVEEND_OPPORTUNIST;
-                            gLastUsedItem = gBattleMons[battler].item;
+                            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_RED_CARD, TRUE);
                             SaveBattlerTarget(battler); // save battler with red card
                             SaveBattlerAttacker(gBattlerAttacker);
                             gBattleStruct->savedMove = gCurrentMove;
@@ -7246,7 +7342,7 @@ static void Cmd_moveend(void)
                         gBattlerTarget = gBattlerAbility = battler;
                         // Battle scripting is super brittle so we shall do the item exchange now (if possible)
                         if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
-                            StealTargetItem(gBattlerTarget, gBattlerAttacker);  // Target takes attacker's item
+                            StealTargetItem(gBattlerTarget, gBattlerAttacker, 0); //TODO STEAL // Target takes attacker's item
 
                         gEffectBattler = gBattlerAttacker;
                         BattleScriptPushCursor();
@@ -7318,13 +7414,33 @@ static void Cmd_moveend(void)
                       || (B_SYMBIOSIS_GEMS >= GEN_7 && gSpecialStatuses[i].gemBoost))
                     && SYMBIOSIS_CHECK(i, BATTLE_PARTNER(i)))
                 {
-                    BestowItem(BATTLE_PARTNER(i), i);
-                    gLastUsedAbility = gBattleMons[BATTLE_PARTNER(i)].ability;
-                    gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(i);
-                    gBattlerAttacker = i;
-                    BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
-                    effect = TRUE;
+                    index = 0;
+                    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+                    for (j = 0; j < MAX_MON_ITEMS; j++)
+                    {
+                        if(gBattleMons[i].items[j] == ITEM_NONE
+                        && gBattleMons[BATTLE_PARTNER(i)].items[j] != ITEM_NONE
+                        && CanBattlerGetOrLoseItem(i, gBattleMons[BATTLE_PARTNER(i)].items[j])
+                        && CanBattlerGetOrLoseItem(BATTLE_PARTNER(i), gBattleMons[BATTLE_PARTNER(i)].items[j]))
+                        {
+                            if (targetableSlots[0] != MAX_MON_ITEMS)
+                                index++;
+                            targetableSlots[index] = j;
+                        }
+                    }
+        
+                    if (targetableSlots[0] != MAX_MON_ITEMS)
+                    {
+                        slot = gLastItemSlot = GetSlot(targetableSlots, index);
+                        BestowItem(BATTLE_PARTNER(i), i, slot);
+                        gLastUsedAbility = gBattleMons[BATTLE_PARTNER(i)].ability;
+                        gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(i);
+                        gBattlerAttacker = i;
+                        BattleScriptPushCursor();
+                        gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
+                        effect = TRUE;
+                    }
                 }
             }
             gBattleScripting.moveendState++;
@@ -7600,7 +7716,8 @@ static void Cmd_switchindataupdate(void)
     i = GetBattlerSide(battler);
     if (gWishFutureKnock.knockedOffMons[i] & (1u << gBattlerPartyIndexes[battler]))
     {
-        gBattleMons[battler].item = ITEM_NONE;
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+            gBattleMons[battler].items[i] = ITEM_NONE;
     }
 
     if (GetMoveEffect(gCurrentMove) == EFFECT_BATON_PASS)
@@ -9054,17 +9171,17 @@ static void TryRestoreDamageAfterCheeckPouch(u32 battler)
 }
 
 // Used by Bestow and Symbiosis to take an item from one battler and give to another.
-static void BestowItem(u32 battlerAtk, u32 battlerDef)
+static void BestowItem(u32 battlerAtk, u32 battlerDef, u8 slot)
 {
-    gLastUsedItem = gBattleMons[battlerAtk].item;
+    gLastUsedItem = gBattleMons[battlerAtk].items[slot];
 
-    gBattleMons[battlerAtk].item = ITEM_NONE;
-    BtlController_EmitSetMonData(battlerAtk, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battlerAtk].item), &gBattleMons[battlerAtk].item);
+    gBattleMons[battlerAtk].items[slot] = ITEM_NONE;
+    BtlController_EmitSetMonData(battlerAtk, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[battlerAtk].items[slot]), &gBattleMons[battlerAtk].items[slot]);
     MarkBattlerForControllerExec(battlerAtk);
     CheckSetUnburden(battlerAtk);
 
-    gBattleMons[battlerDef].item = gLastUsedItem;
-    BtlController_EmitSetMonData(battlerDef, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battlerDef].item), &gBattleMons[battlerDef].item);
+    gBattleMons[battlerDef].items[slot] = gLastUsedItem;
+    BtlController_EmitSetMonData(battlerDef, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[battlerDef].items[slot]), &gBattleMons[battlerDef].items[slot]);
     MarkBattlerForControllerExec(battlerDef);
     gDisableStructs[battlerDef].unburdenActive = FALSE;
 }
@@ -9072,8 +9189,8 @@ static void BestowItem(u32 battlerAtk, u32 battlerDef)
 // Called by Cmd_removeitem. itemId represents the item that was removed, not being given.
 static bool32 TrySymbiosis(u32 battler, u32 itemId)
 {
-    if (!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]].stolen
-        && gBattleStruct->changedItems[battler] == ITEM_NONE
+    if (!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]][0].stolen //SLOT
+        && gBattleStruct->changedItems[battler][0] == ITEM_NONE
         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_EJECT_BUTTON
         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_EJECT_PACK
         && (B_SYMBIOSIS_GEMS < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
@@ -9081,18 +9198,39 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId)
         && !gSpecialStatuses[battler].berryReduced
         && SYMBIOSIS_CHECK(battler, BATTLE_PARTNER(battler)))
     {
-        BestowItem(BATTLE_PARTNER(battler), battler);
-        gLastUsedAbility = gBattleMons[BATTLE_PARTNER(battler)].ability;
-        gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
-        gBattlerAttacker = battler;
-        BattleScriptPush(gBattlescriptCurrInstr + 2);
-        gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
-        return TRUE;
+        u8 slot, i, targetableSlots[MAX_MON_ITEMS];
+        u8 index = 0;
+        targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if(gBattleMons[battler].items[i] == ITEM_NONE
+            && gBattleMons[BATTLE_PARTNER(battler)].items[i] != ITEM_NONE
+            && CanBattlerGetOrLoseItem(battler, gBattleMons[BATTLE_PARTNER(battler)].items[i])
+            && CanBattlerGetOrLoseItem(BATTLE_PARTNER(battler), gBattleMons[BATTLE_PARTNER(battler)].items[i]))
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+        
+        if (targetableSlots[0] != MAX_MON_ITEMS)
+        {
+            slot = gLastItemSlot = GetSlot(targetableSlots, index);
+            BestowItem(BATTLE_PARTNER(battler), battler, slot);
+            gLastUsedAbility = gBattleMons[BATTLE_PARTNER(battler)].ability;
+            gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
+            gBattlerAttacker = battler;
+            BattleScriptPush(gBattlescriptCurrInstr + 2);
+            gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
+            return TRUE;
+        }
     }
     return FALSE;
 }
 
-static void Cmd_removeitem(void)
+static UNUSED void Cmd_removeitem(void)
 {
     CMD_ARGS(u8 battler);
 
@@ -9111,15 +9249,76 @@ static void Cmd_removeitem(void)
 
     // Popped Air Balloon cannot be restored by any means.
     // Corroded items cannot be restored either.
-    if (GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_AIR_BALLOON
-        && GetMoveEffect(gCurrentMove) != EFFECT_CORROSIVE_GAS)
-        gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)] = itemId; // Remember if switched out
+    if (!BattlerHeldItemHasEffect(battler, HOLD_EFFECT_AIR_BALLOON, TRUE)
+     && GetMoveEffect(gCurrentMove) != EFFECT_CORROSIVE_GAS)
+        gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)][0] = itemId; // Remember if switched out
 
-    gBattleMons[battler].item = ITEM_NONE;
+    gBattleMons[battler].item = gBattleMons[battler].items[0]= ITEM_NONE;
     gBattleStruct->canPickupItem |= (1u << battler);
     CheckSetUnburden(battler);
 
     BtlController_EmitSetMonData(battler, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[battler].item), &gBattleMons[battler].item);
+    MarkBattlerForControllerExec(battler);
+
+    ClearBattlerItemEffectHistory(battler);
+    if (!TryCheekPouch(battler, itemId) && !TrySymbiosis(battler, itemId))
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+static void Cmd_removeitemwitheffect(void)
+{
+    CMD_ARGS(u8 battler, u32 holdEffect);
+
+    u32 battler;
+    u32 holdEffect;
+    u16 itemId = ITEM_NONE;
+    u8 slot = MAX_MON_ITEMS;
+
+    if (gBattleScripting.overrideBerryRequirements)
+    {
+        // bug bite / pluck - don't remove current item
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+
+    battler = GetBattlerForBattleScript(cmd->battler);
+    holdEffect = cmd->holdEffect;
+
+    if(holdEffect == HOLD_EFFECT_NONE){
+        itemId = gLastUsedItem;
+        holdEffect = gItemsInfo[gLastUsedItem].holdEffect;
+    }
+    else
+    {
+        itemId = GetBattlerHeldItemWithEffect(battler, holdEffect, TRUE);
+    }
+
+    slot = GetHeldItemSlot(battler, itemId, TRUE);
+
+    // Popped Air Balloon cannot be restored by any means.
+    // Corroded items cannot be restored either.
+    if (holdEffect != HOLD_EFFECT_AIR_BALLOON
+     && gMovesInfo[gCurrentMove].effect != EFFECT_CORROSIVE_GAS
+     && slot != MAX_MON_ITEMS)
+        gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)][slot] = itemId; // Remember if switched out
+
+    // Skip if slot not found
+    if (slot == MAX_MON_ITEMS)
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+        return;
+    }
+
+    // Clear vanilla slot as a redundancy
+    if (slot == 0)
+        gBattleMons[battler].item = ITEM_NONE;
+
+    gBattleMons[battler].items[slot] = ITEM_NONE;
+
+    gBattleStruct->canPickupItem |= (1u << battler);
+    CheckSetUnburden(battler);
+
+    BtlController_EmitSetMonData(battler, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[battler].items[slot]), &gBattleMons[battler].items[slot]);
     MarkBattlerForControllerExec(battler);
 
     ClearBattlerItemEffectHistory(battler);
@@ -9819,7 +10018,7 @@ static bool32 IsElectricAbilityAffected(u32 battler, u32 ability)
 
 static bool32 IsTeatimeAffected(u32 battler)
 {
-    if (ItemId_GetPocket(gBattleMons[battler].item) != POCKET_BERRIES)
+    if (!BattlerHasBerry(battler))
         return FALSE;   // Only berries
     if (gStatuses3[battler] & STATUS3_SEMI_INVULNERABLE)
         return FALSE;   // Teatime doesn't affected semi-invulnerable battlers
@@ -9991,7 +10190,7 @@ static void Cmd_various(void)
 
     struct Pokemon *mon;
     s32 i;
-    u8 data[10];
+    u8 data[10], index, slot, targetableSlots[MAX_MON_ITEMS];
     u32 battler, bits;
     enum CmdVarious variousId = cmd->id;
 
@@ -10049,16 +10248,16 @@ static void Cmd_various(void)
     case VARIOUS_JUMP_IF_HOLD_EFFECT:
     {
         VARIOUS_ARGS(u8 holdEffect, const u8 *jumpInstr, u8 equal);
-        if ((GetBattlerHoldEffect(battler, TRUE) == cmd->holdEffect) == cmd->equal)
+        if (BattlerHeldItemHasEffect(battler, cmd->holdEffect, TRUE) == cmd->equal)
         {
             if (cmd->equal)
-                gLastUsedItem = gBattleMons[battler].item; // For B_LAST_USED_ITEM
+                gLastUsedItem = GetBattlerHeldItemWithEffect(battler, cmd->holdEffect, TRUE); // For B_LAST_USED_ITEM
             gBattlescriptCurrInstr = cmd->jumpInstr;
         }
         else
         {
             if (!cmd->equal)
-                gLastUsedItem = gBattleMons[battler].item; // For B_LAST_USED_ITEM
+                gLastUsedItem = GetBattlerHeldItemWithEffect(battler, cmd->holdEffect, TRUE); // For B_LAST_USED_ITEM
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         return;
@@ -10082,8 +10281,88 @@ static void Cmd_various(void)
     }
     case VARIOUS_SET_LAST_USED_ITEM:
     {
+        VARIOUS_ARGS(u32 holdEffect); 
+
+        u32 holdEffect = cmd->holdEffect;
+        u8 i;
+        u8 targetableSlots[MAX_MON_ITEMS];
+        u8 index = 0;
+        u8 slot = MAX_MON_ITEMS;
+
+        if (holdEffect == HOLD_EFFECT_NONE)
+        {
+            slot = GetHeldItemSlot(battler, gLastUsedItem, TRUE);
+            if (slot != MAX_MON_ITEMS) // If no effect specified, use lastuseditem if battler has it
+                gLastUsedItem = gBattleMons[battler].items[slot];
+            else // If no effect specified and battler does not have lastuseditem, select an item from the battler
+            {
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (gBattleMons[battler].items[i] != ITEM_NONE)
+                    {
+                        if (targetableSlots[0] != MAX_MON_ITEMS)
+                            index++;
+                        targetableSlots[index] = i;
+                    }
+                }
+
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                {   
+                    slot = gLastItemSlot = GetSlot(targetableSlots, index);        
+                    gLastUsedItem = gBattleMons[battler].items[slot];
+                }
+            }
+        } 
+        else // If an effect is specified
+        {
+            slot = GetHeldItemSlotWithEffect(battler, holdEffect, TRUE);
+            if (slot != MAX_MON_ITEMS) // Set lastuseditem if battler has an item with the effect
+                gLastUsedItem = gBattleMons[battler].items[slot]; // For B_LAST_USED_ITEM
+            else // If battler does not have an item with the effect, set lastuseditem to none
+                gLastUsedItem = ITEM_NONE;
+        }
+
+        break;
+    }
+    case VARIOUS_SET_LAST_USED_ITEM_FLING:
+    {
         VARIOUS_ARGS();
-        gLastUsedItem = gBattleMons[battler].item;
+
+        index = 0;
+        targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+        
+        // Fling should prioritize non-berry items. Makes a list of non berry items first and if none are found, makes a list of berries
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (gBattleMons[battler].items[i] != ITEM_NONE && ItemId_GetPocket(gBattleMons[battler].items[i]) != POCKET_BERRIES)
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+
+        if (targetableSlots[0] == MAX_MON_ITEMS)
+        {
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                if (gBattleMons[battler].items[i] != ITEM_NONE && ItemId_GetPocket(gBattleMons[battler].items[i]) == POCKET_BERRIES)
+                {
+                    if (targetableSlots[0] != MAX_MON_ITEMS)
+                        index++;
+                    targetableSlots[index] = i;
+                }
+            }
+        }
+
+        if (targetableSlots[0] != MAX_MON_ITEMS)
+        {   
+            slot = gLastItemSlot = GetSlot(targetableSlots, index);        
+            gLastUsedItem = gBattleMons[battler].items[slot];
+        }
+        else
+            gLastUsedItem = ITEM_NONE;
+        
         break;
     }
     case VARIOUS_TRY_FAIRY_LOCK:
@@ -10206,7 +10485,7 @@ static void Cmd_various(void)
     case VARIOUS_JUMP_IF_NOT_BERRY:
     {
         VARIOUS_ARGS(const u8 *jumpInstr);
-        if (ItemId_GetPocket(gBattleMons[battler].item) == POCKET_BERRIES)
+        if (BattlerHasBerry(battler))
             gBattlescriptCurrInstr = cmd->nextInstr;
         else
             gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -10628,7 +10907,7 @@ static void Cmd_various(void)
         i = GetBattlerAbility(gBattlerAbility);
         if (IsBattlerAlive(gBattlerAbility)
             && (i == ABILITY_RECEIVER || i == ABILITY_POWER_OF_ALCHEMY)
-            && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_ABILITY_SHIELD
+            && !BattlerHeldItemHasEffect(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE)
             && !gAbilitiesInfo[gBattleMons[battler].ability].cantBeCopied)
         {
             gBattleStruct->tracedAbility[gBattlerAbility] = gBattleMons[battler].ability; // re-using the variable for trace
@@ -10740,7 +11019,7 @@ static void Cmd_various(void)
             RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
             gBattlescriptCurrInstr = cmd->failInstr;
         }
-        else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+        else if (BattlerHeldItemHasEffect(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
         {
             RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
             gBattlescriptCurrInstr = cmd->failInstr;
@@ -10765,7 +11044,7 @@ static void Cmd_various(void)
             RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
             gBattlescriptCurrInstr = cmd->failInstr;
         }
-        else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+        else if (BattlerHeldItemHasEffect(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
         {
             RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
             gBattlescriptCurrInstr = cmd->failInstr;
@@ -11073,17 +11352,37 @@ static void Cmd_various(void)
     case VARIOUS_BESTOW:
     {
         VARIOUS_ARGS(const u8 *failInstr);
-        if (gBattleMons[gBattlerAttacker].item == ITEM_NONE
-            || gBattleMons[gBattlerTarget].item != ITEM_NONE
-            || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
-            || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerAttacker].item)
-            || gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerTarget)] & (1u << gBattlerPartyIndexes[gBattlerTarget]))
+
+        index = 0;
+        targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+        
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE
+             || gBattleMons[gBattlerTarget].items[i] != ITEM_NONE
+             || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerAttacker].items[i])
+             || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerAttacker].items[i])
+             || gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerTarget)] & (1u << gBattlerPartyIndexes[gBattlerTarget]))
+            {
+                continue;
+            }
+            else
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+        
+        slot = gLastItemSlot = GetSlot(targetableSlots, index);    
+        
+        if (slot == MAX_MON_ITEMS)    
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         else
         {
-            BestowItem(gBattlerAttacker, gBattlerTarget);
+            BestowItem(gBattlerAttacker, gBattlerTarget, slot);
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         return;
@@ -11263,25 +11562,18 @@ static void Cmd_various(void)
     case VARIOUS_TERRAIN_SEED:
     {
         VARIOUS_ARGS(const u8 *failInstr);
-        if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_SEEDS)
+        if(BattlerHeldItemHasEffect(battler, HOLD_EFFECT_SEEDS, TRUE))
         {
             enum ItemEffect effect = ITEM_NO_EFFECT;
-            u16 item = gBattleMons[battler].item;
-            switch (GetBattlerHoldEffectParam(battler))
-            {
-            case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
+            u16 item = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_SEEDS, TRUE);
+            if(GetBattlerItemHoldEffectParam(battler, item) == HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN)
                 effect = TryHandleSeed(battler, STATUS_FIELD_ELECTRIC_TERRAIN, STAT_DEF, item, ITEMEFFECT_NONE);
-                break;
-            case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
+            if(GetBattlerItemHoldEffectParam(battler, item) == HOLD_EFFECT_PARAM_GRASSY_TERRAIN)
                 effect = TryHandleSeed(battler, STATUS_FIELD_GRASSY_TERRAIN, STAT_DEF, item, ITEMEFFECT_NONE);
-                break;
-            case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
+            if(GetBattlerItemHoldEffectParam(battler, item) == HOLD_EFFECT_PARAM_MISTY_TERRAIN)
                 effect = TryHandleSeed(battler, STATUS_FIELD_MISTY_TERRAIN, STAT_SPDEF, item, ITEMEFFECT_NONE);
-                break;
-            case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
+            if(GetBattlerItemHoldEffectParam(battler, item) == HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN)
                 effect = TryHandleSeed(battler, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF, item, ITEMEFFECT_NONE);
-                break;
-            }
 
             if (effect != ITEM_NO_EFFECT)
                 return;
@@ -11530,8 +11822,17 @@ static void Cmd_various(void)
             return;
         }
 
-        if (cmd->fromBattler)
-            gLastUsedItem = gBattleMons[battler].item;
+        if (cmd->fromBattler && gLastItemSlot != MAX_MON_ITEMS 
+            && ItemId_GetPocket(gBattleMons[battler].items[gLastItemSlot]) == POCKET_BERRIES)
+            {
+                gLastUsedItem = gBattleMons[battler].items[gLastItemSlot];
+            }
+        else
+        {
+            if (ItemId_GetPocket(gBattleMons[battler].items[gLastItemSlot]) != POCKET_BERRIES 
+             && GetHeldItemSlot(battler, gLastUsedItem, TRUE) != MAX_MON_ITEMS)
+                gLastUsedItem = gBattleMons[battler].items[GetBattlerBerry(battler)];
+        }
 
         gBattleStruct->ateBerry[battler & BIT_SIDE] |= 1u << gBattlerPartyIndexes[battler];
         gBattleScripting.battler = gEffectBattler = gBattlerTarget = battler;    // Cover all berry effect battler cases. e.g. ChangeStatBuffs uses target ID
@@ -11728,19 +12029,48 @@ static void Cmd_various(void)
     case VARIOUS_SAVE_BATTLER_ITEM:
     {
         VARIOUS_ARGS();
-        gBattleResources->battleHistory->heldItems[battler] = gBattleMons[battler].item;
+        u8 itemslot = GetHeldItemSlot(battler, gLastUsedItem, TRUE);
+        if (itemslot != MAX_MON_ITEMS)
+            gBattleResources->battleHistory->heldItems[battler] = gBattleMons[battler].items[itemslot];
         break;
     }
     case VARIOUS_RESTORE_BATTLER_ITEM:
     {
         VARIOUS_ARGS();
-        gBattleMons[battler].item = gBattleResources->battleHistory->heldItems[battler];
+        u8 itemslot = GetHeldItemSlot(battler, gLastUsedItem, TRUE);
+        if (itemslot != MAX_MON_ITEMS)
+            gBattleMons[battler].items[itemslot] = gBattleResources->battleHistory->heldItems[battler];
         break;
     }
     case VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM:
     {
         VARIOUS_ARGS();
-        gBattleMons[battler].item = gLastUsedItem;
+        gBattleMons[battler].items[gLastItemSlot] = gLastUsedItem;
+        break;
+    }
+    case VARIOUS_LAST_USED_ITEM_TO_BATTLER_BERRY: //For Stuff Cheeks
+    {
+        VARIOUS_ARGS();
+        index = 0;
+        targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if(ItemId_GetPocket(gBattleMons[battler].items[i]) == POCKET_BERRIES)
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+        if (targetableSlots[0] != MAX_MON_ITEMS)
+        {    
+            slot = gLastItemSlot = GetSlot(targetableSlots, index);
+            gLastUsedItem = gBattleMons[battler].items[slot];
+        }
+        else
+            gLastUsedItem = ITEM_NONE;
+            
         break;
     }
     } // End of switch (cmd->id)
@@ -12377,7 +12707,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
 {
     bool32 certain = FALSE;
     bool32 notProtectAffected = FALSE;
-    u32 index, battler, battlerAbility, battlerHoldEffect;
+    u32 index, battler, battlerAbility; // battlerHoldEffect;
     bool32 affectsUser = (flags & MOVE_EFFECT_AFFECTS_USER);
     bool32 mirrorArmored = (flags & STAT_CHANGE_MIRROR_ARMOR);
 
@@ -12387,7 +12717,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
         battler = gBattlerTarget;
 
     battlerAbility = GetBattlerAbility(battler);
-    battlerHoldEffect = GetBattlerHoldEffect(battler, TRUE);
+    //battlerHoldEffect = GetBattlerHoldEffect(battler, TRUE);
 
     gSpecialStatuses[battler].changedStatsBattlerId = gBattlerAttacker;
 
@@ -12447,7 +12777,7 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
             gBattlescriptCurrInstr = BattleScript_ButItFailed;
             return STAT_CHANGE_DIDNT_WORK;
         }
-        else if ((battlerHoldEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(battlerAbility))
+        else if ((BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CLEAR_AMULET, TRUE) || CanAbilityPreventStatLoss(battlerAbility))
               && (!affectsUser || mirrorArmored) && !certain && gCurrentMove != MOVE_CURSE)
         {
             if (flags == STAT_CHANGE_ALLOW_PTR)
@@ -12459,9 +12789,9 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
                 else
                 {
                     gBattleScripting.battler = battler;
-                    if (battlerHoldEffect == HOLD_EFFECT_CLEAR_AMULET)
+                    if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CLEAR_AMULET, TRUE))
                     {
-                        gLastUsedItem = gBattleMons[battler].item;
+                        gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_CLEAR_AMULET, TRUE);
                         BattleScriptPush(BS_ptr);
                         gBattlescriptCurrInstr = BattleScript_ItemNoStatLoss;
                         RecordItemEffectBattle(battler, HOLD_EFFECT_CLEAR_AMULET);
@@ -13056,8 +13386,11 @@ static void Cmd_tryKO(void)
     CMD_ARGS(const u8 *failInstr);
 
     bool32 lands = FALSE;
-    u32 holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
+    //u32 holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
     u16 targetAbility = GetBattlerAbility(gBattlerTarget);
+
+    u16 battlerItems[MAX_MON_ITEMS];
+    STORE_BATTLER_ITEMS(gBattlerTarget);
 
     // Dynamaxed Pokemon cannot be hit by OHKO moves.
     if ((GetActiveGimmick(gBattlerTarget) == GIMMICK_DYNAMAX))
@@ -13069,16 +13402,16 @@ static void Cmd_tryKO(void)
     }
 
     gPotentialItemEffectBattler = gBattlerTarget;
-    if (holdEffect == HOLD_EFFECT_FOCUS_BAND
-        && (Random() % 100) < GetBattlerHoldEffectParam(gBattlerTarget))
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND)
+        && (Random() % 100) < GetBattlerItemHoldEffectParam(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND))
     {
         gSpecialStatuses[gBattlerTarget].focusBanded = TRUE;
-        RecordItemEffectBattle(gBattlerTarget, holdEffect);
+        RecordItemEffectBattle(gBattlerTarget, SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND));
     }
-    else if (holdEffect == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(gBattlerTarget))
+    else if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH) && IsBattlerAtMaxHp(gBattlerTarget))
     {
         gSpecialStatuses[gBattlerTarget].focusSashed = TRUE;
-        RecordItemEffectBattle(gBattlerTarget, holdEffect);
+        RecordItemEffectBattle(gBattlerTarget, SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH));
     }
 
     if (targetAbility == ABILITY_STURDY)
@@ -13118,7 +13451,10 @@ static void Cmd_tryKO(void)
             {
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].hp - 1;
                 gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FOE_HUNG_ON;
-                gLastUsedItem = gBattleMons[gBattlerTarget].item;
+                if(gSpecialStatuses[gBattlerTarget].focusSashed)
+                    gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_SASH);
+                else
+                    gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND);
             }
             else if (B_AFFECTION_MECHANICS == TRUE && gSpecialStatuses[gBattlerTarget].affectionEndured)
             {
@@ -14560,7 +14896,7 @@ static void Cmd_recoverbasedonsunlight(void)
         }
         else
         {
-            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_UTILITY_UMBRELLA)
+            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || BattlerHeldItemHasEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else if (gBattleWeather & B_WEATHER_SUN)
                 gBattleStruct->moveDamage[gBattlerAttacker] = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
@@ -14979,28 +15315,42 @@ static void Cmd_tryswapitems(void)
     {
         u8 sideAttacker = GetBattlerSide(gBattlerAttacker);
         u8 sideTarget = GetBattlerSide(gBattlerTarget);
+        u8 targetableSlots[MAX_MON_ITEMS];
+        u8 index = 0;
+        targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
 
-        // You can't swap items if they were knocked off in regular battles
-        if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
+        for (int i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            // You can't swap items if they were knocked off in regular battles
+            if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
                              | BATTLE_TYPE_EREADER_TRAINER
                              | BATTLE_TYPE_FRONTIER
                              | BATTLE_TYPE_SECRET_BASE
                              | BATTLE_TYPE_RECORDED_LINK))
             && (gWishFutureKnock.knockedOffMons[sideAttacker] & (1u << gBattlerPartyIndexes[gBattlerAttacker])
                 || gWishFutureKnock.knockedOffMons[sideTarget] & (1u << gBattlerPartyIndexes[gBattlerTarget])))
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
+            {
+                continue;
+            }
+            // can't swap if two Pokémon don't have an item
+            // or if either of them is an enigma berry, a mail, or other invalid item
+            else if ((gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE && gBattleMons[gBattlerTarget].items[i] == ITEM_NONE)
+                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerAttacker].items[i])
+                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerTarget].items[i])
+                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerTarget].items[i])
+                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerAttacker].items[i]))
+            {
+                continue;
+            }
+            // Record slot as valid for swapping
+            if (targetableSlots[0] != MAX_MON_ITEMS)
+                index++;
+            targetableSlots[index] = i;
         }
-        // can't swap if two Pokémon don't have an item
-        // or if either of them is an enigma berry or a mail
-        else if ((gBattleMons[gBattlerAttacker].item == ITEM_NONE && gBattleMons[gBattlerTarget].item == ITEM_NONE)
-                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerTarget].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerTarget].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerAttacker].item))
-        {
+
+        // End if no swappable slots detected 
+        if (targetableSlots[0] == MAX_MON_ITEMS)
             gBattlescriptCurrInstr = cmd->failInstr;
-        }
         // check if ability prevents swapping
         else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
         {
@@ -15011,26 +15361,34 @@ static void Cmd_tryswapitems(void)
         // took a while, but all checks passed and items can be safely swapped
         else
         {
-            u16 oldItemAtk, *newItemAtk;
+            u8 slot;
+            u16 oldItemAtk = 0, *newItemAtk = 0;
 
-            newItemAtk = &gBattleStruct->changedItems[gBattlerAttacker];
-            oldItemAtk = gBattleMons[gBattlerAttacker].item;
-            *newItemAtk = gBattleMons[gBattlerTarget].item;
+            slot = gLastItemSlot = GetSlot(targetableSlots, index);
 
-            gBattleMons[gBattlerAttacker].item = ITEM_NONE;
-            gBattleMons[gBattlerTarget].item = oldItemAtk;
+            newItemAtk = &gBattleStruct->changedItems[gBattlerAttacker][slot];
+            if (gBattleMons[gBattlerAttacker].items[slot] != ITEM_NONE)
+                oldItemAtk = SlotToItemId(gBattleMons[gBattlerAttacker].items[slot], slot);
+            if (gBattleMons[gBattlerTarget].items[slot] != ITEM_NONE)
+                *newItemAtk = SlotToItemId(gBattleMons[gBattlerTarget].items[slot], slot);
+
+            gBattleMons[gBattlerAttacker].items[slot] = ITEM_NONE;
+            gBattleMons[gBattlerTarget].items[slot] = oldItemAtk;
 
             RecordItemEffectBattle(gBattlerAttacker, 0);
             RecordItemEffectBattle(gBattlerTarget, ItemId_GetHoldEffect(oldItemAtk));
 
-            BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(*newItemAtk), newItemAtk);
+            BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(*newItemAtk), newItemAtk); // set attacker item
             MarkBattlerForControllerExec(gBattlerAttacker);
 
-            BtlController_EmitSetMonData(gBattlerTarget, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
+            BtlController_EmitSetMonData(gBattlerTarget, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(ItemIdToSlot(gBattleMons[gBattlerTarget].items[slot], slot)), &gBattleMons[gBattlerTarget].items[slot]); // set target item
             MarkBattlerForControllerExec(gBattlerTarget);
 
-            gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
-            gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
+            if(slot != 1) // swapping the berry slot should not reset Choice Item lock
+            {
+                gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
+                gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
+            }
 
             gBattlescriptCurrInstr = cmd->nextInstr;
 
@@ -15041,9 +15399,9 @@ static void Cmd_tryswapitems(void)
             {
                 // if targeting your own side and you aren't in a multi battle, don't save items as stolen
                 if (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER)
-                    TrySaveExchangedItem(gBattlerAttacker, oldItemAtk);
+                    TrySaveExchangedItem(gBattlerAttacker, oldItemAtk, slot);
                 if (GetBattlerSide(gBattlerTarget) == B_SIDE_PLAYER)
-                    TrySaveExchangedItem(gBattlerTarget, *newItemAtk);
+                    TrySaveExchangedItem(gBattlerTarget, *newItemAtk, slot);
             }
 
             if (oldItemAtk != ITEM_NONE && *newItemAtk != ITEM_NONE)
@@ -15252,7 +15610,7 @@ static void Cmd_tryswapabilities(void)
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    else if (BattlerHeldItemHasEffect(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
     {
         RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -15692,24 +16050,72 @@ static void Cmd_jumpifsubstituteblocks(void)
 
 static void Cmd_tryrecycleitem(void)
 {
-    CMD_ARGS(const u8 *failInstr);
+    CMD_ARGS(u8 type, const u8 *failInstr);
 
-    u16 *usedHeldItem;
+    //Types: 1 = Recycle, 2 = Pickup, 3 = Harvest
 
-    if (gCurrentMove == MOVE_NONE && GetBattlerAbility(gBattlerAttacker) == ABILITY_PICKUP)
-        usedHeldItem = &gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerTarget]][GetBattlerSide(gBattlerTarget)];
-    else
-        usedHeldItem = &gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerAttacker]][GetBattlerSide(gBattlerAttacker)];
-    if (*usedHeldItem != ITEM_NONE && gBattleMons[gBattlerAttacker].item == ITEM_NONE)
+    u8 i;
+    u16 *usedHeldItem, slot = 0;
+    u8 targetableSlots[MAX_MON_ITEMS];
+    u8 index = 0;
+    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+    if (cmd->type == 1)
     {
-        gLastUsedItem = *usedHeldItem;
-        *usedHeldItem = ITEM_NONE;
-        gBattleMons[gBattlerAttacker].item = gLastUsedItem;
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetUsedHeldItem(gBattlerAttacker, i) != ITEM_NONE)
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+    }
+    else if (cmd->type == 2)
+    {
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetUsedHeldItem(gBattlerTarget, i) != ITEM_NONE)
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+    }
+    else if (cmd->type == 3)
+    {
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (ItemId_GetPocket(GetUsedHeldItem(gBattlerAttacker, i)) == POCKET_BERRIES)
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+    }
 
-        BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].item), &gBattleMons[gBattlerAttacker].item);
-        MarkBattlerForControllerExec(gBattlerAttacker);
+    slot = gLastItemSlot = GetSlot(targetableSlots, index);
 
-        gBattlescriptCurrInstr = cmd->nextInstr;
+    if (slot != MAX_MON_ITEMS)
+    {
+        if (gCurrentMove == MOVE_NONE && GetBattlerAbility(gBattlerAttacker) == ABILITY_PICKUP)
+            usedHeldItem = &gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerTarget]][GetBattlerSide(gBattlerTarget)][slot];
+        else
+            usedHeldItem = &gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerAttacker]][GetBattlerSide(gBattlerAttacker)][slot];
+
+        if (gBattleMons[gBattlerAttacker].items[slot] == ITEM_NONE)
+        {
+            gLastUsedItem = *usedHeldItem;
+            *usedHeldItem = ITEM_NONE;
+            gBattleMons[gBattlerAttacker].items[slot] = ItemIdToSlot(gLastUsedItem, slot);
+            BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[gBattlerAttacker].items[slot]), &gBattleMons[gBattlerAttacker].items[slot]);
+            MarkBattlerForControllerExec(gBattlerAttacker);
+
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
     }
     else
     {
@@ -16248,7 +16654,8 @@ static void Cmd_givecaughtmon(void)
                     GetMonNickname(&gPlayerParty[gSelectedMonPartyId], gStringVar2);
                     StringCopy(gStringVar1, GetBoxNamePtr(GetPCBoxToSendMon()));
                     ZeroMonData(&gPlayerParty[gSelectedMonPartyId]);
-                    gBattleStruct->itemLost[B_SIDE_PLAYER][gSelectedMonPartyId].originalItem = ITEM_NONE;
+                    for(int i = 0; i < MAX_MON_ITEMS; i++)
+                        gBattleStruct->itemLost[B_SIDE_PLAYER][gSelectedMonPartyId][i].originalItem = ITEM_NONE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWAPPED_INTO_PARTY;
                     gSelectedMonPartyId = PARTY_SIZE;
                     gBattleCommunication[MULTIUSE_STATE] = GIVECAUGHTMON_GIVE_AND_SHOW_MSG;
@@ -16264,9 +16671,14 @@ static void Cmd_givecaughtmon(void)
     case GIVECAUGHTMON_GIVE_AND_SHOW_MSG:
         if (B_RESTORE_HELD_BATTLE_ITEMS >= GEN_9)
         {
-            u16 lostItem = gBattleStruct->itemLost[B_SIDE_OPPONENT][gBattlerPartyIndexes[GetCatchingBattler()]].originalItem;
-            if (lostItem != ITEM_NONE && ItemId_GetPocket(lostItem) != POCKET_BERRIES)
-                SetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_HELD_ITEM, &lostItem);  // Restore non-berry items
+            u16 lostItem;
+
+            for (int i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                lostItem = gBattleStruct->itemLost[B_SIDE_OPPONENT][gBattlerPartyIndexes[GetCatchingBattler()]][i].originalItem;
+                if (lostItem != ITEM_NONE && ItemId_GetPocket(lostItem) != POCKET_BERRIES)
+                    SetMonData(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]], MON_DATA_HELD_ITEM + i, &lostItem);  // Restore non-berry items
+            }
         }
 
         if (GiveMonToPlayer(&gEnemyParty[gBattlerPartyIndexes[GetCatchingBattler()]]) != MON_GIVEN_TO_PARTY
@@ -16650,9 +17062,9 @@ static void Cmd_jumpifoppositegenders(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_unused(void)
-{
-}
+// static void Cmd_unused(void)
+// {
+// }
 
 static void Cmd_tryworryseed(void)
 {
@@ -16665,7 +17077,7 @@ static void Cmd_tryworryseed(void)
         gBattlescriptCurrInstr = T1_READ_PTR(gBattlescriptCurrInstr + 1);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    else if (BattlerHeldItemHasEffect(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
     {
         RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -16707,6 +17119,15 @@ void BS_SaveTarget(void)
 {
     NATIVE_ARGS();
     SaveBattlerTarget(gBattlerTarget);
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void Cmd_debugprint(void)
+{
+    NATIVE_ARGS();
+    DebugPrintf("PRINTTEST");
+    DebugPrintf("DEBUG ATTACKER Items1:[%d], Item2:[%d]", gBattleMons[gBattlerAttacker].items[0], gBattleMons[gBattlerAttacker].items[1]);
+    DebugPrintf("DEBUG TARGET Items1:[%d], Item2:[%d]", gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -16985,13 +17406,34 @@ void BS_TrySymbiosis(void)
     u32 partner = BATTLE_PARTNER(battler);
     if (SYMBIOSIS_CHECK(battler, partner))
     {
-        BestowItem(partner, battler);
-        gLastUsedAbility = gBattleMons[partner].ability;
-        gBattleScripting.battler = gBattlerAbility = partner;
-        gEffectBattler = battler;
-        BattleScriptPushCursor();
-        gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
-        return;
+        u8 slot, i, targetableSlots[MAX_MON_ITEMS];
+        u8 index = 0;
+        targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if(gBattleMons[battler].items[i] == ITEM_NONE
+            && gBattleMons[BATTLE_PARTNER(battler)].items[i] != ITEM_NONE
+            && CanBattlerGetOrLoseItem(battler, gBattleMons[BATTLE_PARTNER(battler)].items[i])
+            && CanBattlerGetOrLoseItem(BATTLE_PARTNER(battler), gBattleMons[BATTLE_PARTNER(battler)].items[i]))
+            {
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                    index++;
+                targetableSlots[index] = i;
+            }
+        }
+        
+        if (targetableSlots[0] != MAX_MON_ITEMS)
+        {
+            slot = gLastItemSlot = GetSlot(targetableSlots, index);
+            BestowItem(partner, battler, slot);
+            gLastUsedAbility = gBattleMons[partner].ability;
+            gBattleScripting.battler = gBattlerAbility = partner;
+            gEffectBattler = battler;
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
+            return;
+        }
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -17087,11 +17529,11 @@ u8 GetFirstFaintedPartyIndex(u8 battler)
 
 void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBattler)
 {
-    u32 holdEffect = GetMonHoldEffect(&gPlayerParty[expGetterMonId]);
+    //u32 holdEffect = GetMonHoldEffect(&gPlayerParty[expGetterMonId]);
 
     if (IsTradedMon(&gPlayerParty[expGetterMonId]))
         *expAmount = (*expAmount * 150) / 100;
-    if (holdEffect == HOLD_EFFECT_LUCKY_EGG)
+    if (MonItemHasHoldEffect(&gPlayerParty[expGetterMonId], HOLD_EFFECT_LUCKY_EGG))
         *expAmount = (*expAmount * 150) / 100;
     if (B_UNEVOLVED_EXP_MULTIPLIER >= GEN_6 && IsMonPastEvolutionLevel(&gPlayerParty[expGetterMonId]))
         *expAmount = (*expAmount * 4915) / 4096;
@@ -18203,7 +18645,7 @@ void BS_TeatimeInvul(void)
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
 
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    if (ItemId_GetPocket(gBattleMons[battler].item) == POCKET_BERRIES && !(gStatuses3[gBattlerTarget] & (STATUS3_SEMI_INVULNERABLE)))
+    if (BattlerHasBerry(battler) && !(gStatuses3[gBattlerTarget] & (STATUS3_SEMI_INVULNERABLE)))
         gBattlescriptCurrInstr = cmd->nextInstr;
     else
         gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -18746,16 +19188,34 @@ void BS_HealOneSixth(void)
 void BS_TryRecycleBerry(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u16* usedHeldItem = &gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerTarget]][GetBattlerSide(gBattlerTarget)];
-    if (gBattleMons[gBattlerTarget].item == ITEM_NONE
-        && gBattleStruct->changedItems[gBattlerTarget] == ITEM_NONE   // Will not inherit an item
-        && ItemId_GetPocket(*usedHeldItem) == POCKET_BERRIES)
+    u8 i, slot;
+    u16* usedHeldItem;
+    u8 targetableSlots[MAX_MON_ITEMS];
+    u8 index = 0;
+    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+    for (i = 0; i < MAX_MON_ITEMS; i++)
     {
+        usedHeldItem = &gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerTarget]][GetBattlerSide(gBattlerTarget)][i];
+        if (gBattleMons[gBattlerTarget].items[i] == ITEM_NONE
+        && gBattleStruct->changedItems[gBattlerTarget][i] == ITEM_NONE   // Will not inherit an item
+        && ItemId_GetPocket(*usedHeldItem) == POCKET_BERRIES)
+        {
+            if (targetableSlots[0] != MAX_MON_ITEMS)
+                index++;
+            targetableSlots[index] = i;
+        }
+    }
+
+    if (targetableSlots[0] != MAX_MON_ITEMS)
+    {
+        slot = gLastItemSlot = GetSlot(targetableSlots, index);
+        usedHeldItem = &gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerTarget]][GetBattlerSide(gBattlerTarget)][slot];
         gLastUsedItem = *usedHeldItem;
         *usedHeldItem = ITEM_NONE;
         gBattleMons[gBattlerTarget].item = gLastUsedItem;
 
-        BtlController_EmitSetMonData(gBattlerTarget, BUFFER_A, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
+        BtlController_EmitSetMonData(gBattlerTarget, BUFFER_A, REQUEST_HELDITEM_BATTLE + slot, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
         MarkBattlerForControllerExec(gBattlerTarget);
 
         gBattlescriptCurrInstr = cmd->nextInstr;

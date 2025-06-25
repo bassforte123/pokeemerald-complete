@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Blunder Policy raises the users speed by 2 stages if the use
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_BLAST, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
     }
 }
@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to a
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         }
     } THEN {
-        EXPECT(player->item == ITEM_BLUNDER_POLICY);
+        EXPECT(player->items[0] == ITEM_BLUNDER_POLICY);
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to P
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         }
     } THEN {
-        EXPECT(player->item == ITEM_BLUNDER_POLICY);
+        EXPECT(player->items[0] == ITEM_BLUNDER_POLICY);
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }

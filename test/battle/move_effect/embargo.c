@@ -387,3 +387,28 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Primal Reversion")
 
 TO_DO_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves")
 TO_DO_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money")
+
+// SINGLE_BATTLE_TEST("Magic Room Embargo doesn't prevent Mega Evolution")
+// {
+//     GIVEN {
+//         PLAYER(SPECIES_WOBBUFFET);
+//         OPPONENT(SPECIES_WOBBUFFET);
+//         OPPONENT(SPECIES_CHARIZARD) { Item(ITEM_CHARIZARDITE_Y); };
+//     } WHEN {
+//         TURN { MOVE(player, MOVE_MAGIC_ROOM); }
+//         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
+//         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+//     } SCENE {
+//         // Turn 1
+//         MESSAGE("Wobbuffet used Magic Room!");
+//         //MESSAGE("The opposing Wobbuffet can't use items anymore!");
+//         // Turn 2
+//         MESSAGE("The opposing Wobbuffet used Baton Pass!");
+//         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, opponent);
+//         MESSAGE("2 sent out Charizard!");
+//         // Turn 3
+//         MESSAGE("The opposing Charizard's Charizardite Y is reacting to 2's Mega Ring!");
+//         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+//         MESSAGE("The opposing Charizard has Mega Evolved into Mega Charizard!");
+//     }
+// }

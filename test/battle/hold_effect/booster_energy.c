@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Protosynthesis and increases highes
         else if (spDefense == 110)
             MESSAGE("Raging Bolt's Sp. Def was heightened!");
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
         else if (spDefense == 110)
             MESSAGE("Iron Moth's Sp. Def was heightened!");
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 

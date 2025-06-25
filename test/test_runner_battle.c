@@ -1765,6 +1765,22 @@ void Item_(u32 sourceLine, u32 item)
     SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM, &item);
 }
 
+void Items_(u32 sourceLine, u32 items[MAX_MON_ITEMS])
+{
+    s32 i;
+    INVALID_IF(!DATA.currentMon, "Item outside of PLAYER/OPPONENT");
+    
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        INVALID_IF(items[i] >= ITEMS_COUNT, "Illegal item: %d", items[i]);
+
+        if (i == 1)
+            items[i] = ItemIdToSlot(items[i], i); //Offset for Berry items
+            
+        SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM + i, &items[i]);
+    }
+}
+
 void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
 {
     s32 i;

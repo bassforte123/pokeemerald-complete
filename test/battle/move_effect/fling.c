@@ -124,7 +124,7 @@ SINGLE_BATTLE_TEST("Fling - Item is lost even when there is no target")
         MESSAGE("Wobbuffet used Fling!");
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
         MESSAGE("Wobbuffet used Fling!");
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -197,7 +197,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if pokemon is asleep/frozen/p
         }
 
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 

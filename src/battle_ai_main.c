@@ -385,16 +385,16 @@ void Ai_UpdateFaintData(u32 battler)
 
 void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 {
-    u32 ability, holdEffect;
+    u32 ability; //, holdEffect;
 
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
-    aiData->items[battler] = gBattleMons[battler].item;
-    holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
+    aiData->items[battler] = 0;
+    //holdEffect = aiData->holdEffects[battler] = AI_DecideHoldEffectForTurn(battler);
     aiData->holdEffectParams[battler] = GetBattlerHoldEffectParam(battler);
     aiData->lastUsedMove[battler] = gLastMoves[battler];
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
-    aiData->speedStats[battler] = GetBattlerTotalSpeedStatArgs(battler, ability, holdEffect);
+    aiData->speedStats[battler] = GetBattlerTotalSpeedStatArgs(battler, ability);
 }
 
 static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 move)
@@ -1133,7 +1133,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_STUFF_CHEEKS:
-            if (ItemId_GetPocket(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
+            if (!BattlerHasBerry(battlerAtk))
                 return 0;   // cannot even select
             //fallthrough
         case EFFECT_DEFENSE_UP:
@@ -1843,7 +1843,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_RECYCLE:
-            if (GetUsedHeldItem(battlerAtk) == 0 || gBattleMons[battlerAtk].item != 0)
+            if (GetUsedHeldItem(battlerAtk, 0) == 0 || gBattleMons[battlerAtk].item != 0)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_IMPRISON:
@@ -2469,7 +2469,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_TELEKINESIS:
             if (gStatuses3[battlerDef] & (STATUS3_TELEKINESIS | STATUS3_ROOTED | STATUS3_SMACKED_DOWN)
               || gFieldStatuses & STATUS_FIELD_GRAVITY
-              || aiData->holdEffects[battlerDef] == HOLD_EFFECT_IRON_BALL
+              || BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_IRON_BALL, TRUE)
               || IsTelekinesisBannedSpecies(gBattleMons[battlerDef].species)
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
@@ -2703,7 +2703,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     } // move effect checks
 
     // Choice items
-    if (HOLD_EFFECT_CHOICE(aiData->holdEffects[battlerAtk]) && IsBattlerItemEnabled(battlerAtk))
+    //if (HOLD_EFFECT_CHOICE(aiData->holdEffects[battlerAtk]) && IsBattlerItemEnabled(battlerAtk))
+    if (BATTLER_IS_HOLDING_CHOICE_ITEM(battlerAtk) && IsBattlerItemEnabled(battlerAtk))
     {
         // Don't use user-target moves ie. Swords Dance, with exceptions
         if ((moveTarget & MOVE_TARGET_USER)
@@ -3549,7 +3550,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_MULTI_HIT:
     case EFFECT_TRIPLE_KICK:
     case EFFECT_POPULATION_BOMB:
-        if (AI_MoveMakesContact(aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk], move)
+        if (AI_MoveMakesContact(aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk], move, battlerAtk)
           && aiData->abilities[battlerAtk] != ABILITY_MAGIC_GUARD
           && aiData->holdEffects[battlerDef] == HOLD_EFFECT_ROCKY_HELMET)
             ADJUST_SCORE(-2);
@@ -4116,33 +4117,30 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         default:
             if (GetMoveEffect(move) != EFFECT_BESTOW && aiData->items[battlerAtk] == ITEM_NONE && aiData->items[battlerDef] != ITEM_NONE)
             {
-                switch (aiData->holdEffects[battlerDef])
-                {
-                case HOLD_EFFECT_CHOICE_BAND:
-                    break;
-                case HOLD_EFFECT_TOXIC_ORB:
-                    if (ShouldPoisonSelf(battlerAtk, aiData->abilities[battlerAtk]))
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case HOLD_EFFECT_FLAME_ORB:
-                    if (ShouldBurnSelf(battlerAtk, aiData->abilities[battlerAtk]))
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case HOLD_EFFECT_BLACK_SLUDGE:
+                //switch (aiData->holdEffects[battlerDef])
+                if(BattlerHeldItemHasEffect(battlerAtk, HOLD_EFFECT_TOXIC_ORB, TRUE)){
+                    ADJUST_SCORE(DECENT_EFFECT);
+                }
+                if(BattlerHeldItemHasEffect(battlerAtk, HOLD_EFFECT_FLAME_ORB, TRUE)){
+                    ADJUST_SCORE(DECENT_EFFECT);
+                }
+                if(BattlerHeldItemHasEffect(battlerAtk, HOLD_EFFECT_BLACK_SLUDGE, TRUE)){
                     if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON) || aiData->abilities[battlerAtk] == ABILITY_MAGIC_GUARD)
                         ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case HOLD_EFFECT_IRON_BALL:
+                }
+                if(BattlerHeldItemHasEffect(battlerAtk, HOLD_EFFECT_IRON_BALL, TRUE)){
                     if (HasMoveEffect(battlerAtk, EFFECT_FLING))
                         ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case HOLD_EFFECT_LAGGING_TAIL:
-                case HOLD_EFFECT_STICKY_BARB:
-                    break;
-                default:
-                    ADJUST_SCORE(WEAK_EFFECT);    //other hold effects generally universally good
-                    break;
                 }
+                // SET FLAG FOR NONSPECIFIED ITEM DEFAULT
+                // case HOLD_EFFECT_CHOICE_BAND:
+                // break;
+                // case HOLD_EFFECT_LAGGING_TAIL:
+                // case HOLD_EFFECT_STICKY_BARB:
+                //     break;
+                // default:
+                //     ADJUST_SCORE(WEAK_EFFECT);    //other hold effects generally universally good
+                //     break;
             }
         }
         break;
@@ -4179,13 +4177,13 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_RECYCLE:
-        if (GetUsedHeldItem(battlerAtk) != ITEM_NONE)
+        if (GetUsedHeldItem(battlerAtk, 0) != ITEM_NONE)
             ADJUST_SCORE(WEAK_EFFECT);
-        if (IsRecycleEncouragedItem(GetUsedHeldItem(battlerAtk)))
+        if (IsRecycleEncouragedItem(GetUsedHeldItem(battlerAtk, 0)))
             ADJUST_SCORE(WEAK_EFFECT);
         if (aiData->abilities[battlerAtk] == ABILITY_RIPEN)
         {
-            u32 item = GetUsedHeldItem(battlerAtk);
+            u32 item = GetUsedHeldItem(battlerAtk, 0);
             u32 toHeal = (ItemId_GetHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / ItemId_GetHoldEffectParam(item);
 
             if (IsStatBoostingBerry(item) && aiData->hpPercents[battlerAtk] > 60)
@@ -4765,38 +4763,47 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                         && !HasMoveEffect(battlerAtk, EFFECT_ACROBATICS)
                         && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
                         {
-                            switch (aiData->holdEffects[battlerDef])
-                            {
-                            case HOLD_EFFECT_NONE:
-                                break;
-                            case HOLD_EFFECT_CHOICE_BAND:
-                            case HOLD_EFFECT_CHOICE_SCARF:
-                            case HOLD_EFFECT_CHOICE_SPECS:
+                            //switch (aiData->holdEffects[battlerDef])
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_CHOICE_BAND, TRUE)){
                                 ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_TOXIC_ORB:
-                                if (ShouldPoisonSelf(battlerAtk, aiData->abilities[battlerAtk]))
-                                    ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_FLAME_ORB:
-                                if (ShouldBurnSelf(battlerAtk, aiData->abilities[battlerAtk]))
-                                    ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_BLACK_SLUDGE:
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_CHOICE_SCARF, TRUE)){
+                                ADJUST_SCORE(DECENT_EFFECT);
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_CHOICE_SPECS, TRUE)){
+                                ADJUST_SCORE(DECENT_EFFECT);
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_BLACK_SLUDGE, TRUE)){
+                                ADJUST_SCORE(DECENT_EFFECT);
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_BLACK_SLUDGE, TRUE)){
                                 if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
                                     ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_IRON_BALL:
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_TOXIC_ORB, TRUE)){
+                                if (ShouldPoisonSelf(battlerAtk, aiData->abilities[battlerAtk]))
+                                    ADJUST_SCORE(DECENT_EFFECT);
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_FLAME_ORB, TRUE)){
+                                if (ShouldBurnSelf(battlerAtk, aiData->abilities[battlerAtk]))
+                                    ADJUST_SCORE(DECENT_EFFECT);
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_BLACK_SLUDGE, TRUE)){
+                                if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
+                                    ADJUST_SCORE(DECENT_EFFECT);
+                            }
+                            if(BattlerHeldItemHasEffect(battlerDef, HOLD_EFFECT_IRON_BALL, TRUE)){
                                 if (HasMoveEffect(battlerAtk, EFFECT_FLING))
                                     ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_LAGGING_TAIL:
-                            case HOLD_EFFECT_STICKY_BARB:
-                                break;
-                            default:
-                                ADJUST_SCORE(WEAK_EFFECT);
-                                break;
                             }
+
+                                //SET FLAG FOR NONSPECIFIED ITEM DEFALT
+                            // case HOLD_EFFECT_LAGGING_TAIL:
+                            // case HOLD_EFFECT_STICKY_BARB:
+                            //     break;
+                            // default:
+                            //     ADJUST_SCORE(WEAK_EFFECT);
+                            //     break;
                         }
                         break;
                     }

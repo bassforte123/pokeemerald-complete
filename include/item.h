@@ -22,6 +22,7 @@ struct Item
     u8 notConsumed:1;
     u8 padding:5;
     u8 pocket;
+    u8 heldSlot;
     u8 type;
     u8 battleUsage;
     u8 flingPower;

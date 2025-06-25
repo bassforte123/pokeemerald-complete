@@ -1530,6 +1530,7 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
 {
     struct BattlePokemon battleMon;
     struct MovePpInfo moveData;
+    u8 i;
     u8 nickname[POKEMON_NAME_LENGTH * 2];
     u8 *src;
     s16 data16;
@@ -1541,6 +1542,8 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
     case REQUEST_ALL_BATTLE:
         battleMon.species = GetMonData(&party[monId], MON_DATA_SPECIES);
         battleMon.item = GetMonData(&party[monId], MON_DATA_HELD_ITEM);
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+            battleMon.items[i] = GetMonData(&party[monId], MON_DATA_HELD_ITEM + i);
         for (size = 0; size < MAX_MON_MOVES; size++)
         {
             battleMon.moves[size] = GetMonData(&party[monId], MON_DATA_MOVE1 + size);
@@ -1593,6 +1596,12 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         break;
     case REQUEST_HELDITEM_BATTLE:
         data16 = GetMonData(&party[monId], MON_DATA_HELD_ITEM);
+        dst[0] = data16;
+        dst[1] = data16 >> 8;
+        size = 2;
+        break;
+    case REQUEST_HELDITEM_BERRY_BATTLE:
+        data16 = GetMonData(&party[monId], MON_DATA_HELD_ITEM_BERRY);
         dst[0] = data16;
         dst[1] = data16 >> 8;
         size = 2;
@@ -1855,7 +1864,10 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
             u8 iv;
 
             SetMonData(&party[monId], MON_DATA_SPECIES, &battlePokemon->species);
-            SetMonData(&party[monId], MON_DATA_HELD_ITEM, &battlePokemon->item);
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                SetMonData(&party[monId], MON_DATA_HELD_ITEM + i, &battlePokemon->items[i]);  
+            }
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
                 SetMonData(&party[monId], MON_DATA_MOVE1 + i, &battlePokemon->moves[i]);
@@ -1893,6 +1905,9 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
         break;
     case REQUEST_HELDITEM_BATTLE:
         SetMonData(&party[monId], MON_DATA_HELD_ITEM, &gBattleResources->bufferA[battler][3]);
+        break;
+    case REQUEST_HELDITEM_BERRY_BATTLE:
+        SetMonData(&party[monId], MON_DATA_HELD_ITEM_BERRY, &gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MOVES_PP_BATTLE:
         for (i = 0; i < MAX_MON_MOVES; i++)

@@ -146,6 +146,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sQuestionMarksDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_QuestionMark,
@@ -163,6 +164,7 @@ const struct Item gItemsInfo[] =
             "warped through\n"
             "space and time."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_STRANGE,
@@ -179,6 +181,7 @@ const struct Item gItemsInfo[] =
             "catching wild\n"
             "Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_POKE,
@@ -195,6 +198,7 @@ const struct Item gItemsInfo[] =
             "higher catch rate\n"
             "than a Poké Ball."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_GREAT,
@@ -211,6 +215,7 @@ const struct Item gItemsInfo[] =
             "a higher catch rate\n"
             "than a Great Ball."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_ULTRA,
@@ -227,6 +232,7 @@ const struct Item gItemsInfo[] =
             "catches a Pokémon\n"
             "without fail."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_MASTER,
@@ -243,6 +249,7 @@ const struct Item gItemsInfo[] =
             "in commemoration\n"
             "of some event."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_PREMIER,
@@ -259,6 +266,7 @@ const struct Item gItemsInfo[] =
             "that restores\n"
             "caught Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_HEAL,
@@ -275,6 +283,7 @@ const struct Item gItemsInfo[] =
             "well on Water- and\n"
             "Bug-type Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_NET,
@@ -291,6 +300,7 @@ const struct Item gItemsInfo[] =
             "better on weaker\n"
             "Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_NEST,
@@ -307,6 +317,7 @@ const struct Item gItemsInfo[] =
             "better on Pokémon\n"
             "on the ocean floor."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_DIVE,
@@ -323,6 +334,7 @@ const struct Item gItemsInfo[] =
             "used in a\n"
             "dark place."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_DUSK,
@@ -339,6 +351,7 @@ const struct Item gItemsInfo[] =
             "power in battles\n"
             "taking many turns."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_TIMER,
@@ -355,6 +368,7 @@ const struct Item gItemsInfo[] =
             "used on the\n"
             "first turn."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_QUICK,
@@ -371,6 +385,7 @@ const struct Item gItemsInfo[] =
             "better on Pokémon\n"
             "caught before."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_REPEAT,
@@ -387,6 +402,7 @@ const struct Item gItemsInfo[] =
             "makes Pokémon\n"
             "more friendly."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_LUXURY,
@@ -403,6 +419,7 @@ const struct Item gItemsInfo[] =
             "well on lower\n"
             "level Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_LEVEL,
@@ -419,6 +436,7 @@ const struct Item gItemsInfo[] =
             "well on fished\n"
             "up Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_LURE,
@@ -435,6 +453,7 @@ const struct Item gItemsInfo[] =
             "well on Moon\n"
             "Stone users."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_MOON,
@@ -451,6 +470,7 @@ const struct Item gItemsInfo[] =
             "a Pokémon friendly\n"
             "when caught."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_FRIEND,
@@ -467,6 +487,7 @@ const struct Item gItemsInfo[] =
             "Pokémon of the\n"
             "opposite gender."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_LOVE,
@@ -483,6 +504,7 @@ const struct Item gItemsInfo[] =
             "very fast\n"
             "Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_FAST,
@@ -499,6 +521,7 @@ const struct Item gItemsInfo[] =
             "very heavy\n"
             "Pokémon."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_HEAVY,
@@ -520,6 +543,7 @@ const struct Item gItemsInfo[] =
             "the Entree Forest."),
         #endif
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_DREAM,
@@ -536,6 +560,7 @@ const struct Item gItemsInfo[] =
             "is used only in the\n"
             "Safari Zone."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_SAFARI,
@@ -552,6 +577,7 @@ const struct Item gItemsInfo[] =
             "used in the Bug-\n"
             "Catching Contest."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_SPORT,
@@ -567,6 +593,7 @@ const struct Item gItemsInfo[] =
             "A special Ball for\n"
             "the Pal Park."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_PARK,
@@ -582,6 +609,7 @@ const struct Item gItemsInfo[] =
             "A Ball designed to\n"
             "catch Ultra Beasts."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_BEAST,
@@ -598,6 +626,7 @@ const struct Item gItemsInfo[] =
             "in commemoration\n"
             "of some event."),
         .pocket = POCKET_POKE_BALLS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .battleUsage = EFFECT_ITEM_THROW_BALL,
         .secondaryId = BALL_CHERISH,
@@ -617,6 +646,7 @@ const struct Item gItemsInfo[] =
             "a Pokémon by\n"
             "20 points."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -640,6 +670,7 @@ const struct Item gItemsInfo[] =
             "50 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -663,6 +694,7 @@ const struct Item gItemsInfo[] =
             "200 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -681,6 +713,7 @@ const struct Item gItemsInfo[] =
             "Fully restores the\n"
             "HP of a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -700,6 +733,7 @@ const struct Item gItemsInfo[] =
             "HP and status of a\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_HEAL_AND_CURE_STATUS,
@@ -718,6 +752,7 @@ const struct Item gItemsInfo[] =
             "Pokémon with half\n"
             "its HP."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_REVIVE,
@@ -733,6 +768,7 @@ const struct Item gItemsInfo[] =
         .price = 4000,
         .description = sMaxReviveDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_REVIVE,
@@ -756,6 +792,7 @@ const struct Item gItemsInfo[] =
             "by 50 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -779,6 +816,7 @@ const struct Item gItemsInfo[] =
             "by 60 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -805,6 +843,7 @@ const struct Item gItemsInfo[] =
             "by 80 points."),
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -825,6 +864,7 @@ const struct Item gItemsInfo[] =
             "that restores HP\n"
             "by 100 points."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -848,6 +888,7 @@ const struct Item gItemsInfo[] =
             "by 50 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -870,6 +911,7 @@ const struct Item gItemsInfo[] =
             "by 200 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -889,6 +931,7 @@ const struct Item gItemsInfo[] =
             "that heals all\n"
             "status problems."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -907,6 +950,7 @@ const struct Item gItemsInfo[] =
             "that revives a\n"
             "fainted Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_REVIVE,
@@ -924,6 +968,7 @@ const struct Item gItemsInfo[] =
             "Heals a poisoned\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -941,6 +986,7 @@ const struct Item gItemsInfo[] =
             "Heals a paralyzed\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -958,6 +1004,7 @@ const struct Item gItemsInfo[] =
             "Heals Pokémon\n"
             "of a burn."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -975,6 +1022,7 @@ const struct Item gItemsInfo[] =
             "Defrosts a frozen\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -992,6 +1040,7 @@ const struct Item gItemsInfo[] =
             "Awakens a sleeping\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1007,6 +1056,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 400 : 600,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1026,6 +1076,7 @@ const struct Item gItemsInfo[] =
             "of a selected move\n"
             "by 10."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU_MOVES,
         .fieldUseFunc = ItemUseOutOfBattle_PPRecovery,
         .battleUsage = EFFECT_ITEM_RESTORE_PP,
@@ -1045,6 +1096,7 @@ const struct Item gItemsInfo[] =
             "PP of a selected\n"
             "move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU_MOVES,
         .fieldUseFunc = ItemUseOutOfBattle_PPRecovery,
         .battleUsage = EFFECT_ITEM_RESTORE_PP,
@@ -1063,6 +1115,7 @@ const struct Item gItemsInfo[] =
             "Restores the PP\n"
             "of all moves by 10."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PPRecovery,
         .battleUsage = EFFECT_ITEM_RESTORE_PP,
@@ -1082,6 +1135,7 @@ const struct Item gItemsInfo[] =
             "PP of a Pokémon's\n"
             "moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PPRecovery,
         .battleUsage = EFFECT_ITEM_RESTORE_PP,
@@ -1103,6 +1157,7 @@ const struct Item gItemsInfo[] =
             "that restores HP\n"
             "by 20 points."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -1122,6 +1177,7 @@ const struct Item gItemsInfo[] =
             "restores all\n"
             "fainted Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_SacredAsh,
         .effect = gItemEffect_SacredAsh,
@@ -1140,6 +1196,7 @@ const struct Item gItemsInfo[] =
             "that restores HP\n"
             "by 20 points."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -1156,6 +1213,7 @@ const struct Item gItemsInfo[] =
         .price = 8000,
         .description = sMaxReviveDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_REVIVE,
@@ -1174,6 +1232,7 @@ const struct Item gItemsInfo[] =
         .price = 250,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1189,6 +1248,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 350 : 300,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1207,6 +1267,7 @@ const struct Item gItemsInfo[] =
             "that heals all\n"
             "status problems."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1223,6 +1284,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 350 : 200,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1238,6 +1300,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 350 : 100,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1253,6 +1316,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 350 : 200,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1268,6 +1332,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 350 : 200,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1283,6 +1348,7 @@ const struct Item gItemsInfo[] =
         .price = 350,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -1302,6 +1368,7 @@ const struct Item gItemsInfo[] =
             "Raises the base HP\n"
             "of one Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_HPUp,
@@ -1319,6 +1386,7 @@ const struct Item gItemsInfo[] =
             "Attack stat of one\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_Protein,
@@ -1336,6 +1404,7 @@ const struct Item gItemsInfo[] =
             "Defense stat of\n"
             "one Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_Iron,
@@ -1353,6 +1422,7 @@ const struct Item gItemsInfo[] =
             "Sp. Atk stat of one\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_Calcium,
@@ -1370,6 +1440,7 @@ const struct Item gItemsInfo[] =
             "Sp. Def stat of one\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_Zinc,
@@ -1388,6 +1459,7 @@ const struct Item gItemsInfo[] =
             "Speed stat of one\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_Carbos,
@@ -1405,6 +1477,7 @@ const struct Item gItemsInfo[] =
             "PP of a selected\n"
             "move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PPUp,
         .effect = gItemEffect_PPUp,
@@ -1423,6 +1496,7 @@ const struct Item gItemsInfo[] =
             "move to its maximum\n"
             "points."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PPUp,
         .effect = gItemEffect_PPMax,
@@ -1439,6 +1513,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 300 : 3000,
         .description = sHealthFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_HpFeather,
@@ -1453,6 +1528,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 300 : 3000,
         .description = sMuscleFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_AtkFeather,
@@ -1467,6 +1543,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 300 : 3000,
         .description = sResistFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_DefFeather,
@@ -1481,6 +1558,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 300 : 3000,
         .description = sGeniusFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_SpatkFeather,
@@ -1495,6 +1573,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 300 : 3000,
         .description = sCleverFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_SpdefFeather,
@@ -1509,6 +1588,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 300 : 3000,
         .description = sSwiftFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_SpeedFeather,
@@ -1528,6 +1608,7 @@ const struct Item gItemsInfo[] =
             "Switches a Poké-\n"
             "mon's ability."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_AbilityCapsule,
         .iconPic = gItemIcon_AbilityCapsule,
@@ -1545,6 +1626,7 @@ const struct Item gItemsInfo[] =
             "of a Pokémon into\n"
             "a rare ability."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_AbilityPatch,
         .iconPic = gItemIcon_AbilityPatch,
@@ -1562,6 +1644,7 @@ const struct Item gItemsInfo[] =
             "ups Attack, but\n"
             "reduces Defense."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_LONELY,
@@ -1579,6 +1662,7 @@ const struct Item gItemsInfo[] =
             "ups Attack, but\n"
             "reduces Sp. Atk."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_ADAMANT,
@@ -1596,6 +1680,7 @@ const struct Item gItemsInfo[] =
             "ups Attack, but\n"
             "reduces Sp. Def."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_NAUGHTY,
@@ -1613,6 +1698,7 @@ const struct Item gItemsInfo[] =
             "ups Attack, but\n"
             "reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_BRAVE,
@@ -1630,6 +1716,7 @@ const struct Item gItemsInfo[] =
             "ups Defense, but\n"
             "reduces Attack."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_BOLD,
@@ -1647,6 +1734,7 @@ const struct Item gItemsInfo[] =
             "ups Defense, but\n"
             "reduces Sp. Atk."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_IMPISH,
@@ -1664,6 +1752,7 @@ const struct Item gItemsInfo[] =
             "ups Defense, but\n"
             "reduces Sp. Def."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_LAX,
@@ -1681,6 +1770,7 @@ const struct Item gItemsInfo[] =
             "ups Defense, but\n"
             "reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_RELAXED,
@@ -1698,6 +1788,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Atk, but\n"
             "reduces Attack."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_MODEST,
@@ -1715,6 +1806,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Atk, but\n"
             "reduces Defense."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_MILD,
@@ -1732,6 +1824,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Atk, but\n"
             "reduces Sp. Def."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_RASH,
@@ -1749,6 +1842,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Atk, but\n"
             "reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_QUIET,
@@ -1766,6 +1860,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Def, but\n"
             "reduces Attack."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_CALM,
@@ -1783,6 +1878,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Def, but\n"
             "reduces Defense."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_GENTLE,
@@ -1800,6 +1896,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Def, but\n"
             "reduces Sp. Atk."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_CAREFUL,
@@ -1817,6 +1914,7 @@ const struct Item gItemsInfo[] =
             "ups Sp. Def, but\n"
             "reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_SASSY,
@@ -1834,6 +1932,7 @@ const struct Item gItemsInfo[] =
             "ups Speed, but\n"
             "reduces Attack."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_TIMID,
@@ -1851,6 +1950,7 @@ const struct Item gItemsInfo[] =
             "ups Speed, but\n"
             "reduces Defense."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_HASTY,
@@ -1868,6 +1968,7 @@ const struct Item gItemsInfo[] =
             "ups Speed, but\n"
             "reduces Sp. Atk."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_JOLLY,
@@ -1885,6 +1986,7 @@ const struct Item gItemsInfo[] =
             "ups Speed, but\n"
             "reduces Sp. Def."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_NAIVE,
@@ -1902,6 +2004,7 @@ const struct Item gItemsInfo[] =
             "makes each stat\n"
             "grow equally."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Mint,
         .secondaryId = NATURE_SERIOUS,
@@ -1922,6 +2025,7 @@ const struct Item gItemsInfo[] =
             "of a Pokémon by\n"
             "one."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
         .effect = gItemEffect_RareCandy,
@@ -1941,6 +2045,7 @@ const struct Item gItemsInfo[] =
             "amount of Exp. to\n"
             "a single Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
         .effect = gItemEffect_RareCandy,
@@ -1960,6 +2065,7 @@ const struct Item gItemsInfo[] =
             "amount of Exp. to\n"
             "a single Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
         .effect = gItemEffect_RareCandy,
@@ -1979,6 +2085,7 @@ const struct Item gItemsInfo[] =
             "amount of Exp. to\n"
             "a single Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
         .effect = gItemEffect_RareCandy,
@@ -1998,6 +2105,7 @@ const struct Item gItemsInfo[] =
             "amount of Exp. to\n"
             "a single Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
         .effect = gItemEffect_RareCandy,
@@ -2017,6 +2125,7 @@ const struct Item gItemsInfo[] =
             "amount of Exp. to\n"
             "a single Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
         .effect = gItemEffect_RareCandy,
@@ -2035,6 +2144,7 @@ const struct Item gItemsInfo[] =
             "Level of a single\n"
             "Pokémon by one."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_DynamaxCandy,
         .flingPower = 30,
@@ -2054,6 +2164,7 @@ const struct Item gItemsInfo[] =
             "Pokémon."),
         .notConsumed = TRUE,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -2073,6 +2184,7 @@ const struct Item gItemsInfo[] =
             "out of confusion."),
         .notConsumed = TRUE,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -2092,6 +2204,7 @@ const struct Item gItemsInfo[] =
             "out of attraction."),
         .notConsumed = TRUE,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -2114,6 +2227,7 @@ const struct Item gItemsInfo[] =
             "Pokémon."),
         .notConsumed = TRUE,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_BlackWhiteFlute,
         .flingPower = 30,
@@ -2131,6 +2245,7 @@ const struct Item gItemsInfo[] =
             "lures wild Pokémon."),
         .notConsumed = TRUE,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_BlackWhiteFlute,
         .flingPower = 30,
@@ -2150,6 +2265,7 @@ const struct Item gItemsInfo[] =
             "Pokémon for 100\n"
             "steps."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Repel,
         .flingPower = 30,
@@ -2167,6 +2283,7 @@ const struct Item gItemsInfo[] =
             "Pokémon for 200\n"
             "steps."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Repel,
         .flingPower = 30,
@@ -2184,6 +2301,7 @@ const struct Item gItemsInfo[] =
             "Pokémon for 250\n"
             "steps."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Repel,
         .flingPower = 30,
@@ -2201,6 +2319,7 @@ const struct Item gItemsInfo[] =
             "likely to appear\n"
             "for 100 steps."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Lure,
         .secondaryId = 0,
@@ -2219,6 +2338,7 @@ const struct Item gItemsInfo[] =
             "likely to appear\n"
             "for 200 steps."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Lure,
         .secondaryId = 0,
@@ -2237,6 +2357,7 @@ const struct Item gItemsInfo[] =
             "likely to appear\n"
             "for 250 steps."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Lure,
         .secondaryId = 0,
@@ -2260,6 +2381,7 @@ const struct Item gItemsInfo[] =
             .price = (I_PRICE >= GEN_7) ? 1000 : 550,
             .pocket = POCKET_ITEMS,
         #endif
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_EscapeRope,
         .flingPower = 30,
@@ -2285,6 +2407,7 @@ const struct Item gItemsInfo[] =
             "battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_INCREASE_STAT,
@@ -2310,6 +2433,7 @@ const struct Item gItemsInfo[] =
             "battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_INCREASE_STAT,
@@ -2335,6 +2459,7 @@ const struct Item gItemsInfo[] =
             "battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_INCREASE_STAT,
@@ -2360,6 +2485,7 @@ const struct Item gItemsInfo[] =
             "battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_INCREASE_STAT,
@@ -2385,6 +2511,7 @@ const struct Item gItemsInfo[] =
             "battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_INCREASE_STAT,
@@ -2411,6 +2538,7 @@ const struct Item gItemsInfo[] =
             "during one battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_INCREASE_STAT,
@@ -2429,6 +2557,7 @@ const struct Item gItemsInfo[] =
             "critical-hit ratio\n"
             "during one battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_SET_FOCUS_ENERGY,
@@ -2448,6 +2577,7 @@ const struct Item gItemsInfo[] =
             "reduction when\n"
             "used in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_SET_MIST,
@@ -2463,6 +2593,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE < GEN_7) ? 1000 : ((I_PRICE == GEN_7) ? 100 : 300),
         .description = sPokeDollDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_ESCAPE,
@@ -2477,6 +2608,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 100 : 1000,
         .description = sPokeDollDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_ESCAPE,
@@ -2491,6 +2623,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 100 : 1000,
         .description = sPokeDollDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_ESCAPE,
@@ -2509,6 +2642,7 @@ const struct Item gItemsInfo[] =
             "during one battle\n"
             "by one stage."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_INCREASE_ALL_STATS,
@@ -2528,6 +2662,7 @@ const struct Item gItemsInfo[] =
             "cap that gives off\n"
             "a silver gleam."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2544,6 +2679,7 @@ const struct Item gItemsInfo[] =
             "cap that gives off\n"
             "a golden gleam."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2560,6 +2696,7 @@ const struct Item gItemsInfo[] =
             "gold. Can be sold at\n"
             "a high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2576,6 +2713,7 @@ const struct Item gItemsInfo[] =
             "of gold, sellable\n"
             "at a high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 130,
@@ -2592,6 +2730,7 @@ const struct Item gItemsInfo[] =
             "that would sell\n"
             "at a cheap price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2605,6 +2744,7 @@ const struct Item gItemsInfo[] =
         .price = 5000 * TREASURE_FACTOR,
         .description = sBigMushroomDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2618,6 +2758,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 15000 * TREASURE_FACTOR: 12500,
         .description = sBigMushroomDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2634,6 +2775,7 @@ const struct Item gItemsInfo[] =
             "that would sell at a\n"
             "cheap price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2650,6 +2792,7 @@ const struct Item gItemsInfo[] =
             "that would sell at a\n"
             "high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2666,6 +2809,7 @@ const struct Item gItemsInfo[] =
             "that would sell at a\n"
             "high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2683,6 +2827,7 @@ const struct Item gItemsInfo[] =
             "Can be sold at a\n"
             "high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2699,6 +2844,7 @@ const struct Item gItemsInfo[] =
             "It would sell for a\n"
             "very high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2715,6 +2861,7 @@ const struct Item gItemsInfo[] =
             "It would sell for a\n"
             "high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2732,6 +2879,7 @@ const struct Item gItemsInfo[] =
             "deep inside the\n"
             "Shoal Cave."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2748,6 +2896,7 @@ const struct Item gItemsInfo[] =
             "deep inside the\n"
             "Shoal Cave."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2761,6 +2910,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 1000 : 200,
         .description = sShardsDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2774,6 +2924,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 1000 : 200,
         .description = sShardsDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2787,6 +2938,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 1000 : 200,
         .description = sShardsDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2800,6 +2952,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 1000 : 200,
         .description = sShardsDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2816,6 +2969,7 @@ const struct Item gItemsInfo[] =
             "It is coveted by\n"
             "collectors."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2833,6 +2987,7 @@ const struct Item gItemsInfo[] =
             "attracts wild\n"
             "Pokémon when used."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Honey,
         .flingPower = 30,
@@ -2849,6 +3004,7 @@ const struct Item gItemsInfo[] =
             "It can be sold at\n"
             "a high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -2865,6 +3021,7 @@ const struct Item gItemsInfo[] =
             "from this odd stone\n"
             "occasionally."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -2881,6 +3038,7 @@ const struct Item gItemsInfo[] =
             "plain feather that\n"
             "does nothing."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 20,
@@ -2897,6 +3055,7 @@ const struct Item gItemsInfo[] =
             "long ago. It sells\n"
             "at a high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2913,6 +3072,7 @@ const struct Item gItemsInfo[] =
             "long ago. It sells\n"
             "at a high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2929,6 +3089,7 @@ const struct Item gItemsInfo[] =
             "long ago. It sells\n"
             "at a high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2945,6 +3106,7 @@ const struct Item gItemsInfo[] =
             "ago. It sells at\n"
             "a high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2961,6 +3123,7 @@ const struct Item gItemsInfo[] =
             "It sells at a\n"
             "high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2977,6 +3140,7 @@ const struct Item gItemsInfo[] =
             "It sells at a\n"
             "high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -2993,6 +3157,7 @@ const struct Item gItemsInfo[] =
             "It sells at a\n"
             "high price."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -3009,6 +3174,7 @@ const struct Item gItemsInfo[] =
             "depicts a Pokémon\n"
             "from Alola."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -3033,6 +3199,7 @@ const struct Item gItemsInfo[] =
             .importance = 1,
             .pocket = POCKET_KEY_ITEMS,
         #endif
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3055,6 +3222,7 @@ const struct Item gItemsInfo[] =
             .importance = 1,
             .pocket = POCKET_KEY_ITEMS,
         #endif
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3077,6 +3245,7 @@ const struct Item gItemsInfo[] =
             .importance = 1,
             .pocket = POCKET_KEY_ITEMS,
         #endif
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3096,6 +3265,7 @@ const struct Item gItemsInfo[] =
             .importance = 1,
             .pocket = POCKET_KEY_ITEMS,
         #endif
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3115,6 +3285,7 @@ const struct Item gItemsInfo[] =
             .importance = 1,
             .pocket = POCKET_KEY_ITEMS,
         #endif
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3131,6 +3302,7 @@ const struct Item gItemsInfo[] =
             "prehistoric Poké-\n"
             "mon's head."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3147,6 +3319,7 @@ const struct Item gItemsInfo[] =
             "prehistoric Poké-\n"
             "mon's collar."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3163,6 +3336,7 @@ const struct Item gItemsInfo[] =
             "prehistoric Poké-\n"
             "mon's back."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3179,6 +3353,7 @@ const struct Item gItemsInfo[] =
             "prehistoric Poké-\n"
             "mon's wing."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3195,6 +3370,7 @@ const struct Item gItemsInfo[] =
             "prehistoric Poké-\n"
             "mon's large jaw."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3211,6 +3387,7 @@ const struct Item gItemsInfo[] =
             "prehistoric Poké-\n"
             "mon's skin sail."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3227,6 +3404,7 @@ const struct Item gItemsInfo[] =
             "ancient, sky-\n"
             "soaring Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3241,6 +3419,7 @@ const struct Item gItemsInfo[] =
         .price = 5000,
         .description = sFossilizedFishDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3257,6 +3436,7 @@ const struct Item gItemsInfo[] =
             "ancient, land-\n"
             "roaming Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3270,6 +3450,7 @@ const struct Item gItemsInfo[] =
         .price = 5000,
         .description = sFossilizedFishDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -3293,6 +3474,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_GROWTH_MULCH),
@@ -3315,6 +3497,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_DAMP_MULCH),
@@ -3337,6 +3520,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_STABLE_MULCH),
@@ -3359,6 +3543,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_GOOEY_MULCH),
@@ -3381,6 +3566,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_RICH_MULCH),
@@ -3403,6 +3589,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_SURPRISE_MULCH),
@@ -3425,6 +3612,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_BOOST_MULCH),
@@ -3447,6 +3635,7 @@ const struct Item gItemsInfo[] =
         .description = sGenericMulchDesc,
 #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = ITEM_TO_MULCH(ITEM_AMAZE_MULCH),
@@ -3466,6 +3655,7 @@ const struct Item gItemsInfo[] =
             "It assails your\n"
             "nostrils."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_RedApricorn,
@@ -3481,6 +3671,7 @@ const struct Item gItemsInfo[] =
             "It smells a bit\n"
             "like grass."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_BlueApricorn,
@@ -3496,6 +3687,7 @@ const struct Item gItemsInfo[] =
             "It has an invigor-\n"
             "ating scent."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_YellowApricorn,
@@ -3511,6 +3703,7 @@ const struct Item gItemsInfo[] =
             "It has a strange,\n"
             "aromatic scent."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_GreenApricorn,
@@ -3526,6 +3719,7 @@ const struct Item gItemsInfo[] =
             "It has a nice,\n"
             "sweet scent."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_PinkApricorn,
@@ -3541,6 +3735,7 @@ const struct Item gItemsInfo[] =
             "It doesn't smell\n"
             "like anything."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_WhiteApricorn,
@@ -3556,6 +3751,7 @@ const struct Item gItemsInfo[] =
             "It has an inde-\n"
             "scribable scent."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_BlackApricorn,
@@ -3571,6 +3767,7 @@ const struct Item gItemsInfo[] =
             "{PKMN} Den to attract\n"
             "Dynamax Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse, // Todo
         .flingPower = 50,
@@ -3587,6 +3784,7 @@ const struct Item gItemsInfo[] =
             "in Galar called\n"
             "Galarica."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -3604,6 +3802,7 @@ const struct Item gItemsInfo[] =
             "found in the Isle\n"
             "of Armor at Galar."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -3621,6 +3820,7 @@ const struct Item gItemsInfo[] =
             "It can be found in\n"
             "Galar's Max Lair."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -3640,6 +3840,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_ORANGE_MAIL),
@@ -3657,6 +3858,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_HARBOR_MAIL),
@@ -3674,6 +3876,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_GLITTER_MAIL),
@@ -3691,6 +3894,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_MECH_MAIL),
@@ -3708,6 +3912,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_WOOD_MAIL),
@@ -3725,6 +3930,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_WAVE_MAIL),
@@ -3739,6 +3945,7 @@ const struct Item gItemsInfo[] =
         .price = 50,
         .description = sBeadMailDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_BEAD_MAIL),
@@ -3756,6 +3963,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_SHADOW_MAIL),
@@ -3773,6 +3981,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held by\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_TROPIC_MAIL),
@@ -3787,6 +3996,7 @@ const struct Item gItemsInfo[] =
         .price = 50,
         .description = sBeadMailDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_DREAM_MAIL),
@@ -3804,6 +4014,7 @@ const struct Item gItemsInfo[] =
             "Mail to be held\n"
             "by a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_FAB_MAIL),
@@ -3821,6 +4032,7 @@ const struct Item gItemsInfo[] =
             "drawings of three\n"
             "Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_MAIL,
         .fieldUseFunc = ItemUseOutOfBattle_Mail,
         .secondaryId = ITEM_TO_MAIL(ITEM_RETRO_MAIL),
@@ -3836,6 +4048,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3850,6 +4063,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3864,6 +4078,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3878,6 +4093,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3892,6 +4108,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3906,6 +4123,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3920,6 +4138,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3934,6 +4153,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3948,6 +4168,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3962,6 +4183,7 @@ const struct Item gItemsInfo[] =
         .price = (I_PRICE >= GEN_7) ? 3000 : 2100,
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3979,6 +4201,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -3996,6 +4219,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -4013,6 +4237,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -4030,6 +4255,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -4047,6 +4273,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -4065,6 +4292,7 @@ const struct Item gItemsInfo[] =
             "Galar. Makes some\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -4084,6 +4312,7 @@ const struct Item gItemsInfo[] =
             "held by Dragon-\n"
             "type Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4101,6 +4330,7 @@ const struct Item gItemsInfo[] =
             "A peculiar box made\n"
             "by Silph Co."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4118,6 +4348,7 @@ const struct Item gItemsInfo[] =
             "Pokémon. It's stiff\n"
             "and heavy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4135,6 +4366,7 @@ const struct Item gItemsInfo[] =
             "Pokémon. It's full\n"
             "of electric energy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4152,6 +4384,7 @@ const struct Item gItemsInfo[] =
             "Pokémon. It's full\n"
             "of magma energy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4169,6 +4402,7 @@ const struct Item gItemsInfo[] =
             "overflowing with\n"
             "dubious data."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4187,6 +4421,7 @@ const struct Item gItemsInfo[] =
             "Pokémon. Imbued\n"
             "with spirit energy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4204,6 +4439,7 @@ const struct Item gItemsInfo[] =
             "that evolves a\n"
             "certain Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4222,6 +4458,7 @@ const struct Item gItemsInfo[] =
             "treat loved by\n"
             "a certain Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4239,6 +4476,7 @@ const struct Item gItemsInfo[] =
             "perfumes, loved by\n"
             "a certain Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4256,6 +4494,7 @@ const struct Item gItemsInfo[] =
             "that evolves a\n"
             "certain Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -4273,6 +4512,7 @@ const struct Item gItemsInfo[] =
             "sweet loved by\n"
             "Milcery."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -4289,6 +4529,7 @@ const struct Item gItemsInfo[] =
             "sweet loved by\n"
             "Milcery."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -4305,6 +4546,7 @@ const struct Item gItemsInfo[] =
             "sweet loved by\n"
             "Milcery."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -4321,6 +4563,7 @@ const struct Item gItemsInfo[] =
             "sweet loved by\n"
             "Milcery."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -4337,6 +4580,7 @@ const struct Item gItemsInfo[] =
             "sweet loved by\n"
             "Milcery."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -4353,6 +4597,7 @@ const struct Item gItemsInfo[] =
             "sweet loved by\n"
             "Milcery."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -4369,6 +4614,7 @@ const struct Item gItemsInfo[] =
             "sweet loved by\n"
             "Milcery."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -4386,6 +4632,7 @@ const struct Item gItemsInfo[] =
             "item that prevents\n"
             "evolution."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -4402,6 +4649,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 0,
         .description = sNectarDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange_ConsumedOnUse,
         .flingPower = 10,
@@ -4416,6 +4664,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 0,
         .description = sNectarDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange_ConsumedOnUse,
         .flingPower = 10,
@@ -4430,6 +4679,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 0,
         .description = sNectarDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange_ConsumedOnUse,
         .flingPower = 10,
@@ -4444,6 +4694,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 0,
         .description = sNectarDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange_ConsumedOnUse,
         .flingPower = 10,
@@ -4464,6 +4715,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Fire-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIRE,
@@ -4483,6 +4735,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Water-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_WATER,
@@ -4502,6 +4755,7 @@ const struct Item gItemsInfo[] =
             "the power of Elec-\n"
             "tric-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ELECTRIC,
@@ -4521,6 +4775,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Grass-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GRASS,
@@ -4540,6 +4795,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Ice-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ICE,
@@ -4559,6 +4815,7 @@ const struct Item gItemsInfo[] =
             "the power of Fight-\n"
             "ing-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIGHTING,
@@ -4578,6 +4835,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Poison-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_POISON,
@@ -4597,6 +4855,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Ground-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GROUND,
@@ -4616,6 +4875,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Flying-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FLYING,
@@ -4635,6 +4895,7 @@ const struct Item gItemsInfo[] =
             "the power of Psy\n"
             "chic-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_PSYCHIC,
@@ -4654,6 +4915,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Bug-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_BUG,
@@ -4673,6 +4935,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Rock-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ROCK,
@@ -4692,6 +4955,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Ghost-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GHOST,
@@ -4711,6 +4975,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Dragon-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DRAGON,
@@ -4730,6 +4995,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Dark-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DARK,
@@ -4749,6 +5015,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Steel-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_STEEL,
@@ -4768,6 +5035,7 @@ const struct Item gItemsInfo[] =
             "the power of\n"
             "Fairy-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FAIRY,
@@ -4788,6 +5056,7 @@ const struct Item gItemsInfo[] =
             "Techno Blast to\n"
             "Water-type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_WATER,
@@ -4806,6 +5075,7 @@ const struct Item gItemsInfo[] =
             "Techno Blast to\n"
             "Electric-type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ELECTRIC,
@@ -4824,6 +5094,7 @@ const struct Item gItemsInfo[] =
             "Techno Blast to\n"
             "Fire-type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIRE,
@@ -4842,6 +5113,7 @@ const struct Item gItemsInfo[] =
             "Techno Blast to\n"
             "Ice-type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ICE,
@@ -4864,6 +5136,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIRE,
@@ -4884,6 +5157,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_WATER,
@@ -4904,6 +5178,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ELECTRIC,
@@ -4924,6 +5199,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GRASS,
@@ -4944,6 +5220,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ICE,
@@ -4964,6 +5241,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIGHTING,
@@ -4984,6 +5262,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_POISON,
@@ -5004,6 +5283,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GROUND,
@@ -5024,6 +5304,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FLYING,
@@ -5044,6 +5325,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_PSYCHIC,
@@ -5064,6 +5346,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_BUG,
@@ -5084,6 +5367,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ROCK,
@@ -5104,6 +5388,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GHOST,
@@ -5124,6 +5409,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DRAGON,
@@ -5144,6 +5430,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DARK,
@@ -5164,6 +5451,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_STEEL,
@@ -5184,6 +5472,7 @@ const struct Item gItemsInfo[] =
             "type data. It swaps\n"
             "Silvally's type."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FAIRY,
@@ -5201,6 +5490,7 @@ const struct Item gItemsInfo[] =
             "hero used it to\n"
             "halt a disaster."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_RustedSword,
@@ -5216,6 +5506,7 @@ const struct Item gItemsInfo[] =
             "hero used it to\n"
             "halt a disaster."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_RustedShield,
@@ -5234,6 +5525,7 @@ const struct Item gItemsInfo[] =
             "said to contain an\n"
             "ancient power."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_RedOrb,
@@ -5250,6 +5542,7 @@ const struct Item gItemsInfo[] =
             "said to contain an\n"
             "ancient power."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_BlueOrb,
@@ -5268,6 +5561,7 @@ const struct Item gItemsInfo[] =
             "Venusaur to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5283,6 +5577,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = sCharizarditeDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5298,6 +5593,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = sCharizarditeDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5315,6 +5611,7 @@ const struct Item gItemsInfo[] =
             "Blastoise to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5332,6 +5629,7 @@ const struct Item gItemsInfo[] =
             "Beedrill to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5349,6 +5647,7 @@ const struct Item gItemsInfo[] =
             "Pidgeot to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5366,6 +5665,7 @@ const struct Item gItemsInfo[] =
             "Alakazam to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5383,6 +5683,7 @@ const struct Item gItemsInfo[] =
             "Slowbro to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5400,6 +5701,7 @@ const struct Item gItemsInfo[] =
             "Gengar to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5417,6 +5719,7 @@ const struct Item gItemsInfo[] =
             "Kangaskhan to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5434,6 +5737,7 @@ const struct Item gItemsInfo[] =
             "Pinsir to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5451,6 +5755,7 @@ const struct Item gItemsInfo[] =
             "Gyarados to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5468,6 +5773,7 @@ const struct Item gItemsInfo[] =
             "Aerodactyl to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5483,6 +5789,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = sMewtwoniteDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5498,6 +5805,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_MEGA_STONE,
         .description = sMewtwoniteDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5515,6 +5823,7 @@ const struct Item gItemsInfo[] =
             "Ampharos to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5532,6 +5841,7 @@ const struct Item gItemsInfo[] =
             "Steelix to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5549,6 +5859,7 @@ const struct Item gItemsInfo[] =
             "Scizor to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5566,6 +5877,7 @@ const struct Item gItemsInfo[] =
             "Heracross to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5583,6 +5895,7 @@ const struct Item gItemsInfo[] =
             "Houndoom to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5600,6 +5913,7 @@ const struct Item gItemsInfo[] =
             "Tyranitar to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5617,6 +5931,7 @@ const struct Item gItemsInfo[] =
             "Sceptile to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5634,6 +5949,7 @@ const struct Item gItemsInfo[] =
             "Blaziken to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5651,6 +5967,7 @@ const struct Item gItemsInfo[] =
             "Swampert to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5668,6 +5985,7 @@ const struct Item gItemsInfo[] =
             "Gardevoir to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5685,6 +6003,7 @@ const struct Item gItemsInfo[] =
             "Sableye to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5702,6 +6021,7 @@ const struct Item gItemsInfo[] =
             "Mawile to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5719,6 +6039,7 @@ const struct Item gItemsInfo[] =
             "Aggron to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5736,6 +6057,7 @@ const struct Item gItemsInfo[] =
             "Medicham to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5753,6 +6075,7 @@ const struct Item gItemsInfo[] =
             "Manectric to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5770,6 +6093,7 @@ const struct Item gItemsInfo[] =
             "Sharpedo to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5787,6 +6111,7 @@ const struct Item gItemsInfo[] =
             "Camerupt to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5804,6 +6129,7 @@ const struct Item gItemsInfo[] =
             "Altaria to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5821,6 +6147,7 @@ const struct Item gItemsInfo[] =
             "Banette to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5838,6 +6165,7 @@ const struct Item gItemsInfo[] =
             "Absol to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5855,6 +6183,7 @@ const struct Item gItemsInfo[] =
             "Glalie to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5872,6 +6201,7 @@ const struct Item gItemsInfo[] =
             "Salamence to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5889,6 +6219,7 @@ const struct Item gItemsInfo[] =
             "Metagross to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5906,6 +6237,7 @@ const struct Item gItemsInfo[] =
             "Latias to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5923,6 +6255,7 @@ const struct Item gItemsInfo[] =
             "Latios to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5940,6 +6273,7 @@ const struct Item gItemsInfo[] =
             "Lopunny to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5957,6 +6291,7 @@ const struct Item gItemsInfo[] =
             "Garchomp to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5974,6 +6309,7 @@ const struct Item gItemsInfo[] =
             "Lucario to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -5991,6 +6327,7 @@ const struct Item gItemsInfo[] =
             "Abomasnow to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -6008,6 +6345,7 @@ const struct Item gItemsInfo[] =
             "Gallade to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -6025,6 +6363,7 @@ const struct Item gItemsInfo[] =
             "Audino to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -6042,6 +6381,7 @@ const struct Item gItemsInfo[] =
             "Diancie to Mega\n"
             "Evolve in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -6062,6 +6402,7 @@ const struct Item gItemsInfo[] =
             "power of Normal\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_NORMAL,
@@ -6080,6 +6421,7 @@ const struct Item gItemsInfo[] =
             "power of Fire\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIRE,
@@ -6098,6 +6440,7 @@ const struct Item gItemsInfo[] =
             "power of Water\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_WATER,
@@ -6116,6 +6459,7 @@ const struct Item gItemsInfo[] =
             "power of Electric\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ELECTRIC,
@@ -6134,6 +6478,7 @@ const struct Item gItemsInfo[] =
             "power of Grass\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GRASS,
@@ -6152,6 +6497,7 @@ const struct Item gItemsInfo[] =
             "power of Ice\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ICE,
@@ -6170,6 +6516,7 @@ const struct Item gItemsInfo[] =
             "power of Fighting\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIGHTING,
@@ -6188,6 +6535,7 @@ const struct Item gItemsInfo[] =
             "power of Poison\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_POISON,
@@ -6206,6 +6554,7 @@ const struct Item gItemsInfo[] =
             "power of Ground\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GROUND,
@@ -6224,6 +6573,7 @@ const struct Item gItemsInfo[] =
             "power of Flying\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FLYING,
@@ -6242,6 +6592,7 @@ const struct Item gItemsInfo[] =
             "power of Psychic\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_PSYCHIC,
@@ -6260,6 +6611,7 @@ const struct Item gItemsInfo[] =
             "power of Bug\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_BUG,
@@ -6278,6 +6630,7 @@ const struct Item gItemsInfo[] =
             "power of Rock\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ROCK,
@@ -6296,6 +6649,7 @@ const struct Item gItemsInfo[] =
             "power of Ghost\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GHOST,
@@ -6314,6 +6668,7 @@ const struct Item gItemsInfo[] =
             "power of Dragon\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DRAGON,
@@ -6332,6 +6687,7 @@ const struct Item gItemsInfo[] =
             "power of Dark\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DARK,
@@ -6350,6 +6706,7 @@ const struct Item gItemsInfo[] =
             "power of Steel\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_STEEL,
@@ -6368,6 +6725,7 @@ const struct Item gItemsInfo[] =
             "power of Fairy\n"
             "Type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FAIRY,
@@ -6387,6 +6745,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_NORMAL,
@@ -6404,6 +6763,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIRE,
@@ -6421,6 +6781,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_WATER,
@@ -6438,6 +6799,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ELECTRIC,
@@ -6455,6 +6817,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GRASS,
@@ -6472,6 +6835,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ICE,
@@ -6489,6 +6853,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FIGHTING,
@@ -6506,6 +6871,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_POISON,
@@ -6523,6 +6889,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GROUND,
@@ -6540,6 +6907,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FLYING,
@@ -6557,6 +6925,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_PSYCHIC,
@@ -6574,6 +6943,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_BUG,
@@ -6591,6 +6961,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_ROCK,
@@ -6608,6 +6979,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_GHOST,
@@ -6625,6 +6997,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DRAGON,
@@ -6642,6 +7015,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_DARK,
@@ -6659,6 +7033,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_STEEL,
@@ -6676,6 +7051,7 @@ const struct Item gItemsInfo[] =
             "type moves into\n"
             "Z-Moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = TYPE_FAIRY,
@@ -6693,6 +7069,7 @@ const struct Item gItemsInfo[] =
             "Volt Tackle\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6710,6 +7087,7 @@ const struct Item gItemsInfo[] =
             "Last Resort\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6727,6 +7105,7 @@ const struct Item gItemsInfo[] =
             "Giga Impact\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6744,6 +7123,7 @@ const struct Item gItemsInfo[] =
             "Psychic into\n"
             "a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6761,6 +7141,7 @@ const struct Item gItemsInfo[] =
             "eye's Spirit Sha-\n"
             "ckle into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6778,6 +7159,7 @@ const struct Item gItemsInfo[] =
             "roar's Darkest La-\n"
             "riat into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6795,6 +7177,7 @@ const struct Item gItemsInfo[] =
             "Sparkling Aria\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6812,6 +7195,7 @@ const struct Item gItemsInfo[] =
             "Stone Edge\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6829,6 +7213,7 @@ const struct Item gItemsInfo[] =
             "Play Rough\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6846,6 +7231,7 @@ const struct Item gItemsInfo[] =
             "Clanging Scales\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6863,6 +7249,7 @@ const struct Item gItemsInfo[] =
             "Nature's Madness\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  //signature z move
@@ -6880,6 +7267,7 @@ const struct Item gItemsInfo[] =
             "Sunsteel Strike\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6897,6 +7285,7 @@ const struct Item gItemsInfo[] =
             "Moongeist Beam\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6914,6 +7303,7 @@ const struct Item gItemsInfo[] =
             "dow's Spectral Thi-\n"
             "ef into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6931,6 +7321,7 @@ const struct Item gItemsInfo[] =
             "Raichu's Thunder-\n"
             "bolt into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6948,6 +7339,7 @@ const struct Item gItemsInfo[] =
             "a cap's Thunderbolt\n"
             "into a Z-Move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255,  // signature z move
@@ -6965,6 +7357,7 @@ const struct Item gItemsInfo[] =
             "fused Necrozma\n"
             "into a new form."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 255, //signature z move
@@ -6984,6 +7377,7 @@ const struct Item gItemsInfo[] =
             "raises the Atk and\n"
             "Sp. Atk of Pikachu."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7001,6 +7395,7 @@ const struct Item gItemsInfo[] =
             "raises Farfetch'd's\n"
             "critical-hit ratio."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -7018,6 +7413,7 @@ const struct Item gItemsInfo[] =
             "raises Cubone or\n"
             "Marowak's Attack."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 90,
@@ -7036,6 +7432,7 @@ const struct Item gItemsInfo[] =
             "raises Chansey's\n"
             "critical-hit rate."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 40,
@@ -7054,6 +7451,7 @@ const struct Item gItemsInfo[] =
             "raises Ditto's\n"
             "Defense."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7072,6 +7470,7 @@ const struct Item gItemsInfo[] =
             "raises the Speed\n"
             "of Ditto."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7089,6 +7488,7 @@ const struct Item gItemsInfo[] =
             "raises the Sp. Def\n"
             "of Clamperl."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -7108,6 +7508,7 @@ const struct Item gItemsInfo[] =
             "raises the Sp. Atk\n"
             "of Clamperl."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -7133,6 +7534,7 @@ const struct Item gItemsInfo[] =
             "Latios & Latias."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7151,6 +7553,7 @@ const struct Item gItemsInfo[] =
             "Dragon and Steel-\n"
             "type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -7169,6 +7572,7 @@ const struct Item gItemsInfo[] =
             "Dragon and Water-\n"
             "type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -7187,6 +7591,7 @@ const struct Item gItemsInfo[] =
             "Dragon and Ghost-\n"
             "type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -7204,6 +7609,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 20,
         .description = sSeaIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7222,6 +7628,7 @@ const struct Item gItemsInfo[] =
             "slightly lowers the\n"
             "foe's accuracy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7237,6 +7644,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 20,
         .description = sOddIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7252,6 +7660,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 20,
         .description = sRockIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7267,6 +7676,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 5,
         .description = sFullIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7282,6 +7692,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 20,
         .description = sSeaIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7297,6 +7708,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 20,
         .description = sRoseIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7311,6 +7723,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_DOUBLE_PRIZE,
         .description = sLuckIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7325,6 +7738,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_REPEL,
         .description = sPureIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7344,6 +7758,7 @@ const struct Item gItemsInfo[] =
             "raises Cool in\n"
             "Contests."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7361,6 +7776,7 @@ const struct Item gItemsInfo[] =
             "raises Beauty in\n"
             "Contests."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7378,6 +7794,7 @@ const struct Item gItemsInfo[] =
             "raises Cute in\n"
             "Contests."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7395,6 +7812,7 @@ const struct Item gItemsInfo[] =
             "raises Smart in\n"
             "Contests."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7412,6 +7830,7 @@ const struct Item gItemsInfo[] =
             "raises Tough in\n"
             "Contests."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7431,6 +7850,7 @@ const struct Item gItemsInfo[] =
             "promotes growth,\n"
             "but reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -7449,6 +7869,7 @@ const struct Item gItemsInfo[] =
             "promotes HP gain,\n"
             "but reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = STAT_HP,
@@ -7468,6 +7889,7 @@ const struct Item gItemsInfo[] =
             "promotes Atk gain,\n"
             "but reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = STAT_ATK,
@@ -7487,6 +7909,7 @@ const struct Item gItemsInfo[] =
             "promotes Def gain,\n"
             "but reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = STAT_DEF,
@@ -7507,6 +7930,7 @@ const struct Item gItemsInfo[] =
             "motes Sp. Atk gain,\n"
             "but reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = STAT_SPATK,
@@ -7526,6 +7950,7 @@ const struct Item gItemsInfo[] =
             "motes Sp. Def gain,\n"
             "but reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = STAT_SPDEF,
@@ -7545,6 +7970,7 @@ const struct Item gItemsInfo[] =
             "promotes Spd gain,\n"
             "but reduces Speed."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = STAT_SPEED,
@@ -7567,6 +7993,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Normal-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7585,6 +8012,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Fire-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7604,6 +8032,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Water-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7622,6 +8051,7 @@ const struct Item gItemsInfo[] =
             "boosts Electric-\n"
             "type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7637,6 +8067,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = TYPE_BOOST_PARAM,
         .description = sRoseIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7656,6 +8087,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Ice-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7674,6 +8106,7 @@ const struct Item gItemsInfo[] =
             "boosts Fighting-\n"
             "type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7692,6 +8125,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Poison-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 70,
@@ -7711,6 +8145,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Ground-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7729,6 +8164,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Flying-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 50,
@@ -7744,6 +8180,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = TYPE_BOOST_PARAM,
         .description = sOddIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7763,6 +8200,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Bug-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7778,6 +8216,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = TYPE_BOOST_PARAM,
         .description = sRockIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -7796,6 +8235,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Ghost-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7814,6 +8254,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Dragon-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 70,
@@ -7833,6 +8274,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Dark-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7851,6 +8293,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Steel-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -7871,6 +8314,7 @@ const struct Item gItemsInfo[] =
             "allows the use of\n"
             "only one move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7889,6 +8333,7 @@ const struct Item gItemsInfo[] =
             "allows the use of\n"
             "only one move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7907,6 +8352,7 @@ const struct Item gItemsInfo[] =
             "allows the use of\n"
             "only one move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -7926,6 +8372,7 @@ const struct Item gItemsInfo[] =
             "inflicts a burn on\n"
             "holder in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7943,6 +8390,7 @@ const struct Item gItemsInfo[] =
             "badly poisons the\n"
             "holder in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -7962,6 +8410,7 @@ const struct Item gItemsInfo[] =
             "of Rain Dance if\n"
             "used by the holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -7979,6 +8428,7 @@ const struct Item gItemsInfo[] =
             "of Sunny Day if\n"
             "used by the holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -7996,6 +8446,7 @@ const struct Item gItemsInfo[] =
             "of Sandstorm if\n"
             "used by the holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8013,6 +8464,7 @@ const struct Item gItemsInfo[] =
             "of the move Hail\n"
             "used by the holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 40,
@@ -8033,6 +8485,7 @@ const struct Item gItemsInfo[] =
             "Electric Terrain,\n"
             "but only one time."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8051,6 +8504,7 @@ const struct Item gItemsInfo[] =
             "Psychic Terrain,\n"
             "but only one time."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8069,6 +8523,7 @@ const struct Item gItemsInfo[] =
             "Misty Terrain,\n"
             "but only one time."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8087,6 +8542,7 @@ const struct Item gItemsInfo[] =
             "Grassy Terrain,\n"
             "but only one time."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8107,6 +8563,7 @@ const struct Item gItemsInfo[] =
             "the holder is hit by\n"
             "a Water-type move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8126,6 +8583,7 @@ const struct Item gItemsInfo[] =
             "the holder is hit by\n"
             "an Electric move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8145,6 +8603,7 @@ const struct Item gItemsInfo[] =
             "the holder is hit by\n"
             "a Water-type move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8163,6 +8622,7 @@ const struct Item gItemsInfo[] =
             "holder is hit by an\n"
             "Ice-type move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8184,6 +8644,7 @@ const struct Item gItemsInfo[] =
             "casts a glare to\n"
             "reduce accuracy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8201,6 +8662,7 @@ const struct Item gItemsInfo[] =
             "restores any\n"
             "lowered stat."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8226,6 +8688,7 @@ const struct Item gItemsInfo[] =
                 "from battles."),
         #endif
         .pocket = I_EXP_SHARE_ITEM >= GEN_6 ? POCKET_KEY_ITEMS : POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_ExpShare,
         .flingPower = 30,
@@ -8244,6 +8707,7 @@ const struct Item gItemsInfo[] =
             "occasionally allows\n"
             "the first strike."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -8261,6 +8725,7 @@ const struct Item gItemsInfo[] =
             "calms spirits and\n"
             "fosters friendship."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8284,6 +8749,7 @@ const struct Item gItemsInfo[] =
             "of infatuation."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8299,6 +8765,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 10,
         .description = sKingsRockDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -8314,6 +8781,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_DOUBLE_PRIZE,
         .description = sLuckIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8328,6 +8796,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_REPEL,
         .description = sPureIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8345,6 +8814,7 @@ const struct Item gItemsInfo[] =
             "assures fleeing\n"
             "from wild Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8363,6 +8833,7 @@ const struct Item gItemsInfo[] =
             "occasionally\n"
             "prevents fainting."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8380,6 +8851,7 @@ const struct Item gItemsInfo[] =
             "boosts Exp. points\n"
             "earned in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8398,6 +8870,7 @@ const struct Item gItemsInfo[] =
             "improves the\n"
             "critical-hit rate."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8417,6 +8890,7 @@ const struct Item gItemsInfo[] =
             "gradually restores\n"
             "HP in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8435,6 +8909,7 @@ const struct Item gItemsInfo[] =
             "restores HP upon\n"
             "striking the foe."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8454,6 +8929,7 @@ const struct Item gItemsInfo[] =
             "that boosts the\n"
             "accuracy of moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8472,6 +8948,7 @@ const struct Item gItemsInfo[] =
             "boosts the power\n"
             "of physical moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8491,6 +8968,7 @@ const struct Item gItemsInfo[] =
             "that ups the power\n"
             "of special moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8509,6 +8987,7 @@ const struct Item gItemsInfo[] =
             "the power of super\n"
             "effective moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8527,6 +9006,7 @@ const struct Item gItemsInfo[] =
             "of barrier moves\n"
             "used by the holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8544,6 +9024,7 @@ const struct Item gItemsInfo[] =
             "but holder loses HP\n"
             "with each attack."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8561,6 +9042,7 @@ const struct Item gItemsInfo[] =
             "use of a move that\n"
             "charges first."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8579,6 +9061,7 @@ const struct Item gItemsInfo[] =
             "full HP, it endures\n"
             "KO hits with 1 HP."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8598,6 +9081,7 @@ const struct Item gItemsInfo[] =
             "after the foe, it'll\n"
             "boost accuracy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8616,6 +9100,7 @@ const struct Item gItemsInfo[] =
             "boosts a move used\n"
             "consecutively."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8633,6 +9118,7 @@ const struct Item gItemsInfo[] =
             "becomes vulnerable\n"
             "to Ground moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 130,
@@ -8647,6 +9133,7 @@ const struct Item gItemsInfo[] =
         .holdEffect = HOLD_EFFECT_LAGGING_TAIL,
         .description = sFullIncenseDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8664,6 +9151,7 @@ const struct Item gItemsInfo[] =
             "in love, the foe\n"
             "does too."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8682,6 +9170,7 @@ const struct Item gItemsInfo[] =
             "Poison-types.\n"
             "Damages all others."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8699,6 +9188,7 @@ const struct Item gItemsInfo[] =
             "extends binding\n"
             "moves like Wrap."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 90,
@@ -8716,6 +9206,7 @@ const struct Item gItemsInfo[] =
             "each turn. May\n"
             "latch on to foes."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -8733,6 +9224,7 @@ const struct Item gItemsInfo[] =
             "to switch out\n"
             "without fail."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8751,6 +9243,7 @@ const struct Item gItemsInfo[] =
             "ups the power of\n"
             "HP-stealing moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8768,6 +9261,7 @@ const struct Item gItemsInfo[] =
             "ups the holder's\n"
             "critical-hit ratio."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -8784,6 +9278,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = 10,
         .description = sKingsRockDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = EVO_HELD_ITEM_TYPE,
         .fieldUseFunc = EVO_HELD_ITEM_FIELD_FUNC,
         .effect = gItemEffect_EvoItem,
@@ -8803,6 +9298,7 @@ const struct Item gItemsInfo[] =
             "Sp. Def of Pokémon\n"
             "that can evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 40,
@@ -8820,6 +9316,7 @@ const struct Item gItemsInfo[] =
             "when held, it halves\n"
             "a Pokémon's weight."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8838,6 +9335,7 @@ const struct Item gItemsInfo[] =
             "they touch its\n"
             "holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -8856,6 +9354,7 @@ const struct Item gItemsInfo[] =
             "float but bursts\n"
             "if hit by an attack."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8874,6 +9373,7 @@ const struct Item gItemsInfo[] =
             "foe if they hit the\n"
             "holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8892,6 +9392,7 @@ const struct Item gItemsInfo[] =
             "have no effect will\n"
             "hit the holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -8909,6 +9410,7 @@ const struct Item gItemsInfo[] =
             "power of binding\n"
             "moves when held."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8927,6 +9429,7 @@ const struct Item gItemsInfo[] =
             "user if they're hit\n"
             "by the foe."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -8946,6 +9449,7 @@ const struct Item gItemsInfo[] =
             "effective move,\n"
             "ups Atk and Sp. Atk."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -8964,6 +9468,7 @@ const struct Item gItemsInfo[] =
             "prevents the use\n"
             "of status moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -8982,6 +9487,7 @@ const struct Item gItemsInfo[] =
             "weather damage and\n"
             "powder moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -8999,6 +9505,7 @@ const struct Item gItemsInfo[] =
             "Speed if the holder\n"
             "is intimidated."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -9016,6 +9523,7 @@ const struct Item gItemsInfo[] =
             "of the active\n"
             "battle terrain."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -9034,6 +9542,7 @@ const struct Item gItemsInfo[] =
             "from contact move\n"
             "effects."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -9051,6 +9560,7 @@ const struct Item gItemsInfo[] =
             "the holder uses a\n"
             "sound-based move."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -9068,6 +9578,7 @@ const struct Item gItemsInfo[] =
             "switch if its stats\n"
             "are lowered."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 50,
@@ -9086,6 +9597,7 @@ const struct Item gItemsInfo[] =
             "effects of traps\n"
             "set in the field."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -9104,6 +9616,7 @@ const struct Item gItemsInfo[] =
             "the user misses\n"
             "due to Accuracy."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 80,
@@ -9121,6 +9634,7 @@ const struct Item gItemsInfo[] =
             "Trick Room is\n"
             "active."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 100,
@@ -9138,6 +9652,7 @@ const struct Item gItemsInfo[] =
             "protects from\n"
             "weather effects."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -9158,6 +9673,7 @@ const struct Item gItemsInfo[] =
             "heals paralysis\n"
             "in battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -9178,6 +9694,7 @@ const struct Item gItemsInfo[] =
             "awakens Pokémon\n"
             "in battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -9198,6 +9715,7 @@ const struct Item gItemsInfo[] =
             "heals poisoning\n"
             "in battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -9218,6 +9736,7 @@ const struct Item gItemsInfo[] =
             "heals a burn in\n"
             "battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -9238,6 +9757,7 @@ const struct Item gItemsInfo[] =
             "defrosts Pokémon\n"
             "in battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -9259,6 +9779,7 @@ const struct Item gItemsInfo[] =
             "restores 10 PP in\n"
             "battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU_MOVES,
         .fieldUseFunc = ItemUseOutOfBattle_PPRecovery,
         .battleUsage = EFFECT_ITEM_RESTORE_PP,
@@ -9280,6 +9801,7 @@ const struct Item gItemsInfo[] =
             "restores 10 HP in\n"
             "battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -9300,6 +9822,7 @@ const struct Item gItemsInfo[] =
             "heals confusion\n"
             "in battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -9320,6 +9843,7 @@ const struct Item gItemsInfo[] =
             "heals any status\n"
             "problem in battle."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -9350,6 +9874,7 @@ const struct Item gItemsInfo[] =
                 "battle."),
         #endif
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -9368,6 +9893,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = CONFUSE_BERRY_HEAL_FRACTION,
         .description = sFigyBerryDesc,
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9384,6 +9910,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = CONFUSE_BERRY_HEAL_FRACTION,
         .description = sFigyBerryDesc,
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9400,6 +9927,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = CONFUSE_BERRY_HEAL_FRACTION,
         .description = sFigyBerryDesc,
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9416,6 +9944,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = CONFUSE_BERRY_HEAL_FRACTION,
         .description = sFigyBerryDesc,
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9432,6 +9961,7 @@ const struct Item gItemsInfo[] =
         .holdEffectParam = CONFUSE_BERRY_HEAL_FRACTION,
         .description = sFigyBerryDesc,
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9449,6 +9979,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Razz."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9466,6 +9997,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Bluk."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9483,6 +10015,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Nanab."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9500,6 +10033,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Wepear."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9517,6 +10051,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Pinap."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9534,6 +10069,7 @@ const struct Item gItemsInfo[] =
             "friendly but lowers\n"
             "base HP."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ReduceEV,
         .effect = gItemEffect_PomegBerry,
@@ -9552,6 +10088,7 @@ const struct Item gItemsInfo[] =
             "friendly but lowers\n"
             "base Attack."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ReduceEV,
         .effect = gItemEffect_KelpsyBerry,
@@ -9570,6 +10107,7 @@ const struct Item gItemsInfo[] =
             "friendly but lowers\n"
             "base Defense."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ReduceEV,
         .effect = gItemEffect_QualotBerry,
@@ -9588,6 +10126,7 @@ const struct Item gItemsInfo[] =
             "friendly but lowers\n"
             "base Sp. Atk."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ReduceEV,
         .effect = gItemEffect_HondewBerry,
@@ -9606,6 +10145,7 @@ const struct Item gItemsInfo[] =
             "friendly but lowers\n"
             "base Sp. Def."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ReduceEV,
         .effect = gItemEffect_GrepaBerry,
@@ -9624,6 +10164,7 @@ const struct Item gItemsInfo[] =
             "friendly but lowers\n"
             "base Speed."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ReduceEV,
         .effect = gItemEffect_TamatoBerry,
@@ -9642,6 +10183,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Cornn."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9659,6 +10201,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Magost."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9676,6 +10219,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Rabuta."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9693,6 +10237,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Nomel."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9710,6 +10255,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Spelon."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9727,6 +10273,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Pamtre."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9744,6 +10291,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Watmel."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9761,6 +10309,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Durin."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9778,6 +10327,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow Belue."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9797,6 +10347,7 @@ const struct Item gItemsInfo[] =
             "weakens a Normal\n"
             "move."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9816,6 +10367,7 @@ const struct Item gItemsInfo[] =
             "weakens a Fire\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9835,6 +10387,7 @@ const struct Item gItemsInfo[] =
             "weakens a Water\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9854,6 +10407,7 @@ const struct Item gItemsInfo[] =
             "weakens a Electric\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9873,6 +10427,7 @@ const struct Item gItemsInfo[] =
             "weakens a Grass\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9892,6 +10447,7 @@ const struct Item gItemsInfo[] =
             "weakens a Ice\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9911,6 +10467,7 @@ const struct Item gItemsInfo[] =
             "weakens a Fighting\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9930,6 +10487,7 @@ const struct Item gItemsInfo[] =
             "weakens a Poison\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9949,6 +10507,7 @@ const struct Item gItemsInfo[] =
             "weakens a Ground\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9968,6 +10527,7 @@ const struct Item gItemsInfo[] =
             "weakens a Flying\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -9987,6 +10547,7 @@ const struct Item gItemsInfo[] =
             "weakens a Psychic\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10006,6 +10567,7 @@ const struct Item gItemsInfo[] =
             "weakens a Bug\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10025,6 +10587,7 @@ const struct Item gItemsInfo[] =
             "weakens a Rock\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10044,6 +10607,7 @@ const struct Item gItemsInfo[] =
             "weakens a Ghost\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10063,6 +10627,7 @@ const struct Item gItemsInfo[] =
             "weakens a Dragon\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10082,6 +10647,7 @@ const struct Item gItemsInfo[] =
             "weakens a Dark\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10101,6 +10667,7 @@ const struct Item gItemsInfo[] =
             "weakens a Steel\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10120,6 +10687,7 @@ const struct Item gItemsInfo[] =
             "weakens a Fairy\n"
             "move if weak to it."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10139,6 +10707,7 @@ const struct Item gItemsInfo[] =
             "raises Attack in\n"
             "a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10158,6 +10727,7 @@ const struct Item gItemsInfo[] =
             "raises Defense in\n"
             "a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10177,6 +10747,7 @@ const struct Item gItemsInfo[] =
             "raises Speed in\n"
             "a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10196,6 +10767,7 @@ const struct Item gItemsInfo[] =
             "raises Sp. Atk in\n"
             "a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10215,6 +10787,7 @@ const struct Item gItemsInfo[] =
             "raises Sp. Def in\n"
             "a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10234,6 +10807,7 @@ const struct Item gItemsInfo[] =
             "ups the critical-\n"
             "hit rate in a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10253,6 +10827,7 @@ const struct Item gItemsInfo[] =
             "sharply boosts a\n"
             "stat in a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10271,6 +10846,7 @@ const struct Item gItemsInfo[] =
             "heals from super\n"
             "effective moves."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10290,6 +10866,7 @@ const struct Item gItemsInfo[] =
             "the Accuracy of a\n"
             "move in a pinch."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10309,6 +10886,7 @@ const struct Item gItemsInfo[] =
             "in a pinch to move\n"
             "first just once."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10327,6 +10905,7 @@ const struct Item gItemsInfo[] =
             "move, it will hurt\n"
             "the attacker a bit."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10345,6 +10924,7 @@ const struct Item gItemsInfo[] =
             "move, it will hurt\n"
             "the attacker a bit."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10363,6 +10943,7 @@ const struct Item gItemsInfo[] =
             "move, it raises the\n"
             "Defense a bit."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10381,6 +10962,7 @@ const struct Item gItemsInfo[] =
             "move, it raises the\n"
             "Sp. Def. a bit."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 1,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -10398,6 +10980,7 @@ const struct Item gItemsInfo[] =
             "Plant in loamy soil\n"
             "to grow a mystery."),
         .pocket = POCKET_BERRIES,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU, // Type handled by ItemUseOutOfBattle_EnigmaBerry
         .fieldUseFunc = ItemUseOutOfBattle_EnigmaBerry,
         .battleUsage = EFFECT_ITEM_ENIGMA_BERRY_EREADER,
@@ -10418,6 +11001,7 @@ const struct Item gItemsInfo[] =
             "hit by the foe."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_FOCUS_PUNCH,
@@ -10433,6 +11017,7 @@ const struct Item gItemsInfo[] =
             "sharp claws."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_DRAGON_CLAW,
@@ -10448,6 +11033,7 @@ const struct Item gItemsInfo[] =
             "that may confuse."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_WATER_PULSE,
@@ -10463,6 +11049,7 @@ const struct Item gItemsInfo[] =
             "the mind."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_CALM_MIND,
@@ -10478,6 +11065,7 @@ const struct Item gItemsInfo[] =
             "to end the battle."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_ROAR,
@@ -10493,6 +11081,7 @@ const struct Item gItemsInfo[] =
             "gradually worsens."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_TOXIC,
@@ -10508,6 +11097,7 @@ const struct Item gItemsInfo[] =
             "types except Ice."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_HAIL,
@@ -10523,6 +11113,7 @@ const struct Item gItemsInfo[] =
             "Attack & Defense."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_BULK_UP,
@@ -10538,6 +11129,7 @@ const struct Item gItemsInfo[] =
             "the foe."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_BULLET_SEED,
@@ -10553,6 +11145,7 @@ const struct Item gItemsInfo[] =
             "different Pokémon."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_HIDDEN_POWER,
@@ -10568,6 +11161,7 @@ const struct Item gItemsInfo[] =
             "for 5 turns."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SUNNY_DAY,
@@ -10583,6 +11177,7 @@ const struct Item gItemsInfo[] =
             "attack moves."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_TAUNT,
@@ -10602,6 +11197,7 @@ const struct Item gItemsInfo[] =
         #endif
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_ICE_BEAM,
@@ -10623,6 +11219,7 @@ const struct Item gItemsInfo[] =
         #endif
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_BLIZZARD,
@@ -10638,6 +11235,7 @@ const struct Item gItemsInfo[] =
             "next turn."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_HYPER_BEAM,
@@ -10653,6 +11251,7 @@ const struct Item gItemsInfo[] =
             "Sp. Atk damage."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_LIGHT_SCREEN,
@@ -10668,6 +11267,7 @@ const struct Item gItemsInfo[] =
             "in succession."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_PROTECT,
@@ -10683,6 +11283,7 @@ const struct Item gItemsInfo[] =
             "for 5 turns."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_RAIN_DANCE,
@@ -10698,6 +11299,7 @@ const struct Item gItemsInfo[] =
             "this move inflicts."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_GIGA_DRAIN,
@@ -10713,6 +11315,7 @@ const struct Item gItemsInfo[] =
             "mystical power."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SAFEGUARD,
@@ -10728,6 +11331,7 @@ const struct Item gItemsInfo[] =
             "powerful this move."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_FRUSTRATION,
@@ -10743,6 +11347,7 @@ const struct Item gItemsInfo[] =
             "attacks next turn."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SOLAR_BEAM,
@@ -10758,6 +11363,7 @@ const struct Item gItemsInfo[] =
             "lower Defense."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_IRON_TAIL,
@@ -10773,6 +11379,7 @@ const struct Item gItemsInfo[] =
             "cause paralysis."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_THUNDERBOLT,
@@ -10788,6 +11395,7 @@ const struct Item gItemsInfo[] =
             "It may paralyze."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_THUNDER,
@@ -10803,6 +11411,7 @@ const struct Item gItemsInfo[] =
             "on flying foes."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_EARTHQUAKE,
@@ -10818,6 +11427,7 @@ const struct Item gItemsInfo[] =
             "powerful this move."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_RETURN,
@@ -10833,6 +11443,7 @@ const struct Item gItemsInfo[] =
             "strikes next turn."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_DIG,
@@ -10848,6 +11459,7 @@ const struct Item gItemsInfo[] =
             "lower Sp. Def."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_PSYCHIC,
@@ -10863,6 +11475,7 @@ const struct Item gItemsInfo[] =
             "lower Sp. Def."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SHADOW_BALL,
@@ -10878,6 +11491,7 @@ const struct Item gItemsInfo[] =
             "and causes damage."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_BRICK_BREAK,
@@ -10893,6 +11507,7 @@ const struct Item gItemsInfo[] =
             "elusiveness."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_DOUBLE_TEAM,
@@ -10908,6 +11523,7 @@ const struct Item gItemsInfo[] =
             "physical attacks."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_REFLECT,
@@ -10923,6 +11539,7 @@ const struct Item gItemsInfo[] =
             "that never misses."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SHOCK_WAVE,
@@ -10938,6 +11555,7 @@ const struct Item gItemsInfo[] =
             "the foe."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_FLAMETHROWER,
@@ -10953,6 +11571,7 @@ const struct Item gItemsInfo[] =
             "the foe."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SLUDGE_BOMB,
@@ -10968,6 +11587,7 @@ const struct Item gItemsInfo[] =
             "over several turns."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SANDSTORM,
@@ -10983,6 +11603,7 @@ const struct Item gItemsInfo[] =
             "burn the foe."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_FIRE_BLAST,
@@ -10998,6 +11619,7 @@ const struct Item gItemsInfo[] =
             "May lower Speed."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_ROCK_TOMB,
@@ -11013,6 +11635,7 @@ const struct Item gItemsInfo[] =
             "be avoided."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_AERIAL_ACE,
@@ -11028,6 +11651,7 @@ const struct Item gItemsInfo[] =
             "move in a row."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_TORMENT,
@@ -11043,6 +11667,7 @@ const struct Item gItemsInfo[] =
             "or paralyzed."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_FACADE,
@@ -11058,6 +11683,7 @@ const struct Item gItemsInfo[] =
             "on the location."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SECRET_POWER,
@@ -11073,6 +11699,7 @@ const struct Item gItemsInfo[] =
             "health and status."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_REST,
@@ -11088,6 +11715,7 @@ const struct Item gItemsInfo[] =
             "opposite gender."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_ATTRACT,
@@ -11103,6 +11731,7 @@ const struct Item gItemsInfo[] =
             "foe's held item."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_THIEF,
@@ -11118,6 +11747,7 @@ const struct Item gItemsInfo[] =
             "slams into the foe."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_STEEL_WING,
@@ -11133,6 +11763,7 @@ const struct Item gItemsInfo[] =
             "turn this is used."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SKILL_SWAP,
@@ -11148,6 +11779,7 @@ const struct Item gItemsInfo[] =
             "is trying to use."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SNATCH,
@@ -11163,6 +11795,7 @@ const struct Item gItemsInfo[] =
             "lowers Sp. Atk."),
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_OVERHEAT,
@@ -11175,6 +11808,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11187,6 +11821,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11199,6 +11834,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11211,6 +11847,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11223,6 +11860,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11235,6 +11873,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11247,6 +11886,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11259,6 +11899,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11271,6 +11912,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11283,6 +11925,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11295,6 +11938,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11307,6 +11951,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11319,6 +11964,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11331,6 +11977,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11343,6 +11990,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11355,6 +12003,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11367,6 +12016,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11379,6 +12029,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11391,6 +12042,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11403,6 +12055,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11415,6 +12068,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11427,6 +12081,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11439,6 +12094,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11451,6 +12107,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11463,6 +12120,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11475,6 +12133,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11487,6 +12146,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11499,6 +12159,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11511,6 +12172,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11523,6 +12185,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11535,6 +12198,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11547,6 +12211,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11559,6 +12224,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11571,6 +12237,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11583,6 +12250,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11595,6 +12263,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11607,6 +12276,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11619,6 +12289,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11631,6 +12302,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11643,6 +12315,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11655,6 +12328,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11667,6 +12341,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11679,6 +12354,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11691,6 +12367,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11703,6 +12380,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11715,6 +12393,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11727,6 +12406,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11739,6 +12419,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11751,6 +12432,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11763,6 +12445,7 @@ const struct Item gItemsInfo[] =
         .description = sQuestionMarksDesc, // Todo
         .importance = I_REUSABLE_TMS,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_NONE, // Todo
@@ -11778,6 +12461,7 @@ const struct Item gItemsInfo[] =
             "or claws."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_CUT,
@@ -11793,6 +12477,7 @@ const struct Item gItemsInfo[] =
             "attacks next turn."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_FLY,
@@ -11808,6 +12493,7 @@ const struct Item gItemsInfo[] =
             "it down on the foe."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_SURF,
@@ -11823,6 +12509,7 @@ const struct Item gItemsInfo[] =
             "the foe."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_STRENGTH,
@@ -11838,6 +12525,7 @@ const struct Item gItemsInfo[] =
             "reduces accuracy."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_FLASH,
@@ -11853,6 +12541,7 @@ const struct Item gItemsInfo[] =
             "may lower Defense."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_ROCK_SMASH,
@@ -11868,6 +12557,7 @@ const struct Item gItemsInfo[] =
             "to climb waterfalls."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_WATERFALL,
@@ -11883,6 +12573,7 @@ const struct Item gItemsInfo[] =
             "attacks next turn."),
         .importance = 1,
         .pocket = POCKET_TM_HM,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TMHM,
         .secondaryId = MOVE_DIVE,
@@ -11901,6 +12592,7 @@ const struct Item gItemsInfo[] =
             "of finding eggs\n"
             "at the daycare."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_OvalCharm,
@@ -11917,6 +12609,7 @@ const struct Item gItemsInfo[] =
             "raise the chance\n"
             "of Shiny Pokémon."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_ShinyCharm,
@@ -11933,6 +12626,7 @@ const struct Item gItemsInfo[] =
             "the chance of\n"
             "Critical Captures."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_CatchingCharm,
@@ -11949,6 +12643,7 @@ const struct Item gItemsInfo[] =
             "the amount of Exp.\n"
             "earned in battle."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_ExpCharm,
@@ -11967,6 +12662,7 @@ const struct Item gItemsInfo[] =
             "devices liked by\n"
             "Rotom."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_RotomCatalog,
         .iconPic = gItemIcon_RotomCatalog,
@@ -11983,6 +12679,7 @@ const struct Item gItemsInfo[] =
             "it are offered as a\n"
             "token of gratitude."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange,
         .iconPic = gItemIcon_Gracidea,
@@ -12000,6 +12697,7 @@ const struct Item gItemsInfo[] =
             "a Pokémon back to\n"
             "its original form."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange,
         .iconPic = gItemIcon_RevealGlass,
@@ -12017,6 +12715,7 @@ const struct Item gItemsInfo[] =
             "Kyurem and a\n"
             "certain Pokémon."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Fusion,
         .iconPic = gItemIcon_DNASplicers,
@@ -12033,6 +12732,7 @@ const struct Item gItemsInfo[] =
             "Zygarde Cores and\n"
             "Cells."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ZygardeCube,
         .iconPic = gItemIcon_ZygardeCube,
@@ -12049,6 +12749,7 @@ const struct Item gItemsInfo[] =
             "seal a certain\n"
             "Pokémon long ago."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange,
         .iconPic = gItemIcon_PrisonBottle,
@@ -12065,6 +12766,7 @@ const struct Item gItemsInfo[] =
             "and split Necrozma\n"
             "using a Solgaleo."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Fusion,
         .iconPic = gItemIcon_NecrozmaFuser,
@@ -12081,6 +12783,7 @@ const struct Item gItemsInfo[] =
             "and split Necrozma\n"
             "using a Lunala."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Fusion,
         .iconPic = gItemIcon_NecrozmaFuser,
@@ -12098,6 +12801,7 @@ const struct Item gItemsInfo[] =
             "Calyrex with its\n"
             "beloved steed."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Fusion,
         .iconPic = gItemIcon_ReinsOfUnity,
@@ -12116,6 +12820,7 @@ const struct Item gItemsInfo[] =
             "their Mega Stone to\n"
             "Mega Evolve."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_MegaRing,
@@ -12132,6 +12837,7 @@ const struct Item gItemsInfo[] =
             "that enables\n"
             "Z-Move usage."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_ZPowerRing,
@@ -12147,6 +12853,7 @@ const struct Item gItemsInfo[] =
             "Wishing Star that\n"
             "allows Dynamaxing."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_DynamaxBand,
@@ -12165,6 +12872,7 @@ const struct Item gItemsInfo[] =
             "the Running Shoes."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_Bicycle,
@@ -12181,6 +12889,7 @@ const struct Item gItemsInfo[] =
             "speed or better."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Bike,
         .secondaryId = MACH_BIKE,
@@ -12198,6 +12907,7 @@ const struct Item gItemsInfo[] =
             "and wheelies."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Bike,
         .secondaryId = ACRO_BIKE,
@@ -12215,6 +12925,7 @@ const struct Item gItemsInfo[] =
             "wild Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Rod,
         .secondaryId = OLD_ROD,
@@ -12232,6 +12943,7 @@ const struct Item gItemsInfo[] =
             "wild Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Rod,
         .secondaryId = GOOD_ROD,
@@ -12249,6 +12961,7 @@ const struct Item gItemsInfo[] =
             "wild Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Rod,
         .secondaryId = SUPER_ROD,
@@ -12266,6 +12979,7 @@ const struct Item gItemsInfo[] =
             "item by sound."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_Itemfinder,
         .iconPic = gItemIcon_DowsingMachine,
@@ -12282,6 +12996,7 @@ const struct Item gItemsInfo[] =
             "present location."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_TownMap,
         .iconPic = gItemIcon_TownMap,
@@ -12298,6 +13013,7 @@ const struct Item gItemsInfo[] =
             "ready Trainers."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
 #if I_VS_SEEKER_CHARGING != 0
         .fieldUseFunc = FieldUseFunc_VsSeeker,
@@ -12318,6 +13034,7 @@ const struct Item gItemsInfo[] =
             "HMs."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TMCase,
@@ -12335,6 +13052,7 @@ const struct Item gItemsInfo[] =
             "holds Berries."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_BerryPouch,
@@ -12351,6 +13069,7 @@ const struct Item gItemsInfo[] =
             "Storage System."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_PokemonBoxLink,
         .iconPic = gItemIcon_PokemonBoxLink,
@@ -12366,6 +13085,7 @@ const struct Item gItemsInfo[] =
             "up to 9,999 Coins."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CoinCase,
         .iconPic = gItemIcon_CoinCase,
@@ -12382,6 +13102,7 @@ const struct Item gItemsInfo[] =
             "a Berry Crusher."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PowderJar,
         .iconPic = gItemIcon_PowderJar,
@@ -12398,6 +13119,7 @@ const struct Item gItemsInfo[] =
             "and plants."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_WailmerPail,
         .iconPic = gItemIcon_WailmerPail,
@@ -12414,6 +13136,7 @@ const struct Item gItemsInfo[] =
             "hiding in grass."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse, // Todo
         .iconPic = gItemIcon_PokeRadar,
@@ -12430,6 +13153,7 @@ const struct Item gItemsInfo[] =
             "a Berry Blender."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PBLOCK_CASE,
         .fieldUseFunc = ItemUseOutOfBattle_PokeblockCase,
         .iconPic = gItemIcon_PokeblockCase,
@@ -12446,6 +13170,7 @@ const struct Item gItemsInfo[] =
             "volcanic ash."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_SootSack,
@@ -12462,6 +13187,7 @@ const struct Item gItemsInfo[] =
             "Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PokeFlute,
         .battleUsage = EFFECT_ITEM_USE_POKE_FLUTE,
@@ -12479,6 +13205,7 @@ const struct Item gItemsInfo[] =
             "for instant recall."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_FameChecker,
@@ -12495,6 +13222,7 @@ const struct Item gItemsInfo[] =
             "for Trainers."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_FIELD,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeachyTV,
@@ -12513,6 +13241,7 @@ const struct Item gItemsInfo[] =
             "ferry."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_SSTicket,
@@ -12529,6 +13258,7 @@ const struct Item gItemsInfo[] =
             "southern island."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .secondaryId = 1,
@@ -12546,6 +13276,7 @@ const struct Item gItemsInfo[] =
             "to Navel Rock."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_MysticTicket,
@@ -12562,6 +13293,7 @@ const struct Item gItemsInfo[] =
             "to Birth Island."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_AuroraTicket,
@@ -12578,6 +13310,7 @@ const struct Item gItemsInfo[] =
             "to a certain island."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_OldSeaMap,
@@ -12594,6 +13327,7 @@ const struct Item gItemsInfo[] =
             "of the Devon Corp."),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_Letter,
@@ -12611,6 +13345,7 @@ const struct Item gItemsInfo[] =
             "machine parts."),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_DevonParts,
@@ -12628,6 +13363,7 @@ const struct Item gItemsInfo[] =
             "desert sandstorms."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_GoGoggles,
@@ -12644,6 +13380,7 @@ const struct Item gItemsInfo[] =
             "unseeable Pokémon."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_DevonScope,
@@ -12660,6 +13397,7 @@ const struct Item gItemsInfo[] =
             "Mauville City."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_BasementKey,
@@ -12676,6 +13414,7 @@ const struct Item gItemsInfo[] =
             "Abandoned Ship."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_Scanner,
@@ -12692,6 +13431,7 @@ const struct Item gItemsInfo[] =
             "Abandoned Ship."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_StorageKey,
@@ -12706,6 +13446,7 @@ const struct Item gItemsInfo[] =
         .description = sKeyToRoomDesc,
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_KeyToRoom1,
@@ -12720,6 +13461,7 @@ const struct Item gItemsInfo[] =
         .description = sKeyToRoomDesc,
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_KeyToRoom2,
@@ -12734,6 +13476,7 @@ const struct Item gItemsInfo[] =
         .description = sKeyToRoomDesc,
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_KeyToRoom4,
@@ -12748,6 +13491,7 @@ const struct Item gItemsInfo[] =
         .description = sKeyToRoomDesc,
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_KeyToRoom6,
@@ -12763,6 +13507,7 @@ const struct Item gItemsInfo[] =
             "at Meteor Falls."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_FormChange,
         .iconPic = gItemIcon_Meteorite,
@@ -12779,6 +13524,7 @@ const struct Item gItemsInfo[] =
             "Team Magma's mark."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_MagmaEmblem,
@@ -12796,6 +13542,7 @@ const struct Item gItemsInfo[] =
             "Pokémon Contests."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_ContestPass,
@@ -12812,6 +13559,7 @@ const struct Item gItemsInfo[] =
             "Mart's clerk."),
         .importance = 2,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_Parcel,
@@ -12828,6 +13576,7 @@ const struct Item gItemsInfo[] =
             "Gym's entrance."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_SecretKey,
@@ -12844,6 +13593,7 @@ const struct Item gItemsInfo[] =
             "from the Bike Shop."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_BikeVoucher,
@@ -12861,6 +13611,7 @@ const struct Item gItemsInfo[] =
             "Zone's Warden."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_GoldTeeth,
@@ -12877,6 +13628,7 @@ const struct Item gItemsInfo[] =
             "Co's office."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_CardKey,
@@ -12893,6 +13645,7 @@ const struct Item gItemsInfo[] =
             "Rocket's Hideout."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_LiftKey,
@@ -12909,6 +13662,7 @@ const struct Item gItemsInfo[] =
             "POKéMON visible."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_SilphScope,
@@ -12926,6 +13680,7 @@ const struct Item gItemsInfo[] =
             "and Three Island."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TriPass,
@@ -12943,6 +13698,7 @@ const struct Item gItemsInfo[] =
             "Sevii Islands."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_RainbowPass,
@@ -12960,6 +13716,7 @@ const struct Item gItemsInfo[] =
             "old lady."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_Tea,
@@ -12977,6 +13734,7 @@ const struct Item gItemsInfo[] =
             "symbolizes passion."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_Gem,
@@ -12993,6 +13751,7 @@ const struct Item gItemsInfo[] =
             "honesty."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_Gem,
@@ -13009,6 +13768,7 @@ const struct Item gItemsInfo[] =
             "prevented for this\n"
             "items's holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13028,6 +13788,7 @@ const struct Item gItemsInfo[] =
             "prevented for this\n"
             "items's holder."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13045,6 +13806,7 @@ const struct Item gItemsInfo[] =
             "moves and removes\n"
             "their contact."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13062,6 +13824,7 @@ const struct Item gItemsInfo[] =
             "from additional\n"
             "effects of moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13080,6 +13843,7 @@ const struct Item gItemsInfo[] =
             "Multihit strikes\n"
             "hit more times."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13096,6 +13860,7 @@ const struct Item gItemsInfo[] =
             "auspicious wishes.\n"
             "Causes evolution."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13115,6 +13880,7 @@ const struct Item gItemsInfo[] =
             "ups Pokémon with\n"
             "certain Abilities."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13131,6 +13897,7 @@ const struct Item gItemsInfo[] =
             "bamboo shoot. Best\n"
             "sold to gourmands."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13147,6 +13914,7 @@ const struct Item gItemsInfo[] =
             "and treasure these\n"
             "curious coins."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_GimmighoulCoin,
@@ -13162,6 +13930,7 @@ const struct Item gItemsInfo[] =
             "blade of some sort.\n"
             "Held by Bisharp."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_LeadersCrest,
@@ -13177,6 +13946,7 @@ const struct Item gItemsInfo[] =
             "malicious will.\n"
             "Causes evolution."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13195,6 +13965,7 @@ const struct Item gItemsInfo[] =
             "stat increases\n"
             "but only once."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13213,6 +13984,7 @@ const struct Item gItemsInfo[] =
             "the dark path."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13231,6 +14003,7 @@ const struct Item gItemsInfo[] =
             "the water path."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13248,6 +14021,7 @@ const struct Item gItemsInfo[] =
             "Terastallization."),
         .importance = 1,
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraOrb,
@@ -13263,6 +14037,7 @@ const struct Item gItemsInfo[] =
             "bamboo shoot. Best\n"
             "sold to gourmands."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 30,
@@ -13276,6 +14051,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13288,6 +14064,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13300,6 +14077,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13312,6 +14090,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13324,6 +14103,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13336,6 +14116,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13348,6 +14129,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13360,6 +14142,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13372,6 +14155,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13384,6 +14168,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13396,6 +14181,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13408,6 +14194,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13420,6 +14207,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13432,6 +14220,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13444,6 +14233,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13456,6 +14246,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13468,6 +14259,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13480,6 +14272,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_TeraShard,
@@ -13495,6 +14288,7 @@ const struct Item gItemsInfo[] =
             "that lets Dialga\n"
             "change form."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -13511,6 +14305,7 @@ const struct Item gItemsInfo[] =
             "that lets Giratina\n"
             "change form."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -13527,6 +14322,7 @@ const struct Item gItemsInfo[] =
             "that lets Palkia\n"
             "change form."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 60,
@@ -13543,6 +14339,7 @@ const struct Item gItemsInfo[] =
             "makes some Pokémon\n"
             "evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13560,6 +14357,7 @@ const struct Item gItemsInfo[] =
             "that makes some\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13577,6 +14375,7 @@ const struct Item gItemsInfo[] =
             "that makes some\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13595,6 +14394,7 @@ const struct Item gItemsInfo[] =
             "Attack, but causes\n"
             "lasting confusion."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -13613,6 +14413,7 @@ const struct Item gItemsInfo[] =
             "raises the power of\n"
             "Fairy-type moves."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .flingPower = 10,
@@ -13629,6 +14430,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13646,6 +14448,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13663,6 +14466,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13682,6 +14486,7 @@ const struct Item gItemsInfo[] =
             "wield the Rock-\n"
             "type in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_CornerstoneMask,
@@ -13699,6 +14504,7 @@ const struct Item gItemsInfo[] =
             "wield the Water-\n"
             "type in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_WellspringMask,
@@ -13716,6 +14522,7 @@ const struct Item gItemsInfo[] =
             "wield the Fire-\n"
             "type in battle."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_HearthflameMask,
@@ -13729,6 +14536,7 @@ const struct Item gItemsInfo[] =
         .price = 500,
         .description = sHealthFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_HpMochi,
@@ -13744,6 +14552,7 @@ const struct Item gItemsInfo[] =
         .price = 500,
         .description = sMuscleFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_AtkMochi,
@@ -13759,6 +14568,7 @@ const struct Item gItemsInfo[] =
         .price = 500,
         .description = sResistFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_DefMochi,
@@ -13774,6 +14584,7 @@ const struct Item gItemsInfo[] =
         .price = 500,
         .description = sGeniusFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_SpatkMochi,
@@ -13789,6 +14600,7 @@ const struct Item gItemsInfo[] =
         .price = 500,
         .description = sCleverFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_SpdefMochi,
@@ -13804,6 +14616,7 @@ const struct Item gItemsInfo[] =
         .price = 500,
         .description = sSwiftFeatherDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .effect = gItemEffect_SpeedMochi,
@@ -13822,6 +14635,7 @@ const struct Item gItemsInfo[] =
             "all base points of\n"
             "a Pokémon."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_ResetEVs,
         .effect = gItemEffect_ResetMochi,
@@ -13840,6 +14654,7 @@ const struct Item gItemsInfo[] =
             "raise the shards\n"
             "from Tera Raids."),
         .pocket = POCKET_KEY_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_GlimmeringCharm,
@@ -13855,6 +14670,7 @@ const struct Item gItemsInfo[] =
             "that makes certain\n"
             "Pokémon evolve."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_EvolutionStone,
         .effect = gItemEffect_EvoItem,
@@ -13868,6 +14684,7 @@ const struct Item gItemsInfo[] =
         .price = 0,
         .description = sTeraShardDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_StellarTeraShard,
@@ -13880,6 +14697,7 @@ const struct Item gItemsInfo[] =
         .price = 250,
         .description = sFullHealDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_CURE_STATUS,
@@ -13898,6 +14716,7 @@ const struct Item gItemsInfo[] =
             "that restores HP\n"
             "by 20 points."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -13920,6 +14739,7 @@ const struct Item gItemsInfo[] =
             "by 50 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -13942,6 +14762,7 @@ const struct Item gItemsInfo[] =
             "by 200 points."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_PARTY_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_Medicine,
         .battleUsage = EFFECT_ITEM_RESTORE_HP,
@@ -13966,6 +14787,7 @@ const struct Item gItemsInfo[] =
             "during one battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         //.effect = currently missing
@@ -13988,6 +14810,7 @@ const struct Item gItemsInfo[] =
             "during one battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         //.effect = currently missing
@@ -14010,6 +14833,7 @@ const struct Item gItemsInfo[] =
             "during one battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         //.effect = currently missing
@@ -14033,6 +14857,7 @@ const struct Item gItemsInfo[] =
             "one battle."),
         #endif
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         //.effect = currently missing
@@ -14046,6 +14871,7 @@ const struct Item gItemsInfo[] =
         .price = 1200,
         .description = sQuestionMarksDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         //.effect = currently missing
@@ -14059,6 +14885,7 @@ const struct Item gItemsInfo[] =
         .price = 1200,
         .description = sQuestionMarksDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         //.effect = currently missing
@@ -14072,6 +14899,7 @@ const struct Item gItemsInfo[] =
         .price = 1600,
         .description = sQuestionMarksDesc,
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         //.effect = currently missing
@@ -14088,6 +14916,7 @@ const struct Item gItemsInfo[] =
             "resembling a Poké-.\n"
             "mon. Can be sold."),
         .pocket = POCKET_ITEMS,
+        .heldSlot = 0,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
         .iconPic = gItemIcon_PokeshiDoll,

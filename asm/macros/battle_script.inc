@@ -1250,8 +1250,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryrecycleitem failInstr:req
+	.macro tryrecycleitem type:req, failInstr:req
 	.byte 0xea
+	.byte \type
 	.4byte \failInstr
 	.endm
 
@@ -1336,9 +1337,10 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused ptr:req
+	.macro removeitemwitheffect battler:req effect:req
 	.byte 0xfd
-	.4byte \ptr
+	.byte \battler
+	.4byte \effect
 	.endm
 
 	.macro tryworryseed failInstr:req
@@ -2220,8 +2222,13 @@
 	.byte \infatuateWith
 	.endm
 
-	.macro setlastuseditem battler:req
+	.macro setlastuseditem battler:req, holdEffect:req
 	various \battler, VARIOUS_SET_LAST_USED_ITEM
+	.4byte \holdEffect
+	.endm
+
+	.macro setlastuseditemfling battler:req
+	various \battler, VARIOUS_SET_LAST_USED_ITEM_FLING
 	.endm
 
 	.macro jumpifabsent battler:req, jumpInstr:req
@@ -2371,6 +2378,10 @@
 
 	.macro battleritemtolastuseditem battler:req
 	various \battler, VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM
+	.endm
+
+	.macro lastuseditemtobattlerberry battler:req
+	various \battler, VARIOUS_LAST_USED_ITEM_TO_BATTLER_BERRY
 	.endm
 
 	.macro swapsidestatuses
@@ -2589,4 +2600,8 @@
 	.macro flushtextbox
 	printstring STRINGID_EMPTYSTRING3
 	waitmessage 1
+	.endm
+
+	.macro debugprint
+	callnative Cmd_debugprint
 	.endm

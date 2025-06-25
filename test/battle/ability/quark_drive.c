@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Ene
         ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
     }
 }
 
@@ -201,8 +201,8 @@ SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_QUARK_DRIVE);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
-        EXPECT_EQ(opponent->item, ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(opponent->items[0], ITEM_BOOSTER_ENERGY);
         EXPECT_EQ(opponent->ability, ABILITY_QUARK_DRIVE);
     }
 }

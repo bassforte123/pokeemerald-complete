@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Leftovers recovers 1/16th HP at end of turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_LEFTOVERS, ITEM_LEPPA_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}

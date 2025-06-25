@@ -2518,6 +2518,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_HELD_ITEM:
             retVal = substruct0->heldItem;
             break;
+        case MON_DATA_HELD_ITEM_BERRY:
+            retVal = substruct0->heldItemBerry;
+            break;
         case MON_DATA_EXP:
             retVal = substruct0->experience;
             break;
@@ -3012,6 +3015,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         }
         case MON_DATA_HELD_ITEM:
             SET16(substruct0->heldItem);
+            break;
+        case MON_DATA_HELD_ITEM_BERRY:
+            SET16(substruct0->heldItemBerry);
             break;
         case MON_DATA_EXP:
             SET32(substruct0->experience);
@@ -7062,4 +7068,57 @@ bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion)
             return TRUE;
     }
     return FALSE;
+}
+
+//Extra Held Item Stuff
+u8 MonItemHasHoldEffect(struct Pokemon *mon, u16 holdEffect){
+    u8 i;
+    u16 item, itemHoldEffect;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++){
+        //DebugPrintf("Item[%d]: %d, Effect[%d]: %d, holdEffect: %d", i, GetMonData(mon, MON_DATA_HELD_ITEM + i), ItemId_GetHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + i)), holdEffect, ItemId_GetHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + i)));
+        item = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+        itemHoldEffect = ItemId_GetHoldEffect(item);
+        if(holdEffect == itemHoldEffect)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+u8 BoxMonItemHasHoldEffect(struct BoxPokemon *mon, u16 holdEffect){
+    u8 i;
+    u16 item;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++){
+        item = GetBoxMonData(mon, MON_DATA_HELD_ITEM + i);
+        if(holdEffect == ItemId_GetHoldEffect(item))
+            return i;
+    }
+
+    return MAX_MON_ITEMS;
+}
+
+u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon *candidate, u16 holdEffect)
+{
+    u16 item = ITEM_NONE;
+
+    for (int i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        item = SlotToItemId(candidate->items[i], i); //Set offset for slots
+        if(gItemsInfo[item].holdEffect == holdEffect)
+            return item;
+    }
+    return ITEM_NONE;
+}
+
+u8 GetNumOfHeldItems(struct Pokemon *mon){
+    u8 i;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++){
+        if(GetMonData(mon, MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+            return i;
+    }
+
+    return MAX_MON_ITEMS; //No Empty Slot
 }

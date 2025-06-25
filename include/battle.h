@@ -115,7 +115,7 @@ struct DisableStruct
     u8 noRetreat:1;
     u8 tarShot:1;
     u8 octolock:1;
-    u8 cudChew:1;
+    u8 cudChew[MAX_MON_ITEMS];
     u8 spikesDone:1;
     u8 toxicSpikesDone:1;
     u8 stickyWebDone:1;
@@ -708,10 +708,10 @@ struct BattleStruct
     u8 padding1:2;
     u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
-    u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES]; // For each party member and side. For harvest, recycle
+    u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES][MAX_MON_ITEMS]; // For each party member and side. For harvest, recycle
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
-    u16 changedItems[MAX_BATTLERS_COUNT];
+    u16 changedItems[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u8 canPickupItem;
     u8 switchInBattlerCounter;
     u8 arenaTurnCounter;
@@ -772,7 +772,7 @@ struct BattleStruct
     u16 moveEffect2; // For Knock Off
     u16 changedSpecies[NUM_BATTLE_SIDES][PARTY_SIZE]; // For forms when multiple mons can change into the same pokemon.
     u8 quickClawBattlerId;
-    struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
+    struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE][MAX_MON_ITEMS];  // Pokemon that had items consumed or stolen (two bytes per party member per side per item slot)
     u8 blunderPolicy:1; // should blunder policy activate
     u8 swapDamageCategory:1; // Photon Geyser, Shell Side Arm, Light That Burns the Sky
     u8 bouncedMoveIsUsed:1;
@@ -1114,6 +1114,7 @@ extern u16 gChosenMove;
 extern u16 gCalledMove;
 extern s32 gBideDmg[MAX_BATTLERS_COUNT];
 extern u16 gLastUsedItem;
+extern u8 gLastItemSlot; //For random item slot selection that should match another random selection
 extern u16 gLastUsedAbility;
 extern u8 gBattlerAttacker;
 extern u8 gBattlerTarget;

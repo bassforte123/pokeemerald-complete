@@ -107,6 +107,8 @@ typedef s32 (*AiScoreFunc)(u32, u32, u32, s32);
     return score;                   \
 }
 
+//#define AI_BATTLER_HAS_TRAIT(battlerID, abilityToCheck) (AI_DATA->abilities[battlerID] == abilityToCheck || BattlerHasInnate(battlerID, abilityToCheck)) //Useful to make calculations faster, used only for AI stuff
+
 void BattleAI_SetupItems(void);
 void BattleAI_SetupFlags(void);
 void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler);

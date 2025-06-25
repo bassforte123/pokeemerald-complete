@@ -2297,7 +2297,8 @@ static void UpdateMonData(struct BattleDebugMenu *data)
             struct Pokemon *mon = GetPartyBattlerData(i);
             struct BattlePokemon *battleMon = &gBattleMons[i];
 
-            SetMonData(mon, MON_DATA_HELD_ITEM, &battleMon->item);
+            for(j = 0; j < MAX_MON_ITEMS; j++)
+                SetMonData(mon, MON_DATA_HELD_ITEM + j, &battleMon->items[j]);
             SetMonData(mon, MON_DATA_STATUS, &battleMon->status1);
             SetMonData(mon, MON_DATA_HP, &battleMon->hp);
             SetMonData(mon, MON_DATA_MAX_HP, &battleMon->maxHP);

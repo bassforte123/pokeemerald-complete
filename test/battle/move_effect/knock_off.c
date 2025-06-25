@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
         MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Sitrus Berry!");
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
             MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Rocky Helmet!");
         }
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Knock Off deals additional damage to opponents holding an it
         else
             EXPECT_EQ(results[0].damage, results[1].damage);
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         NOT { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF); }
     } THEN {
-        EXPECT(opponent->item == ITEM_LEFTOVERS);
+        EXPECT(opponent->items[0] == ITEM_LEFTOVERS);
     }
 }
 
@@ -116,7 +116,7 @@ SINGLE_BATTLE_TEST("Recycle cannot recover an item removed by Knock Off")
         MESSAGE("The opposing Wobbuffet used Recycle!");
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
@@ -144,9 +144,9 @@ SINGLE_BATTLE_TEST("Knock Off does not prevent targets from receiving another it
         }
     } THEN {
         if (B_KNOCK_OFF_REMOVAL >= GEN_5)
-            EXPECT(opponent->item == ITEM_LEFTOVERS);
+            EXPECT(opponent->items[0] == ITEM_LEFTOVERS);
         else
-            EXPECT(opponent->item == ITEM_NONE);
+            EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Knock Off triggers Unburden")
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         MESSAGE("Wobbuffet used Celebrate!");
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 

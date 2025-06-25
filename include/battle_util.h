@@ -59,6 +59,12 @@ enum {
     ABILITYEFFECT_SWITCH_IN_STATUSES,
 };
 
+#define STORE_BATTLER_ITEMS(battler) \
+({for (int itemLoop = 0; itemLoop < MAX_MON_ITEMS; itemLoop++)\
+{battlerItems[itemLoop] = GetSlotHeldItem(battler, itemLoop, TRUE);\
+}})
+// DebugPrintf("battlerTraits[%d] = %d, loop = %d", itemLoop, battlerItems[itemLoop], GetSlotHeldItem(battler, itemLoop, TRUE));
+
 // Special cases
 #define ABILITYEFFECT_MUD_SPORT                  252 // Only used if B_SPORT_TURNS >= GEN_6
 #define ABILITYEFFECT_WATER_SPORT                253 // Only used if B_SPORT_TURNS >= GEN_6
@@ -221,6 +227,7 @@ bool32 TryPrimalReversion(u32 battler);
 bool32 IsNeutralizingGasOnField(void);
 bool32 IsMoldBreakerTypeAbility(u32 battler, u32 ability);
 u32 GetBattlerAbility(u32 battler);
+u32 BattlerHasKlutz(u32 battler);
 u32 IsAbilityOnSide(u32 battler, u32 ability);
 u32 IsAbilityOnOpposingSide(u32 battler, u32 ability);
 u32 IsAbilityOnField(u32 ability);
@@ -285,7 +292,7 @@ bool32 MoveIsAffectedBySheerForce(u32 move);
 bool32 TestIfSheerForceAffected(u32 battler, u16 move);
 void TryRestoreHeldItems(void);
 bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item);
-void TrySaveExchangedItem(u32 battler, u16 stolenItem);
+void TrySaveExchangedItem(u32 battler, u16 stolenItem, u8 slot);
 bool32 IsPartnerMonFromSameTrainer(u32 battler);
 enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 itemId, enum ItemCaseId caseID);
 bool32 IsBattlerAffectedByHazards(u32 battler, bool32 toxicSpikes);
@@ -294,7 +301,7 @@ bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind);
 bool32 TryRoomService(u32 battler);
 void BufferStatChange(u32 battler, u8 statId, u8 stringId);
 bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
-u16 GetUsedHeldItem(u32 battler);
+u16 GetUsedHeldItem(u32 battler, u8 itemSlot);
 bool32 PickupHasValidTarget(u32 battler);
 bool32 CantPickupItem(u32 battler);
 bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags);
@@ -351,5 +358,17 @@ bool32 HasWeatherEffect(void);
 bool32 IsMovePowderBlocked(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 EmergencyExitCanBeTriggered(u32 battler);
 u32 RestoreWhiteHerbStats(u32 battler);
-
+//Multi Item
+bool8 BattlerHeldItemHasEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
+u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
+u8 GetHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
+u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating);
+u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating);
+u16 ItemIdToSlot(u16 item, u8 slot);
+u16 SlotToItemId(u16 item, u8 slot);
+u8 GetSlot(u8 *availableSlots, u8 size);
+u32 GetBattlerItemHoldEffect(u32 battler, u32 item);
+u32 GetBattlerItemHoldEffectParam(u32 battler, u32 item);
+bool8 BattlerHasBerry(u32 battler);
+bool32 GetBattlerBerry(u32 battler);
 #endif // GUARD_BATTLE_UTIL_H

@@ -161,7 +161,9 @@ enum ItemHoldEffect
     HOLD_EFFECT_BERSERK_GENE,
 };
 
-#define HOLD_EFFECT_CHOICE(holdEffect) ((holdEffect == HOLD_EFFECT_CHOICE_BAND || holdEffect == HOLD_EFFECT_CHOICE_SCARF || holdEffect == HOLD_EFFECT_CHOICE_SPECS))
+//#define HOLD_EFFECT_CHOICE(holdEffect) ((holdEffect == HOLD_EFFECT_CHOICE_BAND || holdEffect == HOLD_EFFECT_CHOICE_SCARF || holdEffect == HOLD_EFFECT_CHOICE_SPECS))
+
+#define BATTLER_IS_HOLDING_CHOICE_ITEM(battler) (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_BAND, FALSE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SCARF, FALSE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SPECS, FALSE))
 
 // Terrain seed params
 #define HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN  0

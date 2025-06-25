@@ -384,7 +384,7 @@ static void SetOpponentGfxVar(void)
 
 static void SetRentalsToOpponentParty(void)
 {
-    u8 i;
+    u8 i, j;
 
     if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT)
         gFacilityTrainerMons = gBattleFrontierMons;
@@ -397,7 +397,8 @@ static void SetRentalsToOpponentParty(void)
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].ivs = GetBoxMonData(&gEnemyParty[i].box, MON_DATA_ATK_IV, NULL);
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].personality = GetMonData(&gEnemyParty[i], MON_DATA_PERSONALITY, NULL);
         gSaveBlock2Ptr->frontier.rentalMons[i + FRONTIER_PARTY_SIZE].abilityNum = GetBoxMonData(&gEnemyParty[i].box, MON_DATA_ABILITY_NUM, NULL);
-        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gFacilityTrainerMons[gFrontierTempParty[i]].heldItem);
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + j, &gFacilityTrainerMons[gFrontierTempParty[i]].heldItem);
     }
 }
 
@@ -655,7 +656,7 @@ bool8 InBattleFactory(void)
 
 static void RestorePlayerPartyHeldItems(void)
 {
-    u8 i;
+    u8 i, j;
 
     if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_TENT)
         gFacilityTrainerMons = gBattleFrontierMons;
@@ -664,9 +665,10 @@ static void RestorePlayerPartyHeldItems(void)
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        SetMonData(&gPlayerParty[i],
-                   MON_DATA_HELD_ITEM,
-                   &gFacilityTrainerMons[gSaveBlock2Ptr->frontier.rentalMons[i].monId].heldItem);
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            SetMonData(&gPlayerParty[i],
+                        MON_DATA_HELD_ITEM + j,
+                        &gFacilityTrainerMons[gSaveBlock2Ptr->frontier.rentalMons[i].monId].heldItem);
     }
 }
 

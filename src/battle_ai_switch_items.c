@@ -965,9 +965,9 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
 
 static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 {
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    //u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
 
-    if (HOLD_EFFECT_CHOICE(holdEffect) && IsBattlerItemEnabled(battler))
+    if (BATTLER_IS_HOLDING_CHOICE_ITEM(battler) && IsBattlerItemEnabled(battler))
     {
         if (GetMoveCategory(AI_DATA->lastUsedMove[battler]) == DAMAGE_CATEGORY_STATUS && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);
@@ -1376,14 +1376,14 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     return bestMonId;
 }
 
-bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2)
+bool32 IsMonGrounded(u8 battler, u32 ability, u8 type1, u8 type2)
 {
     // List that makes mon not grounded
     if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
-         || (heldItemEffect == HOLD_EFFECT_AIR_BALLOON && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))))
+         || (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_AIR_BALLOON, TRUE) && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))))
     {
         // List that overrides being off the ground
-        if ((heldItemEffect == HOLD_EFFECT_IRON_BALL && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))) || (gFieldStatuses & STATUS_FIELD_GRAVITY) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
+        if ((BattlerHeldItemHasEffect(battler, HOLD_EFFECT_IRON_BALL, TRUE) && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))) || (gFieldStatuses & STATUS_FIELD_GRAVITY) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
             return TRUE;
         else
             return FALSE;
@@ -1396,23 +1396,24 @@ bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2)
 static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon)
 {
     u8 defType1 = battleMon->types[0], defType2 = battleMon->types[1], tSpikesLayers;
-    u16 heldItemEffect = ItemId_GetHoldEffect(battleMon->item);
+    //u16 heldItemEffect = ItemId_GetHoldEffect(battleMon->item);
     u32 maxHP = battleMon->maxHP, ability = battleMon->ability, status = battleMon->status1;
     u32 spikesDamage = 0, tSpikesDamage = 0, hazardDamage = 0;
     u32 hazardFlags = gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_SAFEGUARD);
+    bool8 heavyDutyBootsAffected = BattlerHeldItemHasEffect(battler, HOLD_EFFECT_HEAVY_DUTY_BOOTS, TRUE);
 
     // Check ways mon might avoid all hazards
-    if (ability != ABILITY_MAGIC_GUARD || (heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS &&
+    if (ability != ABILITY_MAGIC_GUARD || (heavyDutyBootsAffected &&
         !((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
     {
         // Stealth Rock
-        if ((hazardFlags & SIDE_STATUS_STEALTH_ROCK) && heldItemEffect != HOLD_EFFECT_HEAVY_DUTY_BOOTS)
+        if ((hazardFlags & SIDE_STATUS_STEALTH_ROCK) && !heavyDutyBootsAffected)
             hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, defType1, defType2, battleMon->maxHP);
         // G-Max Steelsurge
-        if ((hazardFlags & SIDE_STATUS_STEELSURGE) && heldItemEffect != HOLD_EFFECT_HEAVY_DUTY_BOOTS)
+        if ((hazardFlags & SIDE_STATUS_STEELSURGE) && !heavyDutyBootsAffected)
             hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, defType1, defType2, battleMon->maxHP);
         // Spikes
-        if ((hazardFlags & SIDE_STATUS_SPIKES) && IsMonGrounded(heldItemEffect, ability, defType1, defType2))
+        if ((hazardFlags & SIDE_STATUS_SPIKES) && IsMonGrounded(battler, ability, defType1, defType2))
         {
             spikesDamage = maxHP / ((5 - gSideTimers[GetBattlerSide(battler)].spikesAmount) * 2);
             if (spikesDamage == 0)
@@ -1428,8 +1429,9 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
             && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
             && !IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
             && !IsAbilityStatusProtected(battler, ability)
-            && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-            && IsMonGrounded(heldItemEffect, ability, defType1, defType2)))
+            && !BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CURE_PSN, TRUE)
+            && !BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CURE_STATUS, TRUE)
+            && IsMonGrounded(battler, ability, defType1, defType2)))
         {
             tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
             if (tSpikesLayers == 1)
@@ -1454,12 +1456,12 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
 static s32 GetSwitchinWeatherImpact(void)
 {
     s32 weatherImpact = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    //u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     if (HasWeatherEffect())
     {
         // Damage
-        if (holdEffect != HOLD_EFFECT_SAFETY_GOGGLES && ability != ABILITY_MAGIC_GUARD && ability != ABILITY_OVERCOAT)
+        if (!SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_SAFETY_GOGGLES) && ability != ABILITY_MAGIC_GUARD && ability != ABILITY_OVERCOAT)
         {
             if ((gBattleWeather & B_WEATHER_HAIL)
              && (AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_ICE || AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_ICE)
@@ -1480,7 +1482,7 @@ static s32 GetSwitchinWeatherImpact(void)
                     weatherImpact = 1;
             }
         }
-        if ((gBattleWeather & B_WEATHER_SUN) && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA
+        if ((gBattleWeather & B_WEATHER_SUN) && !SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_UTILITY_UMBRELLA)
          && (ability == ABILITY_SOLAR_POWER || ability == ABILITY_DRY_SKIN))
         {
             weatherImpact = maxHP / 8;
@@ -1489,7 +1491,7 @@ static s32 GetSwitchinWeatherImpact(void)
         }
 
         // Healing
-        if (gBattleWeather & B_WEATHER_RAIN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
+        if (gBattleWeather & B_WEATHER_RAIN && !SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_UTILITY_UMBRELLA))
         {
             if (ability == ABILITY_DRY_SKIN)
             {
@@ -1518,19 +1520,28 @@ static s32 GetSwitchinWeatherImpact(void)
 static u32 GetSwitchinRecurringHealing(void)
 {
     u32 recurringHealing = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    //u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_KLUTZ)
     {
-        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && (AI_DATA->switchinCandidate.battleMon.types[0] == TYPE_POISON || AI_DATA->switchinCandidate.battleMon.types[1] == TYPE_POISON))
-        {
+        bool8 hasBlackSludge = (SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_BLACK_SLUDGE) && (AI_DATA->switchinCandidate.battleMon.types[0] == TYPE_POISON || AI_DATA->switchinCandidate.battleMon.types[1] == TYPE_POISON));
+        bool8 hasLeftovers = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_LEFTOVERS);
+
+        if(hasBlackSludge && hasLeftovers){
+            //Both items healing
+            recurringHealing = maxHP / 8;
+            if (recurringHealing == 0)
+                recurringHealing = 1;
+        }
+        else if(hasBlackSludge){
+            //Black Sludge effect only
             recurringHealing = maxHP / 16;
             if (recurringHealing == 0)
                 recurringHealing = 1;
         }
-        else if (holdEffect == HOLD_EFFECT_LEFTOVERS)
-        {
+        else if(hasLeftovers){
+            //Leftovers effect only
             recurringHealing = maxHP / 16;
             if (recurringHealing == 0)
                 recurringHealing = 1;
@@ -1552,24 +1563,24 @@ static u32 GetSwitchinRecurringHealing(void)
 static u32 GetSwitchinRecurringDamage(void)
 {
     u32 passiveDamage = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    //u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_MAGIC_GUARD && ability != ABILITY_KLUTZ)
     {
-        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_POISON && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_POISON)
+        if (SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_BLACK_SLUDGE) && AI_DATA->switchinCandidate.battleMon.types[0] != TYPE_POISON && AI_DATA->switchinCandidate.battleMon.types[1] != TYPE_POISON)
         {
             passiveDamage = maxHP / 8;
             if (passiveDamage == 0)
                 passiveDamage = 1;
         }
-        else if (holdEffect == HOLD_EFFECT_LIFE_ORB && ability != ABILITY_SHEER_FORCE)
+        else if (SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_LIFE_ORB) && ability != ABILITY_SHEER_FORCE)
         {
             passiveDamage = maxHP / 10;
             if (passiveDamage == 0)
                 passiveDamage = 1;
         }
-        else if (holdEffect == HOLD_EFFECT_STICKY_BARB)
+        else if (SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_STICKY_BARB))
         {
             passiveDamage = maxHP / 8;
             if(passiveDamage == 0)
@@ -1584,7 +1595,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
 {
     u8 defType1 = AI_DATA->switchinCandidate.battleMon.types[0], defType2 = AI_DATA->switchinCandidate.battleMon.types[1];
     u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
-    u16 heldItemEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    //u16 heldItemEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
     u32 status = AI_DATA->switchinCandidate.battleMon.status1, ability = AI_DATA->switchinCandidate.battleMon.ability, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP;
     u32 statusDamage = 0;
 
@@ -1633,10 +1644,11 @@ static u32 GetSwitchinStatusDamage(u32 battler)
     if (tSpikesLayers != 0 && (defType1 != TYPE_POISON && defType2 != TYPE_POISON
         && ability != ABILITY_IMMUNITY && ability != ABILITY_POISON_HEAL
         && status == 0
-        && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
-            && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
-        && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-        && IsMonGrounded(heldItemEffect, ability, defType1, defType2)))
+        && !(SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_HEAVY_DUTY_BOOTS)
+        && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
+        && !SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_CURE_PSN)
+        && !SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_CURE_STATUS)
+        && IsMonGrounded(battler, ability, defType1, defType2)))
     {
         if (tSpikesLayers == 1)
         {
@@ -1662,8 +1674,8 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
     u32 recurringHealing = GetSwitchinRecurringHealing();
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0, singleUseItemHeal = 0;
-    u16 maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, item = AI_DATA->switchinCandidate.battleMon.item, heldItemEffect = ItemId_GetHoldEffect(item);
-    u8 weatherDuration = gWishFutureKnock.weatherDuration, holdEffectParam = ItemId_GetHoldEffectParam(item);
+    u16 maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, item = ITEM_NONE; //item = AI_DATA->switchinCandidate.battleMon.item, heldItemEffect = ItemId_GetHoldEffect(item);
+    u8 weatherDuration = gWishFutureKnock.weatherDuration, holdEffectParam = 0;
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 opposingAbility = gBattleMons[opposingBattler].ability, ability = AI_DATA->switchinCandidate.battleMon.ability;
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
@@ -1688,7 +1700,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
         currentHP = currentHP - damageTaken;
 
         // One shot prevention effects
-        if (damageTaken >= maxHP && startingHP == maxHP && (heldItemEffect == HOLD_EFFECT_FOCUS_SASH || (!opponentCanBreakMold && B_STURDY >= GEN_5 && ability == ABILITY_STURDY)) && hitsToKO < 1)
+        if (damageTaken >= maxHP && startingHP == maxHP && (SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_FOCUS_SASH) || (!opponentCanBreakMold && B_STURDY >= GEN_5 && ability == ABILITY_STURDY)) && hitsToKO < 1)
             currentHP = 1;
 
         // If mon is still alive, apply weather impact first, as it might KO the mon before it can heal with its item (order is weather -> item -> status)
@@ -1699,32 +1711,79 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
         if (AI_DATA->switchinCandidate.battleMon.ability != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
          && !(opposingAbility == ABILITY_UNNERVE && GetPocketByItemId(item) == POCKET_BERRIES))
         {
-            switch (heldItemEffect)
+            item = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_RESTORE_HP);
+            if(item != ITEM_NONE)
             {
-            case HOLD_EFFECT_RESTORE_HP:
+                holdEffectParam = ItemId_GetHoldEffectParam(item);
                 if (currentHP < maxHP / 2)
                     singleUseItemHeal = holdEffectParam;
-                break;
-            case HOLD_EFFECT_RESTORE_PCT_HP:
+            }
+            item = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_RESTORE_PCT_HP);
+            if(item != ITEM_NONE)
+            {
+                holdEffectParam = ItemId_GetHoldEffectParam(item);
                 if (currentHP < maxHP / 2)
                 {
                     singleUseItemHeal = maxHP / holdEffectParam;
                     if (singleUseItemHeal == 0)
                         singleUseItemHeal = 1;
                 }
-                break;
-            case HOLD_EFFECT_CONFUSE_SPICY:
-            case HOLD_EFFECT_CONFUSE_DRY:
-            case HOLD_EFFECT_CONFUSE_SWEET:
-            case HOLD_EFFECT_CONFUSE_BITTER:
-            case HOLD_EFFECT_CONFUSE_SOUR:
+            }
+            // Confusion berries
+            item = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_CONFUSE_SPICY);
+            if(item != ITEM_NONE)
+            {
                 if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
                 {
+                    holdEffectParam = ItemId_GetHoldEffectParam(item);
                     singleUseItemHeal = maxHP / holdEffectParam;
                     if (singleUseItemHeal == 0)
                         singleUseItemHeal = 1;
                 }
-                break;
+            }
+            item = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_CONFUSE_DRY);
+            if(item != ITEM_NONE)
+            {
+                if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
+                {
+                    holdEffectParam = ItemId_GetHoldEffectParam(item);
+                    singleUseItemHeal = maxHP / holdEffectParam;
+                    if (singleUseItemHeal == 0)
+                        singleUseItemHeal = 1;
+                }
+            }
+            item = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_CONFUSE_SWEET);
+            if(item != ITEM_NONE)
+            {
+                if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
+                {
+                    holdEffectParam = ItemId_GetHoldEffectParam(item);
+                    singleUseItemHeal = maxHP / holdEffectParam;
+                    if (singleUseItemHeal == 0)
+                        singleUseItemHeal = 1;
+                }
+            }
+            item = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_CONFUSE_BITTER);
+            if(item != ITEM_NONE)
+            {
+                if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
+                {
+                    holdEffectParam = ItemId_GetHoldEffectParam(item);
+                    singleUseItemHeal = maxHP / holdEffectParam;
+                    if (singleUseItemHeal == 0)
+                        singleUseItemHeal = 1;
+                }
+            }
+            item = SwitchInCandidateHeldItemWithEffect(&AI_DATA->switchinCandidate.battleMon, HOLD_EFFECT_CONFUSE_SOUR);
+            if(item != ITEM_NONE)
+            {
+                if (currentHP < maxHP / CONFUSE_BERRY_HP_FRACTION)
+                {
+                    holdEffectParam = ItemId_GetHoldEffectParam(item);
+                    singleUseItemHeal = maxHP / holdEffectParam;
+                    if (singleUseItemHeal == 0)
+                        singleUseItemHeal = 1;
+                }
             }
 
             // If we used one, apply it without overcapping our maxHP

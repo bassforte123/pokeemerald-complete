@@ -3,6 +3,7 @@
 
 #include "pokemon.h"
 #include "data.h"
+#include "item.h"
 
 // For displaying a multi battle partner's Pokémon in the party menu
 struct MultiPartnerMenuPokemon
@@ -69,7 +70,7 @@ u8 IsRunningFromBattleImpossible(u32 battler);
 void SwitchTwoBattlersInParty(u32 battler, u32 battler2);
 void SwitchPartyOrder(u32 battlerId);
 void SwapTurnOrder(u8 id1, u8 id2);
-u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, u32 holdEffect);
+u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability);
 u32 GetBattlerTotalSpeedStat(u32 battler);
 s8 GetChosenMovePriority(u32 battlerId);
 s8 GetBattleMovePriority(u32 battlerId, u16 move);
@@ -105,5 +106,25 @@ extern const u8 gStatusConditionString_ConfusionJpn[8];
 extern const u8 gStatusConditionString_LoveJpn[8];
 
 extern const u8 *const gStatusConditionStringsTable[7][2];
+
+// Returns slot of first found item
+static inline u32 SearchItemSlots(u16 *battlerItems, u16 effect)
+{
+  for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+  {
+    if (gItemsInfo[battlerItems[i]].holdEffect == effect)
+        return battlerItems[i];
+  }
+  return ITEM_NONE;
+}
+
+// Translates SearchItemSlot to found/not found true/false
+static inline u32 HasSearchItems(u16 *battlerItems, u16 effect)
+{
+  if (SearchItemSlots(battlerItems, effect) == MAX_MON_ITEMS)
+    return FALSE;
+
+  return SearchItemSlots(battlerItems, effect) == MAX_MON_ITEMS;
+}
 
 #endif // GUARD_BATTLE_MAIN_H

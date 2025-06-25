@@ -1598,7 +1598,7 @@ static void RestoreMonHeldItems(void)
     u8 i;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-    {
+    {//SETFORMULTIITEMS
         SetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
                    MON_DATA_HELD_ITEM,
                    &gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i]);

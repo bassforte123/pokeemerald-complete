@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Red Card switches the attacker with a random non-fainted rep
         MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
         MESSAGE("The opposing Bulbasaur was dragged out!");
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if holder faints")
             MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
         }
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -85,7 +85,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if target is behind a Substitute"
             MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
         }
     } THEN {
-        EXPECT(player->item == ITEM_RED_CARD); // Not activated, so still has the item.
+        EXPECT(player->items[0] == ITEM_RED_CARD); // Not activated, so still has the item.
     }
 }
 
@@ -104,7 +104,7 @@ SINGLE_BATTLE_TEST("Red Card activates after the last hit of a multi-hit move")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if no replacements")
             MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
         }
     } THEN {
-        EXPECT(player->item == ITEM_RED_CARD); // Not activated, so still has the item.
+        EXPECT(player->items[0] == ITEM_RED_CARD); // Not activated, so still has the item.
     }
 }
 
@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if replacements fainted")
             MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
         }
     } THEN {
-        EXPECT(player->item == ITEM_RED_CARD); // Not activated, so still has the item.
+        EXPECT(player->items[0] == ITEM_RED_CARD); // Not activated, so still has the item.
     }
 }
 
@@ -160,7 +160,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if knocked off")
             MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
         }
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -190,7 +190,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if stolen by a move")
             }
         }
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -219,7 +219,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if stolen by Magician")
             }
         }
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
@@ -438,7 +438,7 @@ SINGLE_BATTLE_TEST("Red Card is consumed after dragged out replacement has its S
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         }
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
