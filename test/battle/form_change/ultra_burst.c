@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Dusk Mane Necrozma can Ultra Burst holding Ultranecrozium Z")
+SINGLE_BATTLE_TEST(" Dusk Mane Necrozma can Ultra Burst holding Ultranecrozium Z")
 {
     GIVEN {
         PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
