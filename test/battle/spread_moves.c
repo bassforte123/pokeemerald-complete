@@ -92,7 +92,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RALTS);
         OPPONENT(SPECIES_RAICHU)
-        OPPONENT(SPECIES_SANDSLASH) { Item(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_SANDSLASH) { Items(ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
@@ -188,7 +188,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and 
     }
 }
 
-DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and Lightning Rod (reft)")
+DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and Lightning Rod (right)")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);

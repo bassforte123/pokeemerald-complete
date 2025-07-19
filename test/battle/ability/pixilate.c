@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move")
     }
 }
 
-SINGLE_BATTLE_TEST(" Pixilate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
+SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
     u32 ability, genConfig;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
@@ -140,7 +140,7 @@ TO_DO_BATTLE_TEST("Pixilate doesn't override Ion Deluge (Gen7+)"); // Ion Deluge
 TO_DO_BATTLE_TEST("Pixilate overrides Electrify (Gen6)")
 TO_DO_BATTLE_TEST("Pixilate overrides Ion Deluge (Gen6)")
 TO_DO_BATTLE_TEST("Pixilate doesn't affect Tera Starstorm's type");
-TO_DO_BATTLE_TEST(" Pixilate doesn't affect Max Strike's type");
+TO_DO_BATTLE_TEST("Pixilate doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("Pixilate doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie");

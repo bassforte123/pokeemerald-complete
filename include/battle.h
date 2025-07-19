@@ -271,7 +271,7 @@ struct AI_SavedBattleMon
 {
     u16 ability;
     u16 moves[MAX_MON_MOVES];
-    u16 heldItem;
+    u16 heldItems[MAX_MON_ITEMS];
     u16 species:15;
     u16 saved:1;
     u8 types[3];
@@ -280,8 +280,8 @@ struct AI_SavedBattleMon
 struct AiPartyMon
 {
     u16 species;
-    u16 item;
-    u16 heldEffect;
+    u16 items[MAX_MON_ITEMS];
+    u16 heldEffects[MAX_MON_ITEMS];
     u16 ability;
     u16 level;
     u16 moves[MAX_MON_MOVES];
@@ -316,9 +316,9 @@ struct SimulatedDamage
 struct AiLogicData
 {
     u16 abilities[MAX_BATTLERS_COUNT];
-    u16 items[MAX_BATTLERS_COUNT];
-    u16 holdEffects[MAX_BATTLERS_COUNT];
-    u8 holdEffectParams[MAX_BATTLERS_COUNT];
+    u16 items[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
+    u16 holdEffects[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
+    u8 holdEffectParams[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u16 lastUsedMove[MAX_BATTLERS_COUNT];
     u8 hpPercents[MAX_BATTLERS_COUNT];
     u16 partnerMove;
@@ -361,13 +361,13 @@ struct AiThinkingStruct
 struct BattleHistory
 {
     u16 abilities[MAX_BATTLERS_COUNT];
-    u8 itemEffects[MAX_BATTLERS_COUNT];
+    u8 itemEffects[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
     u16 usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
     u16 moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
     u8 moveHistoryIndex[MAX_BATTLERS_COUNT];
     u16 trainerItems[MAX_BATTLERS_COUNT];
     u8 itemsNo;
-    u16 heldItems[MAX_BATTLERS_COUNT];
+    u16 heldItems[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
 };
 
 struct BattleScriptsStack

@@ -3697,7 +3697,8 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     }
 
     dst->species = GetMonData(src, MON_DATA_SPECIES, NULL);
-    dst->item = GetMonData(src, MON_DATA_HELD_ITEM, NULL);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        dst->items[i] = GetMonData(src, MON_DATA_HELD_ITEM + i, NULL);
     dst->ppBonuses = GetMonData(src, MON_DATA_PP_BONUSES, NULL);
     dst->friendship = GetMonData(src, MON_DATA_FRIENDSHIP, NULL);
     dst->experience = GetMonData(src, MON_DATA_EXP, NULL);
@@ -7214,6 +7215,7 @@ u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u
 
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
+        if (holdEffect == HOLD_EFFECT_FOCUS_SASH)
         item = SlotToItemId(switchinCandidate.items[i], i); //Set offset for slots
         if(GetItemHoldEffect(item) == holdEffect)
             return item;

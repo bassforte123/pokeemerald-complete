@@ -250,11 +250,11 @@ SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was 
         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Items(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); Items(ITEM_APICOT_BERRY); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TRICK); MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_TRICK); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ABILITY_POPUP(opponent, ABILITY_HARVEST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);

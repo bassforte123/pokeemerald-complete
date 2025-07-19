@@ -1112,7 +1112,7 @@ static const u8 *const sAiInfoItemNames[] =
 
 static void PutAiInfoText(struct BattleDebugMenu *data)
 {
-    u32 i;
+    u32 i, j;
     u8 *text = Alloc(0x50);
 
     FillWindowPixelBuffer(data->aiMovesWindowId, 0x11);
@@ -1126,15 +1126,18 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
     // items info
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (IsOnPlayerSide(i) && IsBattlerAlive(i))
+        for (j = 0; j < gBattlersCount; j++)
         {
-            u16 ability = gAiLogicData->abilities[i];
-            enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[i];
-            u16 item = gAiLogicData->items[i];
-            u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
-            AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
-            AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetItemName(item), x, 15, 0, NULL);
-            AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetHoldEffectName(holdEffect), x, 30, 0, NULL);
+            if (IsOnPlayerSide(i) && IsBattlerAlive(i))
+            {
+                u16 ability = gAiLogicData->abilities[i];
+                enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[i][j];
+                u16 item = gAiLogicData->items[i][j];
+                u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetItemName(item), x, 15, 0, NULL);
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, GetHoldEffectName(holdEffect), x, 30, 0, NULL);
+            }
         }
     }
 
@@ -1176,7 +1179,7 @@ static void PutAiPartyText(struct BattleDebugMenu *data)
             AddTextPrinterParameterized5(data->aiMovesWindowId, FONT_SMALL_NARROW, text, i * 41, 35 + j * 15, 0, NULL, 0, 0);
         }
 
-        txtPtr = StringCopyN(text, GetHoldEffectName(aiMons[i].heldEffect), 7);
+        txtPtr = StringCopyN(text, GetHoldEffectName(aiMons[i].heldEffects[0]), 7);
         *txtPtr = EOS;
         AddTextPrinterParameterized5(data->aiMovesWindowId, FONT_SMALL_NARROW, text, i * 41, 35 + j * 15, 0, NULL, 0, 0);
 
