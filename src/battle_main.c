@@ -3886,6 +3886,7 @@ static void TryDoEventsBeforeFirstTurn(void)
             gChosenMoveByBattler[i] = MOVE_NONE;
             gBattleStruct->battlerState[i].absent = (gAbsentBattlerFlags & (1u << i) ? TRUE : FALSE);
         }
+        
         TurnValuesCleanUp(FALSE);
         SpecialStatusesClear();
         BattlePutTextOnWindow(gText_EmptyString3, B_WIN_MSG);
@@ -4632,7 +4633,7 @@ static void HandleTurnActionSelectionState(void)
             break;
         }
     }
-
+DebugPrintf("All actions confirmed.");
     // Check if everyone chose actions.
     if (gBattleCommunication[ACTIONS_CONFIRMED_COUNT] == gBattlersCount)
     {

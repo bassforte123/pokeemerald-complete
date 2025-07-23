@@ -54,7 +54,6 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
 {
     if (calcContext == AI_ATTACKING && BattlerHasAi(battlerAtk))
     {
-
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)) // Risky assumes it deals max damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it deals min damage
@@ -365,7 +364,7 @@ bool32 AI_CanBattlerEscape(u32 battler)
 
     if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
-    if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE))
+    if (Ai_BattlerHasHoldEffects(battler, HOLD_EFFECT_SHED_SHELL, gAiLogicData))
         return TRUE;
 
     return FALSE;
@@ -566,7 +565,8 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
         if(IsBattlerItemEnabled(battlerDef))    
             for (u32 i = 0; i < MAX_MON_ITEMS; i++)
                 if (gAiLogicData->items[battlerDef][i] != ITEM_NONE)
-                    return TRUE;
+                    return FALSE;
+            return TRUE;
         break;
     case EFFECT_FIRST_TURN_ONLY:
         if (!gDisableStructs[battlerAtk].isFirstTurn)
@@ -774,6 +774,11 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
     effectivenessMultiplier = CalcTypeEffectivenessMultiplier(move, moveType, battlerAtk, battlerDef, aiData->abilities[battlerDef], FALSE);
+
+    if (move == MOVE_YAWN)
+    DebugPrintf("--------------------------------");
+    if (move == MOVE_SCRATCH)
+    DebugPrintf("CALCDAMAGE move %S, effectiveness %d", GetMoveName(move), effectivenessMultiplier);
 
     u32 movePower = GetMovePower(move);
     if (movePower)
@@ -2906,7 +2911,7 @@ static u32 GetWeatherDamage(u32 battlerId)
     {
         if (BattlerAffectedBySandstorm(battlerId, ability)
           && !(gStatuses3[battlerId] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
-          && BattlerHeldItemHasEffect(battlerId, HOLD_EFFECT_SAFETY_GOGGLES, TRUE))
+          && !BattlerHeldItemHasEffect(battlerId, HOLD_EFFECT_SAFETY_GOGGLES, TRUE))
         {
             damage = GetNonDynamaxMaxHP(battlerId) / 16;
             if (damage == 0)

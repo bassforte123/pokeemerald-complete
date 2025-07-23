@@ -579,7 +579,7 @@ static void Cmd_switchoutabilities(void);
 static void Cmd_jumpifhasnohp(void);
 static void Cmd_jumpifnotcurrentmoveargtype(void);
 static void Cmd_pickup(void);
-static void Cmd_unused_0xE6(void);
+//static void Cmd_unused_0xE6(void);
 static void Cmd_unused_0xE7(void);
 static void Cmd_settypebasedhalvers(void);
 static void Cmd_jumpifsubstituteblocks(void);
@@ -605,6 +605,7 @@ static void Cmd_jumpifcaptivateaffected(void);
 static void Cmd_setnonvolatilestatus(void);
 static void Cmd_tryworryseed(void);
 static void Cmd_callnative(void);
+static void Cmd_printdebug(void);
 
 void (*const gBattleScriptingCommandsTable[])(void) =
 {
@@ -838,7 +839,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_jumpifhasnohp,                           //0xE3
     Cmd_jumpifnotcurrentmoveargtype,             //0xE4
     Cmd_pickup,                                  //0xE5
-    Cmd_unused_0xE6,                             //0xE6
+    Cmd_printdebug,                              //0xE6
     Cmd_unused_0xE7,                             //0xE7
     Cmd_settypebasedhalvers,                     //0xE8
     Cmd_jumpifsubstituteblocks,                  //0xE9
@@ -11869,18 +11870,39 @@ static void Cmd_various(void)
     case VARIOUS_CHECK_POLTERGEIST:
     {
         VARIOUS_ARGS(const u8 *failInstr);
-        if (gBattleMons[battler].item == ITEM_NONE
-           || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
+        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
            || GetBattlerAbility(battler) == ABILITY_KLUTZ)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         else
         {
-            PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[battler].item);
-            gLastUsedItem = gBattleMons[battler].item;
-            gBattlescriptCurrInstr = cmd->nextInstr;
+            u8 index = 0, slot, targetableSlots[MAX_MON_ITEMS];
+            
+            targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+            for (i = 0; i < MAX_MON_ITEMS; i++) //Gather all stealable item slots
+            {
+                if (gBattleMons[battler].items[i] != ITEM_NONE)
+                {
+                    if (targetableSlots[0] != MAX_MON_ITEMS)
+                        index++;
+                    targetableSlots[index] = i;
+                }
+            }
+
+            if (targetableSlots[0] == MAX_MON_ITEMS) //No valid slots found
+                gBattlescriptCurrInstr = cmd->failInstr;
+            else
+            {    
+                slot = gLastItemSlot = GetSlot(targetableSlots, index);
+
+                PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[battler].items[slot]);
+                gLastUsedItem = gBattleMons[battler].items[slot];
+                gBattlescriptCurrInstr = cmd->nextInstr;
+            }
         }
+
         return;
     }
     case VARIOUS_TRY_NO_RETREAT:
@@ -15850,9 +15872,9 @@ static void Cmd_pickup(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_unused_0xE6(void)
-{
-}
+// static void Cmd_unused_0xE6(void)
+// {
+// }
 
 static void Cmd_unused_0xE7(void)
 {
@@ -17044,12 +17066,12 @@ void BS_SaveTarget(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void Cmd_debugprint(void)
+void Cmd_printdebug(void)
 {
     NATIVE_ARGS();
     DebugPrintf("PRINTTEST");
-    DebugPrintf("DEBUG ATTACKER [%d] Items1:[%d], Item2:[%d]", gBattlerAttacker, gBattleMons[gBattlerAttacker].items[0], gBattleMons[gBattlerAttacker].items[1]);
-    DebugPrintf("DEBUG TARGET [%d] Items1:[%d], Item2:[%d]", gBattlerTarget, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
+    //DebugPrintf("DEBUG ATTACKER [%d] Items1:[%d], Item2:[%d]", gBattlerAttacker, gBattleMons[gBattlerAttacker].items[0], gBattleMons[gBattlerAttacker].items[1]);
+    //DebugPrintf("DEBUG TARGET [%d] Items1:[%d], Item2:[%d]", gBattlerTarget, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -18196,11 +18218,12 @@ void BS_AllySwitchSwapBattler(void)
 void BS_TryAllySwitch(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-
+DebugPrintf("ALLYSWITCH START");
     if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))
      || (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
      || (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
     {
+        DebugPrintf("Can't ally switch");
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else if (B_ALLY_SWITCH_FAIL_CHANCE >= GEN_9)
@@ -18217,7 +18240,10 @@ void BS_TryAllySwitch(void)
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
-    gBattlescriptCurrInstr = cmd->nextInstr;
+    else
+    {
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
 }
 
 void BS_RunStatChangeItems(void)

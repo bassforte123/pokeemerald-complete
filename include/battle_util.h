@@ -393,7 +393,7 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void UpdateStallMons(void);
 bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
 //Multi Item
-bool8 BattlerHeldItemHasEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
+bool32 BattlerHeldItemHasEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u8 GetHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating);

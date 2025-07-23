@@ -10255,7 +10255,6 @@ uq4_12_t CalcTypeEffectivenessMultiplier(u32 move, u32 moveType, u32 battlerAtk,
         if (GetMoveEffect(move) == EFFECT_TWO_TYPED_MOVE)
             modifier = CalcTypeEffectivenessMultiplierInternal(move, GetMoveArgType(move), battlerAtk, battlerDef, recordAbilities, modifier, defAbility);
     }
-    DebugPrintf("Type Effectiveness Modifier: %d", modifier);
 
     if (recordAbilities)
         UpdateMoveResultFlags(modifier, &gBattleStruct->moveResultFlags[battlerDef]);
@@ -11936,7 +11935,7 @@ bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId)
 //Multiple Hold Items
 
 //Check if the battler has an item with the given hold effect
-bool8 BattlerHeldItemHasEffect(u32 battler, u32 holdEffect, bool32 checkNegating)
+bool32 BattlerHeldItemHasEffect(u32 battler, u32 holdEffect, bool32 checkNegating)
 {
     if (holdEffect == HOLD_EFFECT_NONE)
         return FALSE;

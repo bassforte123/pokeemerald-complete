@@ -1342,7 +1342,6 @@ void AI_TrySwitchOrUseItem(u32 battler)
                     }
 
                     GetAIPartyIndexes(battler, &firstId, &lastId);
-
                     for (monToSwitchId = (lastId-1); monToSwitchId >= firstId; monToSwitchId--)
                     {
                         if (!IsValidForBattle(&party[monToSwitchId]))

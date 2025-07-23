@@ -1401,9 +1401,9 @@
 	callnative BS_AllySwitchSwapBattler
 	.endm
 
-	.macro tryallyswitch jumpInstr:req
+	.macro tryallyswitch failInstr:req
 	callnative BS_TryAllySwitch
-	.4byte \jumpInstr
+	.4byte \failInstr
 	.endm
 
 	.macro dostockpilestatchangeswearoff, battler:req, statChangeInstr:req
@@ -2580,4 +2580,8 @@
 	.macro jumpifnowhiteout jumpInstr:req
 	callnative BS_JumpIfNoWhiteOut
 	.4byte \jumpInstr
+	.endm
+
+	.macro printdebug
+	.byte 0xE6
 	.endm
