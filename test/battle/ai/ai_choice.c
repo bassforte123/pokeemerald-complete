@@ -35,8 +35,6 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon switch out after using a status move onc
         OPPONENT(SPECIES_SWAMPERT) { Moves(MOVE_WATERFALL); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_YAWN); }
-        // TURN { MOVE(player, MOVE_CELEBRATE); }
-        // TURN { MOVE(player, MOVE_CELEBRATE); }
         if (ability == ABILITY_KLUTZ) { // Klutz ignores item
             TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); }
         }
