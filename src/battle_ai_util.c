@@ -775,11 +775,6 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     moveType = GetBattleMoveType(move);
     effectivenessMultiplier = CalcTypeEffectivenessMultiplier(move, moveType, battlerAtk, battlerDef, aiData->abilities[battlerDef], FALSE);
 
-    if (move == MOVE_YAWN)
-    DebugPrintf("--------------------------------");
-    if (move == MOVE_SCRATCH)
-    DebugPrintf("CALCDAMAGE move %S, effectiveness %d", GetMoveName(move), effectivenessMultiplier);
-
     u32 movePower = GetMovePower(move);
     if (movePower)
         isDamageMoveUnusable = IsDamageMoveUnusable(battlerAtk, battlerDef, move, moveType, effectivenessMultiplier, weather);

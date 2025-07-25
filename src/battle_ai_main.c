@@ -612,7 +612,6 @@ static void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
         aiData->effectiveness[battlerAtk][battlerDef][moveIndex] = effectiveness;
-        DebugPrintf("Move: %S, effectiveness: %d, accuracy: %d, simulatedDmg: %d", GetMoveName(move), effectiveness, aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex], dmg);
     }
 }
 
@@ -745,12 +744,8 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
     }
-DebugPrintf("Final Score---------------------------");
     for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        DebugPrintf("Move: %S, Score: %d", GetMoveName(gBattleMons[battler].moves[i]), gAiThinkingStruct->score[i]);
         gAiBattleData->finalScore[battler][opposingBattler][i] = gAiThinkingStruct->score[i];
-    }
 
     numOfBestMoves = 1;
     currentMoveArray[0] = gAiThinkingStruct->score[0];
@@ -916,17 +911,12 @@ static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, u32
             if (aiThink->aiLogicId < ARRAY_COUNT(sBattleAiFuncTable)
               && sBattleAiFuncTable[aiThink->aiLogicId] != NULL)
             {
-                if (aiThink->moveConsidered == MOVE_SCRATCH)
-                DebugPrintf("AI [%d]     Move: %S, score: %d", aiThink->aiLogicId, GetMoveName(aiThink->moveConsidered), aiThink->score[aiThink->movesetIndex]);
-
                 // Call AI function
                 aiThink->score[aiThink->movesetIndex] =
                     sBattleAiFuncTable[aiThink->aiLogicId](battlerAtk,
                       battlerDef,
                       aiThink->moveConsidered,
                       aiThink->score[aiThink->movesetIndex]);
-                DebugPrintf("AI [%d] END Move: %S, score: %d", aiThink->aiLogicId, GetMoveName(aiThink->moveConsidered), aiThink->score[aiThink->movesetIndex]);
-
             }
         }
         else
@@ -1068,10 +1058,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 abilityDef = aiData->abilities[battlerDef];
     s32 atkPriority = GetBattleMovePriority(battlerAtk, abilityAtk, move);
 
-
-        if( move == MOVE_SCRATCH)
-    DebugPrintf("CheckBadMove Move: %S, score: %d, effectiveness: %d", GetMoveName(move), score, effectiveness);
-
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
         return score;
 
@@ -1114,14 +1100,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
         }
     }
-
-
-if( move == MOVE_SCRATCH)
-    {
-        //effectiveness = aiData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] = UQ_4_12(0.5);
-        DebugPrintf("CheckBadMove2 Move: %S, score: %d, effectiveness: %d", GetMoveName(move), score, effectiveness);}
-
-
 
     if (effectiveness == UQ_4_12(0.0))
     {
@@ -2590,7 +2568,7 @@ if( move == MOVE_SCRATCH)
             }
             break;
         case EFFECT_NATURAL_GIFT:
-            if (!IsBattlerItemEnabled(battlerAtk) || GetPocketByItemId(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
+            if (!IsBattlerItemEnabled(battlerAtk) || !BattlerHasBerry(battlerAtk))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_GRASSY_TERRAIN:
@@ -2970,7 +2948,6 @@ if( move == MOVE_SCRATCH)
     }
 
     // Choice items
-    //if (HOLD_EFFECT_CHOICE(aiData->holdEffects[battlerAtk]) && IsBattlerItemEnabled(battlerAtk))
     if (BATTLER_IS_HOLDING_CHOICE_ITEM(battlerAtk) && IsBattlerItemEnabled(battlerAtk))
     {
         // Don't use user-target moves ie. Swords Dance, with exceptions
@@ -5416,7 +5393,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                             {
                                 break;
                             }
-                            ADJUST_SCORE(WEAK_EFFECT); //Not 1 to 1 with vanilla but applies the default item bonus as long as an item is held
+                            ADJUST_SCORE(WEAK_EFFECT); //(Multi Item) Not 1 to 1 with vanilla but applies the default item bonus as long as an item is held
                         }
                         break;
                     }
@@ -5463,18 +5440,12 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
 // AI_FLAG_CHECK_VIABILITY - Chooses best possible move to hit player
 static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
-
-if( move == MOVE_SCRATCH)
-    DebugPrintf("Viability: %S, score: %d", GetMoveName(move), score);
-
     // Targeting partner, check benefits of doing that instead
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
         return score;
 
     if (GetMovePower(move) != 0)
     {
-            if( move == MOVE_SCRATCH)
-        { DebugPrintf("Viability Middle: %S, score: %d, index: %d", GetMoveName(move), score, gAiThinkingStruct->movesetIndex); }
         if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING) == 0)
             ADJUST_AND_RETURN_SCORE(NO_DAMAGE_OR_FAILS); // No point in checking the move further so return early
         else
@@ -5490,8 +5461,6 @@ if( move == MOVE_SCRATCH)
     ADJUST_SCORE(AI_CalcMoveEffectScore(battlerAtk, battlerDef, move));
     ADJUST_SCORE(AI_CalcHoldEffectMoveScore(battlerAtk, battlerDef, move));
 
-    if( move == MOVE_SCRATCH)
-        {DebugPrintf("Viability END: %S, score: %d", GetMoveName(move), score); }
     return score;
 }
 

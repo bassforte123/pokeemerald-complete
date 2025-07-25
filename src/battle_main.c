@@ -4633,7 +4633,7 @@ static void HandleTurnActionSelectionState(void)
             break;
         }
     }
-DebugPrintf("All actions confirmed.");
+
     // Check if everyone chose actions.
     if (gBattleCommunication[ACTIONS_CONFIRMED_COUNT] == gBattlersCount)
     {

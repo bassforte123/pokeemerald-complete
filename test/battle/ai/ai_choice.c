@@ -34,15 +34,15 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon switch out after using a status move onc
         OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Item(heldItem); Ability(ability); }
         OPPONENT(SPECIES_SWAMPERT) { Moves(MOVE_WATERFALL); }
     } WHEN {
-         TURN { EXPECT_MOVE(opponent, MOVE_YAWN); }
-         TURN { MOVE(player, MOVE_CELEBRATE); }
-         TURN { MOVE(player, MOVE_CELEBRATE); }
-        // if (ability == ABILITY_KLUTZ) { // Klutz ignores item
-        //     TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); }
-        // }
-        // else {
-        //     TURN { EXPECT_SWITCH(opponent, 1); }
-        // }
+        TURN { EXPECT_MOVE(opponent, MOVE_YAWN); }
+        // TURN { MOVE(player, MOVE_CELEBRATE); }
+        // TURN { MOVE(player, MOVE_CELEBRATE); }
+        if (ability == ABILITY_KLUTZ) { // Klutz ignores item
+            TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        }
+        else {
+            TURN { EXPECT_SWITCH(opponent, 1); }
+        }
     }
 }
 
