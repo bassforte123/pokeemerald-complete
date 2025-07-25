@@ -1601,7 +1601,6 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
 {
     struct BattlePokemon battleMon;
     struct MovePpInfo moveData;
-    u8 i;
     u8 nickname[POKEMON_NAME_LENGTH * 2];
     u8 *src;
     s16 data16;
@@ -1613,8 +1612,8 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
     case REQUEST_ALL_BATTLE:
         battleMon.species = GetMonData(&party[monId], MON_DATA_SPECIES);
         battleMon.item = GetMonData(&party[monId], MON_DATA_HELD_ITEM);
-        for (i = 0; i < MAX_MON_ITEMS; i++)
-            battleMon.items[i] = GetMonData(&party[monId], MON_DATA_HELD_ITEM + i);
+        for (size = 0; size < MAX_MON_ITEMS; size++)
+            battleMon.items[size] = GetMonData(&party[monId], MON_DATA_HELD_ITEM + size);
         for (size = 0; size < MAX_MON_MOVES; size++)
         {
             battleMon.moves[size] = GetMonData(&party[monId], MON_DATA_MOVE1 + size);

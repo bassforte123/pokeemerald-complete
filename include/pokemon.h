@@ -129,12 +129,12 @@ struct PokemonSubstruct0
     u16 heldItem:10; // 1023 items.
     u16 pokeball:6; // 63 balls.
     u32 experience:21;
-    u32 nickname11:8; // 11th character of nickname.
-    u32 unused_04:3;
+    u32 heldItemBerry:10; // 1023 items.
+    u32 unused_04:1;
     u8 ppBonuses;
     u8 friendship;
+    u16 nickname11:8; // 11th character of nickname.
     u16 nickname12:8; // 12th character of nickname.
-    u16 heldItemBerry:8;
 };
 
 struct PokemonSubstruct1

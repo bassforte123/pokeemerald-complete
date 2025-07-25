@@ -145,8 +145,7 @@ enum ItemHoldEffect
 };
 
 //#define HOLD_EFFECT_CHOICE(holdEffect) ((holdEffect == HOLD_EFFECT_CHOICE_BAND || holdEffect == HOLD_EFFECT_CHOICE_SCARF || holdEffect == HOLD_EFFECT_CHOICE_SPECS))
-
-#define BATTLER_IS_HOLDING_CHOICE_ITEM(battler) (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_BAND, FALSE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SCARF, FALSE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SPECS, FALSE))
+#define BATTLER_IS_HOLDING_CHOICE_ITEM(battler) (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_BAND, TRUE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SCARF, TRUE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SPECS, TRUE))
 
 // Terrain seed params
 #define HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN  0
