@@ -182,22 +182,6 @@ SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Z Move")
-{
-    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_Z_MOVE;
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
-    } SCENE {
-        MESSAGE("This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
-        MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
-        MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
-    }
-}
-
 SINGLE_BATTLE_TEST("Trainer Slide: Dynamax")
 {
     gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_DYNAMAX;
@@ -210,5 +194,21 @@ SINGLE_BATTLE_TEST("Trainer Slide: Dynamax")
     } SCENE {
         MESSAGE("This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trainer Slide: Z Move (Multi)")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_Z_MOVE;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_MOON_STONE, ITEM_NORMALIUM_Z); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        MESSAGE("This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
+        MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
     }
 }

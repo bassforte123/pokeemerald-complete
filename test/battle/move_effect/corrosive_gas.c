@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Corrosive Gas destroys the target's item or fails if the tar
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) {Items(item); }
+        OPPONENT(SPECIES_WOBBUFFET) {Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_CORROSIVE_GAS); }
     } SCENE {

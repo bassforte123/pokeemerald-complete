@@ -8459,6 +8459,28 @@ BattleScript_FriskMsg::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_FriskMsgWithPopup2::
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+BattleScript_FriskMsg2::
+	printstring STRINGID_FRISKACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	printstring STRINGID_FRISKACTIVATES2
+	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_FriskMsgWithPopup3::
+	copybyte gBattlerAbility, gBattlerAttacker
+	call BattleScript_AbilityPopUp
+BattleScript_FriskMsg3::
+	printstring STRINGID_FRISKACTIVATES
+	waitmessage B_WAIT_TIME_LONG
+	printstring STRINGID_FRISKACTIVATES2
+	waitmessage B_WAIT_TIME_LONG
+	printstring STRINGID_FRISKACTIVATES3
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_FriskActivates::
 	saveattacker
         savetarget

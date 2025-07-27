@@ -145,7 +145,11 @@ enum ItemHoldEffect
 };
 
 //#define HOLD_EFFECT_CHOICE(holdEffect) ((holdEffect == HOLD_EFFECT_CHOICE_BAND || holdEffect == HOLD_EFFECT_CHOICE_SCARF || holdEffect == HOLD_EFFECT_CHOICE_SPECS))
-#define BATTLER_IS_HOLDING_CHOICE_ITEM(battler) (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_BAND, TRUE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SCARF, TRUE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CHOICE_SPECS, TRUE))
+
+//Some AI checks do their own negation, so a non-negation checking version is used instead
+#define BATTLER_IS_HOLDING_CHOICE_ITEM_WITH_NEGATION(battler) (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_BAND, TRUE) || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SCARF, TRUE) || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SPECS, TRUE))
+#define BATTLER_IS_HOLDING_CHOICE_ITEM_WITHOUT_NEGATION(battler) (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_BAND, FALSE) || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SCARF, FALSE) || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SPECS, FALSE))
+
 
 // Terrain seed params
 #define HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN  0

@@ -7177,7 +7177,7 @@ u32 GetTeraTypeFromPersonality(struct Pokemon *mon)
 }
 
 //Extra Held Item Stuff
-u8 MonItemHasHoldEffect(struct Pokemon *mon, u16 holdEffect)
+u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect)
 {
     u8 i;
     u16 item, itemHoldEffect;
@@ -7194,7 +7194,7 @@ u8 MonItemHasHoldEffect(struct Pokemon *mon, u16 holdEffect)
     return FALSE;
 }
 
-u8 BoxMonItemHasHoldEffect(struct BoxPokemon *mon, u16 holdEffect)
+u8 BoxMonHasItemHoldEffect(struct BoxPokemon *mon, u16 holdEffect)
 {
     u8 i;
     u16 item;

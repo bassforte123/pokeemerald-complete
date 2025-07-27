@@ -163,7 +163,7 @@ static inline bool32 SetSwitchinAndSwitch(u32 battler, u32 switchinId)
 static bool32 AI_DoesChoiceItemBlockMove(u32 battler, u32 move)
 {
     // Choice locked into something else
-    if (gAiLogicData->lastUsedMove[battler] != MOVE_NONE && gAiLogicData->lastUsedMove[battler] != move && BATTLER_IS_HOLDING_CHOICE_ITEM(battler) && IsBattlerItemEnabled(battler))
+    if (gAiLogicData->lastUsedMove[battler] != MOVE_NONE && gAiLogicData->lastUsedMove[battler] != move && BATTLER_IS_HOLDING_CHOICE_ITEM_WITHOUT_NEGATION(battler) && IsBattlerItemEnabled(battler))
         return TRUE;
     return FALSE;
 }
@@ -273,7 +273,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
     // Check if mon gets one shot
     if (maxDamageTaken > gBattleMons[battler].hp
-        && !(BattlerHeldItemHasEffect(battler, HOLD_EFFECT_FOCUS_BAND, TRUE) || (!IsMoldBreakerTypeAbility(opposingBattler, gBattleMons[opposingBattler].ability) && B_STURDY >= GEN_5 && aiAbility == ABILITY_STURDY)))
+        && !(GetItemHoldEffect(gBattleMons[battler].item) == HOLD_EFFECT_FOCUS_SASH || (!IsMoldBreakerTypeAbility(opposingBattler, gBattleMons[opposingBattler].ability) && B_STURDY >= GEN_5 && aiAbility == ABILITY_STURDY)))
     {
         getsOneShot = TRUE;
     }
@@ -677,7 +677,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
             if ((monAbility == ABILITY_NATURAL_CURE
                 || monAbility == ABILITY_SHED_SKIN
                 || monAbility == ABILITY_EARLY_BIRD)
-                || Ai_BattlerHasHoldEffects(battler, HOLD_EFFECT_CURE_SLP, gAiLogicData) || Ai_BattlerHasHoldEffects(battler, HOLD_EFFECT_CURE_STATUS, gAiLogicData)
+                || Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_CURE_SLP, gAiLogicData) || Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_CURE_STATUS, gAiLogicData)
                 || HasMove(battler, MOVE_SLEEP_TALK)
                 || (HasMoveWithEffect(battler, MOVE_SNORE) && AI_GetMoveEffectiveness(MOVE_SNORE, battler, opposingBattler) >= UQ_4_12(2.0))
                 || (IsBattlerGrounded(battler)
@@ -1014,7 +1014,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
         || CanAbilityBlockMove(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], lastUsedMove, ABILITY_CHECK_TRIGGER)))
         moveAffectsTarget = FALSE;
 
-    if (BATTLER_IS_HOLDING_CHOICE_ITEM(battler) && IsBattlerItemEnabled(battler))
+    if (BATTLER_IS_HOLDING_CHOICE_ITEM_WITHOUT_NEGATION(battler) && IsBattlerItemEnabled(battler))
     {
         if ((GetMoveCategory(lastUsedMove) == DAMAGE_CATEGORY_STATUS || !moveAffectsTarget) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);
@@ -1509,10 +1509,10 @@ bool32 IsMonGrounded(u8 battler, u32 ability, u8 type1, u8 type2)
 {
     // List that makes mon not grounded
     if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
-         || (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_AIR_BALLOON, TRUE) && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))))
+         || (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_AIR_BALLOON, TRUE) && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))))
     {
         // List that overrides being off the ground
-        if ((BattlerHeldItemHasEffect(battler, HOLD_EFFECT_IRON_BALL, TRUE) && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))) || (gFieldStatuses & STATUS_FIELD_GRAVITY) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
+        if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_IRON_BALL, TRUE) && !(ability == ABILITY_KLUTZ || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))) || (gFieldStatuses & STATUS_FIELD_GRAVITY) || (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM))
             return TRUE;
         else
             return FALSE;
@@ -1529,7 +1529,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
     u32 maxHP = battleMon->maxHP, ability = battleMon->ability, status = battleMon->status1;
     u32 spikesDamage = 0, tSpikesDamage = 0, hazardDamage = 0;
     u32 hazardFlags = gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_SAFEGUARD);
-    bool8 heavyDutyBootsAffected = BattlerHeldItemHasEffect(battler, HOLD_EFFECT_HEAVY_DUTY_BOOTS, TRUE);
+    bool8 heavyDutyBootsAffected = BattlerHasHeldItemEffect(battler, HOLD_EFFECT_HEAVY_DUTY_BOOTS, TRUE);
 
     // Check ways mon might avoid all hazards
     if (ability != ABILITY_MAGIC_GUARD || (heavyDutyBootsAffected &&
@@ -1558,8 +1558,8 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
             && !IsAbilityOnSide(battler, ABILITY_PASTEL_VEIL)
             && !IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
             && !IsAbilityStatusProtected(battler, ability)
-            && !BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CURE_PSN, TRUE)
-            && !BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CURE_STATUS, TRUE)
+            && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CURE_PSN, TRUE)
+            && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CURE_STATUS, TRUE)
             && IsMonGrounded(battler, ability, defType1, defType2)))
         {
             tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;

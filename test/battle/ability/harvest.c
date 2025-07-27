@@ -189,9 +189,9 @@ SINGLE_BATTLE_TEST("Harvest doesn't restore a Berry that's collected via Pickup"
 DOUBLE_BATTLE_TEST("Harvest order is affected by speed")
 {
     GIVEN {
-        PLAYER(SPECIES_EXEGGUTOR) { Speed(2); Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Items(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_EXEGGUTOR) { Speed(2); Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(SPECIES_EXEGGUTOR) { Speed(10); Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Items(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_EXEGGUTOR) { Speed(10); Ability(ABILITY_HARVEST); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_BULLDOZE); MOVE(playerLeft, MOVE_SUNNY_DAY); }
@@ -247,8 +247,8 @@ SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
         ASSUME(gItemsInfo[ITEM_APICOT_BERRY].holdEffect == HOLD_EFFECT_SP_DEFENSE_UP);
-        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Items(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); Items(ITEM_APICOT_BERRY); }
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); Item(ITEM_APICOT_BERRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_TRICK); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -262,24 +262,3 @@ SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was 
         EXPECT_GT(opponent->hp, opponent->maxHP / 2); // eats 2 Sitrus
     }
 }
-
-// SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was transferred from another Pokémon instead of its original Berry (Multi)")
-// {
-//     GIVEN {
-//         ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
-//         ASSUME(gItemsInfo[ITEM_APICOT_BERRY].holdEffect == HOLD_EFFECT_SP_DEFENSE_UP);
-//         PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Items(ITEM_POTION, ITEM_SITRUS_BERRY); }
-//         OPPONENT(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); HP(100); MaxHP(500); Items(ITEM_RARE_CANDY, ITEM_APICOT_BERRY); }
-//     } WHEN {
-//         TURN { MOVE(opponent, MOVE_TRICK); MOVE(player, MOVE_SCRATCH); }
-//     } SCENE {
-//         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-//         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
-//         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-//         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-//         ABILITY_POPUP(opponent, ABILITY_HARVEST);
-//         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-//     } THEN {
-//         EXPECT_GT(opponent->hp, opponent->maxHP / 2); // eats 2 Sitrus
-//     }
-// }

@@ -65,7 +65,7 @@ void ClearBattlerItemEffectHistory(u32 battlerId);
 void SaveBattlerData(u32 battlerId);
 void SetBattlerData(u32 battlerId);
 void SetBattlerAiData(u32 battlerId, struct AiLogicData *aiData);
-bool32 Ai_BattlerHasHoldEffects(u32 battler, u32 holdEffect, struct AiLogicData *aiData);
+bool32 Ai_BattlerHasHoldEffect(u32 battler, u32 holdEffect, struct AiLogicData *aiData);
 bool32 Ai_BattlerHasItem(u32 battler, u32 item, struct AiLogicData *aiData);
 void RestoreBattlerData(u32 battlerId);
 u32 GetAIChosenMove(u32 battlerId);

@@ -187,7 +187,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in weather from an ability")
     }
 }
 
-SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather")
+SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather (Multi)")
 {
     u32 species, item, ability;
     PARAMETRIZE { species = SPECIES_KYOGRE; ability = ABILITY_PRIMORDIAL_SEA; item = ITEM_BLUE_ORB; }
@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather")
     GIVEN {
         PLAYER(SPECIES_CASTFORM_NORMAL) { Ability(ABILITY_FORECAST); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Item(item); }
+        OPPONENT(species) { Items(ITEM_DOME_FOSSIL, item); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {

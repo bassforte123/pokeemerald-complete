@@ -243,7 +243,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && ability != ABILITY_OVERCOAT
          && !IS_BATTLER_ANY_TYPE(gBattlerAttacker, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && !(gStatuses3[gBattlerAttacker] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
-         && !BattlerHeldItemHasEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
+         && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
          && !IsBattlerProtectedByMagicGuard(battler, ability))
         {
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -267,7 +267,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && ability != ABILITY_OVERCOAT
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && !(gStatuses3[battler] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
-             && !BattlerHeldItemHasEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
+             && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
              && !IsBattlerProtectedByMagicGuard(battler, ability))
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -517,8 +517,8 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
     {
         //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
-        if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
-         || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
+        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;
 
@@ -767,7 +767,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
             gBattleScripting.animArg2 = gBattleStruct->wrappedMove[battler] >> 8;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
-            if (!BattlerHeldItemHasEffect(gBattleStruct->wrappedBy[battler], HOLD_EFFECT_BINDING_BAND, TRUE))
+            if (!BattlerHasHeldItemEffect(gBattleStruct->wrappedBy[battler], HOLD_EFFECT_BINDING_BAND, TRUE))
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
             else
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
@@ -1423,12 +1423,12 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     {
         //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         
-        if(BattlerHeldItemHasEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
-        || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
-        || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
+        if(BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
+        || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
+        || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
             if (ItemBattleEffects(ITEMEFFECT_ORBS, battler, FALSE))
                 effect = TRUE;
-        if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE))
+        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE))
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;
         gBattleStruct->eventBlockCounter = 0;
@@ -1481,7 +1481,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     case FOURTH_EVENT_BLOCK_EJECT_PACK:
     {
         //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
-        if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_EJECT_PACK, TRUE))
+        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_EJECT_PACK, TRUE))
         {
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
                 effect = TRUE;

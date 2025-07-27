@@ -832,8 +832,8 @@ u32 GetRegionalFormByRegion(u32 species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion);
 u32 GetTeraTypeFromPersonality(struct Pokemon *mon);
 // Multi Items
-u8 MonItemHasHoldEffect(struct Pokemon *mon, u16 holdEffect);
-u8 BoxMonItemHasHoldEffect(struct BoxPokemon *mon, u16 holdEffect);
+u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect);
+u8 BoxMonHasItemHoldEffect(struct BoxPokemon *mon, u16 holdEffect);
 u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u16 holdEffect);
 u8 GetNumOfHeldItems(struct Pokemon *mon);
 

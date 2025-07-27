@@ -4069,7 +4069,7 @@ u8 IsRunningFromBattleImpossible(u32 battler)
         return BATTLE_RUN_FORBIDDEN;
     }
 
-    if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CAN_ALWAYS_RUN, TRUE))
+    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CAN_ALWAYS_RUN, TRUE))
         return BATTLE_RUN_SUCCESS;
     if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return BATTLE_RUN_SUCCESS;
@@ -4853,9 +4853,9 @@ s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMov
             strikesFirst = 1;
         else if (battler2HasQuickEffect && !battler1HasQuickEffect)
             strikesFirst = -1;
-        else if (BattlerHeldItemHasEffect(battler1, HOLD_EFFECT_LAGGING_TAIL, TRUE) && !BattlerHeldItemHasEffect(battler2, HOLD_EFFECT_LAGGING_TAIL, TRUE))
+        else if (BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_LAGGING_TAIL, TRUE) && !BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_LAGGING_TAIL, TRUE))
             strikesFirst = -1;
-        else if (BattlerHeldItemHasEffect(battler2, HOLD_EFFECT_LAGGING_TAIL, TRUE) && !BattlerHeldItemHasEffect(battler1, HOLD_EFFECT_LAGGING_TAIL, TRUE))
+        else if (BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_LAGGING_TAIL, TRUE) && !BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_LAGGING_TAIL, TRUE))
             strikesFirst = 1;
         else if (battler1HasStallingAbility && !battler2HasStallingAbility)
             strikesFirst = -1;
@@ -5252,8 +5252,8 @@ static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickCl
         gProtectStructs[battler1].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler1].quickDraw
-     && ((BattlerHeldItemHasEffect(battler1, HOLD_EFFECT_QUICK_CLAW, TRUE)  && quickClawRandom[battler1])
-     || (BattlerHeldItemHasEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler1, 4, gBattleMons[battler1].item))))
+     && ((BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_QUICK_CLAW, TRUE)  && quickClawRandom[battler1])
+     || (BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler1, 4, gBattleMons[battler1].item))))
         gProtectStructs[battler1].usedCustapBerry = TRUE;
 
     // Battler 2
@@ -5262,8 +5262,8 @@ static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickCl
         gProtectStructs[battler2].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler2].quickDraw
-     && ((BattlerHeldItemHasEffect(battler2, HOLD_EFFECT_QUICK_CLAW,   TRUE) && quickClawRandom[battler2])
-      || (BattlerHeldItemHasEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler2, 4, gBattleMons[battler2].item))))
+     && ((BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_QUICK_CLAW,   TRUE) && quickClawRandom[battler2])
+      || (BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler2, 4, gBattleMons[battler2].item))))
         gProtectStructs[battler2].usedCustapBerry = TRUE;
 }
 
@@ -5288,7 +5288,7 @@ static void CheckChangingTurnOrderEffects(void)
                 {
                     gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_QUICK_CLAW, FALSE);
                     PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
-                    if (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_CUSTAP_BERRY, FALSE))
+                    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CUSTAP_BERRY, FALSE))
                     {
                         gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_CUSTAP_BERRY, FALSE);
                         PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
@@ -5815,7 +5815,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
 {
     u32 moveType = GetMoveType(move);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    u32 species, heldItem, ability, type1, type2, type3;
+    u32 species, ability, type1, type2, type3; //heldItem
     bool8 utilityUmbrellaAffected = FALSE;
     //enum ItemHoldEffect holdEffect;
     enum Gimmick gimmick = GetActiveGimmick(battler);
@@ -5826,24 +5826,24 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     if (state == MON_IN_BATTLE)
     {
         species = gBattleMons[battler].species;
-        heldItem = gBattleMons[battler].item;
+        //heldItem = gBattleMons[battler].item;
         //holdEffect = GetBattlerHoldEffect(battler, TRUE);
         ability = GetBattlerAbility(battler);
         type1 = gBattleMons[battler].types[0];
         type2 = gBattleMons[battler].types[1];
         type3 = gBattleMons[battler].types[2];
-        utilityUmbrellaAffected = BattlerHeldItemHasEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE);
+        utilityUmbrellaAffected = BattlerHasHeldItemEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE);
     }
     else
     {
         species = GetMonData(mon, MON_DATA_SPECIES);
-        heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
+        //heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
         //holdEffect = GetItemHoldEffect(heldItem);
         ability = GetMonAbility(mon);
         type1 = gSpeciesInfo[species].types[0];
         type2 = gSpeciesInfo[species].types[1];
         type3 = TYPE_MYSTERY;
-        utilityUmbrellaAffected = MonItemHasHoldEffect(mon, HOLD_EFFECT_UTILITY_UMBRELLA);
+        utilityUmbrellaAffected = MonHasItemHoldEffect(mon, HOLD_EFFECT_UTILITY_UMBRELLA);
     }
 
     switch (moveEffect)
@@ -5921,8 +5921,8 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
         }
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:
-        if (BattlerHeldItemHasEffect(battler, GetMoveEffectArg_HoldEffect(move), TRUE))
-            return GetItemSecondaryId(heldItem);
+        if (BattlerHasHeldItemEffect(battler, GetMoveEffectArg_HoldEffect(move), TRUE))
+            return GetItemSecondaryId(GetBattlerHeldItemWithEffect(battler, GetMoveEffectArg_HoldEffect(move), TRUE));
         break;
     case EFFECT_REVELATION_DANCE:
         if (gimmick != GIMMICK_Z_MOVE)
@@ -5964,10 +5964,20 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
         }
         break;
     case EFFECT_NATURAL_GIFT:
-        if (GetItemPocket(heldItem) == POCKET_BERRIES)
-            return gNaturalGiftTable[ITEM_TO_BERRY(heldItem)].type;
-        else
-            return moveType;
+        for (u32 i = 0; i < MAX_MON_ITEMS; i++) //Uses the first berry found for dependability
+        {   
+            if (state == MON_IN_BATTLE)
+            {
+                if (GetItemPocket(gBattleMons[battler].items[i]) == POCKET_BERRIES)
+                    return gNaturalGiftTable[ITEM_TO_BERRY(gBattleMons[battler].items[i])].type;
+            }
+            else
+            {
+                if (GetItemPocket(GetMonData(mon, MON_DATA_HELD_ITEM + i)) == POCKET_BERRIES)
+                    return gNaturalGiftTable[GetMonData(mon, MON_DATA_HELD_ITEM + i)].type;
+            }
+        }
+        return moveType;
     case EFFECT_TERRAIN_PULSE:
         if (state == MON_IN_BATTLE)
         {

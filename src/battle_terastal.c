@@ -101,7 +101,7 @@ bool32 CanTerastallize(u32 battler)
         return FALSE;
 
     // Check if battler is holding a Z-Crystal or Mega Stone.
-    if (!TESTING && (BattlerHeldItemHasEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE) || BattlerHeldItemHasEffect(battler, HOLD_EFFECT_MEGA_STONE, FALSE))) // tests make this check already
+    if (!TESTING && (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE) || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_MEGA_STONE, FALSE))) // tests make this check already
         return FALSE;
 
     // Every check passed!
