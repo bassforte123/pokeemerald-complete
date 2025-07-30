@@ -99,3 +99,40 @@ SINGLE_BATTLE_TEST("Unnerve activates only once per switch-in")
 
     }
 }
+
+SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own berries (Multi)")
+{
+    u16 mon;
+    u16 ability;
+    PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
+    PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_RAWST_BERRY].holdEffect == HOLD_EFFECT_CURE_BRN);
+        PLAYER(mon) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ANTIDOTE, ITEM_RAWST_BERRY); Status1(STATUS1_BURN); }
+    } WHEN {
+        TURN { }
+    } SCENE {
+        ABILITY_POPUP(player, ability);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unnerve doesn't prevent opposing Pokémon from using Natural Gift (Multi)")
+{
+    u16 mon;
+    u16 ability;
+    PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
+    PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
+        PLAYER(mon) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ANTIDOTE, ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_NATURAL_GIFT); }
+    } SCENE {
+        ABILITY_POPUP(player, ability);
+        HP_BAR(player);
+    }
+}

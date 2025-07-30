@@ -224,3 +224,33 @@ SINGLE_BATTLE_TEST("Mirror Armor reflects Obstruct defense drop")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     }
 }
+
+// This behaviour needs to be verified in the actual games. Currently it's written to follow Showdown's logic.
+DOUBLE_BATTLE_TEST("Mirror Armor lowers Speed of the partner Pokemon after Court Change was used by the opponent after it set up Sticky Web (Multi)")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
+        ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_CORVIKNIGHT) {Ability(ABILITY_MIRROR_ARMOR); Items(ITEM_ETHER, ITEM_IRON_BALL); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_STICKY_WEB); }
+        TURN { MOVE(opponentLeft, MOVE_COURT_CHANGE); }
+        TURN { SWITCH(playerRight, 2);}
+        TURN { }
+    } SCENE {
+        MESSAGE("Wobbuffet used Sticky Web!");
+        MESSAGE("The opposing Wynaut used Court Change!");
+        MESSAGE("The opposing Wynaut swapped the battle effects affecting each side of the field!");
+        SEND_IN_MESSAGE("Corviknight");
+        MESSAGE("Corviknight was caught in a sticky web!");
+        ABILITY_POPUP(playerRight, ABILITY_MIRROR_ARMOR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        MESSAGE("Wobbuffet's Speed fell!");
+    }
+}

@@ -76,3 +76,25 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun")
 }
 
 TO_DO_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on the field");
+
+SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Toxic Orb (Multi)")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_FLAME_ORB; }
+    PARAMETRIZE { item = ITEM_TOXIC_ORB; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Items(ITEM_ETHER, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        if (item == ITEM_FLAME_ORB) {
+            NONE_OF { MESSAGE("Leafeon was burned!"); STATUS_ICON(player, burn: TRUE); }
+        }
+        else {
+            NONE_OF { MESSAGE("Leafeon was badly poisoned!"); STATUS_ICON(player, poison: TRUE); }
+        }
+    }
+}

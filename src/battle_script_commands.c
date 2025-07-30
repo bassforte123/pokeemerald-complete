@@ -10420,7 +10420,7 @@ static void Cmd_various(void)
         // Fling should prioritize non-berry items. Makes a list of non berry items first and if none are found, makes a list of berries
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (gBattleMons[battler].items[i] != ITEM_NONE && GetPocketByItemId(gBattleMons[battler].items[i]) != POCKET_BERRIES)
+            if (gBattleMons[battler].items[i] != ITEM_NONE && GetPocketByItemId(gBattleMons[battler].items[i]) != POCKET_BERRIES && CanBattlerGetOrLoseItem(battler, gBattleMons[battler].items[i]))
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
@@ -10432,7 +10432,7 @@ static void Cmd_various(void)
         {
             for (i = 0; i < MAX_MON_ITEMS; i++)
             {
-                if (gBattleMons[battler].items[i] != ITEM_NONE && GetPocketByItemId(gBattleMons[battler].items[i]) == POCKET_BERRIES)
+                if (gBattleMons[battler].items[i] != ITEM_NONE && GetPocketByItemId(gBattleMons[battler].items[i]) == POCKET_BERRIES && CanBattlerGetOrLoseItem(battler, gBattleMons[battler].items[i]))
                 {
                     if (targetableSlots[0] != MAX_MON_ITEMS)
                         index++;
@@ -11571,6 +11571,7 @@ static void Cmd_various(void)
         VARIOUS_ARGS(const u8 *failInstr);
         if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_ROOM_SERVICE, TRUE) && TryRoomService(battler))
         {
+            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_ROOM_SERVICE, TRUE);
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_ConsumableStatRaiseRet;
         }

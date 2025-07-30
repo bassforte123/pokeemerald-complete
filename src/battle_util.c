@@ -11320,10 +11320,20 @@ u16 GetUsedHeldItem(u32 battler, u8 itemSlot)
 
 bool32 CantPickupItem(u32 battler)
 {
+    bool8 hasUsedHeldItem = FALSE;
+    for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (GetUsedHeldItem(battler, i));
+        {
+            hasUsedHeldItem = TRUE;
+            break;
+        }
+    }
+
     // Used by RandomUniformExcept() for RNG_PICKUP
     if (battler == gBattlerAttacker && (B_PICKUP_WILD < GEN_9 || gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK)))
         return TRUE;
-    return !(IsBattlerAlive(battler) && GetUsedHeldItem(battler, 0) && gBattleStruct->battlerState[battler].canPickupItem);
+    return !(IsBattlerAlive(battler) && hasUsedHeldItem && gBattleStruct->battlerState[battler].canPickupItem);
 }
 
 bool32 PickupHasValidTarget(u32 battler)

@@ -125,3 +125,18 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_BERSERK_GENE].holdEffect == HOLD_EFFECT_BERSERK_GENE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); Items(ITEM_ETHER, ITEM_BERSERK_GENE); };
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ABILITY_POPUP(opponent, ABILITY_OWN_TEMPO);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+    }
+}

@@ -6615,16 +6615,16 @@ u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32
 // Returns the current species if no form change is possible
 u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg)
 {
-    u32 i;
+    u32 i, k;
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
     u32 targetSpecies = species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
-    u16 heldItem;
+    //u16 heldItem;
     u32 ability;
 
     if (formChanges != NULL)
     {
-        heldItem = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM, NULL);
+        //heldItem = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM, NULL);
         ability = GetAbilityBySpecies(species, GetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, NULL));
 
         for (i = 0; formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
@@ -6634,7 +6634,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                 switch (method)
                 {
                 case FORM_CHANGE_ITEM_HOLD:
-                    if ((heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
+                    if ((BoxMonHasItem(boxMon, formChanges[i].param1) || formChanges[i].param1 == ITEM_NONE)
                      && (ability == formChanges[i].param2 || formChanges[i].param2 == ABILITY_NONE))
                     {
                         // This is to prevent reverting to base form when giving the item to the corresponding form.
@@ -6643,7 +6643,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                         for (int j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
                         {
                             if (species == formChanges[j].targetSpecies
-                                && formChanges[j].param1 == heldItem
+                                && BoxMonHasItem (boxMon, formChanges[j].param1)
                                 && formChanges[j].param1 != ITEM_NONE)
                             {
                                 currentItemForm = TRUE;
@@ -6690,7 +6690,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                     break;
                 case FORM_CHANGE_BEGIN_BATTLE:
                 case FORM_CHANGE_END_BATTLE:
-                    if (heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
+                    if (BoxMonHasItem(boxMon, formChanges[i].param1) || formChanges[i].param1 == ITEM_NONE)
                         targetSpecies = formChanges[i].targetSpecies;
                     break;
                 case FORM_CHANGE_END_BATTLE_TERRAIN:
@@ -7194,19 +7194,19 @@ u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect)
     return FALSE;
 }
 
-u8 BoxMonHasItemHoldEffect(struct BoxPokemon *mon, u16 holdEffect)
+u8 BoxMonHasItem(struct BoxPokemon *mon, u16 item)
 {
     u8 i;
-    u16 item;
+    u16 helditem;
 
     for(i = 0; i < MAX_MON_ITEMS; i++)
     {
-        item = GetBoxMonData(mon, MON_DATA_HELD_ITEM + i);
-        if(holdEffect == GetItemHoldEffect(item))
-            return i;
+        helditem = GetBoxMonData(mon, MON_DATA_HELD_ITEM + i);
+        if(item == helditem)
+            return TRUE;
     }
 
-    return MAX_MON_ITEMS;
+    return FALSE;
 }
 
 u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u16 holdEffect)
