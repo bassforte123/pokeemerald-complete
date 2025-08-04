@@ -68,3 +68,17 @@ TO_DO_BATTLE_TEST("Fissure faints the target, skipping regular damage calculatio
 TO_DO_BATTLE_TEST("Fissure always fails if the target has a higher level than the user")
 TO_DO_BATTLE_TEST("Fissure's accuracy increases by 1% for every level the user has over the target")
 TO_DO_BATTLE_TEST("Fissure's ignores non-stage accuracy modifiers") // Gravity, Wide Lens, Compound Eyes
+
+SINGLE_BATTLE_TEST("OHKO moves can can be endured by Focus Sash (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHEER_COLD); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, player);
+        HP_BAR(opponent, hp: 1);
+        MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
+    }
+}

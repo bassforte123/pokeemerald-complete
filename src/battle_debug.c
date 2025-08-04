@@ -99,6 +99,7 @@ enum
     LIST_ITEM_MOVES,
     LIST_ITEM_ABILITY,
     LIST_ITEM_HELD_ITEM,
+    //LIST_ITEM_HELD_ITEM_BERRY,
     LIST_ITEM_PP,
     LIST_ITEM_TYPES,
     LIST_ITEM_STATS,
@@ -1699,10 +1700,15 @@ static void PrintSecondaryEntries(struct BattleDebugMenu *data)
         AddTextPrinter(&printer, 0, NULL);
         break;
     case LIST_ITEM_HELD_ITEM:
-        PadString(GetItemName(gBattleMons[data->battlerId].item), text);
+        PadString(GetItemName(gBattleMons[data->battlerId].items[0]), text);
         printer.currentY = printer.y = sSecondaryListTemplate.upText_Y;
         AddTextPrinter(&printer, 0, NULL);
         break;
+    // case LIST_ITEM_HELD_ITEM_BERRY:
+    //     PadString(GetItemName(gBattleMons[data->battlerId].items[1]), text);
+    //     printer.currentY = printer.y = sSecondaryListTemplate.upText_Y;
+    //     AddTextPrinter(&printer, 0, NULL);
+    //     break;
     case LIST_ITEM_TYPES:
         for (i = 0; i < 3; i++)
         {

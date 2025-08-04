@@ -146,3 +146,21 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Sto
         ABILITY_POPUP(opponentRight, ABILITY_STORM_DRAIN);
     }
 }
+
+SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_CHOICE_BAND); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_FLY, MOVE_DIG); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SLEEP_TALK); }
+        TURN { MOVE(player, MOVE_SLEEP_TALK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
+    }
+}

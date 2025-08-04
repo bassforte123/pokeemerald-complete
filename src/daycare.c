@@ -617,13 +617,21 @@ static void InheritIVs(struct Pokemon *egg, struct DayCare *daycare)
     u8 iv;
     u8 howManyIVs = 3;
 
-    if (motherItem == ITEM_DESTINY_KNOT || fatherItem == ITEM_DESTINY_KNOT)
+    if (BoxMonHasItem(&daycare->mons[0].mon, ITEM_DESTINY_KNOT)|| BoxMonHasItem(&daycare->mons[1].mon, ITEM_DESTINY_KNOT))
         howManyIVs = 5;
 
     // Initialize a list of IV indices.
     for (i = 0; i < NUM_STATS; i++)
     {
         availableIVs[i] = i;
+    }
+
+    for ( i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM + i) == HOLD_EFFECT_POWER_ITEM)
+            motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM + i);
+        if (GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM + i) == HOLD_EFFECT_POWER_ITEM)
+            fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM + i);
     }
 
     start = 0;
@@ -949,13 +957,13 @@ void RejectEggFromDayCare(void)
 static void AlterEggSpeciesWithIncenseItem(u16 *species, struct DayCare *daycare)
 {
     u32 i;
-    u16 motherItem, fatherItem;
-    motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
-    fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
+    // u16 motherItem, fatherItem;
+    // motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
+    // fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
 
     for (i = 0; i < ARRAY_COUNT(sIncenseBabyTable); i++)
     {
-        if (sIncenseBabyTable[i].babySpecies == *species && motherItem != sIncenseBabyTable[i].item && fatherItem != sIncenseBabyTable[i].item)
+        if (sIncenseBabyTable[i].babySpecies == *species && !BoxMonHasItem(&daycare->mons[0].mon, sIncenseBabyTable[i].item) && BoxMonHasItem(&daycare->mons[1].mon, sIncenseBabyTable[i].item))
         {
             *species = sIncenseBabyTable[i].currSpecies;
             break;
@@ -976,14 +984,14 @@ static const struct {
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)
 {
     u16 i, species = GetMonData(mon, MON_DATA_SPECIES);
-    u32 motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
-    u32 fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
+    // u32 motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
+    // u32 fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
 
     for (i = 0; i < ARRAY_COUNT(sBreedingSpecialMoveItemTable); i++)
     {
         if (sBreedingSpecialMoveItemTable[i].offspring == species
-            && (motherItem == sBreedingSpecialMoveItemTable[i].item ||
-                fatherItem == sBreedingSpecialMoveItemTable[i].item))
+            && (BoxMonHasItem(&daycare->mons[0].mon, sBreedingSpecialMoveItemTable[i].item) || //Mother Item
+                BoxMonHasItem(&daycare->mons[1].mon, sBreedingSpecialMoveItemTable[i].item)))  //Father Item
         {
             if (GiveMoveToMon(mon, sBreedingSpecialMoveItemTable[i].move) == MON_HAS_MAX_MOVES)
                 DeleteFirstMoveAndGiveMoveToMon(mon, sBreedingSpecialMoveItemTable[i].move);

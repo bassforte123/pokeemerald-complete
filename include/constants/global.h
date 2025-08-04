@@ -185,7 +185,9 @@
 // Multi Items
     //Types: 1 = Recycle, 2 = Pickup, 3 = Harvest
 #define RECYCLE_ITEM_RECYCLE    1
-#define RECYCLE_ITEM_PICKUP     2   
+#define RECYCLE_ITEM_PICKUP     2
 #define RECYCLE_ITEM_HARVEST    3
+#define LAST_ITEM_CORROSIVE     1
+#define LAST_ITEM_FLING         2  
 
 #endif // GUARD_CONSTANTS_GLOBAL_H

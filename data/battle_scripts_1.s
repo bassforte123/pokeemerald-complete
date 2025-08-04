@@ -442,7 +442,7 @@ BattleScript_EffectCorrosiveGas::
 	attackanimation
 	waitanimation
 	jumpifability BS_TARGET, ABILITY_STICKY_HOLD, BattleScript_StickyHoldActivates
-	setlastuseditem BS_TARGET, HOLD_EFFECT_NONE
+	setlastuseditemcorrosivefling BS_TARGET, LAST_ITEM_CORROSIVE
 	removeitemwitheffect BS_TARGET, HOLD_EFFECT_NONE
 	printstring STRINGID_PKMNITEMMELTED
 	waitmessage B_WAIT_TIME_LONG
@@ -748,7 +748,7 @@ BattleScript_SkyDropFlyingAlreadyConfused:
 	goto BattleScript_ThrashConfuses
 
 BattleScript_EffectFling::
-	setlastuseditemfling BS_ATTACKER
+	setlastuseditemcorrosivefling BS_ATTACKER, LAST_ITEM_FLING
 	attackcanceler
 	jumpifcantfling BS_ATTACKER, BattleScript_FailedFromAtkString
 	accuracycheck BattleScript_FlingMissed, ACC_CURR_MOVE

@@ -128,7 +128,7 @@ bool32 ShouldLowerAccuracy(u32 battlerAtk, u32 battlerDef, u32 defAbility);
 bool32 ShouldLowerEvasion(u32 battlerAtk, u32 battlerDef, u32 defAbility);
 
 // move checks
-bool32 IsAffectedByPowder(u32 battler, u32 ability);
+bool32 IsAffectedByPowder(u32 battler, u32 ability, bool32 hasGoggles);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, u32 category);
 s32 AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo);
 struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, bool32 considerZPower);

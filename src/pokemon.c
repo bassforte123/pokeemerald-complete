@@ -5334,103 +5334,100 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     u16 totalEVs = 0;
     u16 heldItem;
     u8 holdEffect;
-    int i, multiplier;
+    int i, j, multiplier;
     u8 stat;
     u8 bonus;
     u32 currentEVCap = GetCurrentEVCap();
+    bool32 hasboost = MonHasItemHoldEffect(mon, HOLD_EFFECT_POWER_ITEM);
 
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
+    for (j = 0; j < MAX_MON_ITEMS; j++)
     {
-        if (gMain.inBattle)
-            holdEffect = gEnigmaBerries[0].holdEffect;
-        else
-        #if FREE_ENIGMA_BERRY == FALSE
-            holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-        #else
-            holdEffect = 0;
-        #endif //FREE_ENIGMA_BERRY
-    }
-    else
-    {
-        holdEffect = GetItemHoldEffect(heldItem);
-    }
-
-    stat = GetItemSecondaryId(heldItem);
-    bonus = GetItemHoldEffectParam(heldItem);
-
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        evs[i] = GetMonData(mon, MON_DATA_HP_EV + i, 0);
-        totalEVs += evs[i];
-    }
-
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        if (totalEVs >= currentEVCap)
-            break;
-
-        if (CheckPartyHasHadPokerus(mon, 0))
-            multiplier = 2;
-        else
-            multiplier = 1;
-
-        switch (i)
+        heldItem = GetMonData(mon, MON_DATA_HELD_ITEM + j, 0);
+        
+        if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
         {
-        case STAT_HP:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_HP)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_HP + bonus) * multiplier;
+            if (gMain.inBattle)
+                holdEffect = gEnigmaBerries[0].holdEffect;
             else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_HP * multiplier;
-            break;
-        case STAT_ATK:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_ATK)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Attack + bonus) * multiplier;
+            #if FREE_ENIGMA_BERRY == FALSE
+                holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+            #else
+                holdEffect = 0;
+            #endif //FREE_ENIGMA_BERRY
+        }
+        else
+        {
+            holdEffect = GetItemHoldEffect(heldItem);
+        }
+
+        stat = GetItemSecondaryId(heldItem);
+        bonus = GetItemHoldEffectParam(heldItem);
+
+        for (i = 0; i < NUM_STATS; i++)
+        {
+            evs[i] = GetMonData(mon, MON_DATA_HP_EV + i, 0);
+            totalEVs += evs[i];
+        }
+        
+        for (i = 0; i < NUM_STATS; i++)
+        {
+            evIncrease = 0;
+            
+            if (totalEVs >= currentEVCap)
+                break;
+
+            if (CheckPartyHasHadPokerus(mon, 0))
+                multiplier = 2;
             else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Attack * multiplier;
-            break;
-        case STAT_DEF:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_DEF)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Defense + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Defense * multiplier;
-            break;
-        case STAT_SPEED:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPEED)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Speed + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Speed * multiplier;
-            break;
-        case STAT_SPATK:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPATK)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpAttack + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpAttack * multiplier;
-            break;
-        case STAT_SPDEF:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPDEF)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpDefense + bonus) * multiplier;
-            else
+                multiplier = 1;
+
+            switch (i)
+            {
+            case STAT_HP:
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_HP)
+                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_HP + bonus) * multiplier;
+                break;
+            case STAT_ATK:
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_ATK)
+                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Attack + bonus) * multiplier;
+                break;
+            case STAT_DEF:
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_DEF)
+                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Defense + bonus) * multiplier;
+                break;
+            case STAT_SPEED:
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPEED)
+                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Speed + bonus) * multiplier;
+                break;
+            case STAT_SPATK:
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPATK)
+                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpAttack + bonus) * multiplier;
+                break;
+            case STAT_SPDEF:
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPDEF)
+                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpDefense + bonus) * multiplier;
+                break;
+            }
+
+            if (i == 0 && !hasboost) // Non boosted defeatedSpecies gains should only occur once and only if none of the boost cases happened
                 evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpDefense * multiplier;
-            break;
+
+            if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
+                evIncrease *= 2;
+
+            if (totalEVs + (s16)evIncrease > currentEVCap)
+                evIncrease = ((s16)evIncrease + currentEVCap) - (totalEVs + evIncrease);
+
+            if (evs[i] + (s16)evIncrease > MAX_PER_STAT_EVS)
+            {
+                int val1 = (s16)evIncrease + MAX_PER_STAT_EVS;
+                int val2 = evs[i] + evIncrease;
+                evIncrease = val1 - val2;
+            }
+            evs[i] += evIncrease;
+            totalEVs += evIncrease;
+            SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
         }
-
-        if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
-            evIncrease *= 2;
-
-        if (totalEVs + (s16)evIncrease > currentEVCap)
-            evIncrease = ((s16)evIncrease + currentEVCap) - (totalEVs + evIncrease);
-
-        if (evs[i] + (s16)evIncrease > MAX_PER_STAT_EVS)
-        {
-            int val1 = (s16)evIncrease + MAX_PER_STAT_EVS;
-            int val2 = evs[i] + evIncrease;
-            evIncrease = val1 - val2;
-        }
-
-        evs[i] += evIncrease;
-        totalEVs += evIncrease;
-        SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
     }
 }
 
@@ -6615,7 +6612,7 @@ u32 GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method, u32
 // Returns the current species if no form change is possible
 u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges method, u32 arg)
 {
-    u32 i, k;
+    u32 i;
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
     u32 targetSpecies = species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);

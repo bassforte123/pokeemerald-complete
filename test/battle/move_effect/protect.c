@@ -618,3 +618,35 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
         EXPECT_EQ(results[4].damage, results[5].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Z-Move demage (Multi)", s16 damage)
+{
+    bool32 protected;
+    u32 move;
+
+    PARAMETRIZE { protected = TRUE; move = MOVE_WIDE_GUARD; }
+    PARAMETRIZE { protected = FALSE; move = MOVE_WIDE_GUARD; }
+
+    PARAMETRIZE { protected = TRUE; move = MOVE_QUICK_GUARD; }
+    PARAMETRIZE { protected = FALSE; move = MOVE_QUICK_GUARD; }
+
+    PARAMETRIZE { protected = TRUE; move = MOVE_CRAFTY_SHIELD; }
+    PARAMETRIZE { protected = FALSE; move = MOVE_CRAFTY_SHIELD; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (protected)
+            TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); MOVE(opponent, move); }
+        else
+            TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[2].damage, results[3].damage);
+        EXPECT_EQ(results[4].damage, results[5].damage);
+    }
+}

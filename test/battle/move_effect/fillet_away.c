@@ -72,3 +72,19 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }
+
+SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_MAX_ELIXIR, ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FILLET_AWAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FILLET_AWAY, player);
+        MESSAGE("Wobbuffet's Attack sharply rose!");
+        MESSAGE("Wobbuffet's Sp. Atk sharply rose!");
+        MESSAGE("Wobbuffet's Speed sharply rose!");
+        NOT MESSAGE("Wobbuffet's Air Balloon popped!");
+    }
+}

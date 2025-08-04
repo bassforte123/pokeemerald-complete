@@ -127,3 +127,137 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
         EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
+
+SINGLE_BATTLE_TEST("Thief and Covet steal target's held item (Multi)")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items( ITEM_LUXURY_BALL, ITEM_HYPER_POTION); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+    } THEN {
+        EXPECT_EQ(player->items[0], ITEM_LUXURY_BALL);
+        EXPECT_EQ(player->items[1], ITEM_HYPER_POTION);
+        EXPECT_EQ(opponent->items[1], ITEM_NONE);
+        EXPECT_EQ(opponent->items[1], ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Thief and Covet steal player's held item if opponent is a trainer (Multi)")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    GIVEN {
+        ASSUME(B_TRAINERS_KNOCK_OFF_ITEMS == TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_LUXURY_BALL, ITEM_HYPER_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+        TURN { MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, player);
+    } THEN {
+        EXPECT_EQ(opponent->items[0], ITEM_LUXURY_BALL);
+        EXPECT_EQ(opponent->items[1], ITEM_HYPER_POTION);
+        EXPECT_EQ(player->items[1], ITEM_NONE);
+        EXPECT_EQ(player->items[1], ITEM_NONE);
+    }
+}
+
+WILD_BATTLE_TEST("Thief and Covet don't steal player's held item if opponent is a wild mon (Multi)")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    GIVEN {
+        ASSUME(B_TRAINERS_KNOCK_OFF_ITEMS == TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_LUXURY_BALL, ITEM_HYPER_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+        TURN { MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        HP_BAR(player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        HP_BAR(player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, player);
+    } THEN {
+        EXPECT_EQ(player->items[0], ITEM_LUXURY_BALL);
+        EXPECT_EQ(player->items[1], ITEM_HYPER_POTION);
+        EXPECT_EQ(opponent->items[1], ITEM_NONE);
+        EXPECT_EQ(opponent->items[1], ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if user is holding an item (Multi)")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_LUXURY_BALL, ITEM_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items( ITEM_ULTRA_BALL, ITEM_HYPER_POTION); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+    } THEN {
+        EXPECT_EQ(player->items[0], ITEM_LUXURY_BALL);
+        EXPECT_EQ(player->items[1], ITEM_POTION);
+        EXPECT_EQ(opponent->items[0], ITEM_ULTRA_BALL);
+        EXPECT_EQ(opponent->items[1], ITEM_HYPER_POTION);
+    }
+}
+
+// Test can't currently verify if the item is sent to Bag
+WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag in wild battles (Gen 9) (Multi)")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    GIVEN {
+        ASSUME(B_STEAL_WILD_ITEMS >= GEN_9);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items( ITEM_LUXURY_BALL, ITEM_HYPER_POTION); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+    } THEN {
+        EXPECT_EQ(player->items[0], ITEM_NONE);
+        EXPECT_EQ(player->items[1], ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
+        EXPECT_EQ(opponent->items[1], ITEM_NONE);
+    }
+}

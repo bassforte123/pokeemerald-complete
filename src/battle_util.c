@@ -298,7 +298,7 @@ bool32 IsAffectedByFollowMe(u32 battlerAtk, u32 defSide, u32 move)
     if (effect == EFFECT_PURSUIT && IsPursuitTargetSet())
         return FALSE;
 
-    if (gSideTimers[defSide].followmePowder && !IsAffectedByPowder(battlerAtk, ability))
+    if (gSideTimers[defSide].followmePowder && !IsAffectedByPowder(battlerAtk, ability, BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)))
         return FALSE;
 
     return TRUE;
@@ -3234,6 +3234,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
     u32 partner = 0;
     struct Pokemon *mon;
     u8 index, slot, targetableSlots[MAX_MON_ITEMS];
+    
+    index = 0;
+    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return 0;
@@ -4322,9 +4325,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_BALL_FETCH:
-                slot = 0;
+                slot = gItemsInfo[gLastUsedBall].heldSlot;
 
-                if (gBattleMons[battler].item == ITEM_NONE
+                if (gBattleMons[battler].items[slot] == ITEM_NONE
                     && gBattleResults.catchAttempts[gLastUsedBall - ITEM_ULTRA_BALL] >= 1
                     && !gHasFetchedBall)
                 {
@@ -4348,9 +4351,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_CUD_CHEW:
-
-                index = 0;
-                targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
                 for (slot = 0; slot < MAX_MON_ITEMS; slot++)
                 {
                     if (gDisableStructs[battler].cudChew[slot])
@@ -5902,19 +5902,19 @@ bool32 CanBeConfused(u32 battler)
 // second argument is 1/X of current hp compared to max hp
 bool32 HasEnoughHpToEatBerry(u32 battler, u32 hpFraction, u32 itemId)
 {
-    bool32 isBerry = (GetItemPocket(itemId) == POCKET_BERRIES);
+    //bool32 isBerry = (GetItemPocket(itemId) == POCKET_BERRIES);
 
     if (!IsBattlerAlive(battler))
         return FALSE;
     if (gBattleScripting.overrideBerryRequirements)
         return TRUE;
     // Unnerve prevents consumption of opponents' berries.
-    if (isBerry && IsUnnerveAbilityOnOpposingSide(battler))
+    if (BattlerHasBerry(battler) && IsUnnerveAbilityOnOpposingSide(battler))
         return FALSE;
     if (gBattleMons[battler].hp <= gBattleMons[battler].maxHP / hpFraction)
         return TRUE;
 
-    if (hpFraction <= 4 && GetBattlerAbility(battler) == ABILITY_GLUTTONY && isBerry
+    if (hpFraction <= 4 && GetBattlerAbility(battler) == ABILITY_GLUTTONY && BattlerHasBerry(battler)
          && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2)
     {
         RecordAbilityBattle(battler, ABILITY_GLUTTONY);
@@ -6390,7 +6390,7 @@ u32 RestoreWhiteHerbStats(u32 battler)
     }
     if (effect != 0)
     {
-        gLastUsedItem = gBattleMons[battler].item;
+        gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE);
         gBattleScripting.battler = battler;
         gPotentialItemEffectBattler = battler;
     }
@@ -7718,14 +7718,15 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
             }
             if (SearchItemSlots(battlerItems, HOLD_EFFECT_STICKY_BARB))
             {
+                u8 barbSlot = GetBattlerHeldItemSlotWithEffect(gBattlerTarget, HOLD_EFFECT_STICKY_BARB, TRUE);
                 if (IsBattlerTurnDamaged(gBattlerTarget)
                    && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
                    && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_PROTECTIVE_PADS, TRUE)
                    && IsMoveMakingContact(gCurrentMove, gBattlerAttacker)
                    && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)
                    && IsBattlerAlive(gBattlerAttacker)
-                   && CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
-                   && gBattleMons[gBattlerAttacker].item == ITEM_NONE)
+                   && CanStealItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].items[barbSlot])
+                   && gBattleMons[gBattlerAttacker].items[barbSlot] == ITEM_NONE)
                 {
                     // No sticky hold checks.
                     gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_STICKY_BARB);
@@ -8587,10 +8588,23 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
         }
         break;
     case EFFECT_ACROBATICS:
-        if (gBattleMons[battlerAtk].item == ITEM_NONE
+        // For Multi Items, increase power in stages based on number of held items
+        u8 occupiedSlots = MAX_MON_ITEMS;
+
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (gBattleMons[battlerAtk].items[i] == ITEM_NONE
             // Edge case, because removal of items happens after damage calculation.
-            || (gSpecialStatuses[battlerAtk].gemBoost && BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_GEMS, FALSE)))
-            basePower *= 2;
+            || (gSpecialStatuses[battlerAtk].gemBoost && gItemsInfo[GetSlotHeldItem(battlerAtk, i, FALSE)].holdEffect == HOLD_EFFECT_GEMS))
+                occupiedSlots--;
+        }
+
+        if (occupiedSlots == 0)
+            basePower *= 2; // Normal boosted damage with no items at all
+        else if (occupiedSlots == 1 && MAX_MON_ITEMS > 1) // Only apply additional math if there are more than one item slot
+           basePower = uq4_12_multiply(basePower, UQ_4_12(1.33)); // If pokemon has 1 item, damage boost reduced to 33% since there's a major jump between having no items and having even 1
+        else if (MAX_MON_ITEMS > 1) // Further items then evenly reduce the remaining boost down to 1x effectiveness at full load
+           basePower = uq4_12_multiply(basePower, uq4_12_subtract(UQ_4_12(1.33),uq4_12_multiply(uq4_12_divide(UQ_4_12(0.33), UQ_4_12(MAX_MON_ITEMS - 1)), UQ_4_12(occupiedSlots - 1)))); 
         break;
     case EFFECT_LOW_KICK:
         weight = GetBattlerWeight(battlerDef);
@@ -8793,10 +8807,21 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
         break;
     case EFFECT_KNOCK_OFF:
-        if (B_KNOCK_OFF_DMG >= GEN_6
-            && gBattleMons[battlerDef].item != ITEM_NONE
-            && CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerDef].item))
+        if (B_KNOCK_OFF_DMG >= GEN_6)
+        {
+            bool32 canKnockOff = FALSE;
+            for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                if (gBattleMons[battlerDef].items[i] != ITEM_NONE
+                 && CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerDef].items[i]))
+                 {
+                    canKnockOff = TRUE;
+                    break;
+                 }
+            }
+        if (canKnockOff)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
+        }
         break;
     default:
         break;
@@ -11286,7 +11311,7 @@ bool32 TryRoomService(u32 battler)
         SET_STATCHANGER(STAT_SPEED, 1, TRUE);
         gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_SPEED;
         gBattleScripting.animArg2 = 0;
-        gLastUsedItem = gBattleMons[battler].item;
+        gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_ROOM_SERVICE, TRUE);
         return TRUE;
     }
     else
@@ -11984,6 +12009,36 @@ bool32 BattlerHasHeldItemEffect(u32 battler, u32 holdEffect, bool32 checkNegatin
        return FALSE;
 }
 
+//Check if the battler has a given item
+bool32 BattlerHasHeldItem(u32 battler, u32 item, bool32 checkNegating)
+{
+    if (item == ITEM_NONE)
+        return FALSE;
+
+    if (checkNegating)
+    {
+        if (gStatuses3[battler] & STATUS3_EMBARGO)
+            return FALSE;
+        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+            return FALSE;
+        if (BattlerHasKlutz(battler))
+            return FALSE;
+    }
+
+    if(battler >= MAX_BATTLERS_COUNT)
+    {
+        //DebugPrintf("Invalid Battler: %d", battler);
+        return FALSE;
+    }
+    
+    for (int i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if((SlotToItemId(gBattleMons[battler].items[i], i) == item))
+            return TRUE;
+    }
+       return FALSE;
+}
+
 //Returns item with the given hold effect if present
 u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating)
 {
@@ -12062,7 +12117,7 @@ u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating)
 
     if(battler >= MAX_BATTLERS_COUNT)
     {
-        //DebugPrintf("Invalid Battler: %d", battler);
+        DebugPrintf("Invalid Battler: %d", battler);
         return ITEM_NONE;
     }
 
@@ -12129,6 +12184,11 @@ u16 SlotToItemId(u16 offsetItemID, u8 slot)
     if (offsetItemID == ITEM_NONE) //Don't convert if no berry
         return ITEM_NONE;
 
+    if (TESTING)
+    {
+        return offsetItemID; //Tests default to full item range additional item slots
+    }
+
     if (slot == 0) //First slot has the full item range, so no conversion needed
         return offsetItemID;
 
@@ -12136,16 +12196,12 @@ u16 SlotToItemId(u16 offsetItemID, u8 slot)
     {
         u16 item = offsetItemID - 1;
 
-        if (TESTING)
-        {
-            return offsetItemID; //Tests default to  full item range additional item slots
-        }
-
         if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX) //range for berry items for a berry specific slot
         {
             DebugPrintf("Invalid Item ID[%d]: battler %d, lastuseditemid %d, item1: %d, item2: %d", slot, gLastUsedItem, item, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
             return ITEM_NONE; //Escape if the item is out of the expected range
         }
+
         return BERRY_TO_ITEM(offsetItemID);
     }
 

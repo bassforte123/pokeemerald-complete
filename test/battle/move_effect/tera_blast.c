@@ -186,3 +186,18 @@ SINGLE_BATTLE_TEST("Flying-type Tera Blast does not have its priority boosted by
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
     }
 }
+
+SINGLE_BATTLE_TEST("Stellar-type Tera Blast activates a Stellar-type Pokemon's Weakness Policy (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_STELLAR); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items( ITEM_LUXURY_BALL, ITEM_WEAKNESS_POLICY); TeraType(TYPE_NORMAL); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Tera Blast!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);
+        MESSAGE("It's super effective!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}

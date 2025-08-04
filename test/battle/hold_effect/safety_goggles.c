@@ -45,3 +45,43 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Sandstorm")
 }
 
 TO_DO_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect");
+
+SINGLE_BATTLE_TEST("Safety Goggles block powder and spore moves (Multi)")
+{
+    GIVEN {
+        ASSUME(IsPowderMove(MOVE_STUN_SPORE));
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_ABRA) { Items(ITEM_BLK_APRICORN, ITEM_SAFETY_GOGGLES); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STUN_SPORE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
+        MESSAGE("The opposing Abra is not affected thanks to its Safety Goggles!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Hail (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_BLK_APRICORN, ITEM_SAFETY_GOGGLES); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAIL); }
+    } SCENE {
+        NOT MESSAGE("The opposing Wobbuffet is buffeted by the hail!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Sandstorm (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_BLK_APRICORN, ITEM_SAFETY_GOGGLES); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_SANDSTORM); }
+    } SCENE {
+        NOT MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
+    }
+}
+
+TO_DO_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect (Multi)");

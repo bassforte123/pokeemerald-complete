@@ -49,3 +49,47 @@ SINGLE_BATTLE_TEST("Custap Berry activates even if the opposing mon switches out
         MESSAGE("Regirock can act faster than normal, thanks to its Custap Berry!");
     }
 }
+
+SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority bracket when HP is below 1/4 (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); MaxHP(160); HP(40); Items(ITEM_TM_ICE_BEAM, ITEM_CUSTAP_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet can act faster than normal, thanks to its Custap Berry!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority bracket when HP is below 1/2. If the holder has Gluttony (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_BELLSPROUT) { Speed(1); MaxHP(160); HP(80); Ability(ABILITY_GLUTTONY); Items(ITEM_TM_ICE_BEAM, ITEM_CUSTAP_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Bellsprout can act faster than normal, thanks to its Custap Berry!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Custap Berry activates even if the opposing mon switches out (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_REGIROCK) { HP(1); Items(ITEM_TM_ICE_BEAM, ITEM_CUSTAP_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Regirock can act faster than normal, thanks to its Custap Berry!");
+    }
+}

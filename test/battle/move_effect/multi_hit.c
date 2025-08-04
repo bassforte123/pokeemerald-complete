@@ -284,3 +284,90 @@ SINGLE_BATTLE_TEST("Multi Hit moves will not disrupt Destiny Bond flag")
         MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
+
+SINGLE_BATTLE_TEST("Multi hit Moves hit at least four times with Loaded Dice (Multi)")
+{
+    PASSES_RANDOMLY(50, 100, RNG_LOADED_DICE);
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_LOADED_DICE].holdEffect == HOLD_EFFECT_LOADED_DICE);
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BULLET_SEED); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        MESSAGE("The Pokémon was hit 4 time(s)!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi hit Moves hit five times 50 Percent of the time with Loaded Dice (Multi)")
+{
+    PASSES_RANDOMLY(50, 100, RNG_LOADED_DICE);
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_LOADED_DICE].holdEffect == HOLD_EFFECT_LOADED_DICE);
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BULLET_SEED); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLET_SEED, player);
+        MESSAGE("The Pokémon was hit 5 time(s)!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after the 4th hit of Loaded Dice (Multi)")
+{
+    PASSES_RANDOMLY(50, 100, RNG_LOADED_DICE);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCALE_SHOT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
+        MESSAGE("The Pokémon was hit 4 time(s)!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Wobbuffet's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Wobbuffet's Speed rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after killing opposing with less then 4 hits (Multi)")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_LOADED_DICE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SCALE_SHOT) == EFFECT_MULTI_HIT);
+        PLAYER(SPECIES_BAGON) { Items( ITEM_GREEN_APRICORN, item); }
+        OPPONENT(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCALE_SHOT); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCALE_SHOT, player);
+        MESSAGE("The opposing Slugma fainted!");
+        MESSAGE("The Pokémon was hit 3 time(s)!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Bagon's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Bagon's Speed rose!");
+    }
+}

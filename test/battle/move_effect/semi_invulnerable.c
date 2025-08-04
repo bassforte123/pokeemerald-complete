@@ -248,3 +248,107 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves apply a status that won't block cert
         HP_BAR(player);
     }
 }
+
+SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb (Multi)")
+{
+    u16 move;
+
+    PARAMETRIZE { move = MOVE_FLY; }
+    PARAMETRIZE { move = MOVE_DIG; }
+    PARAMETRIZE { move = MOVE_BOUNCE; }
+    PARAMETRIZE { move = MOVE_DIVE; }
+    PARAMETRIZE { move = MOVE_PHANTOM_FORCE; }
+    PARAMETRIZE { move = MOVE_SHADOW_FORCE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_POWER_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        // Charging turn
+        if (B_UPDATED_MOVE_DATA >= GEN_5)
+        {
+            switch (move)
+            {
+                case MOVE_FLY:
+                    NOT MESSAGE("Wobbuffet flew up high!");
+                    MESSAGE("Wobbuffet used Fly!");
+                    break;
+                case MOVE_DIG:
+                    NOT MESSAGE("Wobbuffet dug a hole!");
+                    MESSAGE("Wobbuffet used Dig!");
+                    break;
+                case MOVE_BOUNCE:
+                    NOT MESSAGE("Wobbuffet sprang up!");
+                    MESSAGE("Wobbuffet used Bounce!");
+                    break;
+                case MOVE_DIVE:
+                    NOT MESSAGE("Wobbuffet hid underwater!");
+                    MESSAGE("Wobbuffet used Dive!");
+                    break;
+                case MOVE_PHANTOM_FORCE:
+                    NOT MESSAGE("Wobbuffet vanished instantly!");
+                    MESSAGE("Wobbuffet used Phantom Force!");
+                    break;
+                case MOVE_SHADOW_FORCE:
+                    NOT MESSAGE("Wobbuffet vanished instantly!");
+                    MESSAGE("Wobbuffet used Shadow Force!");
+                    break;
+            }
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, move, player);
+        }
+        if (B_UPDATED_MOVE_DATA < GEN_5)
+        {
+            switch (move)
+            {
+                case MOVE_FLY:
+                    MESSAGE("Wobbuffet flew up high!");
+                    break;
+                case MOVE_DIG:
+                    MESSAGE("Wobbuffet dug a hole!");
+                    break;
+                case MOVE_BOUNCE:
+                    MESSAGE("Wobbuffet sprang up!");
+                    break;
+                case MOVE_DIVE:
+                    MESSAGE("Wobbuffet hid underwater!");
+                    break;
+                case MOVE_PHANTOM_FORCE:
+                case MOVE_SHADOW_FORCE:
+                    MESSAGE("Wobbuffet vanished instantly!");
+                    break;
+            }
+        }
+        else
+            ANIMATION(ANIM_TYPE_MOVE, move, player);
+        MESSAGE("Wobbuffet became fully charged due to its Power Herb!");
+        if (B_UPDATED_MOVE_DATA < GEN_5)
+        {
+            switch (move)
+            {
+                case MOVE_FLY:
+                    MESSAGE("Wobbuffet used Fly!");
+                    break;
+                case MOVE_DIG:
+                    MESSAGE("Wobbuffet used Dig!");
+                    break;
+                case MOVE_BOUNCE:
+                    MESSAGE("Wobbuffet used Bounce!");
+                    break;
+                case MOVE_DIVE:
+                    MESSAGE("Wobbuffet used Dive!");
+                    break;
+                case MOVE_PHANTOM_FORCE:
+                    MESSAGE("Wobbuffet used Phantom Force!");
+                    break;
+                case MOVE_SHADOW_FORCE:
+                    MESSAGE("Wobbuffet used Shadow Force!");
+                    break;
+            }
+        }
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+    }
+}

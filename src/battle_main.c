@@ -4308,7 +4308,7 @@ static void HandleTurnActionSelectionState(void)
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, PARTY_ACTION_CANT_SWITCH, PARTY_SIZE, ABILITY_NONE, gBattleStruct->battlerPartyOrders[battler]);
                     }
-                    else if (GetItemHoldEffect(gBattleMons[battler].item) != HOLD_EFFECT_SHED_SHELL
+                    else if (!BattlerHasHeldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE)
                       && (i = IsAbilityPreventingEscape(battler)))   // must be last to keep i value integrity
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, ((i - 1) << 4) | PARTY_ACTION_ABILITY_PREVENTS, PARTY_SIZE, gBattleMons[i - 1].ability, gBattleStruct->battlerPartyOrders[battler]);
@@ -5252,8 +5252,8 @@ static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickCl
         gProtectStructs[battler1].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler1].quickDraw
-     && ((BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_QUICK_CLAW, TRUE)  && quickClawRandom[battler1])
-     || (BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler1, 4, gBattleMons[battler1].item))))
+     && ((BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_QUICK_CLAW, TRUE)  && quickClawRandom[battler1]) 
+     || (BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler1, 4, GetBattlerHeldItemWithEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE)))))
         gProtectStructs[battler1].usedCustapBerry = TRUE;
 
     // Battler 2
@@ -5263,7 +5263,7 @@ static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickCl
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler2].quickDraw
      && ((BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_QUICK_CLAW,   TRUE) && quickClawRandom[battler2])
-      || (BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler2, 4, gBattleMons[battler2].item))))
+      || (BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler2, 4, GetBattlerHeldItemWithEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE)))))
         gProtectStructs[battler2].usedCustapBerry = TRUE;
 }
 

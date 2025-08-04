@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Acrobatics doubles in power if the user has no held item", s
     PARAMETRIZE { heldItem = ITEM_NONE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(heldItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(heldItem, heldItem); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ACROBATICS); }
     } SCENE {
@@ -44,5 +44,26 @@ SINGLE_BATTLE_TEST("Acrobatics still doubles in power when Flying Gem is consume
             EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.3), (results[1].damage));
         else
             EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), (results[1].damage));
+    }
+}
+
+SINGLE_BATTLE_TEST("Acrobatics power scales correctly with number of held items (1.33x with 1 item) (Multi)", s16 damage)
+{
+    u16 heldItem1, helditem2;
+    PARAMETRIZE { heldItem1 = ITEM_POTION; helditem2 = ITEM_SUPER_POTION; }
+    PARAMETRIZE { heldItem1 = ITEM_POTION; helditem2 = ITEM_NONE; }
+    PARAMETRIZE { heldItem1 = ITEM_NONE; helditem2 = ITEM_POTION; }
+    PARAMETRIZE { heldItem1 = ITEM_NONE; helditem2 = ITEM_NONE; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(heldItem1, helditem2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ACROBATICS); }
+    } SCENE {
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.33), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.33), results[2].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2), results[3].damage);
     }
 }

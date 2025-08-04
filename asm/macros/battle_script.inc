@@ -2203,8 +2203,9 @@
 	.4byte \holdEffect
 	.endm
 
-	.macro setlastuseditemfling battler:req
-	various \battler, VARIOUS_SET_LAST_USED_ITEM_FLING
+	.macro setlastuseditemcorrosivefling battler:req, type:req
+	various \battler, VARIOUS_SET_LAST_USED_ITEM_CORROSIVEFLING
+	.byte \type
 	.endm
 
 	.macro jumpifabsent battler:req, jumpInstr:req
