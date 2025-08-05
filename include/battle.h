@@ -213,6 +213,8 @@ struct SpecialStatus
     u8 dancerOriginalTarget:3;
     u8 unused:4;
     // End of byte
+    u8 berryReducedType; // Catch for multiple berries and hidden power(multi)
+    // End of byte
 };
 
 struct SideTimer

@@ -2412,16 +2412,36 @@ static inline bool32 TryTeraShellDistortTypeMatchups(u32 battlerDef)
 // It doesn't have any impact on gameplay and is only a visual thing which can be adjusted later.
 static inline bool32 TryActivateWeakenessBerry(u32 battlerDef)
 {
-    if (gSpecialStatuses[battlerDef].berryReduced && BattlerHasHeldItemEffect(battlerDef, HOLD_EFFECT_RESIST_BERRY, TRUE))
-    {
-        gBattleScripting.battler = battlerDef;
-        gLastUsedItem = GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_RESIST_BERRY, TRUE);
-        gBattleStruct->partyState[GetBattlerSide(battlerDef)][gBattlerPartyIndexes[battlerDef]].ateBerry = TRUE;
-        BattleScriptPushCursor();
-        gBattlescriptCurrInstr = BattleScript_BerryReduceDmg;
-        return TRUE;
-    }
+    u32 itemDef = ITEM_NONE;
+    bool32 hasArg = FALSE;
 
+    if (gSpecialStatuses[battlerDef].berryReducedType != 0)
+    {
+        for (int i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (B_FLYING_PRESS_RESIST) //If Flying Press DualType moves should be counted
+                hasArg = GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == GetMoveArgType(gCurrentMove);
+
+            if (GetItemHoldEffect(gBattleMons[battlerDef].items[i]) == HOLD_EFFECT_RESIST_BERRY
+            && (GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == gSpecialStatuses[battlerDef].berryReducedType
+            || hasArg)) // for Flying Press
+            {
+            itemDef = GetSlotHeldItem(battlerDef, i, FALSE);
+            break;
+            }
+        }
+
+        if (itemDef != ITEM_NONE)
+        {
+            gSpecialStatuses[battlerDef].berryReducedType = 0;  //Makes sure only one berry is used (multi)
+            gBattleScripting.battler = battlerDef;
+            gLastUsedItem = itemDef;
+            gBattleStruct->partyState[GetBattlerSide(battlerDef)][gBattlerPartyIndexes[battlerDef]].ateBerry = TRUE;
+            BattleScriptPushCursor();
+            gBattlescriptCurrInstr = BattleScript_BerryReduceDmg;
+            return TRUE;
+        }
+    }
     return FALSE;
 }
 
@@ -7581,6 +7601,7 @@ static void Cmd_moveend(void)
             gBattleStruct->ateBoost[gBattlerAttacker] = FALSE;
             gSpecialStatuses[gBattlerAttacker].gemBoost = FALSE;
             gSpecialStatuses[gBattlerTarget].berryReduced = FALSE;
+            gSpecialStatuses[gBattlerTarget].berryReducedType = 0;
             gSpecialStatuses[gBattlerTarget].distortedTypeMatchups = FALSE;
             gBattleScripting.moveEffect = 0;
             gBattleStruct->isAtkCancelerForCalledMove = FALSE;
@@ -18293,12 +18314,11 @@ void BS_AllySwitchSwapBattler(void)
 void BS_TryAllySwitch(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-DebugPrintf("ALLYSWITCH START");
+
     if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))
      || (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
      || (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
     {
-        DebugPrintf("Can't ally switch");
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else if (B_ALLY_SWITCH_FAIL_CHANCE >= GEN_9)

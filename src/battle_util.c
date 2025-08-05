@@ -9814,21 +9814,41 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageCalculationData *da
 {
     u32 battlerDef = damageCalcData->battlerDef;
     u32 moveType = damageCalcData->moveType;
+    u32 itemDef = ITEM_NONE;
+    bool32 hasArg = FALSE;
 
     //u32 holdEffectDefParam = GetBattlerHoldEffectParam(battlerDef);
-    u32 itemDef = GetBattlerHeldItemWithEffect(battlerDef, HOLD_EFFECT_RESIST_BERRY, TRUE);
+
+    for (int i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (B_FLYING_PRESS_RESIST) //If Flying Press DualType moves should be counted
+            hasArg = GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == GetMoveArgType(gCurrentMove);
+
+        if (GetItemHoldEffect(gBattleMons[battlerDef].items[i]) == HOLD_EFFECT_RESIST_BERRY
+         && (GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == moveType
+         || hasArg))
+        {
+           itemDef = GetSlotHeldItem(battlerDef, i, TRUE);
+           break;
+        }
+    }
 
     if(itemDef != ITEM_NONE)
+    {
         if (UnnerveOn(battlerDef, itemDef))
             return UQ_4_12(1.0);
-        if (moveType == GetBattlerItemHoldEffectParam(battlerDef, itemDef) && (moveType == TYPE_NORMAL || typeEffectivenessModifier >= UQ_4_12(2.0)))
+        if ((moveType == TYPE_NORMAL || typeEffectivenessModifier >= UQ_4_12(2.0)))
         {
             if (damageCalcData->updateFlags)
-                gSpecialStatuses[battlerDef].berryReduced = TRUE;
+                {
+                    gSpecialStatuses[battlerDef].berryReduced = TRUE;
+                    gSpecialStatuses[battlerDef].berryReducedType = moveType; //prevents multiple reduction berry activations and transfers hiddenpower type to eating function
+                 } 
             return (abilityDef == ABILITY_RIPEN) ? UQ_4_12(0.25) : UQ_4_12(0.5);
         }
-    else
-        return UQ_4_12(1.0);
+    }
+
+    return UQ_4_12(1.0);
 }
 
 #define DAMAGE_MULTIPLY_MODIFIER(modifier) do {                     \

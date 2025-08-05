@@ -189,6 +189,7 @@
 #define B_SERENE_GRACE_BOOST        GEN_LATEST // In Gen5+, Serene Grace boosts the added flinch chance of King's Rock and Razor Fang.
 #define B_IRON_BALL                 GEN_LATEST // In Gen5+, Flying-type Pokemon holding Iron Ball take x1 damage from Ground-type moves regardless of their other types, except during Inverse Battles or if the Pokemon is grounded by any other effect.
 #define B_MULTI_ITEM_ORDER          0          // What order item slots are targeted in by Moves. 0 = latest to earliest, 1 = earliest to latest, 2 = random.
+#define B_FLYING_PRESS_RESIST       FALSE       // If TRUE, Flying Press and similar dualtype moves will be affected by damage reduction berries
 
 // Flag settings
 // To use the following features, change the 0 for a flag present in include/constants/flags.h, preferably an unused one.
