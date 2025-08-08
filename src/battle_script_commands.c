@@ -9343,9 +9343,7 @@ static void BestowItem(u32 battlerAtk, u32 battlerDef, u8 slot)
 // Called by Cmd_removeitem. itemId represents the item that was removed, not being given.
 static bool32 TrySymbiosis(u32 battler, u32 itemId)
 {
-    if (!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]][0].stolen //SLOT
-        && gBattleStruct->changedItems[battler][0] == ITEM_NONE
-        && !GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_EJECT_BUTTON, TRUE)
+    if (!GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_EJECT_BUTTON, TRUE)
         && !GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_EJECT_PACK, TRUE)
         && (B_SYMBIOSIS_GEMS < GEN_7 || !(gSpecialStatuses[battler].gemBoost))
         && gCurrentMove != MOVE_FLING //Fling and damage-reducing berries are handled separately.
@@ -9358,7 +9356,9 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId)
 
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if(gBattleMons[battler].items[i] == ITEM_NONE
+            if(!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]][i].stolen
+            && gBattleStruct->changedItems[battler][i] == ITEM_NONE
+            && gBattleMons[battler].items[i] == ITEM_NONE
             && gBattleMons[BATTLE_PARTNER(battler)].items[i] != ITEM_NONE
             && CanBattlerGetOrLoseItem(battler, gBattleMons[BATTLE_PARTNER(battler)].items[i])
             && CanBattlerGetOrLoseItem(BATTLE_PARTNER(battler), gBattleMons[BATTLE_PARTNER(battler)].items[i]))
@@ -15888,9 +15888,14 @@ static void Cmd_pickup(void)
 {
     CMD_ARGS();
 
-    u32 i, j;
+    u32 i, j, k;
     u16 species, heldItem, ability;
     u8 lvlDivBy10;
+    u8 targetableSlots[MAX_MON_ITEMS];
+    u8 index;
+    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+
+    // Multi Items will make an array of open slots then only add items to the correct slot category if slot categories are enabled
 
     if (!InBattlePike()) // No items in Battle Pike.
     {
@@ -15898,23 +15903,45 @@ static void Cmd_pickup(void)
         for (i = 0; i < PARTY_SIZE; i++)
         {
             species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
-            heldItem = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
+            //heldItem = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
+            index = 0;
             lvlDivBy10 = (GetMonData(&gPlayerParty[i], MON_DATA_LEVEL)-1) / 10; //Moving this here makes it easier to add in abilities like Honey Gather.
             if (lvlDivBy10 > 9)
                 lvlDivBy10 = 9;
+                
+            // Clear targetable slots
+            for (k = 0; k < MAX_MON_ITEMS; k++)
+                targetableSlots[k] = MAX_MON_ITEMS;
+
+            for (k = 0; k < MAX_MON_ITEMS; k++)
+                {
+                    if (GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + k) == ITEM_NONE)
+                        {
+                            if (targetableSlots[0] != MAX_MON_ITEMS)
+                                index++;
+                            targetableSlots[index] = k;
+                        }
+                }
 
             ability = gSpeciesInfo[species].abilities[GetMonData(&gPlayerParty[i], MON_DATA_ABILITY_NUM)];
 
             if (ability == ABILITY_PICKUP
                 && species != SPECIES_NONE
                 && species != SPECIES_EGG
-                && heldItem == ITEM_NONE
+                && targetableSlots[0] != MAX_MON_ITEMS
                 && (Random() % 10) == 0)
             {
                 if (isInPyramid)
-                {
+                {   
                     heldItem = GetBattlePyramidPickupItemId();
-                    SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &heldItem);
+                    for (k = 0; k < MAX_MON_ITEMS; k++)
+                    {
+                        if (targetableSlots[k] == gItemsInfo[heldItem].heldSlot)
+                        {
+                            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + targetableSlots[k], &heldItem);
+                            break;
+                        }
+                    } 
                 }
                 else
                 {
@@ -15926,7 +15953,14 @@ static void Cmd_pickup(void)
                         percentTotal += sPickupTable[j].percentage[lvlDivBy10];
                         if (rand < percentTotal)
                         {
-                            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &sPickupTable[j].itemId);
+                            for (k = 0; k < MAX_MON_ITEMS; k++)
+                            {
+                                if (targetableSlots[k] == gItemsInfo[sPickupTable[j].itemId].heldSlot)
+                                {
+                                    SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + targetableSlots[k], &sPickupTable[j].itemId);
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
@@ -15935,21 +15969,39 @@ static void Cmd_pickup(void)
             else if (ability == ABILITY_HONEY_GATHER
                 && species != 0
                 && species != SPECIES_EGG
-                && heldItem == ITEM_NONE)
+                && targetableSlots[0] != MAX_MON_ITEMS)
             {
                 if ((lvlDivBy10 + 1 ) * 5 > Random() % 100)
                 {
                     heldItem = ITEM_HONEY;
-                    SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &heldItem);
+                    for (k = 0; k < MAX_MON_ITEMS; k++)
+                    {
+                        if (targetableSlots[k] == gItemsInfo[heldItem].heldSlot)
+                        {
+                            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + targetableSlots[k], &heldItem);
+                            break;
+                        }
+                    }
                 }
             }
             else if (P_SHUCKLE_BERRY_JUICE == GEN_2
                 && species == SPECIES_SHUCKLE
-                && heldItem == ITEM_ORAN_BERRY
                 && (Random() % 16) == 0)
             {
                 heldItem = ITEM_BERRY_JUICE;
-                SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &heldItem);
+                for (k = 0; k < MAX_MON_ITEMS; k++)
+                {
+                    if (GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + k) == ITEM_ORAN_BERRY)
+                    {
+                        if (gItemsInfo[heldItem].heldSlot != gItemsInfo[ITEM_ORAN_BERRY].heldSlot)
+                            DebugPrintf("WARN: Berry Juice not in same slot category as Oran Berry (Multi)");
+                        if (gItemsInfo[ITEM_ORAN_BERRY].heldSlot == k)
+                        {   
+                            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + k, &heldItem);
+                            break;
+                        }
+                    }
+                }
             }
         }
     }

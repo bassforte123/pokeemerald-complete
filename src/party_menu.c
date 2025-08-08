@@ -6887,7 +6887,7 @@ void CB2_ChooseMonToGiveItem(void)
 static void TryGiveItemOrMailToSelectedMon(u8 taskId)
 {
     u16 slot = gItemsInfo[gPartyMenu.bagItem].heldSlot;
-    DebugPrintf("Test26");
+
     sPartyMenuItemId = SlotToItemId(GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + gItemsInfo[gPartyMenu.bagItem].heldSlot), slot);
     if (sPartyMenuItemId == ITEM_NONE)
     {

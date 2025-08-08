@@ -4436,6 +4436,7 @@ static void InitBoxMonSprites(u8 boxId)
     u16 i, j, count;
     u16 species;
     u32 personality;
+    bool32 hasItem;
 
     count = 0;
     boxPosition = 0;
@@ -4465,7 +4466,16 @@ static void InitBoxMonSprites(u8 boxId)
     {
         for (boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
-            if (GetBoxMonDataAt(boxId, boxPosition, MON_DATA_HELD_ITEM) == ITEM_NONE)
+            hasItem = FALSE;
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                if (GetBoxMonDataAt(boxId, boxPosition, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+                {
+                    hasItem = TRUE;
+                    break;
+                }
+            }
+            if (hasItem == FALSE)
                 sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
         }
     }
@@ -4571,6 +4581,7 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
     u8 subpriority = 19 - column;
     u8 iconsCreated = 0;
     u8 boxPosition = column;
+    bool32 hasItem = FALSE;
 
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
     {
@@ -4598,6 +4609,17 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
     {
         // Separate case for Move Items mode is used
         // to create the icons with the proper blend
+
+        hasItem = FALSE;
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetBoxMonDataAt(sStorage->incomingBoxId, boxPosition, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+            {
+                hasItem = TRUE;
+                break;
+            }
+        }
+        
         for (i = 0; i < IN_BOX_ROWS; i++)
         {
             if (sStorage->boxSpecies[boxPosition] != SPECIES_NONE)
@@ -4611,7 +4633,7 @@ static u8 CreateBoxMonIconsInColumn(u8 column, u16 distance, s16 speed)
                     sStorage->boxMonsSprites[boxPosition]->sSpeed = speed;
                     sStorage->boxMonsSprites[boxPosition]->sScrollInDestX = xDest;
                     sStorage->boxMonsSprites[boxPosition]->callback = SpriteCB_BoxMonIconScrollIn;
-                    if (GetBoxMonDataAt(sStorage->incomingBoxId, boxPosition, MON_DATA_HELD_ITEM) == ITEM_NONE)
+                    if (!hasItem)
                         sStorage->boxMonsSprites[boxPosition]->oam.objMode = ST_OAM_OBJ_BLEND;
                     iconsCreated++;
                 }
@@ -4733,9 +4755,10 @@ static void SetBoxMonIconObjMode(u8 boxPosition, u8 objMode)
 
 static void CreatePartyMonsSprites(bool8 visible)
 {
-    u16 i, count;
+    u16 i, j, count;
     u16 species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES_OR_EGG);
     u32 personality = GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY);
+    bool32 hasItem = FALSE;
 
     sStorage->partySprites[0] = CreateMonIconSprite(species, personality, 104, 64, 1, 12);
     count = 1;
@@ -4767,7 +4790,16 @@ static void CreatePartyMonsSprites(bool8 visible)
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            if (sStorage->partySprites[i] != NULL && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == ITEM_NONE)
+            hasItem = FALSE;
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+            {
+                if (sStorage->partySprites[i] != NULL && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j) != ITEM_NONE)
+                {
+                    hasItem = TRUE;
+                    break;
+                }
+            }
+            if (!hasItem)
                 sStorage->partySprites[i]->oam.objMode = ST_OAM_OBJ_BLEND;
         }
     }
@@ -10056,6 +10088,8 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
 {
     u16 species = GetBoxMonData(boxMon, MON_DATA_SPECIES);
     bool8 isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY);
+    bool32 hasItem = FALSE;
+    u8 i;
     u32 pid = GetBoxMonData(boxMon, MON_DATA_PERSONALITY);
 
     // Update front sprite
@@ -10081,7 +10115,18 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
             DestroyBoxMonIconAtPosition(sCursorPosition);
             CreateBoxMonIconAtPos(sCursorPosition);
             if (sStorage->boxOption == OPTION_MOVE_ITEMS)
-                SetBoxMonIconObjMode(sCursorPosition, (GetBoxMonData(boxMon, MON_DATA_HELD_ITEM) == ITEM_NONE ? ST_OAM_OBJ_NORMAL : ST_OAM_OBJ_BLEND));
+                {
+                    hasItem = FALSE;
+                    for (i = 0; i < MAX_MON_ITEMS; i++)
+                    {
+                        if (GetBoxMonData(boxMon, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+                        {
+                            hasItem = TRUE;
+                            break;
+                        }
+                    }
+                    SetBoxMonIconObjMode(sCursorPosition, (!hasItem ? ST_OAM_OBJ_NORMAL : ST_OAM_OBJ_BLEND));
+                }
         }
     }
     sJustOpenedBag = FALSE;

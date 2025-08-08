@@ -1241,8 +1241,14 @@ static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityN
     SetMonData(mon, MON_DATA_ABILITY_NUM, &abilityNum);
 
     // Set Held Item
-    if (item)
-        SetMonData(mon, MON_DATA_HELD_ITEM, &item);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (item && gItemsInfo[item].heldSlot == i)
+            {
+                SetMonData(mon, MON_DATA_HELD_ITEM + i, &item);
+                break;
+            }
+    }
 
     //Set moves
     for (i = 0; i < MAX_MON_MOVES; i++)

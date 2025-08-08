@@ -7174,6 +7174,16 @@ u32 GetTeraTypeFromPersonality(struct Pokemon *mon)
 }
 
 //Extra Held Item Stuff
+u8 MonHasItem(struct Pokemon *mon, u16 item)
+{
+    u8 i;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++)
+        if(item == GetMonData(mon, MON_DATA_HELD_ITEM + i))
+            return TRUE;
+
+    return FALSE;
+}
 u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect)
 {
     u8 i;
@@ -7218,16 +7228,4 @@ u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u
             return item;
     }
     return ITEM_NONE;
-}
-
-u8 GetNumOfHeldItems(struct Pokemon *mon)
-{
-    u8 i;
-
-    for(i = 0; i < MAX_MON_ITEMS; i++){
-        if(GetMonData(mon, MON_DATA_HELD_ITEM + i) == ITEM_NONE)
-            return i;
-    }
-
-    return MAX_MON_ITEMS; //No Empty Slot
 }
