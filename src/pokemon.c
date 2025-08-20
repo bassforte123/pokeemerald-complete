@@ -1581,15 +1581,19 @@ void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level,
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest)
 {
     s32 i;
-    u16 heldItem;
+    u16 heldItem[MAX_MON_ITEMS];
 
     dest->species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
+    
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        heldItem[i] = GetMonData(mon, MON_DATA_HELD_ITEM + i, NULL);
 
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-        heldItem = ITEM_NONE;
+        if (heldItem[i] == ITEM_ENIGMA_BERRY_E_READER)
+            heldItem[i] = ITEM_NONE;
 
-    dest->heldItem = heldItem;
+        dest->heldItem[i] = heldItem[i];
+    }
 
     for (i = 0; i < MAX_MON_MOVES; i++)
         dest->moves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, NULL);
@@ -2532,8 +2536,8 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_HELD_ITEM:
             retVal = substruct0->heldItem;
             break;
-        case MON_DATA_HELD_ITEM_BERRY:
-            retVal = substruct0->heldItemBerry;
+        case MON_DATA_HELD_ITEM_TWO:
+            retVal = substruct0->heldItem2;
             break;
         case MON_DATA_EXP:
             retVal = substruct0->experience;
@@ -3030,8 +3034,8 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         case MON_DATA_HELD_ITEM:
             SET16(substruct0->heldItem);
             break;
-        case MON_DATA_HELD_ITEM_BERRY:
-            SET16(substruct0->heldItemBerry);
+        case MON_DATA_HELD_ITEM_TWO:
+            SET16(substruct0->heldItem2);
             break;
         case MON_DATA_EXP:
             SET32(substruct0->experience);
@@ -3535,7 +3539,7 @@ void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
                 OT_ID_RANDOM_NO_SHINY,
                 0);
 
-            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleResources->secretBase->party.heldItems[i]);
+            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleResources->secretBase->party.heldItem[i]);
 
             for (j = 0; j < NUM_STATS; j++)
                 SetMonData(&gEnemyParty[i], MON_DATA_HP_EV + j, &gBattleResources->secretBase->party.EVs[i]);

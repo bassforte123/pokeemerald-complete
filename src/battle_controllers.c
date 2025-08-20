@@ -1670,8 +1670,8 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         dst[1] = data16 >> 8;
         size = 2;
         break;
-    case REQUEST_HELDITEM_BERRY_BATTLE:
-        data16 = GetMonData(&party[monId], MON_DATA_HELD_ITEM_BERRY);
+    case REQUEST_HELDITEM_BATTLE_TWO:
+        data16 = GetMonData(&party[monId], MON_DATA_HELD_ITEM_TWO);
         dst[0] = data16;
         dst[1] = data16 >> 8;
         size = 2;
@@ -1976,8 +1976,8 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
     case REQUEST_HELDITEM_BATTLE:
         SetMonData(&party[monId], MON_DATA_HELD_ITEM, &gBattleResources->bufferA[battler][3]);
         break;
-    case REQUEST_HELDITEM_BERRY_BATTLE:
-        SetMonData(&party[monId], MON_DATA_HELD_ITEM_BERRY, &gBattleResources->bufferA[battler][3]);
+    case REQUEST_HELDITEM_BATTLE_TWO:
+        SetMonData(&party[monId], MON_DATA_HELD_ITEM_TWO, &gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MOVES_PP_BATTLE:
         for (i = 0; i < MAX_MON_MOVES; i++)

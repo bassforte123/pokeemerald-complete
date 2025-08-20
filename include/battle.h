@@ -273,7 +273,7 @@ struct AI_SavedBattleMon
 {
     u16 ability;
     u16 moves[MAX_MON_MOVES];
-    u16 heldItems[MAX_MON_ITEMS];
+    u16 heldItem[MAX_MON_ITEMS];
     u16 species:15;
     u16 saved:1;
     u8 types[3];
@@ -369,7 +369,7 @@ struct BattleHistory
     u8 moveHistoryIndex[MAX_BATTLERS_COUNT];
     u16 trainerItems[MAX_BATTLERS_COUNT];
     u8 itemsNo;
-    u16 heldItems[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
+    u16 heldItem[MAX_BATTLERS_COUNT][MAX_MON_ITEMS];
 };
 
 struct BattleScriptsStack

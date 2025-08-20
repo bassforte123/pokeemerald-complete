@@ -12179,59 +12179,74 @@ u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating)
 //Converts itemIDs to offsetItemIDs based on slot
 u16 ItemIdToSlot(u16 item, u8 slot)
 {
-    if (item == ITEM_NONE) //Don't convert if no item
-        return ITEM_NONE;
+    // OFFSET LOGIC: used to convert itemIDs to offset itemIDs if you need to save space by using smaller item slots.
+    // To enable: uncomment the code here in ItemIDToSlot and also SlotToItemID
+    // Example here accepts IDs and if going to a berry only Slot1 converts the item range to a berry exclusive range.
+    // In this case, the item slot would only need to be large enough to accomodate berries. 
+    // Use in conjunction with item helditemslots to categorize slots by item type
 
-    if (slot == 0)  //First slot has the full item range, so no conversion needed
-        return item;
+    // if (item == ITEM_NONE) //Don't convert if no item
+    //     return ITEM_NONE;
 
-    if (TESTING)
-    {
-        return item; //Tests default to full item range additional item slots
-    }
+    // if (slot == 0)  //First slot has the full item range, so no conversion needed
+    //     return item;
 
-    u16 offsetItem = item - FIRST_BERRY_INDEX;
+    // if (TESTING)
+    // {
+    //     return item; //Tests default to full item range additional item slots
+    // }
 
-    if (offsetItem > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
-        return ITEM_TO_BERRY(FIRST_BERRY_INDEX);
-    else
-        return ITEM_TO_BERRY(item);
+    // u16 offsetItem = item - FIRST_BERRY_INDEX;
+
+    // if (offsetItem > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
+    //     return ITEM_TO_BERRY(FIRST_BERRY_INDEX);
+    // else
+    //     return ITEM_TO_BERRY(item);
+
+    return item;
+    
 }
 
 //Converts offsetItemIDs to itemIDs based on slot
 u16 SlotToItemId(u16 offsetItemID, u8 slot)
 {
-    if (offsetItemID == ITEM_NONE) //Don't convert if no berry
-        return ITEM_NONE;
+    // OFFSET LOGIC: used to convert offset itemIDs back into normal itemIDs if you need to save space by using smaller item slots.
+    // To enable: uncomment the code here in SlotToItemID and also ItemIDToSlot
+    // Example here accepts IDs from a berry only Slot1 and converts them back into normal itemIDs for general use.
+    // In this case, the item slot would only need to be large enough to accomodate berries.
+    // Use in conjunction with item helditemslots to categorize slots by item type
 
-    if (TESTING)
-    {
-        return offsetItemID; //Tests default to full item range additional item slots
-    }
+    // if (offsetItemID == ITEM_NONE) //Don't convert if no item
+    //     return ITEM_NONE;
 
-    if (slot == 0) //First slot has the full item range, so no conversion needed
-        return offsetItemID;
+    // if (TESTING)
+    // {
+    //     return offsetItemID; //Tests don't use offset itemID logic
+    // }
 
-    if (slot == 1) //Second slot only handles berries and needs to convert item IDs
-    {
-        u16 item = offsetItemID - 1;
+    // if (slot == 0) //First slot has the full item range, so no conversion needed
+    //     return offsetItemID;
 
-        if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX) //range for berry items for a berry specific slot
-        {
-            DebugPrintf("Invalid Item ID[%d]: battler %d, lastuseditemid %d, item1: %d, item2: %d", slot, gLastUsedItem, item, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
-            return ITEM_NONE; //Escape if the item is out of the expected range
-        }
+    // if (slot == 1) //Second slot only handles berries and needs to convert item IDs
+    // {
+    //     u16 item = offsetItemID - 1;
 
-        return BERRY_TO_ITEM(offsetItemID);
-    }
+    //     if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX) //range for berry items for a berry specific slot
+    //     {
+    //         DebugPrintf("Invalid Item ID[%d]: battler %d, lastuseditemid %d, item1: %d, item2: %d", slot, gLastUsedItem, item, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
+    //         return ITEM_NONE; //Escape if the item is out of the expected range
+    //     }
 
-    if (offsetItemID > ITEMS_COUNT)
-    {
-        //DebugPrintf("Invalid Item: Battler[1]: battler %d, lastuseditemid %d, item1: %d, item2: %d", gLastUsedItem, itemID, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
-        return ITEM_NONE;
-    }
+    //     return BERRY_TO_ITEM(offsetItemID);
+    // }
+
+    // if (offsetItemID > ITEMS_COUNT)
+    // {
+    //     //DebugPrintf("Invalid Item: Battler[1]: battler %d, lastuseditemid %d, item1: %d, item2: %d", gLastUsedItem, itemID, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
+    //     return ITEM_NONE;
+    // }
     
-    //Returning the reegular itemID version of the offsetItemID
+    //Returning the regular itemID version of the offsetItemID
     return offsetItemID;
 }
 

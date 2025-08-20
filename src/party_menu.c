@@ -4395,7 +4395,7 @@ static void UpdatePartyMonHeldItemSprite(struct Pokemon *mon, struct PartyMenuBo
     u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
     if (GetMonData(mon, MON_DATA_HELD_ITEM) == ITEM_NONE)
-        item = GetMonData(mon, MON_DATA_HELD_ITEM_BERRY);
+        item = GetMonData(mon, MON_DATA_HELD_ITEM_TWO);
 
     //Sets item value to the Held item first so that Mail rules take priority.  Item value is populated if at least one item slot is filled.
     ShowOrHideHeldItemSprite(item, menuBox);

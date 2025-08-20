@@ -35,7 +35,7 @@ enum {
     MON_DATA_NICKNAME10,
     MON_DATA_SPECIES,
     MON_DATA_HELD_ITEM,
-    MON_DATA_HELD_ITEM_BERRY,
+    MON_DATA_HELD_ITEM_TWO,
     MON_DATA_MOVE1,
     MON_DATA_MOVE2,
     MON_DATA_MOVE3,
@@ -129,7 +129,7 @@ struct PokemonSubstruct0
     u16 heldItem:10; // 1023 items.
     u16 pokeball:6; // 63 balls.
     u32 experience:21;
-    u32 heldItemBerry:10; // 1023 items.
+    u32 heldItem2:10; // 1023 items.
     u32 unused_04:1;
     u8 ppBonuses;
     u8 friendship;

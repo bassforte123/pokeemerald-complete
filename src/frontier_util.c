@@ -42,7 +42,7 @@
 struct FrontierBrainMon
 {
     u16 species;
-    u16 heldItem;
+    u16 heldItem[MAX_MON_ITEMS];
     u8 fixedIV;
     u8 nature;
     u8 evs[NUM_STATS];
@@ -256,7 +256,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_ALAKAZAM,
-                .heldItem = ITEM_BRIGHT_POWDER,
+                .heldItem = { ITEM_BRIGHT_POWDER },
                 .fixedIV = 24,
                 .nature = NATURE_MODEST,
                 .evs = {106, 0, 152, 152, 100, 0},
@@ -264,7 +264,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_ENTEI,
-                .heldItem = ITEM_LUM_BERRY,
+                .heldItem = { ITEM_LUM_BERRY },
                 .fixedIV = 24,
                 .nature = NATURE_LONELY,
                 .evs = {100, 152, 152, 0, 100, 6},
@@ -272,7 +272,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SNORLAX,
-                .heldItem = ITEM_QUICK_CLAW,
+                .heldItem = { ITEM_QUICK_CLAW },
                 .fixedIV = 24,
                 .nature = NATURE_ADAMANT,
                 .evs = {152, 152, 0, 0, 106, 100},
@@ -283,7 +283,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_RAIKOU,
-                .heldItem = ITEM_LUM_BERRY,
+                .heldItem = { ITEM_LUM_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {158, 0, 252, 100, 0, 0},
@@ -291,7 +291,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_LATIOS,
-                .heldItem = ITEM_BRIGHT_POWDER,
+                .heldItem = { ITEM_BRIGHT_POWDER },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {252, 0, 252, 6, 0, 0},
@@ -299,7 +299,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SNORLAX,
-                .heldItem = ITEM_CHESTO_BERRY,
+                .heldItem = { ITEM_CHESTO_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {252, 252, 0, 0, 6, 0},
@@ -313,7 +313,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_SWAMPERT,
-                .heldItem = ITEM_FOCUS_BAND,
+                .heldItem = { ITEM_FOCUS_BAND },
                 .fixedIV = 20,
                 .nature = NATURE_BRAVE,
                 .evs = {152, 152, 106, 0, 100, 0},
@@ -321,7 +321,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SALAMENCE,
-                .heldItem = ITEM_LUM_BERRY,
+                .heldItem = { ITEM_LUM_BERRY },
                 .fixedIV = 20,
                 .nature = NATURE_ADAMANT,
                 .evs = {152, 152, 106, 100, 0, 0},
@@ -329,7 +329,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_CHARIZARD,
-                .heldItem = ITEM_WHITE_HERB,
+                .heldItem = { ITEM_WHITE_HERB },
                 .fixedIV = 20,
                 .nature = NATURE_QUIET,
                 .evs = {100, 152, 106, 152, 0, 0},
@@ -340,7 +340,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_SWAMPERT,
-                .heldItem = ITEM_LEFTOVERS,
+                .heldItem = { ITEM_LEFTOVERS },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {252, 252, 6, 0, 0, 0},
@@ -348,7 +348,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_METAGROSS,
-                .heldItem = ITEM_QUICK_CLAW,
+                .heldItem = { ITEM_QUICK_CLAW },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {252, 252, 6, 0, 0, 0},
@@ -356,7 +356,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_LATIAS,
-                .heldItem = ITEM_CHESTO_BERRY,
+                .heldItem = { ITEM_CHESTO_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {252, 0, 252, 6, 0, 0},
@@ -370,7 +370,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_CROBAT,
-                .heldItem = ITEM_BRIGHT_POWDER,
+                .heldItem = { ITEM_BRIGHT_POWDER },
                 .fixedIV = 16,
                 .nature = NATURE_ADAMANT,
                 .evs = {152, 0, 0, 152, 100, 106},
@@ -378,7 +378,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SLAKING,
-                .heldItem = ITEM_SCOPE_LENS,
+                .heldItem = { ITEM_SCOPE_LENS },
                 .fixedIV = 16,
                 .nature = NATURE_HARDY,
                 .evs = {152, 152, 0, 106, 100, 0},
@@ -386,7 +386,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_LAPRAS,
-                .heldItem = ITEM_QUICK_CLAW,
+                .heldItem = { ITEM_QUICK_CLAW },
                 .fixedIV = 16,
                 .nature = NATURE_QUIET,
                 .evs = {0, 0, 252, 0, 106, 152},
@@ -397,7 +397,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_ARCANINE,
-                .heldItem = ITEM_WHITE_HERB,
+                .heldItem = { ITEM_WHITE_HERB },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_HASTY,
                 .evs = {6, 252, 252, 0, 0, 0},
@@ -405,7 +405,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SLAKING,
-                .heldItem = ITEM_SCOPE_LENS,
+                .heldItem = { ITEM_SCOPE_LENS },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_HARDY,
                 .evs = {6, 252, 0, 252, 0, 0},
@@ -413,7 +413,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SUICUNE,
-                .heldItem = ITEM_KINGS_ROCK,
+                .heldItem = { ITEM_KINGS_ROCK },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_HASTY,
                 .evs = {252, 0, 252, 6, 0, 0},
@@ -427,7 +427,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_HERACROSS,
-                .heldItem = ITEM_SALAC_BERRY,
+                .heldItem = { ITEM_SALAC_BERRY },
                 .fixedIV = 20,
                 .nature = NATURE_JOLLY,
                 .evs = {106, 152, 0, 152, 0, 100},
@@ -435,7 +435,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_UMBREON,
-                .heldItem = ITEM_LEFTOVERS,
+                .heldItem = { ITEM_LEFTOVERS },
                 .fixedIV = 20,
                 .nature = NATURE_CALM,
                 .evs = {152, 0, 100, 0, 152, 106},
@@ -443,7 +443,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SHEDINJA,
-                .heldItem = ITEM_BRIGHT_POWDER,
+                .heldItem = { ITEM_BRIGHT_POWDER },
                 .fixedIV = 20,
                 .nature = NATURE_ADAMANT,
                 .evs = {0, 252, 6, 252, 0, 0},
@@ -454,7 +454,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_UMBREON,
-                .heldItem = ITEM_CHESTO_BERRY,
+                .heldItem = { ITEM_CHESTO_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_CALM,
                 .evs = {252, 0, 0, 0, 252, 6},
@@ -462,7 +462,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_GENGAR,
-                .heldItem = ITEM_LEFTOVERS,
+                .heldItem = { ITEM_LEFTOVERS },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MODEST,
                 .evs = {252, 0, 252, 0, 6, 0},
@@ -470,7 +470,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_BRELOOM,
-                .heldItem = ITEM_LUM_BERRY,
+                .heldItem = { ITEM_LUM_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_JOLLY,
                 .evs = {6, 252, 0, 252, 0, 0},
@@ -485,7 +485,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_METANG,
-                .heldItem = ITEM_SITRUS_BERRY,
+                .heldItem = { ITEM_SITRUS_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {0, 252, 252, 0, 6, 0},
@@ -493,7 +493,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SKARMORY,
-                .heldItem = ITEM_SITRUS_BERRY,
+                .heldItem = { ITEM_SITRUS_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_IMPISH,
                 .evs = {252, 0, 0, 0, 6, 252},
@@ -501,7 +501,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_AGGRON,
-                .heldItem = ITEM_SITRUS_BERRY,
+                .heldItem = { ITEM_SITRUS_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {0, 252, 0, 0, 252, 6},
@@ -511,7 +511,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_METANG,
-                .heldItem = ITEM_SITRUS_BERRY,
+                .heldItem = { ITEM_SITRUS_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {0, 252, 252, 0, 6, 0},
@@ -519,7 +519,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SKARMORY,
-                .heldItem = ITEM_SITRUS_BERRY,
+                .heldItem = { ITEM_SITRUS_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_IMPISH,
                 .evs = {252, 0, 0, 0, 6, 252},
@@ -527,7 +527,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_AGGRON,
-                .heldItem = ITEM_SITRUS_BERRY,
+                .heldItem = { ITEM_SITRUS_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {0, 252, 0, 0, 252, 6},
@@ -541,7 +541,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_SEVIPER,
-                .heldItem = ITEM_QUICK_CLAW,
+                .heldItem = { ITEM_QUICK_CLAW },
                 .fixedIV = 16,
                 .nature = NATURE_BRAVE,
                 .evs = {252, 0, 252, 0, 6, 0},
@@ -549,7 +549,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_SHUCKLE,
-                .heldItem = ITEM_CHESTO_BERRY,
+                .heldItem = { ITEM_CHESTO_BERRY },
                 .fixedIV = 16,
                 .nature = NATURE_BOLD,
                 .evs = {252, 0, 0, 0, 106, 252},
@@ -557,7 +557,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_MILOTIC,
-                .heldItem = ITEM_LEFTOVERS,
+                .heldItem = { ITEM_LEFTOVERS },
                 .fixedIV = 16,
                 .nature = NATURE_MODEST,
                 .evs = {152, 0, 100, 0, 152, 106},
@@ -568,7 +568,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_SEVIPER,
-                .heldItem = ITEM_FOCUS_BAND,
+                .heldItem = { ITEM_FOCUS_BAND },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BOLD,
                 .evs = {252, 0, 0, 0, 252, 6},
@@ -576,7 +576,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_STEELIX,
-                .heldItem = ITEM_BRIGHT_POWDER,
+                .heldItem = { ITEM_BRIGHT_POWDER },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_BRAVE,
                 .evs = {252, 0, 0, 0, 6, 252},
@@ -584,7 +584,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_GYARADOS,
-                .heldItem = ITEM_CHESTO_BERRY,
+                .heldItem = { ITEM_CHESTO_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_ADAMANT,
                 .evs = {252, 6, 0, 0, 0, 252},
@@ -598,7 +598,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_REGIROCK,
-                .heldItem = ITEM_QUICK_CLAW,
+                .heldItem = { ITEM_QUICK_CLAW },
                 .fixedIV = 16,
                 .nature = NATURE_ADAMANT,
                 .evs = {152, 152, 0, 0, 106, 100},
@@ -606,7 +606,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_REGISTEEL,
-                .heldItem = ITEM_LEFTOVERS,
+                .heldItem = { ITEM_LEFTOVERS },
                 .fixedIV = 16,
                 .nature = NATURE_ADAMANT,
                 .evs = {152, 152, 0, 0, 6, 200},
@@ -614,7 +614,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_REGICE,
-                .heldItem = ITEM_CHESTO_BERRY,
+                .heldItem = { ITEM_CHESTO_BERRY },
                 .fixedIV = 16,
                 .nature = NATURE_MODEST,
                 .evs = {106, 0, 152, 0, 100, 152},
@@ -625,7 +625,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
         {
             {
                 .species = SPECIES_ARTICUNO,
-                .heldItem = ITEM_SCOPE_LENS,
+                .heldItem = { ITEM_SCOPE_LENS },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MILD,
                 .evs = {6, 0, 252, 252, 0, 0},
@@ -633,7 +633,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_ZAPDOS,
-                .heldItem = ITEM_LUM_BERRY,
+                .heldItem = { ITEM_LUM_BERRY },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MILD,
                 .evs = {6, 0, 252, 252, 0, 0},
@@ -641,7 +641,7 @@ static const struct FrontierBrainMon sFrontierBrainsMons[][2][FRONTIER_PARTY_SIZ
             },
             {
                 .species = SPECIES_MOLTRES,
-                .heldItem = ITEM_BRIGHT_POWDER,
+                .heldItem = { ITEM_BRIGHT_POWDER },
                 .fixedIV = MAX_PER_STAT_IVS,
                 .nature = NATURE_MILD,
                 .evs = {6, 0, 252, 252, 0, 0},
@@ -1961,7 +1961,7 @@ static void AppendCaughtBannedMonSpeciesName(u16 species, u8 count, s32 numBanne
     StringAppend(gStringVar1, GetSpeciesName(species));
 }
 
-static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monLevel, u16 *speciesArray, u16 *itemsArray, u8 *count)
+static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monLevel, u16 *speciesArray, u16 itemsArray[][MAX_MON_ITEMS], u8 slot, u8 *count)
 {
     s32 i = 0;
 
@@ -1979,14 +1979,14 @@ static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monL
 
     if (heldItem != 0)
     {
-        for (i = 0; i < *count && itemsArray[i] != heldItem; i++)
+        for (i = 0; i < *count && itemsArray[i][slot] != heldItem; i++)
             ;
         if (i != *count)
             return;
     }
 
     speciesArray[*count] = species;
-    itemsArray[*count] = heldItem;
+    itemsArray[*count][slot] = heldItem;
     (*count)++;
 }
 
@@ -1996,10 +1996,10 @@ static void AppendIfValid(u16 species, u16 heldItem, u16 hp, u8 lvlMode, u8 monL
 static void CheckPartyIneligibility(void)
 {
     u16 speciesArray[PARTY_SIZE];
-    u16 itemArray[PARTY_SIZE];
+    u16 itemArray[PARTY_SIZE][MAX_MON_ITEMS];
     s32 monId = 0;
     s32 toChoose = 0;
-    u8 count = 0;
+    u8 count = 0, i, slot;
     s32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     s32 monIdLooper;
 
@@ -2031,17 +2031,23 @@ static void CheckPartyIneligibility(void)
         do
         {
             u16 species = GetMonData(&gPlayerParty[monId], MON_DATA_SPECIES_OR_EGG);
-            u16 heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM);
+            u16 heldItem;
             u8 level = GetMonData(&gPlayerParty[monId], MON_DATA_LEVEL);
             u16 hp = GetMonData(&gPlayerParty[monId], MON_DATA_HP);
-            if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
+
+            for (i = 0; i < MAX_MON_ITEMS; i++)
             {
-                if (heldItem == ITEM_NONE)
-                    AppendIfValid(species, heldItem, hp, gSpecialVar_Result, level, speciesArray, itemArray, &numEligibleMons);
-            }
-            else
-            {
-                AppendIfValid(species, heldItem, hp, gSpecialVar_Result, level, speciesArray, itemArray, &numEligibleMons);
+                slot = i;
+                heldItem = GetMonData(&gPlayerParty[monId], MON_DATA_HELD_ITEM + i);
+                if (VarGet(VAR_FRONTIER_FACILITY) == FRONTIER_FACILITY_PYRAMID)
+                {
+                    if (heldItem == ITEM_NONE)
+                        AppendIfValid(species, heldItem, hp, gSpecialVar_Result, level, speciesArray, itemArray, slot, &numEligibleMons);
+                }
+                else
+                {
+                    AppendIfValid(species, heldItem, hp, gSpecialVar_Result, level, speciesArray, itemArray, slot, &numEligibleMons);
+                }
             }
             monId++;
             if (monId >= PARTY_SIZE)

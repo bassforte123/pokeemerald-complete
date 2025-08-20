@@ -156,6 +156,7 @@ static u32 PickLowest(const struct Trainer *trainer, u8 *poolIndexArray, u32 par
 
 static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u32 partyIndex, u32 monsCount, u32 battleTypeFlags, struct PoolRules *rules, struct PickFunctions pickFunctions)
 {
+    u32 i,j,k;
     u32 monIndex = POOL_SLOT_DISABLED;
     //  Pick Lead
     if (monIndex == POOL_SLOT_DISABLED)
@@ -168,7 +169,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         monIndex = pickFunctions.OtherFunction(trainer, poolIndexArray, partyIndex, monsCount, battleTypeFlags, rules);
     u32 chosenTags = trainer->party[monIndex].tags;
     u16 chosenSpecies = trainer->party[monIndex].species;
-    u16 chosenItem = trainer->party[monIndex].heldItem;
+    //u16 chosenItem = trainer->party[monIndex].heldItem;
     u16 chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
     //  If tag was required, change pool rule to account for the required tag already being picked
     u32 tagsToEliminate = 0;
@@ -196,7 +197,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         {
             u32 currentTags = trainer->party[poolIndexArray[currIndex]].tags;
             u16 currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
-            u16 currentItem = trainer->party[poolIndexArray[currIndex]].heldItem;
+            u16 currentItem;
             u16 currentNatDex = gSpeciesInfo[currentSpecies].natDexNum;
             if (currentTags & tagsToEliminate)
             {
@@ -206,25 +207,38 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
                 poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
             if (!rules->excludeForms && chosenNatDex == currentNatDex)
                 poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
-            if (rules->itemClause && currentItem != ITEM_NONE)
+            for (k = 0; k < MAX_MON_ITEMS; k++)
             {
-                if (rules->itemClauseExclusions)
+                currentItem = trainer->party[poolIndexArray[currIndex]].heldItem[k];
+                if (rules->itemClause && currentItem != ITEM_NONE)
                 {
-                    bool32 isExcluded = FALSE;
-                    for (u32 i = 0; i < ARRAY_COUNT(poolItemClauseExclusions); i++)
+                    if (rules->itemClauseExclusions)
                     {
-                        if (chosenItem == poolItemClauseExclusions[i])
+                        bool32 isExcluded = FALSE;
+                        for (i = 0; i < ARRAY_COUNT(poolItemClauseExclusions); i++)
                         {
-                            isExcluded = TRUE;
-                            break;
+                            for (j = 0; j < MAX_MON_ITEMS; j++)
+                            {
+                                if (trainer->party[monIndex].heldItem[j] == poolItemClauseExclusions[i])
+                                {
+                                    isExcluded = TRUE;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!isExcluded)
+                            poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+                    }
+                    else 
+                    {
+                        for (i = 0; i < MAX_MON_ITEMS; i++)
+                        {
+                                if (trainer->party[monIndex].heldItem[i] == currentItem)
+                                {
+                                    poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+                                }
                         }
                     }
-                    if (!isExcluded)
-                        poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
-                }
-                else if (chosenItem == currentItem)
-                {
-                    poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
                 }
             }
         }

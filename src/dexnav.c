@@ -89,7 +89,7 @@ struct DexNavSearch
 {
     u16 species;
     u16 moves[MAX_MON_MOVES];
-    u16 heldItem;
+    u16 heldItem; // Wild pokemon start with one held item
     u8 abilityNum;
     u8 potential;
     u8 searchLevel;

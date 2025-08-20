@@ -235,7 +235,7 @@ void SaveBattlerData(u32 battlerId)
         gAiThinkingStruct->saved[battlerId].saved = TRUE;
         gAiThinkingStruct->saved[battlerId].ability = gBattleMons[battlerId].ability;
         for (i = 0; i < MAX_MON_ITEMS; i++)
-            gAiThinkingStruct->saved[battlerId].heldItems[i] = gBattleMons[battlerId].items[i];
+            gAiThinkingStruct->saved[battlerId].heldItem[i] = gBattleMons[battlerId].items[i];
         gAiThinkingStruct->saved[battlerId].species = gBattleMons[battlerId].species;
         for (i = 0; i < 4; i++)
             gAiThinkingStruct->saved[battlerId].moves[i] = gBattleMons[battlerId].moves[i];
@@ -337,7 +337,7 @@ void RestoreBattlerData(u32 battlerId)
         gAiThinkingStruct->saved[battlerId].saved = FALSE;
         gBattleMons[battlerId].ability = gAiThinkingStruct->saved[battlerId].ability;
         for (i = 0; i < MAX_MON_ITEMS; i++)
-            gBattleMons[battlerId].items[i] = gAiThinkingStruct->saved[battlerId].heldItems[i];
+            gBattleMons[battlerId].items[i] = gAiThinkingStruct->saved[battlerId].heldItem[i];
         gBattleMons[battlerId].species = gAiThinkingStruct->saved[battlerId].species;
         for (i = 0; i < 4; i++)
             gBattleMons[battlerId].moves[i] = gAiThinkingStruct->saved[battlerId].moves[i];

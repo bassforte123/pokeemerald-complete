@@ -12075,7 +12075,7 @@ static void Cmd_various(void)
         VARIOUS_ARGS();
         u8 itemslot = GetHeldItemSlot(battler, gLastUsedItem, TRUE);
         if (itemslot != MAX_MON_ITEMS)
-            gBattleHistory->heldItems[battler][itemslot] = gBattleMons[battler].items[itemslot];
+            gBattleHistory->heldItem[battler][itemslot] = gBattleMons[battler].items[itemslot];
         break;
     }
     case VARIOUS_RESTORE_BATTLER_ITEM:
@@ -12083,7 +12083,7 @@ static void Cmd_various(void)
         VARIOUS_ARGS();
         u8 itemslot = GetHeldItemSlot(battler, gLastUsedItem, TRUE);
         if (itemslot != MAX_MON_ITEMS)
-            gBattleMons[battler].items[itemslot] = gBattleHistory->heldItems[battler][itemslot];
+            gBattleMons[battler].items[itemslot] = gBattleHistory->heldItem[battler][itemslot];
         break;
     }
     case VARIOUS_BATTLER_ITEM_TO_LAST_USED_ITEM:
