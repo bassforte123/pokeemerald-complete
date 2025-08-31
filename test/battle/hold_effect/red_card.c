@@ -560,6 +560,7 @@ SINGLE_BATTLE_TEST("Red Card switches the attacker with a random non-fainted rep
     }
 }
 
+
 DOUBLE_BATTLE_TEST("Red Card switches the target with a random non-battler, non-fainted replacement (Multi)")
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
@@ -1069,5 +1070,32 @@ SINGLE_BATTLE_TEST("Red Card activates before Eject Pack (Multi)")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Multiple Red Cards activate one at a time when hit (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD, ITEM_RED_CARD); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_BULBASAUR);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); 
+               MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        MESSAGE("Wobbuffet held up its Red Card against the opposing Wobbuffet!");
+        MESSAGE("The opposing Bulbasaur was dragged out!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        MESSAGE("Wobbuffet held up its Red Card against the opposing Wynaut!");
+        MESSAGE("The opposing Wobbuffet was dragged out!");
+    } THEN {
+        EXPECT(playerLeft->items[0] == ITEM_NONE);
+        EXPECT(playerLeft->items[1] == ITEM_NONE);
     }
 }

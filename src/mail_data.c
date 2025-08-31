@@ -1,5 +1,6 @@
 #include "global.h"
 #include "mail.h"
+#include "battle.h"
 #include "constants/items.h"
 #include "pokemon.h"
 #include "pokemon_icon.h"
@@ -48,6 +49,7 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
     u8 id, i;
     u16 species;
     u32 personality;
+    u16 slot = GetNextMonEmptySlot(mon, itemId);
 
     heldItem[0] = itemId;
     heldItem[1] = itemId >> 8;
@@ -72,7 +74,7 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
             gSaveBlock1Ptr->mail[id].species = SpeciesToMailSpecies(species, personality);
             gSaveBlock1Ptr->mail[id].itemId = itemId;
             SetMonData(mon, MON_DATA_MAIL, &id);
-            SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
+            SetMonData(mon, MON_DATA_HELD_ITEM + slot, heldItem);
             return id;
         }
     }
@@ -158,7 +160,7 @@ void ClearMailItemId(u8 mailId)
 
 u8 TakeMailFromMonAndSave(struct Pokemon *mon)
 {
-    u8 i;
+    u8 i, slot = MAX_MON_ITEMS;
     u8 newHeldItem[2];
     u8 newMailId;
 
@@ -166,6 +168,18 @@ u8 TakeMailFromMonAndSave(struct Pokemon *mon)
     newHeldItem[1] = ITEM_NONE << 8;
     newMailId = MAIL_NONE;
 
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (ItemIsMail(GetMonData(mon, MON_DATA_HELD_ITEM + i)))
+        {
+            slot = i;
+            break;
+        }
+    }
+
+    if (slot == MAX_MON_ITEMS)
+        return MAIL_NONE;
+        
     for (i = PARTY_SIZE; i < MAIL_COUNT; i++)
     {
         if (gSaveBlock1Ptr->mail[i].itemId == ITEM_NONE)
@@ -173,7 +187,7 @@ u8 TakeMailFromMonAndSave(struct Pokemon *mon)
             memcpy(&gSaveBlock1Ptr->mail[i], &gSaveBlock1Ptr->mail[GetMonData(mon, MON_DATA_MAIL)], sizeof(struct Mail));
             gSaveBlock1Ptr->mail[GetMonData(mon, MON_DATA_MAIL)].itemId = ITEM_NONE;
             SetMonData(mon, MON_DATA_MAIL, &newMailId);
-            SetMonData(mon, MON_DATA_HELD_ITEM, newHeldItem);
+            SetMonData(mon, MON_DATA_HELD_ITEM + slot, newHeldItem);
             return i;
         }
     }

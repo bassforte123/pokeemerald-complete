@@ -8887,6 +8887,11 @@ BattleScript_AirBaloonMsgIn::
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
+BattleScript_AirBaloonIronBallMsgIn::
+	printstring STRINGID_AIRBALLOONIRON
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
 BattleScript_AirBaloonMsgPop::
 	printstring STRINGID_AIRBALLOONPOP
 	waitmessage B_WAIT_TIME_LONG

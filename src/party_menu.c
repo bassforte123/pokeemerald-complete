@@ -2036,18 +2036,27 @@ static void DisplaySwitchedHeldItemMessage(u16 item, u16 item2, bool8 keepOpen)
 static void GiveItemToMon(struct Pokemon *mon, u16 item)
 {
     u8 itemBytes[2];
-    u16 slot = gItemsInfo[item].heldSlot;
-    item = ItemIdToSlot(item, slot);
+    u16 slot = GetNextMonEmptySlot(mon, item);
 
-    if (ItemIsMail(item) == TRUE)
+    if (slot != MAX_MON_ITEMS)
     {
-        if (GiveMailToMonByItemId(mon, item) == MAIL_NONE)
-            return;
+        item = ItemIdToSlot(item, slot);
+
+        if (ItemIsMail(item) == TRUE)
+        {
+            if (GiveMailToMonByItemId(mon, item) == MAIL_NONE)
+                return;
+        }
+        itemBytes[0] = item;
+        itemBytes[1] = item >> 8;
+        SetMonData(mon, MON_DATA_HELD_ITEM + slot, itemBytes);
+        TryItemHoldFormChange(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.slotId);
     }
-    itemBytes[0] = item;
-    itemBytes[1] = item >> 8;
-    SetMonData(mon, MON_DATA_HELD_ITEM + slot, itemBytes);
-    TryItemHoldFormChange(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.slotId);
+}
+
+static void BufferBagFullCantTakeItemMessage(u16 itemUnused)
+{
+    StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
 }
 
 static u8 TryTakeMonItem(struct Pokemon *mon)
@@ -2055,12 +2064,15 @@ static u8 TryTakeMonItem(struct Pokemon *mon)
     u16 item = ITEM_NONE;
     bool8 bagFull = FALSE;
 
-    for (int i = 0; i < MAX_MON_ITEMS; i++)
+    for (int i = MAX_MON_ITEMS -1; i >= 0; i--)
     {
         if (GetMonData(mon, MON_DATA_HELD_ITEM + i) != ITEM_NONE) //Check item without offset to see if empty
         {
             item = SlotToItemId(GetMonData(mon, MON_DATA_HELD_ITEM + i), i); //Set offset for slots
             
+            if (ItemIsMail(item) == TRUE)
+                continue;
+
             if (AddBagItem(item, 1) == FALSE)
                 bagFull = TRUE;
             else
@@ -2075,14 +2087,12 @@ static u8 TryTakeMonItem(struct Pokemon *mon)
     }
 
     if (bagFull == TRUE) //Give can't take item message if none of the slots are valid but at least one fails the bag check.
-        return 1;
+        {
+            BufferBagFullCantTakeItemMessage(item);
+            return 1;
+        }
     else
         return 0; //Returns no item to take if it can't find an item to take and none of the slots are a full bag item.
-}
-
-static void BufferBagFullCantTakeItemMessage(u16 itemUnused)
-{
-    StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
 }
 
 #define tHP           data[0]
@@ -2903,10 +2913,22 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     {
         if (GetMonData(&mons[1], MON_DATA_SPECIES) != SPECIES_NONE)
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SWITCH);
-        if (ItemIsMail(GetMonData(&mons[slotId], MON_DATA_HELD_ITEM)))
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_MAIL);
-        else
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_ITEM);
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (!ItemIsMail(GetMonData(&mons[slotId], MON_DATA_HELD_ITEM + i)))
+            {
+                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_ITEM);
+                break;
+            }
+        }
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (ItemIsMail(GetMonData(&mons[slotId], MON_DATA_HELD_ITEM + i)))
+            {
+                AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_MAIL);
+                break;
+            }
+        }
     }
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_CANCEL1);
 }
@@ -3357,6 +3379,7 @@ static void CursorCb_Cancel1(u8 taskId)
 
 static void CursorCb_Item(u8 taskId)
 {
+    DebugPrintf("CursorCb_Item");
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
@@ -3367,15 +3390,15 @@ static void CursorCb_Item(u8 taskId)
     gTasks[taskId].func = Task_HandleSelectionMenuInput;
 }
 
-static bool8 CheckIfHasItem(u16 item)
-{
-    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+// static bool8 CheckIfHasItem(u16 item)
+// {
+//     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
 
-        if(GetMonData(mon, MON_DATA_HELD_ITEM + gItemsInfo[item].heldSlot) != ITEM_NONE)
-            return TRUE;
+//         if(GetMonData(mon, MON_DATA_HELD_ITEM + gItemsInfo[item].heldSlot) != ITEM_NONE)
+//             return TRUE;
 
-    return FALSE;
-}
+//     return FALSE;
+// }
 
 static void CursorCb_Give(u8 taskId)
 {
@@ -3394,7 +3417,7 @@ static void CB2_SelectBagItemToGive(void)
 
 static void CB2_GiveHoldItem(void)
 {
-    u16 slot = gItemsInfo[gSpecialVar_ItemId].heldSlot;
+    u16 slot = GetNextMonEmptySlot(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId);
 
     if (gSpecialVar_ItemId == ITEM_NONE)
     {
@@ -3402,10 +3425,23 @@ static void CB2_GiveHoldItem(void)
     }
     else
     {
+        if (slot == MAX_MON_ITEMS) //Assign target slot when none empty (Multi)
+        {
+            if (B_HELD_ITEM_CATEGORIZATION)
+                slot = gItemsInfo[gSpecialVar_ItemId].heldSlot;
+            else
+                slot = 0;
+        }
+
         sPartyMenuItemId = SlotToItemId(GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot), slot);
 
+        // Already holding mail
+        if (ItemIsMail(sPartyMenuItemId))
+        {
+            InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, gPartyMenu.action, TRUE, PARTY_MSG_NONE, DisplayItemMustBeRemovedFirstMessage, gPartyMenu.exitCallback);
+        }
         // Already holding item
-        if (CheckIfHasItem(gSpecialVar_ItemId))
+        else if (sPartyMenuItemId != ITEM_NONE) //Check against targeted slot (Multi)
         {
             InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, gPartyMenu.action, TRUE, PARTY_MSG_NONE, Task_SwitchHoldItemsPrompt, gPartyMenu.exitCallback);
         }
@@ -3458,10 +3494,18 @@ static void Task_SwitchItemsYesNo(u8 taskId)
 
 static void Task_HandleSwitchItemsYesNoInput(u8 taskId)
 {
+    u8 slot;
+    u16 item = ITEM_NONE;
+
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
     case 0: // Yes, switch items
         RemoveBagItem(gSpecialVar_ItemId, 1);
+
+        if (B_HELD_ITEM_CATEGORIZATION)
+                slot = gItemsInfo[gSpecialVar_ItemId].heldSlot;
+            else
+                slot = 0;
 
         // No room to return held item to bag
         if (AddBagItem(sPartyMenuItemId, 1) == FALSE)
@@ -3474,12 +3518,14 @@ static void Task_HandleSwitchItemsYesNoInput(u8 taskId)
         // Giving mail
         else if (ItemIsMail(gSpecialVar_ItemId))
         {
+            SetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot, &item); //remove old item first (Multi)
             GiveItemToMon(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId);
             gTasks[taskId].func = Task_WriteMailToGiveMonAfterText;
         }
         // Giving item
         else
         {
+            SetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot, &item); //remove old item first (Multi)
             GiveItemToMon(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId);
             DisplaySwitchedHeldItemMessage(gSpecialVar_ItemId, sPartyMenuItemId, TRUE);
             gTasks[taskId].func = Task_UpdateHeldItemSprite;
@@ -3569,7 +3615,7 @@ static void Task_UpdateHeldItemSprite(u8 taskId)
 static void CursorCb_TakeItem(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    //u16 item = GetMonData(mon, MON_DATA_HELD_ITEM); //Item prompts moved to TryTakeMonItem
 
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
@@ -3582,7 +3628,7 @@ static void CursorCb_TakeItem(u8 taskId)
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         break;
     case 1: // No room to take item
-        BufferBagFullCantTakeItemMessage(item);
+        //BufferBagFullCantTakeItemMessage(item);
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         break;
     default: // Took item
@@ -6886,9 +6932,17 @@ void CB2_ChooseMonToGiveItem(void)
 
 static void TryGiveItemOrMailToSelectedMon(u8 taskId)
 {
-    u16 slot = gItemsInfo[gPartyMenu.bagItem].heldSlot;
+    u16 slot = GetNextMonEmptySlot(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.bagItem);
 
-    sPartyMenuItemId = SlotToItemId(GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + gItemsInfo[gPartyMenu.bagItem].heldSlot), slot);
+    if (slot == MAX_MON_ITEMS) //Assign target slot when none empty (Multi)
+    {
+        if (B_HELD_ITEM_CATEGORIZATION)
+            slot = gItemsInfo[gPartyMenu.bagItem].heldSlot;
+        else
+            slot = 0;
+    }
+
+    sPartyMenuItemId = SlotToItemId(GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot), slot);
     if (sPartyMenuItemId == ITEM_NONE)
     {
         GiveItemOrMailToSelectedMon(taskId);

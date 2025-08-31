@@ -398,6 +398,7 @@ u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegati
 u8 GetBattlerHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating);
 u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating);
+u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item);
 u16 ItemIdToSlot(u16 item, u8 slot);
 u16 SlotToItemId(u16 item, u8 slot);
 u8 GetSlot(u8 *availableSlots, u8 size);

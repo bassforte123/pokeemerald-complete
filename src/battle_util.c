@@ -4325,7 +4325,23 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_BALL_FETCH:
-                slot = gItemsInfo[gLastUsedBall].heldSlot;
+                
+                if (B_HELD_ITEM_CATEGORIZATION)
+                {
+                    slot = gItemsInfo[gLastUsedBall].heldSlot;
+                }
+                else
+                {
+                    slot = 0;
+                    for (int i = 0; i < MAX_MON_ITEMS; i++)
+                    {
+                        if (GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+                        {
+                            slot = i;
+                            break;
+                        }
+                    }
+                }
 
                 if (gBattleMons[battler].items[slot] == ITEM_NONE
                     && gBattleResults.catchAttempts[gLastUsedBall - ITEM_ULTRA_BALL] >= 1
@@ -7046,7 +7062,10 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
                 gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_AIR_BALLOON);
                 effect = ITEM_EFFECT_OTHER;
                 gBattleScripting.battler = battler;
-                BattleScriptPushCursorAndCallback(BattleScript_AirBaloonMsgIn);
+                if (SearchItemSlots(battlerItems, HOLD_EFFECT_IRON_BALL))
+                    BattleScriptPushCursorAndCallback(BattleScript_AirBaloonIronBallMsgIn);
+                else
+                    BattleScriptPushCursorAndCallback(BattleScript_AirBaloonMsgIn);
                 RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
             }
             if(SearchItemSlots(battlerItems, HOLD_EFFECT_ROOM_SERVICE))
@@ -12175,6 +12194,55 @@ u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating)
     }
     return slot;
 }
+
+//Gets next valid slot to add an item to based categorization flag and item's heldSlot value
+u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
+{
+    u8 i, slot = MAX_MON_ITEMS;
+
+    //If categorization flag is enabled, items can only be sent to their assigned slots based on their heldSlot value.
+    //Otherwise, items are first sent to empty available slots and if none are found, target the first item slot
+    if (B_HELD_ITEM_CATEGORIZATION)
+    {
+        i = gItemsInfo[item].heldSlot;
+        if (GetMonData(mon, MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+            slot = i;
+    }
+    else
+    {
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetMonData(mon, MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+            {
+                slot = i;
+                break;
+            }
+        }
+    }
+
+    //Example Block for hybrid categorization where first two slots are free but third slot (2) only takes items marked
+    // else
+    // {
+    //     if (gItemsInfo[item].heldSlot == 2)
+    //     {
+    //         slot = gItemsInfo[item].heldSlot;
+    //     }
+    //     else
+    //     {
+    //         for (int i = 0; i < MAX_MON_ITEMS; i++)
+    //         {
+    //             if (i != gItemsInfo[item].heldSlot && GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + i) == ITEM_NONE)
+    //             {
+    //                 slot = i;
+    //                 break;
+    //             }
+    //         }
+    //     }
+    // }
+
+    return slot;
+}
+
 
 //Converts itemIDs to offsetItemIDs based on slot
 u16 ItemIdToSlot(u16 item, u8 slot)

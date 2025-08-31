@@ -91,13 +91,14 @@ void HasEnoughMonsForDoubleBattle(void)
 
 static bool8 CheckPartyMonHasHeldItem(u16 item)
 {
-    int i;
+    int i, j;
 
     for(i = 0; i < PARTY_SIZE; i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
-        if (species != SPECIES_NONE && species != SPECIES_EGG && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == item)
-            return TRUE;
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            if (species != SPECIES_NONE && species != SPECIES_EGG && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j) == item)
+                return TRUE;
     }
     return FALSE;
 }

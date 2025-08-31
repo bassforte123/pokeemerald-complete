@@ -160,3 +160,21 @@ SINGLE_BATTLE_TEST("Restore HP Berry triggers only during the end turn (Multi)")
     }
 }
 #endif
+
+SINGLE_BATTLE_TEST("Multiple healing berries activate once per phase, switch-in then move-end (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_ORAN_BERRY].holdEffect == HOLD_EFFECT_RESTORE_HP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(20); Items(ITEM_ORAN_BERRY, ITEM_ORAN_BERRY); Ability(ABILITY_GLUTTONY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Wobbuffet restored its health using its Oran Berry!");
+        MESSAGE("Wobbuffet used Celebrate!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Wobbuffet restored its health using its Oran Berry!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
+    }
+}

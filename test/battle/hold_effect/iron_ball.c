@@ -37,3 +37,24 @@ SINGLE_BATTLE_TEST("Ground-type moves do neutral damage to non-grounded Flying t
     }
 }
 
+SINGLE_BATTLE_TEST("Iron Ball takes priority over Air Balloon (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIKACHU) { Items(ITEM_AIR_BALLOON, ITEM_IRON_BALL); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_EARTHQUAKE); };
+        TURN { MOVE(player, MOVE_EARTHQUAKE); };
+    } SCENE {
+        MESSAGE("The opposing Pikachu's Air Balloon was weighed down by its Iron Ball!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
+        NONE_OF {
+            MESSAGE("The opposing Pikachu floats in the air with its Air Balloon!");
+        }
+        MESSAGE("It's super effective!");
+        MESSAGE("The opposing Pikachu's Air Balloon popped!");
+        MESSAGE("It's super effective!");
+    } THEN {
+        EXPECT(player->items[0] == ITEM_NONE);
+    }
+}

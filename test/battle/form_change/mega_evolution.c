@@ -336,3 +336,30 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting 
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Mega Evolution works by held order (Multi)")
+{
+    u32 item1, item2, form;
+    PARAMETRIZE { item1 = ITEM_CHARIZARDITE_Y;     item2 = ITEM_CHARIZARDITE_X; form = 0; }
+    PARAMETRIZE { item1 = ITEM_CHARIZARDITE_X;     item2 = ITEM_CHARIZARDITE_Y; form = 1; }
+    PARAMETRIZE { item1 = ITEM_POTION;             item2 = ITEM_CHARIZARDITE_X; form = 1; }
+    PARAMETRIZE { item1 = ITEM_NONE;               item2 = ITEM_CHARIZARDITE_Y; form = 0; }
+    GIVEN {
+        PLAYER(SPECIES_CHARIZARD) { Items( item1, item2 ); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        if (form == 0)
+            MESSAGE("Charizard's Charizardite Y is reacting to 1's Mega Ring!");
+        else
+            MESSAGE("Charizard's Charizardite X is reacting to 1's Mega Ring!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
+        MESSAGE("Charizard has Mega Evolved into Mega Charizard!");
+    } THEN {
+        if (form == 0)
+            EXPECT_EQ(player->species, SPECIES_CHARIZARD_MEGA_Y);
+        else
+            EXPECT_EQ(player->species, SPECIES_CHARIZARD_MEGA_X);
+    }
+}

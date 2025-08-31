@@ -93,7 +93,7 @@
 
 // Dynamic fields for the Pokémon Skills page
 #define PSS_DATA_WINDOW_SKILLS_HELD_ITEM 0
-#define PSS_DATA_WINDOW_SKILLS_HELD_ITEM_BERRY 1
+#define PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2 1
 #define PSS_DATA_WINDOW_SKILLS_STATS_LEFT 2 // HP, Attack, Defense
 #define PSS_DATA_WINDOW_SKILLS_STATS_RIGHT 3 // Sp. Attack, Sp. Defense, Speed
 #define PSS_DATA_WINDOW_EXP 4 // Exp, next level
@@ -274,7 +274,7 @@ static void PrintEggState(void);
 static void PrintEggMemo(void);
 static void Task_PrintSkillsPage(u8);
 static void PrintHeldItemName(void);
-static void PrintHeldItemNameBerry(void);
+static void PrintHeldItemName2(void);
 static void PrintSkillsPageText(void);
 //static void PrintRibbonCount(void);
 static void BufferLeftColumnStats(void);
@@ -638,7 +638,7 @@ static const struct WindowTemplate sPageSkillsTemplate[] =
         .paletteNum = 6,
         .baseBlock = 467,
     },
-    [PSS_DATA_WINDOW_SKILLS_HELD_ITEM_BERRY] = {
+    [PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2] = {
         .bg = 0,
         .tilemapLeft = 20,
         .tilemapTop = 4,
@@ -3668,7 +3668,7 @@ static void PrintEggMemo(void)
 static void PrintSkillsPageText(void)
 {
     PrintHeldItemName();
-    PrintHeldItemNameBerry();
+    PrintHeldItemName2();
     if(ShouldShowIvEvPrompt())
         ShowUtilityPrompt(SUMMARY_SKILLS_MODE_STATS);
     BufferLeftColumnStats();
@@ -3688,7 +3688,7 @@ static void Task_PrintSkillsPage(u8 taskId)
         PrintHeldItemName();
         break;
     case 2:
-        PrintHeldItemNameBerry();
+        PrintHeldItemName2();
         break;
     case 3:
         ChangeStatLabel(SUMMARY_SKILLS_MODE_STATS);
@@ -3754,7 +3754,7 @@ static inline void TruncateToFirstWordOnly(u8 *str)
     }
 }
 
-static void PrintHeldItemNameBerry(void)
+static void PrintHeldItemName2(void)
 {
     const u8 *text;
     u32 fontId;
@@ -3773,14 +3773,14 @@ static void PrintHeldItemNameBerry(void)
     else
     {
         CopyItemName(SlotToItemId(sMonSummaryScreen->summary.item[1], 1), gStringVar1);
-        TruncateToFirstWordOnly(gStringVar1);  // Truncate to first word, can be used here since every Berry item ends in "Berry"
+        //TruncateToFirstWordOnly(gStringVar1);  // Truncate to first word, can be used for a Berry exclusive item slot since they all end with "Berry"
         text = gStringVar1;
         
     }
 
-    fontId = GetFontIdToFit(text, FONT_NORMAL, 0, WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_HELD_ITEM_BERRY]) - 8);
+    fontId = GetFontIdToFit(text, FONT_NORMAL, 0, WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2]) - 8);
     x = GetStringCenterAlignXOffset(fontId, text, 72) + 6;
-    PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM_BERRY), text, x, 1, 0, 0, fontId);
+    PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2), text, x, 1, 0, 0, fontId);
 }
 
 // static void PrintRibbonCount(void)
