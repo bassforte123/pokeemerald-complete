@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "bg.h"
@@ -1217,7 +1218,7 @@ static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityN
 {
     struct Pokemon *mon = &gEnemyParty[0];
     u8 iv[3] = {NUM_STATS};
-    u8 i;
+    u8 i, slot;
     u8 perfectIv = 31;
 
     CreateWildMon(species, level);  // shiny rate bonus handled in CreateBoxMon
@@ -1241,13 +1242,11 @@ static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityN
     SetMonData(mon, MON_DATA_ABILITY_NUM, &abilityNum);
 
     // Set Held Item
-    for (i = 0; i < MAX_MON_ITEMS; i++)
+    if (item)
     {
-        if (item && gItemsInfo[item].heldSlot == i)
-            {
-                SetMonData(mon, MON_DATA_HELD_ITEM + i, &item);
-                break;
-            }
+        slot = GetNextMonEmptySlot(mon, item);
+        if (slot != MAX_MON_ITEMS)
+                SetMonData(mon, MON_DATA_HELD_ITEM + slot, &item);
     }
 
     //Set moves

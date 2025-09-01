@@ -7227,7 +7227,7 @@ u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
         if (holdEffect == HOLD_EFFECT_FOCUS_SASH)
-        item = SlotToItemId(switchinCandidate.items[i], i); //Set offset for slots
+        item = switchinCandidate.items[i];
         if(GetItemHoldEffect(item) == holdEffect)
             return item;
     }

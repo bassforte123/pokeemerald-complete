@@ -3793,8 +3793,6 @@ static void GiveChosenBagItem(void)
             slot = GetNextMonEmptySlot(mon, itemId);
             if (slot != MAX_MON_ITEMS)
             {
-                DebugPrintf("slot: %d", slot);
-                itemId = ItemIdToSlot(itemId, slot);
                 SetMonData(&gPlayerParty[pos], MON_DATA_HELD_ITEM + slot, &itemId);
                 SetMonFormPSS(&mon->box, FORM_CHANGE_ITEM_HOLD);
                 UpdateSpeciesSpritePSS(&mon->box);
@@ -3805,7 +3803,6 @@ static void GiveChosenBagItem(void)
             slot = GetNextBoxEmptySlot(pos, itemId);
             if (slot != MAX_MON_ITEMS)
             {
-                itemId = ItemIdToSlot(itemId, slot);
                 SetCurrentBoxMonData(pos, MON_DATA_HELD_ITEM + slot, &itemId);
                 SetMonFormPSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][pos], FORM_CHANGE_ITEM_HOLD);
                 UpdateSpeciesSpritePSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][pos]);

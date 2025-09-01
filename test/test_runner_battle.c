@@ -1784,9 +1784,6 @@ void Items_(u32 sourceLine, u32 items[MAX_MON_ITEMS])
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
         INVALID_IF(items[i] >= ITEMS_COUNT, "Illegal item: %d", items[i]);
-
-        if (i == 1)
-            items[i] = ItemIdToSlot(items[i], i); //Offset for Slot Categories
             
         SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM + i, &items[i]);
     }

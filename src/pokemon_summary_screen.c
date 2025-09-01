@@ -3772,7 +3772,7 @@ static void PrintHeldItemName2(void)
     }
     else
     {
-        CopyItemName(SlotToItemId(sMonSummaryScreen->summary.item[1], 1), gStringVar1);
+        CopyItemName(sMonSummaryScreen->summary.item[1], gStringVar1);
         //TruncateToFirstWordOnly(gStringVar1);  // Truncate to first word, can be used for a Berry exclusive item slot since they all end with "Berry"
         text = gStringVar1;
         

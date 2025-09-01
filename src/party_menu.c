@@ -2040,8 +2040,6 @@ static void GiveItemToMon(struct Pokemon *mon, u16 item)
 
     if (slot != MAX_MON_ITEMS)
     {
-        item = ItemIdToSlot(item, slot);
-
         if (ItemIsMail(item) == TRUE)
         {
             if (GiveMailToMonByItemId(mon, item) == MAIL_NONE)
@@ -2068,7 +2066,7 @@ static u8 TryTakeMonItem(struct Pokemon *mon)
     {
         if (GetMonData(mon, MON_DATA_HELD_ITEM + i) != ITEM_NONE) //Check item without offset to see if empty
         {
-            item = SlotToItemId(GetMonData(mon, MON_DATA_HELD_ITEM + i), i); //Set offset for slots
+            item = GetMonData(mon, MON_DATA_HELD_ITEM + i); //Set offset for slots
             
             if (ItemIsMail(item) == TRUE)
                 continue;
@@ -3005,6 +3003,7 @@ static bool8 CreateSelectionWindow(u8 taskId)
     }
     else
     {
+        DebugPrintf("CreateSelectionWindowPiramid");
         item = GetMonData(mon, MON_DATA_HELD_ITEM);
         if (item != ITEM_NONE)
         {
@@ -3418,7 +3417,7 @@ static void CB2_SelectBagItemToGive(void)
 static void CB2_GiveHoldItem(void)
 {
     u16 slot = GetNextMonEmptySlot(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId);
-
+    DebugPrintf("slot: %d", slot);
     if (gSpecialVar_ItemId == ITEM_NONE)
     {
         InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, gPartyMenu.action, TRUE, PARTY_MSG_NONE, Task_TryCreateSelectionWindow, gPartyMenu.exitCallback);
@@ -3433,10 +3432,11 @@ static void CB2_GiveHoldItem(void)
                 slot = 0;
         }
 
-        sPartyMenuItemId = SlotToItemId(GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot), slot);
+        sPartyMenuItemId = GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot); // held item
 
-        // Already holding mail
-        if (ItemIsMail(sPartyMenuItemId))
+        // Fail if trying to Swap items when Mail is in the first slot
+        if (ItemIsMail(sPartyMenuItemId)
+         || (MonHasMail(&gPlayerParty[gPartyMenu.slotId]) && ItemIsMail(gSpecialVar_ItemId))) // Cannot hold more than one mail
         {
             InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, gPartyMenu.action, TRUE, PARTY_MSG_NONE, DisplayItemMustBeRemovedFirstMessage, gPartyMenu.exitCallback);
         }
@@ -3563,13 +3563,23 @@ static void CB2_WriteMailToGiveMon(void)
 static void CB2_ReturnToPartyMenuFromWritingMail(void)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    u16 item = ITEM_NONE;
+    u8 slot = 0;
 
     // Canceled writing mail
     if (gSpecialVar_Result == FALSE)
     {
+        for (u8 i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (ItemIsMail(GetMonData(mon, MON_DATA_HELD_ITEM + i)))
+            {
+                slot = i;
+                item = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+                break;
+            }
+        }
         TakeMailFromMon(mon);
-        SetMonData(mon, MON_DATA_HELD_ITEM, &sPartyMenuItemId);
+        SetMonData(mon, MON_DATA_HELD_ITEM + slot, &sPartyMenuItemId);
         RemoveBagItem(sPartyMenuItemId, 1);
         AddBagItem(item, 1);
         InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, gPartyMenu.action, TRUE, PARTY_MSG_CHOOSE_MON, Task_TryCreateSelectionWindow, gPartyMenu.exitCallback);
@@ -3597,13 +3607,23 @@ static void Task_DisplayGaveMailFromPartyMessage(u8 taskId)
 static void Task_UpdateHeldItemSprite(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+    bool32 hasItem = FALSE;
+
+    for (u8 i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (GetMonData(mon, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+        {
+            hasItem = TRUE;
+            break;
+        }
+    }
 
     if (IsPartyMenuTextPrinterActive() != TRUE)
     {
         UpdatePartyMonHeldItemSprite(mon, &sPartyMenuBoxes[gPartyMenu.slotId]);
         if (gPartyMenu.menuType == PARTY_MENU_TYPE_STORE_PYRAMID_HELD_ITEMS)
         {
-            if (GetMonData(mon, MON_DATA_HELD_ITEM) != ITEM_NONE)
+            if (hasItem)
                 DisplayPartyPokemonDescriptionText(PARTYBOX_DESC_HAVE, &sPartyMenuBoxes[gPartyMenu.slotId], 1);
             else
                 DisplayPartyPokemonDescriptionText(PARTYBOX_DESC_DONT_HAVE, &sPartyMenuBoxes[gPartyMenu.slotId], 1);
@@ -3615,7 +3635,7 @@ static void Task_UpdateHeldItemSprite(u8 taskId)
 static void CursorCb_TakeItem(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    //u16 item = GetMonData(mon, MON_DATA_HELD_ITEM); //Item prompts moved to TryTakeMonItem
+    //u16 item = GetMonData(mon, MON_DATA_HELD_ITEM); //Item prompts moved to TryTakeMonItem (Multi)
 
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
@@ -3642,7 +3662,7 @@ static void CursorCb_TakeItem(u8 taskId)
 static void CursorCb_Toss(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM); //Battle Pyramid toss when bag is full, targets first held item.
 
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
@@ -3798,7 +3818,7 @@ static void Task_HandleLoseMailMessageYesNoInput(u8 taskId)
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
     case 0: // Yes, lose mail message
-        item = GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM);
+        item = GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM); // Battle Pyramid Toss should only affect first slot
         if (AddBagItem(item, 1) == TRUE)
         {
             TakeMailFromMon(&gPlayerParty[gPartyMenu.slotId]);
@@ -4438,10 +4458,18 @@ static void CreatePartyMonHeldItemSpriteParameterized(u16 species, u16 item, str
 
 static void UpdatePartyMonHeldItemSprite(struct Pokemon *mon, struct PartyMenuBox *menuBox)
 {
-    u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    u16 item = ITEM_NONE;
+    
+    item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
-    if (GetMonData(mon, MON_DATA_HELD_ITEM) == ITEM_NONE)
-        item = GetMonData(mon, MON_DATA_HELD_ITEM_TWO);
+    for (int i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (GetMonData(mon, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
+        {
+            item = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+            break;
+        }
+    }
 
     //Sets item value to the Held item first so that Mail rules take priority.  Item value is populated if at least one item slot is filled.
     ShowOrHideHeldItemSprite(item, menuBox);
@@ -4471,25 +4499,37 @@ void LoadHeldItemIcons(void)
 
 void DrawHeldItemIconsForTrade(u8 *partyCounts, u8 *partySpriteIds, u8 whichParty)
 {
-    u16 i;
-    u16 item;
+    u16 i, j;
+    u16 item = ITEM_NONE;
 
     switch (whichParty)
     {
     case TRADE_PLAYER:
         for (i = 0; i < partyCounts[TRADE_PLAYER]; i++)
         {
-            item = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
-            if (item != ITEM_NONE)
-                CreateHeldItemSpriteForTrade(partySpriteIds[i], ItemIsMail(item));
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+            {
+                item = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j);
+                if (item != ITEM_NONE)
+                {
+                    CreateHeldItemSpriteForTrade(partySpriteIds[i], ItemIsMail(item));
+                    break;
+                }
+            }
         }
         break;
     case TRADE_PARTNER:
         for (i = 0; i < partyCounts[TRADE_PARTNER]; i++)
         {
-            item = GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM);
-            if (item != ITEM_NONE)
-                CreateHeldItemSpriteForTrade(partySpriteIds[i + PARTY_SIZE], ItemIsMail(item));
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+            {
+                item = GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + j);
+                if (item != ITEM_NONE)
+                {
+                    CreateHeldItemSpriteForTrade(partySpriteIds[i + PARTY_SIZE], ItemIsMail(item));
+                    break;
+                }
+            }
         }
         break;
     }
@@ -6934,7 +6974,7 @@ static void TryGiveItemOrMailToSelectedMon(u8 taskId)
 {
     u16 slot = GetNextMonEmptySlot(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.bagItem);
 
-    if (slot == MAX_MON_ITEMS) //Assign target slot when none empty (Multi)
+    if (slot == MAX_MON_ITEMS) //Assign target slot when none are empty (Multi)
     {
         if (B_HELD_ITEM_CATEGORIZATION)
             slot = gItemsInfo[gPartyMenu.bagItem].heldSlot;
@@ -6942,12 +6982,14 @@ static void TryGiveItemOrMailToSelectedMon(u8 taskId)
             slot = 0;
     }
 
-    sPartyMenuItemId = SlotToItemId(GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot), slot);
-    if (sPartyMenuItemId == ITEM_NONE)
+    sPartyMenuItemId = GetMonData(&gPlayerParty[gPartyMenu.slotId], MON_DATA_HELD_ITEM + slot); //held item
+    
+    if (sPartyMenuItemId == ITEM_NONE
+     || (MonHasMail(&gPlayerParty[gPartyMenu.slotId]) && !ItemIsMail(gPartyMenu.bagItem))) // Cannot hold more than one mail
     {
         GiveItemOrMailToSelectedMon(taskId);
     }
-    else if (ItemIsMail(sPartyMenuItemId))
+    else if (ItemIsMail(sPartyMenuItemId)) // Prevents Swapping items when mail is in the first slot
     {
         DisplayItemMustBeRemovedFirstMessage(taskId);
     }
@@ -7014,12 +7056,23 @@ static void CB2_ReturnToPartyOrBagMenuFromWritingMail(void)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
     u16 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+    u8 slot = 0;
 
     // Canceled writing mail
     if (gSpecialVar_Result == FALSE)
     {
+
+        for (u8 i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (ItemIsMail(GetMonData(mon, MON_DATA_HELD_ITEM + i)))
+            {
+                slot = i;
+                item = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+                break;
+            }
+        }
         TakeMailFromMon(mon);
-        SetMonData(mon, MON_DATA_HELD_ITEM, &sPartyMenuItemId);
+        SetMonData(mon, MON_DATA_HELD_ITEM + slot, &sPartyMenuItemId);
         RemoveBagItem(sPartyMenuItemId, 1);
         ReturnGiveItemToBagOrPC(item);
         SetMainCallback2(gPartyMenu.exitCallback);
@@ -7887,15 +7940,18 @@ static void CB2_ChooseMonForMoveRelearner(void)
 
 void DoBattlePyramidMonsHaveHeldItem(void)
 {
-    u8 i;
+    u8 i, j;
 
     gSpecialVar_Result = FALSE;
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) != ITEM_NONE)
+        for (j = 0; j < MAX_MON_ITEMS; j++)
         {
-            gSpecialVar_Result = TRUE;
-            break;
+            if (GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j) != ITEM_NONE)
+            {
+                gSpecialVar_Result = TRUE;
+                break;
+            }
         }
     }
 }

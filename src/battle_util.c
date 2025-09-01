@@ -12042,7 +12042,7 @@ bool32 BattlerHasHeldItemEffect(u32 battler, u32 holdEffect, bool32 checkNegatin
     
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if((GetItemHoldEffect(SlotToItemId(gBattleMons[battler].items[i], i)) == holdEffect))
+        if((GetItemHoldEffect(gBattleMons[battler].items[i]) == holdEffect))
             return TRUE;
     }
        return FALSE;
@@ -12072,7 +12072,7 @@ bool32 BattlerHasHeldItem(u32 battler, u32 item, bool32 checkNegating)
     
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if((SlotToItemId(gBattleMons[battler].items[i], i) == item))
+        if((gBattleMons[battler].items[i] == item))
             return TRUE;
     }
        return FALSE;
@@ -12101,7 +12101,7 @@ u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegati
 
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
-        item = SlotToItemId(gBattleMons[battler].items[i], i); //Set offset for slots
+        item = gBattleMons[battler].items[i];
         
         if(GetItemHoldEffect(item) == holdEffect)
             return item;
@@ -12133,8 +12133,6 @@ u8 GetBattlerHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNeg
 
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
-        item = SlotToItemId(gBattleMons[battler].items[i], i); //Set offset for slots
-
         if(GetItemHoldEffect(item) == holdEffect)
             slot = i;
     }
@@ -12160,7 +12158,7 @@ u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating)
         return ITEM_NONE;
     }
 
-    return SlotToItemId(gBattleMons[battler].items[slot], slot);
+    return gBattleMons[battler].items[slot];
 }
 
 //Returns slot of the given item
@@ -12189,7 +12187,7 @@ u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating)
 
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if(SlotToItemId(gBattleMons[battler].items[i], i) == itemId) 
+        if(gBattleMons[battler].items[i] == itemId) 
             slot = i;
     }
     return slot;
@@ -12241,81 +12239,6 @@ u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
     // }
 
     return slot;
-}
-
-
-//Converts itemIDs to offsetItemIDs based on slot
-u16 ItemIdToSlot(u16 item, u8 slot)
-{
-    // OFFSET LOGIC: used to convert itemIDs to offset itemIDs if you need to save space by using smaller item slots.
-    // To enable: uncomment the code here in ItemIDToSlot and also SlotToItemID
-    // Example here accepts IDs and if going to a berry only Slot1 converts the item range to a berry exclusive range.
-    // In this case, the item slot would only need to be large enough to accomodate berries. 
-    // Use in conjunction with item helditemslots to categorize slots by item type
-
-    // if (item == ITEM_NONE) //Don't convert if no item
-    //     return ITEM_NONE;
-
-    // if (slot == 0)  //First slot has the full item range, so no conversion needed
-    //     return item;
-
-    // if (TESTING)
-    // {
-    //     return item; //Tests default to full item range additional item slots
-    // }
-
-    // u16 offsetItem = item - FIRST_BERRY_INDEX;
-
-    // if (offsetItem > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
-    //     return ITEM_TO_BERRY(FIRST_BERRY_INDEX);
-    // else
-    //     return ITEM_TO_BERRY(item);
-
-    return item;
-    
-}
-
-//Converts offsetItemIDs to itemIDs based on slot
-u16 SlotToItemId(u16 offsetItemID, u8 slot)
-{
-    // OFFSET LOGIC: used to convert offset itemIDs back into normal itemIDs if you need to save space by using smaller item slots.
-    // To enable: uncomment the code here in SlotToItemID and also ItemIDToSlot
-    // Example here accepts IDs from a berry only Slot1 and converts them back into normal itemIDs for general use.
-    // In this case, the item slot would only need to be large enough to accomodate berries.
-    // Use in conjunction with item helditemslots to categorize slots by item type
-
-    // if (offsetItemID == ITEM_NONE) //Don't convert if no item
-    //     return ITEM_NONE;
-
-    // if (TESTING)
-    // {
-    //     return offsetItemID; //Tests don't use offset itemID logic
-    // }
-
-    // if (slot == 0) //First slot has the full item range, so no conversion needed
-    //     return offsetItemID;
-
-    // if (slot == 1) //Second slot only handles berries and needs to convert item IDs
-    // {
-    //     u16 item = offsetItemID - 1;
-
-    //     if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX) //range for berry items for a berry specific slot
-    //     {
-    //         DebugPrintf("Invalid Item ID[%d]: battler %d, lastuseditemid %d, item1: %d, item2: %d", slot, gLastUsedItem, item, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
-    //         return ITEM_NONE; //Escape if the item is out of the expected range
-    //     }
-
-    //     return BERRY_TO_ITEM(offsetItemID);
-    // }
-
-    // if (offsetItemID > ITEMS_COUNT)
-    // {
-    //     //DebugPrintf("Invalid Item: Battler[1]: battler %d, lastuseditemid %d, item1: %d, item2: %d", gLastUsedItem, itemID, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
-    //     return ITEM_NONE;
-    // }
-    
-    //Returning the regular itemID version of the offsetItemID
-    return offsetItemID;
 }
 
 //Takes a list of valid item slots for an effect and returns a targeted slot based on preferences

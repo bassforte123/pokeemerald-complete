@@ -36,11 +36,15 @@ void ClearMail(struct Mail *mail)
 
 bool8 MonHasMail(struct Pokemon *mon)
 {
-    u16 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
-    if (ItemIsMail(heldItem) && GetMonData(mon, MON_DATA_MAIL) != MAIL_NONE)
-        return TRUE;
-    else
-        return FALSE;
+    u16 heldItem;
+    
+    for (int i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        heldItem = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+        if (ItemIsMail(heldItem) && GetMonData(mon, MON_DATA_MAIL) != MAIL_NONE)
+            return TRUE;
+    }
+    return FALSE;
 }
 
 u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
@@ -115,6 +119,7 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
     u8 heldItem[2];
     u16 itemId = mail->itemId;
     u8 mailId = GiveMailToMonByItemId(mon, itemId);
+    u16 slot = GetNextMonEmptySlot(mon, itemId);
 
     if (mailId == MAIL_NONE)
         return MAIL_NONE;
@@ -126,7 +131,7 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
     heldItem[0] = itemId;
     heldItem[1] = itemId >> 8;
 
-    SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
+    SetMonData(mon, MON_DATA_HELD_ITEM + slot, heldItem);
 
     return mailId;
 }
@@ -149,7 +154,9 @@ void TakeMailFromMon(struct Pokemon *mon)
         heldItem[0] = ITEM_NONE;
         heldItem[1] = ITEM_NONE << 8;
         SetMonData(mon, MON_DATA_MAIL, &mailId);
-        SetMonData(mon, MON_DATA_HELD_ITEM, heldItem);
+        for (u8 i = 0; i < MAX_MON_ITEMS; i++)
+            if (ItemIsMail(GetMonData(mon, MON_DATA_HELD_ITEM + i)))
+                SetMonData(mon, MON_DATA_HELD_ITEM + i, heldItem);
     }
 }
 
@@ -160,7 +167,7 @@ void ClearMailItemId(u8 mailId)
 
 u8 TakeMailFromMonAndSave(struct Pokemon *mon)
 {
-    u8 i, slot = MAX_MON_ITEMS;
+    u8 i;
     u8 newHeldItem[2];
     u8 newMailId;
 
@@ -168,18 +175,6 @@ u8 TakeMailFromMonAndSave(struct Pokemon *mon)
     newHeldItem[1] = ITEM_NONE << 8;
     newMailId = MAIL_NONE;
 
-    for (i = 0; i < MAX_MON_ITEMS; i++)
-    {
-        if (ItemIsMail(GetMonData(mon, MON_DATA_HELD_ITEM + i)))
-        {
-            slot = i;
-            break;
-        }
-    }
-
-    if (slot == MAX_MON_ITEMS)
-        return MAIL_NONE;
-        
     for (i = PARTY_SIZE; i < MAIL_COUNT; i++)
     {
         if (gSaveBlock1Ptr->mail[i].itemId == ITEM_NONE)
@@ -187,7 +182,9 @@ u8 TakeMailFromMonAndSave(struct Pokemon *mon)
             memcpy(&gSaveBlock1Ptr->mail[i], &gSaveBlock1Ptr->mail[GetMonData(mon, MON_DATA_MAIL)], sizeof(struct Mail));
             gSaveBlock1Ptr->mail[GetMonData(mon, MON_DATA_MAIL)].itemId = ITEM_NONE;
             SetMonData(mon, MON_DATA_MAIL, &newMailId);
-            SetMonData(mon, MON_DATA_HELD_ITEM + slot, newHeldItem);
+            for (u8 j = 0; j < MAX_MON_ITEMS; j++)
+                if (ItemIsMail(GetMonData(mon, MON_DATA_HELD_ITEM + j)))
+                    SetMonData(mon, MON_DATA_HELD_ITEM + j, newHeldItem);
             return i;
         }
     }
