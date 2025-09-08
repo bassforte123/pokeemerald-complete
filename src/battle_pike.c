@@ -1583,25 +1583,31 @@ static void IsPartyFullHealed(void)
 
 static void SaveMonHeldItems(void)
 {
-    u8 i;
+    u8 i, j;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        int heldItem = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
-                                  MON_DATA_HELD_ITEM);
-        gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i] = heldItem;
+        for(j = 0; j < MAX_MON_ITEMS; j++)
+        {   
+            int heldItem = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
+                                        MON_DATA_HELD_ITEM + j);
+            gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i][j] = heldItem;
+        }
     }
 }
 
 static void RestoreMonHeldItems(void)
 {
-    u8 i;
+    u8 i, j;
 
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-    {//SETFORMULTIITEMS
-        SetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
-                   MON_DATA_HELD_ITEM,
-                   &gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i]);
+    {
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+        {
+            SetMonData(&gPlayerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
+                       MON_DATA_HELD_ITEM + j,
+                       &gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i][j]);
+        }
     }
 }
 

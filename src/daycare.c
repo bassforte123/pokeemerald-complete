@@ -227,7 +227,7 @@ static void TransferEggMoves(void)
 
                 // Check if you can inherit from them
                 if (GET_BASE_SPECIES_ID(moveTeacherSpecies) != GET_BASE_SPECIES_ID(moveLearnerSpecies)
-                    && (P_EGG_MOVE_TRANSFER < GEN_9 || GetBoxMonData(&gSaveBlock1Ptr->daycare.mons[i].mon, MON_DATA_HELD_ITEM) != ITEM_MIRROR_HERB)
+                    && (P_EGG_MOVE_TRANSFER < GEN_9 || !BoxMonHasItem(&gSaveBlock1Ptr->daycare.mons[k].mon, ITEM_MIRROR_HERB))
                 )
                     continue;
 
@@ -537,7 +537,7 @@ static s32 GetParentToInheritNature(struct DayCare *daycare)
 
     for (i = 0; i < DAYCARE_MON_COUNT; i++)
     {
-        if (GetItemHoldEffect(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_HELD_ITEM)) == HOLD_EFFECT_PREVENT_EVOLVE
+        if (BoxMonHasItemHoldEffect(&daycare->mons[i].mon, HOLD_EFFECT_PREVENT_EVOLVE)
             && (P_NATURE_INHERITANCE != GEN_3 || GetBoxMonGender(&daycare->mons[i].mon) == MON_FEMALE || IS_DITTO(GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES))))
         {
             slot = i;
@@ -608,8 +608,9 @@ static void UNUSED TriggerPendingDaycareMaleEgg(void)
 
 static void InheritIVs(struct Pokemon *egg, struct DayCare *daycare)
 {
-    u16 motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
-    u16 fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
+    u16 item1, motherItem = ITEM_NONE;
+    u16 item2, fatherItem = ITEM_NONE;
+    u16 slot[MAX_MON_ITEMS];
     u8 i, start;
     u8 selectedIvs[5];
     u8 availableIVs[NUM_STATS];
@@ -628,10 +629,21 @@ static void InheritIVs(struct Pokemon *egg, struct DayCare *daycare)
 
     for ( i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if (GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM + i) == HOLD_EFFECT_POWER_ITEM)
-            motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM + i);
-        if (GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM + i) == HOLD_EFFECT_POWER_ITEM)
-            fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM + i);
+        if (motherItem == ITEM_NONE)
+            item1 = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM + i);
+        if (fatherItem == ITEM_NONE)
+            item2 = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM + i);
+
+        if (GetItemHoldEffect(item1) == HOLD_EFFECT_POWER_ITEM)
+            {
+                motherItem = item1;
+                slot[0] = i;
+            }
+        if (GetItemHoldEffect(item2) == HOLD_EFFECT_POWER_ITEM)
+            {
+                fatherItem = item2;
+                slot[1] = i;
+            }
     }
 
     start = 0;
@@ -640,7 +652,7 @@ static void InheritIVs(struct Pokemon *egg, struct DayCare *daycare)
     {
         whichParents[0] = Random() % DAYCARE_MON_COUNT;
         selectedIvs[0] = GetItemSecondaryId(
-            GetBoxMonData(&daycare->mons[whichParents[0]].mon, MON_DATA_HELD_ITEM));
+            GetBoxMonData(&daycare->mons[whichParents[0]].mon, MON_DATA_HELD_ITEM + slot[whichParents[0]]));
         RemoveIVIndexFromList(availableIVs, selectedIvs[0]);
         start++;
     }
@@ -1027,8 +1039,8 @@ static u16 DetermineEggSpeciesAndParentSlots(struct DayCare *daycare, u8 *parent
 
     motherEggSpecies = GetEggSpecies(species[parentSlots[0]]);
     fatherEggSpecies = GetEggSpecies(species[parentSlots[1]]);
-    hasMotherEverstone = GetItemHoldEffect(GetBoxMonData(&daycare->mons[parentSlots[0]].mon, MON_DATA_HELD_ITEM)) == HOLD_EFFECT_PREVENT_EVOLVE;
-    hasFatherEverstone = GetItemHoldEffect(GetBoxMonData(&daycare->mons[parentSlots[1]].mon, MON_DATA_HELD_ITEM)) == HOLD_EFFECT_PREVENT_EVOLVE;
+    hasMotherEverstone = BoxMonHasItemHoldEffect(&daycare->mons[parentSlots[0]].mon, HOLD_EFFECT_PREVENT_EVOLVE);
+    hasFatherEverstone = BoxMonHasItemHoldEffect(&daycare->mons[parentSlots[1]].mon, HOLD_EFFECT_PREVENT_EVOLVE);
     motherIsForeign = IsSpeciesForeignRegionalForm(motherEggSpecies, currentRegion);
     fatherIsForeign = IsSpeciesForeignRegionalForm(fatherEggSpecies, currentRegion);
 

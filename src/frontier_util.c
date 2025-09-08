@@ -2165,14 +2165,18 @@ static void IncrementWinStreak(void)
 
 static void RestoreHeldItems(void)
 {
-    u8 i;
+    u8 i, j;
+    u16 item;
 
     for (i = 0; i < MAX_FRONTIER_PARTY_SIZE; i++)
     {
         if (gSaveBlock2Ptr->frontier.selectedPartyMons[i] != 0)
         {
-            u16 item = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_HELD_ITEM, NULL);
-            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+            {
+                item = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_HELD_ITEM + j, NULL);
+                SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j, &item);
+            }
         }
     }
 }
@@ -2542,7 +2546,8 @@ void CreateFrontierBrainPokemon(void)
                   sFrontierBrainsMons[facility][symbol][i].fixedIV,
                   TRUE, j,
                   OT_ID_PRESET, FRONTIER_BRAIN_OTID);
-        SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM + j, &sFrontierBrainsMons[facility][symbol][i].heldItem[j]);
         for (j = 0; j < NUM_STATS; j++)
             SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);
         friendship = MAX_FRIENDSHIP;

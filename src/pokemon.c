@@ -73,6 +73,7 @@ struct SpeciesItem
 {
     u16 species;
     u16 item;
+    u16 item2;
 };
 
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon);
@@ -1409,7 +1410,8 @@ void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src)
         SetMonMoveSlot(mon, src->moves[i], i);
 
     SetMonData(mon, MON_DATA_PP_BONUSES, &src->ppBonuses);
-    SetMonData(mon, MON_DATA_HELD_ITEM, &src->heldItem);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        SetMonData(mon, MON_DATA_HELD_ITEM + i, &src->heldItem[i]);
     SetMonData(mon, MON_DATA_FRIENDSHIP, &src->friendship);
 
     StringCopy(nickname, src->nickname);
@@ -1471,7 +1473,8 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
         SetMonMoveSlot(mon, src->moves[i], i);
 
     SetMonData(mon, MON_DATA_PP_BONUSES, &src->ppBonuses);
-    SetMonData(mon, MON_DATA_HELD_ITEM, &src->heldItem);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        SetMonData(mon, MON_DATA_HELD_ITEM + i, &src->heldItem[i]);
     SetMonData(mon, MON_DATA_FRIENDSHIP, &src->friendship);
 
     StringCopy(nickname, src->nickname);
@@ -1530,7 +1533,8 @@ void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 m
               OT_ID_PRESET,
               otId);
 
-    SetMonData(mon, MON_DATA_HELD_ITEM, &src->party[monId].item);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        SetMonData(mon, MON_DATA_HELD_ITEM + i, &src->party[monId].item[i]);
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(mon, src->party[monId].moves[i], i);
 
@@ -1719,6 +1723,7 @@ void CreateEnemyEventMon(void)
     s32 species = gSpecialVar_0x8004;
     s32 level = gSpecialVar_0x8005;
     s32 itemId = gSpecialVar_0x8006;
+    u16 slot;
 
     ZeroEnemyPartyMons();
     CreateEventMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
@@ -1727,7 +1732,11 @@ void CreateEnemyEventMon(void)
         u8 heldItem[2];
         heldItem[0] = itemId;
         heldItem[1] = itemId >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
+
+        slot = GetNextMonEmptySlot(&gEnemyParty[0], itemId);
+        
+        if (slot != MAX_MON_ITEMS)
+            SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM + slot, heldItem);  //leaving as one item to not mess with the specialVar (Multi)
     }
 }
 
@@ -3539,7 +3548,8 @@ void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
                 OT_ID_RANDOM_NO_SHINY,
                 0);
 
-            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleResources->secretBase->party.heldItem[i]);
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+                SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + j, &gBattleResources->secretBase->party.heldItem[i][j]);
 
             for (j = 0; j < NUM_STATS; j++)
                 SetMonData(&gEnemyParty[i], MON_DATA_HP_EV + j, &gBattleResources->secretBase->party.EVs[i]);
@@ -3760,7 +3770,7 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, 
     {                                                                                                   \
         friendshipChange = itemEffect[itemEffectParam];                                                 \
         friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, NULL);                                        \
-        if (friendshipChange > 0 && holdEffect == HOLD_EFFECT_FRIENDSHIP_UP)                            \
+        if (friendshipChange > 0 && MonHasItemHoldEffect(mon, HOLD_EFFECT_FRIENDSHIP_UP))               \
             friendship += 150 * friendshipChange / 100;                                                 \
         else                                                                                            \
             friendship += friendshipChange;                                                             \
@@ -3801,7 +3811,7 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     u8 itemEffectParam = ITEM_EFFECT_ARG_START;
     u32 temp1, temp2;
     s8 friendshipChange = 0;
-    u8 holdEffect;
+    //u8 holdEffect;
     u8 battler = MAX_BATTLERS_COUNT;
     u32 friendshipOnly = FALSE;
     u16 heldItem;
@@ -3812,16 +3822,16 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     // Determine the EV cap to use
     u32 maxAllowedEVs = !B_EV_ITEMS_CAP ? MAX_TOTAL_EVS : GetCurrentEVCap();
 
-    // Get item hold effect
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-    #if FREE_ENIGMA_BERRY == FALSE
-        holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-    #else
-        holdEffect = 0;
-    #endif //FREE_ENIGMA_BERRY
-    else
-        holdEffect = GetItemHoldEffect(heldItem);
+    // // Get item hold effect
+    // heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
+    // if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
+    // #if FREE_ENIGMA_BERRY == FALSE
+    //     holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+    // #else
+    //     holdEffect = 0;
+    // #endif //FREE_ENIGMA_BERRY
+    // else
+    //     holdEffect = GetItemHoldEffect(heldItem);
 
     // Skip using the item if it won't do anything
     if (GetItemEffect(item) == NULL && item != ITEM_ENIGMA_BERRY_E_READER)
@@ -4487,7 +4497,7 @@ u32 GetGMaxTargetSpecies(u32 species)
 bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState)
 {
     u32 i, j;
-    u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
+    //u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
     u32 gender = GetMonGender(mon);
     u32 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, 0);
     u32 attack = GetMonData(mon, MON_DATA_ATK, 0);
@@ -4500,28 +4510,29 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     u32 removeBagItem = ITEM_NONE;
     u32 removeBagItemCount = 0;
     u32 evolutionTracker = GetMonData(mon, MON_DATA_EVOLUTION_TRACKER, 0);
-    u32 partnerSpecies, partnerHeldItem;
-    enum ItemHoldEffect partnerHoldEffect;
+    u32 partnerSpecies; //, partnerHeldItem;
+    u8 slot;
+    //enum ItemHoldEffect partnerHoldEffect;
 
     if (tradePartner != NULL)
     {
         partnerSpecies = GetMonData(tradePartner, MON_DATA_SPECIES, 0);
-        partnerHeldItem = GetMonData(tradePartner, MON_DATA_HELD_ITEM, 0);
+        // partnerHeldItem = GetMonData(tradePartner, MON_DATA_HELD_ITEM, 0);
 
-        if (partnerHeldItem == ITEM_ENIGMA_BERRY_E_READER)
-        #if FREE_ENIGMA_BERRY == FALSE
-            partnerHoldEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-        #else
-            partnerHoldEffect = 0;
-        #endif //FREE_ENIGMA_BERRY
-        else
-            partnerHoldEffect = GetItemHoldEffect(partnerHeldItem);
+        // if (partnerHeldItem == ITEM_ENIGMA_BERRY_E_READER)
+        // #if FREE_ENIGMA_BERRY == FALSE
+        //     partnerHoldEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+        // #else
+        //     partnerHoldEffect = 0;
+        // #endif //FREE_ENIGMA_BERRY
+        // else
+        //     partnerHoldEffect = GetItemHoldEffect(partnerHeldItem);
     }
     else
     {
         partnerSpecies = SPECIES_NONE;
-        partnerHeldItem = ITEM_NONE;
-        partnerHoldEffect = HOLD_EFFECT_NONE;
+        // partnerHeldItem = ITEM_NONE;
+        // partnerHoldEffect = HOLD_EFFECT_NONE;
     }
 
     // Check for additional conditions (only if the primary method passes). Skips if there's no additional conditions.
@@ -4563,8 +4574,9 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
                 currentCondition = TRUE;
             break;
         case IF_HOLD_ITEM:
-            if (heldItem == params[i].arg1)
+            if (MonHasItem(mon, params[i].arg1))
             {
+                slot = i;
                 currentCondition = TRUE;
                 removeHoldItem = TRUE;
             }
@@ -4644,7 +4656,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         // Gen 5
         case IF_TRADE_PARTNER_SPECIES:
-            if (params[i].arg1 == partnerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
+            if (params[i].arg1 == partnerSpecies && MonHasItemHoldEffect(tradePartner, HOLD_EFFECT_PREVENT_EVOLVE) == FALSE)
                 currentCondition = TRUE;
             break;
         // Gen 6
@@ -4790,7 +4802,12 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             if (removeHoldItem)
             {
                 u32 heldItem = ITEM_NONE;
-                SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (GetMonData(mon, MON_DATA_HELD_ITEM + i) == params[slot].arg1) 
+                        SetMonData(mon, MON_DATA_HELD_ITEM + i, &heldItem);
+                }
+                
             }
 
             if (removeBagItem != ITEM_NONE)
@@ -4809,7 +4826,7 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     int i;
     u32 targetSpecies = SPECIES_NONE;
     u32 species = GetMonData(mon, MON_DATA_SPECIES, 0);
-    u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
+    //u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
     u32 holdEffect;
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
@@ -4817,17 +4834,17 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     if (evolutions == NULL)
         return SPECIES_NONE;
 
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-    #if FREE_ENIGMA_BERRY == FALSE
-        holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-    #else
-        holdEffect = 0;
-    #endif //FREE_ENIGMA_BERRY
-    else
-        holdEffect = GetItemHoldEffect(heldItem);
+    // if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
+    // #if FREE_ENIGMA_BERRY == FALSE
+    //     holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+    // #else
+    //     holdEffect = 0;
+    // #endif //FREE_ENIGMA_BERRY
+    // else
+    //     holdEffect = GetItemHoldEffect(heldItem);
 
     // Prevent evolution with Everstone, unless we're just viewing the party menu with an evolution item
-    if (holdEffect == HOLD_EFFECT_PREVENT_EVOLVE
+    if (MonHasItemHoldEffect(mon, HOLD_EFFECT_PREVENT_EVOLVE)
         && mode != EVO_MODE_ITEM_CHECK
         && (P_KADABRA_EVERSTONE < GEN_4 || species != SPECIES_KADABRA))
         return SPECIES_NONE;
@@ -5254,7 +5271,7 @@ u16 ModifyStatByNature(u8 nature, u16 stat, u8 statIndex)
 
 void AdjustFriendship(struct Pokemon *mon, u8 event)
 {
-    u16 species, heldItem;
+    u16 species; //, heldItem;
     u8 holdEffect;
     s8 mod;
 
@@ -5262,23 +5279,23 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
         return;
 
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
+    //heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
 
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-    {
-        if (gMain.inBattle)
-            holdEffect = gEnigmaBerries[0].holdEffect;
-        else
-        #if FREE_ENIGMA_BERRY == FALSE
-            holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-        #else
-            holdEffect = 0;
-        #endif //FREE_ENIGMA_BERRY
-    }
-    else
-    {
-        holdEffect = GetItemHoldEffect(heldItem);
-    }
+    // if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
+    // {
+    //     if (gMain.inBattle)
+    //         holdEffect = gEnigmaBerries[0].holdEffect;
+    //     else
+    //     #if FREE_ENIGMA_BERRY == FALSE
+    //         holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+    //     #else
+    //         holdEffect = 0;
+    //     #endif //FREE_ENIGMA_BERRY
+    // }
+    // else
+    // {
+    //     holdEffect = GetItemHoldEffect(heldItem);
+    // }
 
     if (species && species != SPECIES_EGG)
     {
@@ -5309,7 +5326,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
         }
 
         mod = sFriendshipEventModifiers[event][friendshipLevel];
-        if (mod > 0 && holdEffect == HOLD_EFFECT_FRIENDSHIP_UP)
+        if (mod > 0 && MonHasItemHoldEffect(mon, HOLD_EFFECT_FRIENDSHIP_UP))
             // 50% increase, rounding down
             mod = (150 * mod) / 100;
 
@@ -6108,15 +6125,15 @@ void SetWildMonHeldItem(void)
         u16 rnd;
         u16 species;
         u16 count = (WILD_DOUBLE_BATTLE) ? 2 : 1;
-        u16 i;
+        u16 i, slot;
         bool32 itemHeldBoost = CanFirstMonBoostHeldItemRarity();
         u16 chanceNoItem = itemHeldBoost ? 20 : 45;
         u16 chanceNotRare = itemHeldBoost ? 80 : 95;
 
         for (i = 0; i < count; i++)
         {
-            if (GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, NULL) != ITEM_NONE)
-                continue; // prevent overwriting previously set item
+            // if (GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, NULL) != ITEM_NONE)
+            //     continue; // prevent overwriting previously set item
 
             rnd = Random() % 100;
             species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, 0);
@@ -6128,7 +6145,9 @@ void SetWildMonHeldItem(void)
                     // In active Altering Cave, use special item list
                     if (rnd < chanceNotRare)
                         continue;
-                    SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &sAlteringCaveWildMonHeldItems[alteringCaveId].item);
+                    slot = GetNextMonEmptySlot(&gEnemyParty[i], sAlteringCaveWildMonHeldItems[alteringCaveId].item);
+                    if (slot != MAX_MON_ITEMS)
+                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &sAlteringCaveWildMonHeldItems[alteringCaveId].item);
                 }
                 else
                 {
@@ -6136,9 +6155,17 @@ void SetWildMonHeldItem(void)
                     if (rnd < chanceNoItem)
                         continue;
                     if (rnd < chanceNotRare)
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemCommon);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
+                    }
                     else
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemRare);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
+                    }
                 }
             }
             else
@@ -6146,16 +6173,26 @@ void SetWildMonHeldItem(void)
                 if (gSpeciesInfo[species].itemCommon == gSpeciesInfo[species].itemRare && gSpeciesInfo[species].itemCommon != ITEM_NONE)
                 {
                     // Both held items are the same, 100% chance to hold item
-                    SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemCommon);
+                    slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                    if (slot != MAX_MON_ITEMS)
+                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                 }
                 else
                 {
                     if (rnd < chanceNoItem)
                         continue;
                     if (rnd < chanceNotRare)
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemCommon);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
+                    }
                     else
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemRare);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
+                    }
                 }
             }
         }
@@ -7214,6 +7251,21 @@ u8 BoxMonHasItem(struct BoxPokemon *mon, u16 item)
     {
         helditem = GetBoxMonData(mon, MON_DATA_HELD_ITEM + i);
         if(item == helditem)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+u8 BoxMonHasItemHoldEffect(struct BoxPokemon *mon, u16 holdEffect)
+{
+    u8 i;
+    u16 helditem;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        helditem = GetBoxMonData(mon, MON_DATA_HELD_ITEM + i);
+        if(GetItemHoldEffect(helditem) == holdEffect)
             return TRUE;
     }
 

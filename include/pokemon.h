@@ -835,6 +835,7 @@ u32 GetTeraTypeFromPersonality(struct Pokemon *mon);
 u8 MonHasItem(struct Pokemon *mon, u16 item);
 u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect);
 u8 BoxMonHasItem(struct BoxPokemon *mon, u16 item);
+u8 BoxMonHasItemHoldEffect(struct BoxPokemon *mon, u16 holdEffect);
 u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u16 holdEffect);
 
 #endif // GUARD_POKEMON_H

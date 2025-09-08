@@ -1421,7 +1421,7 @@ static void CancelItemSwap(u8 taskId)
 
 void TryStoreHeldItemsInPyramidBag(void)
 {
-    u8 i;
+    u8 i, j;
     struct Pokemon *party = gPlayerParty;
     u16 *newItems = Alloc(PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
 #if MAX_PYRAMID_BAG_ITEM_CAPACITY > 255
@@ -1435,22 +1435,26 @@ void TryStoreHeldItemsInPyramidBag(void)
     memcpy(newQuantities, gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode], PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
-        heldItem = GetMonData(&party[i], MON_DATA_HELD_ITEM);
-        if (heldItem != ITEM_NONE && !AddBagItem(heldItem, 1))
+        for (j = 0; j < MAX_MON_ITEMS; j++)
         {
-            // Cant store party held items in pyramid bag because bag is full
-            memcpy(gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode], newItems, PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
-            memcpy(gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode], newQuantities, PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
-            Free(newItems);
-            Free(newQuantities);
-            gSpecialVar_Result = 1;
-            return;
+            heldItem = GetMonData(&party[i], MON_DATA_HELD_ITEM + j);
+            if (heldItem != ITEM_NONE && !AddBagItem(heldItem, 1))
+            {
+                // Cant store party held items in pyramid bag because bag is full
+                memcpy(gSaveBlock2Ptr->frontier.pyramidBag.itemId[gSaveBlock2Ptr->frontier.lvlMode], newItems, PYRAMID_BAG_ITEMS_COUNT * sizeof(*newItems));
+                memcpy(gSaveBlock2Ptr->frontier.pyramidBag.quantity[gSaveBlock2Ptr->frontier.lvlMode], newQuantities, PYRAMID_BAG_ITEMS_COUNT * sizeof(*newQuantities));
+                Free(newItems);
+                Free(newQuantities);
+                gSpecialVar_Result = 1;
+                return;
+            }
         }
     }
 
     heldItem = ITEM_NONE;
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
-        SetMonData(&party[i], MON_DATA_HELD_ITEM, &heldItem);
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            SetMonData(&party[i], MON_DATA_HELD_ITEM + j, &heldItem);
     gSpecialVar_Result = 0;
     Free(newItems);
     Free(newQuantities);

@@ -345,8 +345,7 @@ bool8 MEScrCmd_givepokemon(struct ScriptContext *ctx)
             GetSetPokedexFlag(pokedexNum, FLAG_SET_CAUGHT);
         }
 
-        heldItem = GetMonData(&gPlayerParty[PARTY_SIZE - 1], MON_DATA_HELD_ITEM);
-        if (ItemIsMail(heldItem))
+        if (MonHasMail(&gPlayerParty[PARTY_SIZE - 1]))
             GiveMailToMon(&gPlayerParty[PARTY_SIZE - 1], &mail);
         CompactPartySlots();
         CalculatePlayerPartyCount();

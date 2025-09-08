@@ -498,7 +498,8 @@ static void SaveApprenticeParty(u8 numQuestions)
     for (i = 0; i < MULTI_PARTY_SIZE; i++)
     {
         gSaveBlock2Ptr->apprentices[0].party[i].species = SPECIES_NONE;
-        gSaveBlock2Ptr->apprentices[0].party[i].item = ITEM_NONE;
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            gSaveBlock2Ptr->apprentices[0].party[i].item[j] = ITEM_NONE;
         for (j = 0; j < MAX_MON_MOVES; j++)
             gSaveBlock2Ptr->apprentices[0].party[i].moves[j] = MOVE_NONE;
     }
@@ -524,10 +525,35 @@ static void SaveApprenticeParty(u8 numQuestions)
     {
         u8 questionId = PLAYER_APPRENTICE.questions[i].questionId;
         u8 monId = PLAYER_APPRENTICE.questions[i].monId;
+        u16 item = ITEM_NONE;
         if (questionId == QUESTION_ID_WHAT_ITEM)
         {
             if (PLAYER_APPRENTICE.questions[i].suggestedChange)
-                apprenticeMons[monId]->item = PLAYER_APPRENTICE.questions[i].data;
+            {
+                item = PLAYER_APPRENTICE.questions[i].data;
+                if (B_HELD_ITEM_CATEGORIZATION)
+                {
+                    apprenticeMons[monId]->item[gItemsInfo[item].heldSlot] = item;
+                }
+                else
+                {
+                    if (item != ITEM_NONE)
+                        for (j = 0; j < MAX_MON_ITEMS; j++)
+                        {
+                            if (apprenticeMons[monId]->item[j] == ITEM_NONE)
+                            {
+                                apprenticeMons[monId]->item[j] = item;
+                                break;
+                            }
+                            apprenticeMons[monId]->item[0] = item; // If told to hold an item and all slots are full, puts it in the first slot
+                        }
+                    else // If told to not to hold an item, clears all item slots
+                        for (j = 0; j < MAX_MON_ITEMS; j++)
+                        {
+                            apprenticeMons[monId]->item[j] = item;
+                        }
+                }
+            }
         }
         else if (questionId == QUESTION_ID_WHICH_MOVE)
         {

@@ -2222,7 +2222,7 @@ static void Cmd_adjustdamage(void)
             enduredHit = TRUE;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED;
         }
-        else if (SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND) && rand < SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND))
+        else if (rand < GetBattlerItemHoldEffectParam(battlerDef, SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND)))
         {
             gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_FOCUS_BAND);
             enduredHit = TRUE;
@@ -4988,22 +4988,22 @@ static bool32 BattleTypeAllowsExp(void)
         return TRUE;
 }
 
-static UNUSED u32 GetMonHoldEffect(struct Pokemon *mon)
-{
-    enum ItemHoldEffect holdEffect;
-    u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+// static UNUSED u32 GetMonHoldEffect(struct Pokemon *mon)
+// {
+//     enum ItemHoldEffect holdEffect;
+//     u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
 
-    if (item == ITEM_ENIGMA_BERRY_E_READER)
-    #if FREE_ENIGMA_BERRY == FALSE
-        holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-    #else
-        holdEffect = 0;
-    #endif //FREE_ENIGMA_BERRY
-    else
-        holdEffect = GetItemHoldEffect(item);
+//     if (item == ITEM_ENIGMA_BERRY_E_READER)
+//     #if FREE_ENIGMA_BERRY == FALSE
+//         holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+//     #else
+//         holdEffect = 0;
+//     #endif //FREE_ENIGMA_BERRY
+//     else
+//         holdEffect = GetItemHoldEffect(item);
 
-    return holdEffect;
-}
+//     return holdEffect;
+// }
 
 static void Cmd_getexp(void)
 {
@@ -15937,7 +15937,11 @@ static void Cmd_pickup(void)
                             }
                         }
                     }
-                    SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
+                    if (slot != MAX_MON_ITEMS)
+                    {
+                        DebugPrintf("Pickup Item: %d, slot: %d", giveItem, slot);
+                            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
+                    }
                 }
             }
             else if (ability == ABILITY_HONEY_GATHER

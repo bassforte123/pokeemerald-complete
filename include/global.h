@@ -311,7 +311,7 @@ struct ApprenticeMon
 {
     u16 species;
     u16 moves[MAX_MON_MOVES];
-    u16 item;
+    u16 item[MAX_MON_ITEMS];
 };
 
 // This is for past players Apprentices or Apprentices received via Record Mix.
@@ -487,7 +487,7 @@ struct BattleFrontier
               u8 pikeHintedRoomType:4;
               u8 pikeHealingRoomsDisabled:1;
     /*0xE11*/ //u8 padding2;
-    /*0xE12*/ u16 pikeHeldItemsBackup[FRONTIER_PARTY_SIZE];
+    /*0xE12*/ u16 pikeHeldItemsBackup[FRONTIER_PARTY_SIZE][MAX_MON_ITEMS];
     /*0xE18*/ u16 pyramidPrize;
     /*0xE1A*/ u16 pyramidWinStreaks[FRONTIER_LVL_MODE_COUNT];
     /*0xE1E*/ u16 pyramidRecordStreaks[FRONTIER_LVL_MODE_COUNT];

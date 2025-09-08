@@ -9003,7 +9003,7 @@ static void TakeItemFromMon(u8 cursorArea, u8 cursorPos)
         {
             if (GetCurrentBoxMonData(cursorPos, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
                 break;
-            if (i == MAX_MON_ITEMS - 1)
+            if (i == MAX_MON_ITEMS - 1 || MAX_MON_ITEMS == 0)
                 SetBoxMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
         }
         SetMonFormPSS(&gPokemonStoragePtr->boxes[StorageGetCurrentBox()][cursorPos], FORM_CHANGE_ITEM_HOLD);
@@ -9017,7 +9017,7 @@ static void TakeItemFromMon(u8 cursorArea, u8 cursorPos)
         {
             if (GetMonData(&gPlayerParty[cursorPos], MON_DATA_HELD_ITEM + i) != ITEM_NONE)
                 break;
-            if (i == MAX_MON_ITEMS - 1)
+            if (i == MAX_MON_ITEMS - 1 || MAX_MON_ITEMS == 0)
                 SetBoxMonIconObjMode(cursorPos, ST_OAM_OBJ_BLEND);
         }
         SetMonFormPSS(&mon->box, FORM_CHANGE_ITEM_HOLD);
