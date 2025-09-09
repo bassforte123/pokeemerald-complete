@@ -563,20 +563,20 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
             }
         }
     }
-    hpIv              = PARSE_FLAG(11, hpIv);
-    atkIv             = PARSE_FLAG(12, atkIv);
-    defIv             = PARSE_FLAG(13, defIv);
-    speedIv           = PARSE_FLAG(14, speedIv);
-    spAtkIv           = PARSE_FLAG(15, spAtkIv);
-    spDefIv           = PARSE_FLAG(16, spDefIv);
-    u16 move1         = PARSE_FLAG(17, MOVE_NONE);
-    u16 move2         = PARSE_FLAG(18, MOVE_NONE);
-    u16 move3         = PARSE_FLAG(19, MOVE_NONE);
-    u16 move4         = PARSE_FLAG(20, MOVE_NONE);
-    bool8 isShiny     = PARSE_FLAG(21, FALSE);
-    bool8 gmaxFactor  = PARSE_FLAG(22, FALSE);
-    u8 teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
-    u8 dmaxLevel      = PARSE_FLAG(24, 0);
+    hpIv              = PARSE_FLAG(12, hpIv);
+    atkIv             = PARSE_FLAG(13, atkIv);
+    defIv             = PARSE_FLAG(14, defIv);
+    speedIv           = PARSE_FLAG(15, speedIv);
+    spAtkIv           = PARSE_FLAG(16, spAtkIv);
+    spDefIv           = PARSE_FLAG(17, spDefIv);
+    u16 move1         = PARSE_FLAG(18, MOVE_NONE);
+    u16 move2         = PARSE_FLAG(19, MOVE_NONE);
+    u16 move3         = PARSE_FLAG(20, MOVE_NONE);
+    u16 move4         = PARSE_FLAG(21, MOVE_NONE);
+    bool8 isShiny     = PARSE_FLAG(22, FALSE);
+    bool8 gmaxFactor  = PARSE_FLAG(23, FALSE);
+    u8 teraType       = PARSE_FLAG(24, NUMBER_OF_MON_TYPES);
+    u8 dmaxLevel      = PARSE_FLAG(25, 0);
 
     u8 evs[NUM_STATS]        = {hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv};
     u8 ivs[NUM_STATS]        = {hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv};
