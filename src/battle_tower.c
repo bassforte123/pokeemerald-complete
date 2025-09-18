@@ -1751,7 +1751,6 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
         if (j != i + firstMonId)
             continue;
 
-            DebugPrintf("NOMatch-----------------");
         // Ensure this exact Pokémon index isn't a duplicate. This check doesn't seem necessary
         // because the species and held items were already checked directly above.
         for (j = 0; j < i; j++)
@@ -1763,7 +1762,7 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
             continue;
 
         chosenMonIndices[i] = monId;
-        DebugPrintf("****************PASS*****************");
+
         // Place the chosen Pokémon into the trainer's party.
         CreateFacilityMon(&gFacilityTrainerMons[monId], level, fixedIV, otID, 0, &gEnemyParty[i + firstMonId]);
 

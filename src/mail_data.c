@@ -58,31 +58,33 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
     heldItem[0] = itemId;
     heldItem[1] = itemId >> 8;
 
-    for (id = 0; id < PARTY_SIZE; id++)
+    if (slot != MAX_MON_ITEMS)
     {
-        if (gSaveBlock1Ptr->mail[id].itemId == ITEM_NONE)
+        for (id = 0; id < PARTY_SIZE; id++)
         {
-            for (i = 0; i < MAIL_WORDS_COUNT; i++)
-                gSaveBlock1Ptr->mail[id].words[i] = EC_EMPTY_WORD;
+            if (gSaveBlock1Ptr->mail[id].itemId == ITEM_NONE)
+            {
+                for (i = 0; i < MAIL_WORDS_COUNT; i++)
+                    gSaveBlock1Ptr->mail[id].words[i] = EC_EMPTY_WORD;
 
-            for (i = 0; i < PLAYER_NAME_LENGTH; i++)
-                gSaveBlock1Ptr->mail[id].playerName[i] = gSaveBlock2Ptr->playerName[i];
-            gSaveBlock1Ptr->mail[id].playerName[i] = EOS;
-            PadNameString(gSaveBlock1Ptr->mail[id].playerName, CHAR_SPACE);
+                for (i = 0; i < PLAYER_NAME_LENGTH; i++)
+                    gSaveBlock1Ptr->mail[id].playerName[i] = gSaveBlock2Ptr->playerName[i];
+                gSaveBlock1Ptr->mail[id].playerName[i] = EOS;
+                PadNameString(gSaveBlock1Ptr->mail[id].playerName, CHAR_SPACE);
 
-            for (i = 0; i < TRAINER_ID_LENGTH; i++)
-                gSaveBlock1Ptr->mail[id].trainerId[i] = gSaveBlock2Ptr->playerTrainerId[i];
+                for (i = 0; i < TRAINER_ID_LENGTH; i++)
+                    gSaveBlock1Ptr->mail[id].trainerId[i] = gSaveBlock2Ptr->playerTrainerId[i];
 
-            species = GetBoxMonData(&mon->box, MON_DATA_SPECIES);
-            personality = GetBoxMonData(&mon->box, MON_DATA_PERSONALITY);
-            gSaveBlock1Ptr->mail[id].species = SpeciesToMailSpecies(species, personality);
-            gSaveBlock1Ptr->mail[id].itemId = itemId;
-            SetMonData(mon, MON_DATA_MAIL, &id);
-            SetMonData(mon, MON_DATA_HELD_ITEM + slot, heldItem);
-            return id;
+                species = GetBoxMonData(&mon->box, MON_DATA_SPECIES);
+                personality = GetBoxMonData(&mon->box, MON_DATA_PERSONALITY);
+                gSaveBlock1Ptr->mail[id].species = SpeciesToMailSpecies(species, personality);
+                gSaveBlock1Ptr->mail[id].itemId = itemId;
+                SetMonData(mon, MON_DATA_MAIL, &id);
+                SetMonData(mon, MON_DATA_HELD_ITEM + slot, heldItem);
+                return id;
+            }
         }
     }
-
     return MAIL_NONE;
 }
 
@@ -121,7 +123,7 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
     u8 mailId = GiveMailToMonByItemId(mon, itemId);
     u16 slot = GetNextMonEmptySlot(mon, itemId);
 
-    if (mailId == MAIL_NONE)
+    if (mailId == MAIL_NONE || slot == MAX_MON_ITEMS)
         return MAIL_NONE;
 
     gSaveBlock1Ptr->mail[mailId] = *mail;

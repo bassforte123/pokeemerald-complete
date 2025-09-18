@@ -3814,7 +3814,6 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     //u8 holdEffect;
     u8 battler = MAX_BATTLERS_COUNT;
     u32 friendshipOnly = FALSE;
-    u16 heldItem;
     u8 effectFlags;
     s8 evChange;
     u16 evCount;
@@ -4828,7 +4827,6 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     u32 species = GetMonData(mon, MON_DATA_SPECIES, 0);
     //u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
-    u32 holdEffect;
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
     if (evolutions == NULL)
@@ -5272,7 +5270,6 @@ u16 ModifyStatByNature(u8 nature, u16 stat, u8 statIndex)
 void AdjustFriendship(struct Pokemon *mon, u8 event)
 {
     u16 species; //, heldItem;
-    u8 holdEffect;
     s8 mod;
 
     if (ShouldSkipFriendshipChange())
@@ -7232,7 +7229,6 @@ u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect)
 
     for(i = 0; i < MAX_MON_ITEMS; i++)
     {
-        //DebugPrintf("Item[%d]: %d, Effect[%d]: %d, holdEffect: %d", i, GetMonData(mon, MON_DATA_HELD_ITEM + i), ItemId_GetHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + i)), holdEffect, ItemId_GetHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + i)));
         item = GetMonData(mon, MON_DATA_HELD_ITEM + i);
         itemHoldEffect = GetItemHoldEffect(item);
         if(holdEffect == itemHoldEffect)

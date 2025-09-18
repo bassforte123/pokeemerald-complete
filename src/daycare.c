@@ -151,7 +151,7 @@ void InitDaycareMailRecordMixing(struct DayCare *daycare, struct RecordMixingDay
         if (GetBoxMonData(&daycare->mons[i].mon, MON_DATA_SPECIES) != SPECIES_NONE)
         {
             numDaycareMons++;
-            if (GetBoxMonData(&daycare->mons[i].mon, MON_DATA_HELD_ITEM) == ITEM_NONE)
+            if (GetBoxMonData(&daycare->mons[i].mon, MON_DATA_HELD_ITEM) == ITEM_NONE) // Mail is first slot only
                 mixMail->cantHoldItem[i] = FALSE;
             else
                 mixMail->cantHoldItem[i] = TRUE;

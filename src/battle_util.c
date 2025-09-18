@@ -12036,7 +12036,7 @@ bool32 BattlerHasHeldItemEffect(u32 battler, u32 holdEffect, bool32 checkNegatin
 
     if(battler >= MAX_BATTLERS_COUNT)
     {
-        //DebugPrintf("Invalid Battler: %d", battler);
+        DebugPrintf("Invalid Battler: %d", battler);
         return FALSE;
     }
     
@@ -12066,7 +12066,7 @@ bool32 BattlerHasHeldItem(u32 battler, u32 item, bool32 checkNegating)
 
     if(battler >= MAX_BATTLERS_COUNT)
     {
-        //DebugPrintf("Invalid Battler: %d", battler);
+        DebugPrintf("Invalid Battler: %d", battler);
         return FALSE;
     }
     
@@ -12095,7 +12095,7 @@ u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegati
 
     if(battler >= MAX_BATTLERS_COUNT)
     {
-        //DebugPrintf("Invalid Battler: %d", battler);
+        DebugPrintf("Invalid Battler: %d", battler);
         return item;
     }
 
@@ -12127,7 +12127,7 @@ u8 GetBattlerHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNeg
 
     if(battler >= MAX_BATTLERS_COUNT)
     {
-        //DebugPrintf("Invalid Battler: %d", battler);
+        DebugPrintf("Invalid Battler: %d", battler);
         return slot;
     }
 
@@ -12181,7 +12181,7 @@ u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating)
 
     if(battler >= MAX_BATTLERS_COUNT)
     {
-        //DebugPrintf("Invalid Battler: %d", battler);
+        DebugPrintf("Invalid Battler: %d", battler);
         return slot;
     }
 

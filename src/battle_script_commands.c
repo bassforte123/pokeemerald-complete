@@ -15939,8 +15939,7 @@ static void Cmd_pickup(void)
                     }
                     if (slot != MAX_MON_ITEMS)
                     {
-                        DebugPrintf("Pickup Item: %d, slot: %d", giveItem, slot);
-                            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
+                        SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
                     }
                 }
             }
@@ -17177,9 +17176,8 @@ void BS_SaveTarget(void)
 void Cmd_printdebug(void)
 {
     NATIVE_ARGS();
-    DebugPrintf("PRINTTEST");
-    //DebugPrintf("DEBUG ATTACKER [%d] Items1:[%d], Item2:[%d]", gBattlerAttacker, gBattleMons[gBattlerAttacker].items[0], gBattleMons[gBattlerAttacker].items[1]);
-    //DebugPrintf("DEBUG TARGET [%d] Items1:[%d], Item2:[%d]", gBattlerTarget, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
+    DebugPrintf("DEBUG ATTACKER [%d] Items1:[%d], Item2:[%d]", gBattlerAttacker, gBattleMons[gBattlerAttacker].items[0], gBattleMons[gBattlerAttacker].items[1]);
+    DebugPrintf("DEBUG TARGET [%d] Items1:[%d], Item2:[%d]", gBattlerTarget, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

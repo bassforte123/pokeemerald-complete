@@ -3397,7 +3397,6 @@ static void CursorCb_Cancel1(u8 taskId)
 
 static void CursorCb_Item(u8 taskId)
 {
-    DebugPrintf("CursorCb_Item");
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
@@ -3436,7 +3435,7 @@ static void CB2_SelectBagItemToGive(void)
 static void CB2_GiveHoldItem(void)
 {
     u16 slot = GetNextMonEmptySlot(&gPlayerParty[gPartyMenu.slotId], gSpecialVar_ItemId);
-    DebugPrintf("slot: %d", slot);
+
     if (gSpecialVar_ItemId == ITEM_NONE)
     {
         InitPartyMenu(gPartyMenu.menuType, KEEP_PARTY_LAYOUT, gPartyMenu.action, TRUE, PARTY_MSG_NONE, Task_TryCreateSelectionWindow, gPartyMenu.exitCallback);
@@ -3774,13 +3773,10 @@ static void Task_TossHeldItem(u8 taskId)
         UpdatePartyMonHeldItemSprite(mon, &sPartyMenuBoxes[gPartyMenu.slotId]);
         for (i = MAX_MON_ITEMS - 1; i >= 0; i--)
         {
-            DebugPrintf("Item[%d]: %d", i, GetMonData(mon, MON_DATA_HELD_ITEM + i));
             if (GetMonData(mon, MON_DATA_HELD_ITEM + i) != ITEM_NONE)
             {
-                DebugPrintf("BREAK");
              break;   
             }
-            DebugPrintf("i: %d", i);
             if (i == 0)
                 DisplayPartyPokemonDescriptionText(PARTYBOX_DESC_DONT_HAVE, &sPartyMenuBoxes[gPartyMenu.slotId], 1);
         }
@@ -7333,7 +7329,6 @@ static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
 
 static u8 CheckBattleEntriesAndGetMessage(void)
 {
-    DebugPrintf("CheckBattleEntriesAndGetMessage");
     u8 maxBattlers;
     u8 i, j, k, l;
     u8 facility;

@@ -3782,7 +3782,6 @@ static void GiveChosenBagItem(void)
 {
     u16 itemId = gSpecialVar_ItemId;
     u8 slot;
-    DebugPrintf("GiveChosenBagItem");
 
     if (itemId != ITEM_NONE)
     {
@@ -8982,14 +8981,11 @@ static void TryHideItemIconAtPos(u8 cursorArea, u8 cursorPos)
 
 static void TakeItemFromMon(u8 cursorArea, u8 cursorPos)
 {
-    bool32 hadItem = FALSE;
     u8 id, i;
-    u16 itemId, slot;
+    u16 itemId;
 
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
         return;
-        DebugPrintf("TakeItemFromMon");
-
 
     id = GetItemIconIdxByPosition(cursorArea, cursorPos);
     itemId = ITEM_NONE;
@@ -9047,7 +9043,7 @@ static void SwapItemsWithMon(u8 cursorArea, u8 cursorPos)
 
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
         return;
-DebugPrintf("SwapItemsWithMon");
+
     id = GetItemIconIdxByPosition(cursorArea, cursorPos);
     SetItemIconAffineAnim(id, ITEM_ANIM_PICK_UP);
     SetItemIconCallback(id, ITEM_CB_SWAP_TO_HAND, CURSOR_AREA_IN_HAND, 0);
@@ -9076,12 +9072,10 @@ DebugPrintf("SwapItemsWithMon");
 
 static void GiveItemToMon(u8 cursorArea, u8 cursorPos)
 {
-    bool32 hadItem = FALSE;
-    u8 id, i, slot;
+    u8 id;
 
     if (sStorage->boxOption != OPTION_MOVE_ITEMS)
         return;
-    DebugPrintf("GiveItemToMon");
 
     id = GetItemIconIdxByPosition(CURSOR_AREA_IN_HAND, 0);
     SetItemIconAffineAnim(id, ITEM_ANIM_PUT_DOWN);
@@ -9120,7 +9114,6 @@ static void MoveItemFromMonToBag(u8 cursorArea, u8 cursorPos)
         }
     }
 
-    DebugPrintf("MoveItemFromMonToBag");
     itemId = ITEM_NONE;
     id = GetItemIconIdxByPosition(cursorArea, cursorPos);
     if (!ItemIsMail(sStorage->displayMonItemId[0]))
