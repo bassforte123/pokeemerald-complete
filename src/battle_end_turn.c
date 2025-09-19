@@ -516,7 +516,6 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
     {
-        //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
          || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
@@ -1421,8 +1420,6 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     }
     case THIRD_EVENT_BLOCK_ITEMS:
     {
-        //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
-        
         if(BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
@@ -1480,7 +1477,6 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     }
     case FOURTH_EVENT_BLOCK_EJECT_PACK:
     {
-        //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_EJECT_PACK, TRUE))
         {
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))

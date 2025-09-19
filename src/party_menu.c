@@ -3407,16 +3407,6 @@ static void CursorCb_Item(u8 taskId)
     gTasks[taskId].func = Task_HandleSelectionMenuInput;
 }
 
-// static bool8 CheckIfHasItem(u16 item)
-// {
-//     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-
-//         if(GetMonData(mon, MON_DATA_HELD_ITEM + gItemsInfo[item].heldSlot) != ITEM_NONE)
-//             return TRUE;
-
-//     return FALSE;
-// }
-
 static void CursorCb_Give(u8 taskId)
 {
     PlaySE(SE_SELECT);
@@ -3653,7 +3643,7 @@ static void Task_UpdateHeldItemSprite(u8 taskId)
 static void CursorCb_TakeItem(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-    //u16 item = GetMonData(mon, MON_DATA_HELD_ITEM); //Item prompts moved to TryTakeMonItem (Multi)
+     //Item prompts moved to TryTakeMonItem (Multi)
 
     PlaySE(SE_SELECT);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[0]);
@@ -3666,11 +3656,9 @@ static void CursorCb_TakeItem(u8 taskId)
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         break;
     case 1: // No room to take item
-        //BufferBagFullCantTakeItemMessage(item);
         DisplayPartyMenuMessage(gStringVar4, TRUE);
         break;
     default: // Took item
-        //DisplayTookHeldItemMessage(mon, item, TRUE);
         break;
     }
     ScheduleBgCopyTilemapToVram(2);
@@ -3759,7 +3747,6 @@ static void Task_TossHeldItem(u8 taskId)
         u16 item = ITEM_NONE;
         int i;
         u8 slot = 0;
-        u8 itemcount = 0;
 
         for (i = MAX_MON_ITEMS - 1; i >= 0; i--)
         {

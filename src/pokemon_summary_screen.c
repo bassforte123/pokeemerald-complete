@@ -276,7 +276,6 @@ static void Task_PrintSkillsPage(u8);
 static void PrintHeldItemName(void);
 static void PrintHeldItemName2(void);
 static void PrintSkillsPageText(void);
-//static void PrintRibbonCount(void);
 static void BufferLeftColumnStats(void);
 static void PrintLeftColumnStats(void);
 static void BufferRightColumnStats(void);
@@ -3782,26 +3781,6 @@ static void PrintHeldItemName2(void)
     x = GetStringCenterAlignXOffset(fontId, text, 72) + 6;
     PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2), text, x, 1, 0, 0, fontId);
 }
-
-// static void PrintRibbonCount(void)
-// {
-//     const u8 *text;
-//     int x;
-
-//     if (sMonSummaryScreen->summary.ribbonCount == 0)
-//     {
-//         text = gText_None;
-//     }
-//     else
-//     {
-//         ConvertIntToDecimalStringN(gStringVar1, sMonSummaryScreen->summary.ribbonCount, STR_CONV_MODE_RIGHT_ALIGN, 2);
-//         StringExpandPlaceholders(gStringVar4, gText_RibbonsVar1);
-//         text = gStringVar4;
-//     }
-
-//     x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 70) + 6;
-//     PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT), text, x, 1, 0, 0);
-// }
 
 static void BufferStat(u8 *dst, u8 statIndex, u32 stat, u32 strId, u32 n)
 {

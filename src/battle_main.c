@@ -4042,7 +4042,6 @@ void BattleTurnPassed(void)
 
 u8 IsRunningFromBattleImpossible(u32 battler)
 {
-    //enum ItemHoldEffect holdEffect;
     u32 i;
 
     if (FlagGet(B_FLAG_NO_RUNNING))
@@ -4050,11 +4049,6 @@ u8 IsRunningFromBattleImpossible(u32 battler)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CANT_ESCAPE;
         return BATTLE_RUN_FORBIDDEN;
     }
-
-    // if (gBattleMons[battler].item == ITEM_ENIGMA_BERRY_E_READER)
-    //     holdEffect = gEnigmaBerries[battler].holdEffect;
-    // else
-    //     holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
 
     gPotentialItemEffectBattler = battler;
 
@@ -4781,7 +4775,7 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability)
 u32 GetBattlerTotalSpeedStat(u32 battler)
 {
     u32 ability = GetBattlerAbility(battler);
-    //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
+
     return GetBattlerTotalSpeedStatArgs(battler, ability);
 }
 
@@ -4903,9 +4897,7 @@ s32 GetWhichBattlerFasterOrTies(u32 battler1, u32 battler2, bool32 ignoreChosenM
     s32 priority1 = 0, priority2 = 0;
     u32 ability1 = GetBattlerAbility(battler1);
     u32 speedBattler1 = GetBattlerTotalSpeedStat(battler1);
-    //enum ItemHoldEffect holdEffectBattler1 = GetBattlerHoldEffect(battler1, TRUE);
     u32 speedBattler2 = GetBattlerTotalSpeedStat(battler2);
-    //enum ItemHoldEffect holdEffectBattler2 = GetBattlerHoldEffect(battler2, TRUE);
     u32 ability2 = GetBattlerAbility(battler2);
 
     if (!ignoreChosenMoves)
@@ -5243,8 +5235,6 @@ static void TryChangeTurnOrder(void)
 static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickClawRandom, u32 *quickDrawRandom)
 {
     u32 ability1 = GetBattlerAbility(battler1);
-    //enum ItemHoldEffect holdEffectBattler1 = GetBattlerHoldEffect(battler1, TRUE);
-    //enum ItemHoldEffect holdEffectBattler2 = GetBattlerHoldEffect(battler2, TRUE);
     u32 ability2 = GetBattlerAbility(battler2);
 
     // Battler 1
@@ -5816,9 +5806,8 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
 {
     u32 moveType = GetMoveType(move);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    u32 species, ability, type1, type2, type3; //heldItem
+    u32 species, ability, type1, type2, type3;
     bool8 utilityUmbrellaAffected = FALSE;
-    //enum ItemHoldEffect holdEffect;
     enum Gimmick gimmick = GetActiveGimmick(battler);
 
     if (move == MOVE_STRUGGLE)
@@ -5827,8 +5816,6 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     if (state == MON_IN_BATTLE)
     {
         species = gBattleMons[battler].species;
-        //heldItem = gBattleMons[battler].item;
-        //holdEffect = GetBattlerHoldEffect(battler, TRUE);
         ability = GetBattlerAbility(battler);
         type1 = gBattleMons[battler].types[0];
         type2 = gBattleMons[battler].types[1];
@@ -5838,8 +5825,6 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     else
     {
         species = GetMonData(mon, MON_DATA_SPECIES);
-        //heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
-        //holdEffect = GetItemHoldEffect(heldItem);
         ability = GetMonAbility(mon);
         type1 = gSpeciesInfo[species].types[0];
         type2 = gSpeciesInfo[species].types[1];
@@ -6065,7 +6050,6 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
 {
     u32 moveType;
     u32 heldGem = ITEM_NONE;
-    //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
 
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->ateBoost[battler] = FALSE;
@@ -6096,7 +6080,6 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
     // Check if a gem should activate.
     u32 effect = GetMoveEffect(move);
     if (heldGem != ITEM_NONE
-        //&& GetBattleMoveType(move) == GetItemSecondaryId(heldItem)
         && effect != EFFECT_PLEDGE
         && effect != EFFECT_OHKO
         && effect != EFFECT_STRUGGLE)

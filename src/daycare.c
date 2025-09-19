@@ -969,9 +969,6 @@ void RejectEggFromDayCare(void)
 static void AlterEggSpeciesWithIncenseItem(u16 *species, struct DayCare *daycare)
 {
     u32 i;
-    // u16 motherItem, fatherItem;
-    // motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
-    // fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
 
     for (i = 0; i < ARRAY_COUNT(sIncenseBabyTable); i++)
     {
@@ -996,8 +993,6 @@ static const struct {
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)
 {
     u16 i, species = GetMonData(mon, MON_DATA_SPECIES);
-    // u32 motherItem = GetBoxMonData(&daycare->mons[0].mon, MON_DATA_HELD_ITEM);
-    // u32 fatherItem = GetBoxMonData(&daycare->mons[1].mon, MON_DATA_HELD_ITEM);
 
     for (i = 0; i < ARRAY_COUNT(sBreedingSpecialMoveItemTable); i++)
     {

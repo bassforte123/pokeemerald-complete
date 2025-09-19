@@ -85,6 +85,7 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
             }
         }
     }
+
     return MAIL_NONE;
 }
 

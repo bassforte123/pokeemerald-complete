@@ -118,7 +118,7 @@ static inline u32 SearchItemSlots(u16 *battlerItems, u16 effect)
   return ITEM_NONE;
 }
 
-// Translates SearchItemSlot to found/not found true/false
+// Returns if item found in SearchItemSlots array
 static inline u32 HasSearchItems(u16 *battlerItems, u16 effect)
 {
   if (SearchItemSlots(battlerItems, effect) == MAX_MON_ITEMS)

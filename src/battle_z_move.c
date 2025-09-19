@@ -113,8 +113,6 @@ bool32 IsZMove(u32 move)
 
 bool32 CanUseZMove(u32 battler)
 {
-    //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
-
     // Check if Player has Z-Power Ring.
     if (!TESTING && (battler == B_POSITION_PLAYER_LEFT
         || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
@@ -143,8 +141,6 @@ bool32 CanUseZMove(u32 battler)
 
 u32 GetUsableZMove(u32 battler, u32 move)
 {
-    //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
-
     if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
     {
         u32 item = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE);
@@ -167,11 +163,7 @@ void ActivateZMove(u32 battler)
 
 bool32 IsViableZMove(u32 battler, u32 move)
 {
-    //u32 item;
-    //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
     int moveSlotIndex;
-
-    //item = gBattleMons[battler].item;
 
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_Z_MOVE)
         return FALSE;

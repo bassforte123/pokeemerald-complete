@@ -578,7 +578,6 @@ static void Cmd_switchoutabilities(void);
 static void Cmd_jumpifhasnohp(void);
 static void Cmd_jumpifnotcurrentmoveargtype(void);
 static void Cmd_pickup(void);
-//static void Cmd_unused_0xE6(void);
 static void Cmd_unused_0xE7(void);
 static void Cmd_settypebasedhalvers(void);
 static void Cmd_jumpifsubstituteblocks(void);
@@ -1575,11 +1574,8 @@ static bool32 AccuracyCalcHelper(u32 move, u32 battler)
 
 u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u32 defAbility)
 {
-    //TODO AICHECK?
     u32 calc, moveAcc;
     s8 buff, accStage, evasionStage;
-    //u32 atkParam = GetBattlerHoldEffectParam(battlerAtk);
-    //u32 defParam = GetBattlerHoldEffectParam(battlerDef);
     u32 atkAlly = BATTLE_PARTNER(battlerAtk);
     u32 atkAllyAbility = GetBattlerAbility(atkAlly);
 
@@ -1697,7 +1693,6 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 
     enum BattleMoveEffects effect = GetMoveEffect(move);
     u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
-    //enum ItemHoldEffect holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
 
     if (move == NO_ACC_CALC_CHECK_LOCK_ON)
     {
@@ -1896,7 +1891,7 @@ static inline u32 GetCriticalHitOdds(u32 critChance)
     return sCriticalHitOdds[critChance];
 }
 
-static inline u32 IsBattlerLeekAffected(u32 battler) //enum ItemHoldEffect holdEffect
+static inline u32 IsBattlerLeekAffected(u32 battler)
 {
     if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEEK, TRUE))
     {
@@ -1906,7 +1901,7 @@ static inline u32 IsBattlerLeekAffected(u32 battler) //enum ItemHoldEffect holdE
     return FALSE;
 }
 
-static inline u32 GetHoldEffectCritChanceIncrease(u32 battler) //enum ItemHoldEffect holdEffect
+static inline u32 GetHoldEffectCritChanceIncrease(u32 battler)
 {
     u32 critStageIncrease = 0;
 
@@ -1916,7 +1911,7 @@ static inline u32 GetHoldEffectCritChanceIncrease(u32 battler) //enum ItemHoldEf
         if (gBattleMons[battler].species == SPECIES_CHANSEY)
             critStageIncrease = critStageIncrease + 2;
     }
-    if (IsBattlerLeekAffected(battler)) //holdEffect
+    if (IsBattlerLeekAffected(battler))
         critStageIncrease = 2;
 
     return critStageIncrease;
@@ -1941,7 +1936,7 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
         critChance  = 2 * ((gBattleMons[battlerAtk].status2 & STATUS2_FOCUS_ENERGY) != 0)
                     + 1 * ((gBattleMons[battlerAtk].status2 & STATUS2_DRAGON_CHEER) != 0)
                     + GetMoveCriticalHitStage(move)
-                    + GetHoldEffectCritChanceIncrease(battlerAtk) //holdEffectAtk
+                    + GetHoldEffectCritChanceIncrease(battlerAtk)
                     + 2 * (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS)
                     + (abilityAtk == ABILITY_SUPER_LUCK)
                     + gBattleStruct->bonusCritStages[gBattlerAttacker];
@@ -1976,7 +1971,7 @@ s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
     s32 critChance = 0;
     s32 moveCritStage = GetMoveCriticalHitStage(gCurrentMove);
     s32 bonusCritStage = gBattleStruct->bonusCritStages[battlerAtk]; // G-Max Chi Strike
-    u32 holdEffectCritStage = GetHoldEffectCritChanceIncrease(battlerAtk); //holdEffectAtk
+    u32 holdEffectCritStage = GetHoldEffectCritChanceIncrease(battlerAtk);
     u16 baseSpeed = gSpeciesInfo[gBattleMons[battlerAtk].species].baseSpeed;
 
     critChance = baseSpeed / 2;
@@ -2039,7 +2034,6 @@ static void Cmd_critcalc(void)
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
     u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
-    //enum ItemHoldEffect holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
     gPotentialItemEffectBattler = gBattlerAttacker;
 
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -2159,8 +2153,6 @@ static void Cmd_adjustdamage(void)
 {
     CMD_ARGS();
 
-    //enum ItemHoldEffect holdEffect;
-    //u8 param;
     u32 battlerDef;
     u32 heldGem = ITEM_NONE;
     u32 rand = Random() % 100;
@@ -2207,9 +2199,6 @@ static void Cmd_adjustdamage(void)
 
         if (gBattleMons[gBattlerTarget].hp > gBattleStruct->moveDamage[battlerDef])
             continue;
-
-        //holdEffect = GetBattlerHoldEffect(battlerDef, TRUE);
-        //param = GetBattlerHoldEffectParam(battlerDef);
 
         gPotentialItemEffectBattler = battlerDef;
 
@@ -4988,28 +4977,10 @@ static bool32 BattleTypeAllowsExp(void)
         return TRUE;
 }
 
-// static UNUSED u32 GetMonHoldEffect(struct Pokemon *mon)
-// {
-//     enum ItemHoldEffect holdEffect;
-//     u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
-
-//     if (item == ITEM_ENIGMA_BERRY_E_READER)
-//     #if FREE_ENIGMA_BERRY == FALSE
-//         holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-//     #else
-//         holdEffect = 0;
-//     #endif //FREE_ENIGMA_BERRY
-//     else
-//         holdEffect = GetItemHoldEffect(item);
-
-//     return holdEffect;
-// }
-
 static void Cmd_getexp(void)
 {
     CMD_ARGS(u8 battler);
 
-    //enum ItemHoldEffect holdEffect;
     s32 i; // also used as stringId
     u8 *expMonId = &gBattleStruct->expGetterMonId;
     u32 currLvl;
@@ -5048,7 +5019,6 @@ static void Cmd_getexp(void)
                 if ((1u << i) & sentInBits)
                     viaSentIn++;
 
-				//holdEffect = GetMonHoldEffect(&gPlayerParty[i]);
                 if (MonHasItemHoldEffect(&gPlayerParty[i], HOLD_EFFECT_EXP_SHARE) || IsGen6ExpShareEnabled())
                 {
                     expShareBits |= 1u << i;
@@ -5116,7 +5086,6 @@ static void Cmd_getexp(void)
         if (gBattleControllerExecFlags == 0)
         {
             bool32 wasSentOut = (gBattleStruct->expSentInMons & (1u << *expMonId)) != 0;
-            //holdEffect = GetMonHoldEffect(&gPlayerParty[*expMonId]);
             
             if ((!MonHasItemHoldEffect(&gPlayerParty[*expMonId], HOLD_EFFECT_EXP_SHARE) && !wasSentOut && !IsGen6ExpShareEnabled())
              || GetMonData(&gPlayerParty[*expMonId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
@@ -6179,9 +6148,7 @@ static bool32 TryKnockOffBattleScript(u32 battlerDef)
 
             gLastUsedItem = gBattleMons[battlerDef].items[slot];
             gBattleMons[battlerDef].items[slot] = ITEM_NONE;
-            // if (slot == 0)
-            //     gBattleMons[battlerDef].item = ITEM_NONE; //redundancy for vanilla slot
-                
+            
             if (gBattleMons[battlerDef].ability != ABILITY_GORILLA_TACTICS)
                 gBattleStruct->choicedMove[battlerDef] = 0;
             CheckSetUnburden(battlerDef);
@@ -6208,10 +6175,6 @@ static bool32 TryKnockOffBattleScript(u32 battlerDef)
 static inline bool32 TryTriggerSymbiosis(u32 battler, u32 ally)
 {
     return GetBattlerAbility(ally) == ABILITY_SYMBIOSIS
-        //&& gBattleMons[battler].item == ITEM_NONE
-        //&& gBattleMons[ally].item != ITEM_NONE
-        //&& CanBattlerGetOrLoseItem(battler, gBattleMons[ally].item)
-        //&& CanBattlerGetOrLoseItem(ally, gBattleMons[ally].item)
         && IsBattlerAlive(battler)
         && IsBattlerAlive(ally);
 }
@@ -6242,7 +6205,6 @@ static inline bool32 IsProtectivePadsProtected(u32 battler)
 
 static inline bool32 IsProtectEffectAffected(u32 battler, u32 move)
 {
-    //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
     if (IsProtectivePadsProtected(battler))
         return TRUE;
 
@@ -6318,11 +6280,8 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
             slot = gLastItemSlot = GetSlot(targetableSlots, index);
 
             if (move != MOVE_FLING && move != MOVE_NATURAL_GIFT
-            //&& gBattleMons[battlerAtk].item == ITEM_NONE // In loop
-            //&& gBattleMons[battlerDef].item != ITEM_NONE // In loop
             && IsBattlerAlive(battlerAtk)
             && IsBattlerTurnDamaged(battlerDef)
-            //&& CanStealItem(battlerAtk, battlerDef, gBattleMons[battlerDef].item) //In loop
             && !gSpecialStatuses[battlerAtk].gemBoost   // In base game, gems are consumed after magician would activate.
             && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(battlerDef)] & (1u << gBattlerPartyIndexes[battlerDef]))
             && !DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
@@ -6442,7 +6401,6 @@ static void Cmd_moveend(void)
     s32 i;
     bool32 effect = FALSE;
     u32 moveType = 0;
-    //enum ItemHoldEffect holdEffectAtk = HOLD_EFFECT_NONE;
     u32 endMode, endState;
     u32 originallyUsedMove;
                 
@@ -6454,7 +6412,6 @@ static void Cmd_moveend(void)
     endMode = cmd->endMode;
     endState = cmd->endState;
 
-    //holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
     moveType = GetBattleMoveType(gCurrentMove);
 
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
@@ -7376,7 +7333,6 @@ static void Cmd_moveend(void)
             u8 index;
 
             if (IsBattlerAlive(gBattlerAttacker)
-              //&& gBattleMons[gBattlerAttacker].item != ITEM_NONE        // Attacker must be holding an item
               && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker]))   // But not knocked off
               && IsMoveMakingContact(gCurrentMove, gBattlerAttacker)    // Pickpocket requires contact
               && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))           // Obviously attack needs to have worked
@@ -7392,8 +7348,6 @@ static void Cmd_moveend(void)
                       && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
                       && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
                       && IsBattlerAlive(battler)                                                        // Battler must be alive to pickpocket
-                      //&& gBattleMons[battler].item == ITEM_NONE                                        // Pickpocketer can't have an item already
-                      //&& CanStealItem(battler, gBattlerAttacker, gBattleMons[gBattlerAttacker].item)   // Cannot steal plates, mega stones, etc
                       )
                     {
                         index = 0;
@@ -12704,7 +12658,6 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
     bool32 certain = FALSE;
     bool32 notProtectAffected = FALSE;
     u32 index, battler, battlerAbility;
-    //enum ItemHoldEffect battlerHoldEffect;
     bool32 affectsUser = (flags & MOVE_EFFECT_AFFECTS_USER);
     bool32 mirrorArmored = (flags & STAT_CHANGE_MIRROR_ARMOR);
 
@@ -12714,7 +12667,6 @@ static u32 ChangeStatBuffs(s8 statValue, u32 statId, u32 flags, const u8 *BS_ptr
         battler = gBattlerTarget;
 
     battlerAbility = GetBattlerAbility(battler);
-    //battlerHoldEffect = GetBattlerHoldEffect(battler, TRUE);
 
     gSpecialStatuses[battler].changedStatsBattlerId = gBattlerAttacker;
 
@@ -13406,7 +13358,6 @@ static void Cmd_tryKO(void)
     CMD_ARGS(const u8 *failInstr);
 
     bool32 lands = FALSE;
-    //enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
     u16 targetAbility = GetBattlerAbility(gBattlerTarget);
     u32 rand = Random() % 100;
     u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
@@ -13530,10 +13481,6 @@ static void Cmd_copybidedmg(void)
     gBattleStruct->moveDamage[gBattlerTarget] = gBideDmg[gBattlerAttacker] * 2;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
-
-// static void Cmd_unused_96(void)
-// {
-// }
 
 static void Cmd_tryinfatuating(void)
 {
@@ -15887,7 +15834,7 @@ static void Cmd_pickup(void)
     u32 i, j, k;
     u16 species, ability, storeItem = ITEM_NONE, giveItem = ITEM_NONE;
     u8 lvlDivBy10;
-    u8 index, slot = MAX_MON_ITEMS;
+    u8 slot = MAX_MON_ITEMS;
 
     // Multi Items will make an array of open slots then only add items to the correct slot category if slot categories are enabled
 
@@ -15897,8 +15844,6 @@ static void Cmd_pickup(void)
         for (i = 0; i < PARTY_SIZE; i++)
         {
             species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
-            //heldItem = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
-            index = 0;
             lvlDivBy10 = (GetMonData(&gPlayerParty[i], MON_DATA_LEVEL)-1) / 10; //Moving this here makes it easier to add in abilities like Honey Gather.
             if (lvlDivBy10 > 9)
                 lvlDivBy10 = 9;
@@ -15911,7 +15856,7 @@ static void Cmd_pickup(void)
                 && (Random() % 1) == 0)
             {
                 if (isInPyramid)
-                {   
+                {
                     giveItem = GetBattlePyramidPickupItemId();
                     slot = GetNextMonEmptySlot(&gPlayerParty[i], giveItem);
                     if (slot != MAX_MON_ITEMS)
@@ -15978,10 +15923,6 @@ static void Cmd_pickup(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
-
-// static void Cmd_unused_0xE6(void)
-// {
-// }
 
 static void Cmd_unused_0xE7(void)
 {
@@ -17597,8 +17538,6 @@ u8 GetFirstFaintedPartyIndex(u8 battler)
 
 void ApplyExperienceMultipliers(s32 *expAmount, u8 expGetterMonId, u8 faintedBattler)
 {
-    //enum ItemHoldEffect holdEffect = GetMonHoldEffect(&gPlayerParty[expGetterMonId]);
-
     if (IsTradedMon(&gPlayerParty[expGetterMonId]))
         *expAmount = (*expAmount * 150) / 100;
     if (MonHasItemHoldEffect(&gPlayerParty[expGetterMonId], HOLD_EFFECT_LUCKY_EGG))
@@ -17946,8 +17885,6 @@ void BS_SetRemoveTerrain(void)
     }
     else
     {
-        //enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
-
         gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= statusFlag;
         gFieldTimers.terrainTimer = gBattleTurnCounter + BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_TERRAIN_EXTENDER, TRUE) ? 8 : 5;

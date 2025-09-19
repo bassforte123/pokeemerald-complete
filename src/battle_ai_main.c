@@ -36,7 +36,6 @@ static u32 ChooseMoveOrAction_Singles(u32 battler);
 static u32 ChooseMoveOrAction_Doubles(u32 battler);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, u32 battlerAtk, u32 battlerDef);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef);
-//static bool32 IsPinchBerryItemEffect(enum ItemHoldEffect holdEffect);
 static bool32 HasPinchBerryItemEffect(u32 battler);
 
 // ewram
@@ -521,7 +520,7 @@ void Ai_UpdateFaintData(u32 battler)
 
 void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 {
-    u32 ability, i, item; //, holdEffect;
+    u32 ability, i, item;
 
     ability = aiData->abilities[battler] = AI_DecideKnownAbilityForTurn(battler);
     for (i = 0; i < MAX_MON_ITEMS; i++)
@@ -744,8 +743,11 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
     }
+
     for (i = 0; i < MAX_MON_MOVES; i++)
+    {
         gAiBattleData->finalScore[battler][opposingBattler][i] = gAiThinkingStruct->score[i];
+    }
 
     numOfBestMoves = 1;
     currentMoveArray[0] = gAiThinkingStruct->score[0];
@@ -3009,7 +3011,6 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 battlerAtkPartner = BATTLE_PARTNER(battlerAtk);
     struct AiLogicData *aiData = gAiLogicData;
     u32 atkPartnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
-    //u32 atkPartnerHoldEffect = aiData->holdEffects[BATTLE_PARTNER(battlerAtk)];
     enum BattleMoveEffects partnerEffect = GetMoveEffect(aiData->partnerMove);
     bool32 partnerProtecting = IsAllyProtectingFromMove(battlerAtk, move, aiData->partnerMove) && !MoveIgnoresProtect(move);
     bool32 attackerHasBadAbility = (gAbilitiesInfo[aiData->abilities[battlerAtk]].aiRating < 0);
@@ -3106,26 +3107,26 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     switch (effect)
     {
     case EFFECT_SANDSTORM:
-        if (ShouldSetSandstorm(battlerAtkPartner, atkPartnerAbility)) //atkPartnerHoldEffect
+        if (ShouldSetSandstorm(battlerAtkPartner, atkPartnerAbility))
         {
             RETURN_SCORE_PLUS(WEAK_EFFECT);   // our partner benefits from sandstorm
         }
         break;
     case EFFECT_RAIN_DANCE:
-        if (ShouldSetRain(battlerAtkPartner, atkPartnerAbility)) //atkPartnerHoldEffect
+        if (ShouldSetRain(battlerAtkPartner, atkPartnerAbility))
         {
             RETURN_SCORE_PLUS(WEAK_EFFECT);   // our partner benefits from rain
         }
         break;
     case EFFECT_SUNNY_DAY:
-        if (ShouldSetSun(battlerAtkPartner, atkPartnerAbility)) //atkPartnerHoldEffect
+        if (ShouldSetSun(battlerAtkPartner, atkPartnerAbility))
         {
             RETURN_SCORE_PLUS(WEAK_EFFECT);   // our partner benefits from sun
         }
         break;
     case EFFECT_HAIL:
         if (IsBattlerAlive(battlerAtkPartner)
-         && ShouldSetHail(battlerAtkPartner, atkPartnerAbility)) //atkPartnerHoldEffect
+         && ShouldSetHail(battlerAtkPartner, atkPartnerAbility))
         {
             RETURN_SCORE_PLUS(DECENT_EFFECT);   // our partner benefits from hail
         }
@@ -3133,7 +3134,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     case EFFECT_SNOWSCAPE:
     case EFFECT_CHILLY_RECEPTION:
         if (IsBattlerAlive(battlerAtkPartner)
-         && ShouldSetSnow(battlerAtkPartner, atkPartnerAbility)) //atkPartnerHoldEffect
+         && ShouldSetSnow(battlerAtkPartner, atkPartnerAbility))
         {
             RETURN_SCORE_PLUS(DECENT_EFFECT);   // our partner benefits from snow
         }
@@ -3660,25 +3661,6 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     return score;
 }
 
-// static bool32 IsPinchBerryItemEffect(enum ItemHoldEffect holdEffect)
-// {
-//     switch (holdEffect)
-//     {
-//     case HOLD_EFFECT_ATTACK_UP:
-//     case HOLD_EFFECT_DEFENSE_UP:
-//     case HOLD_EFFECT_SPEED_UP:
-//     case HOLD_EFFECT_SP_ATTACK_UP:
-//     case HOLD_EFFECT_SP_DEFENSE_UP:
-//     case HOLD_EFFECT_CRITICAL_UP:
-//     case HOLD_EFFECT_RANDOM_STAT_UP:
-//     case HOLD_EFFECT_CUSTAP_BERRY:
-//     case HOLD_EFFECT_MICLE_BERRY:
-//         return TRUE;
-//     default:
-//         return FALSE;
-//     }
-// }
-
 static bool32 HasPinchBerryItemEffect(u32 battler)
 {
     if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_NONE, FALSE)
@@ -3824,7 +3806,6 @@ static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
 static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
 {
     struct AiLogicData *aiData = gAiLogicData;
-    //enum ItemHoldEffect holdEffect = aiData->holdEffects[battlerAtk];
 
     s32 score = 0;
 
@@ -5162,7 +5143,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                     ADJUST_SCORE(DECENT_EFFECT);
             }
         }
-    
         break;
     default:
         break;
@@ -5341,12 +5321,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
 
                         if (canSteal && Ai_BattlerHasItem(battlerAtk, ITEM_NONE, aiData)
                         && !Ai_BattlerHasItem(battlerDef, ITEM_NONE, aiData)
-                        // && CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
-                        // && CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
                         && !HasMoveWithEffect(battlerAtk, EFFECT_ACROBATICS)
                         && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
                         {
-                            //switch (aiData->holdEffects[battlerDef])
                             if(Ai_BattlerHasItem(battlerDef, HOLD_EFFECT_CHOICE_BAND, aiData))
                             {
                                 ADJUST_SCORE(DECENT_EFFECT);

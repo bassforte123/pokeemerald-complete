@@ -1710,7 +1710,6 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
     for (bfMonCount = 0; monSet[bfMonCount] != 0xFFFF; bfMonCount++)
         ;
     i = 0;
-
     otID = Random32();
     while (i != monCount)
     {

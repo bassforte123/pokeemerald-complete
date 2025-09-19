@@ -1588,9 +1588,9 @@ static void SaveMonHeldItems(void)
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {
         for(j = 0; j < MAX_MON_ITEMS; j++)
-        {   
+        {
             int heldItem = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1],
-                                        MON_DATA_HELD_ITEM + j);
+                                      MON_DATA_HELD_ITEM + j);
             gSaveBlock2Ptr->frontier.pikeHeldItemsBackup[i][j] = heldItem;
         }
     }

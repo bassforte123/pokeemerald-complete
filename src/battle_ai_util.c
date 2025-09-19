@@ -54,6 +54,7 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
 {
     if (calcContext == AI_ATTACKING && BattlerHasAi(battlerAtk))
     {
+
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE)) // Risky assumes it deals max damage
             return aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum;
         if ((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_CONSERVATIVE) && !(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)) // Conservative assumes it deals min damage
@@ -358,10 +359,9 @@ bool32 AI_BattlerAtMaxHp(u32 battlerId)
     return FALSE;
 }
 
+
 bool32 AI_CanBattlerEscape(u32 battler)
 {
-    //enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[battler];
-
     if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
     if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SHED_SHELL, gAiLogicData))
@@ -627,7 +627,7 @@ static inline void AI_RestoreBattlerTypes(u32 battlerAtk, u32 *types)
     gBattleMons[battlerAtk].types[2] = types[2];
 }
 
-static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCalcData, u16 *medianDamage, u16 *minimumDamage, u16 *maximumDamage, u32 abilityAtk) //enum ItemHoldEffect holdEffectAtk
+static inline void CalcDynamicMoveDamage(struct DamageCalculationData *damageCalcData, u16 *medianDamage, u16 *minimumDamage, u16 *maximumDamage, u32 abilityAtk)
 {
     u32 move = damageCalcData->move;
     enum BattleMoveEffects effect = GetMoveEffect(move);
@@ -1177,8 +1177,6 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
 s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
 {
     u32 speedBattlerAI, speedBattler;
-    //enum ItemHoldEffect holdEffectAI = gAiLogicData->holdEffects[battlerAI];
-    //enum ItemHoldEffect holdEffectPlayer = gAiLogicData->holdEffects[battler];
     u32 abilityAI = gAiLogicData->abilities[battlerAI];
     u32 abilityPlayer = gAiLogicData->abilities[battler];
 
@@ -1752,7 +1750,6 @@ bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move)
 
 bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbility, u32 move)
 {
-    //enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[battlerDef];
     u32 accuracy = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
 
     gPotentialItemEffectBattler = battlerDef;
@@ -1782,7 +1779,7 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbil
     return FALSE;
 }
 
-bool32 ShouldSetSandstorm(u32 battler, u32 ability) //enum ItemHoldEffect holdEffect
+bool32 ShouldSetSandstorm(u32 battler, u32 ability)
 {
     if (IsWeatherActive(B_WEATHER_SANDSTORM | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
@@ -1802,7 +1799,7 @@ bool32 ShouldSetSandstorm(u32 battler, u32 ability) //enum ItemHoldEffect holdEf
     return FALSE;
 }
 
-bool32 ShouldSetHail(u32 battler, u32 ability) //enum ItemHoldEffect holdEffect
+bool32 ShouldSetHail(u32 battler, u32 ability)
 {
     if (IsWeatherActive(B_WEATHER_HAIL | B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
@@ -1824,7 +1821,7 @@ bool32 ShouldSetHail(u32 battler, u32 ability) //enum ItemHoldEffect holdEffect
     return FALSE;
 }
 
-bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility) //enum ItemHoldEffect holdEffect
+bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility)
 {
     if (IsWeatherActive(B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
@@ -1844,7 +1841,7 @@ bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility) //enum ItemHoldEffect holdE
     return FALSE;
 }
 
-bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility) //enum ItemHoldEffect holdEffect
+bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility)
 {
     if (IsWeatherActive(B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
@@ -1869,7 +1866,7 @@ bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility) //enum ItemHoldEffect holdEf
     return FALSE;
 }
 
-bool32 ShouldSetSnow(u32 battler, u32 ability) //enum ItemHoldEffect holdEffect
+bool32 ShouldSetSnow(u32 battler, u32 ability)
 {
     if (IsWeatherActive(B_WEATHER_SNOW | B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
@@ -2832,7 +2829,6 @@ static u32 GetTrapDamage(u32 battlerId)
 {
     // ai has no knowledge about turns remaining
     u32 damage = 0;
-    //enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[gBattleStruct->wrappedBy[battlerId]];
     if (gBattleMons[battlerId].status2 & STATUS2_WRAPPED)
     {
         if (BattlerHasHeldItemEffect(battlerId, HOLD_EFFECT_BINDING_BAND, TRUE))
@@ -2896,7 +2892,6 @@ static bool32 BattlerAffectedByHail(u32 battlerId, u32 ability)
 static u32 GetWeatherDamage(u32 battlerId)
 {
     u32 ability = gAiLogicData->abilities[battlerId];
-    //enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[battlerId];
     u32 damage = 0;
     u32 weather = AI_GetWeather();
     if (!weather)
@@ -2992,7 +2987,6 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
 {
     struct Pokemon *mon = &GetBattlerParty(currBattler)[switchBattler];
     u32 ability = GetMonAbility(mon);   // we know our own party data
-    //enum ItemHoldEffect holdEffect;
     u32 holdEffectBlocked = FALSE;
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     u32 flags = gSideStatuses[GetBattlerSide(currBattler)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES);
@@ -4427,7 +4421,7 @@ void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score
     }
 }
 
-bool32 AI_MoveMakesContact(u32 ability, u32 move, u32 battlerAtk) //enum ItemHoldEffect holdEffect
+bool32 AI_MoveMakesContact(u32 ability, u32 move, u32 battlerAtk)
 {
     if (MoveMakesContact(move)
       && ability != ABILITY_LONG_REACH
@@ -4555,7 +4549,6 @@ bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, u32 move, st
 {
     u32 preventsStatLoss;
     u32 partnerAbility;
-    //u32 partnerHoldEffect = aiData->holdEffects[battlerAtkPartner];
 
     if (DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move))
         partnerAbility = ABILITY_NONE;
