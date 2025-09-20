@@ -4324,7 +4324,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 else
                 {
-                    slot = 0;
+                    slot = MAX_MON_ITEMS;
                     for (int i = 0; i < MAX_MON_ITEMS; i++)
                     {
                         if (gBattleMons[battler].items[i] == ITEM_NONE)
@@ -4335,14 +4335,16 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     }
                 }
 
-                if (gBattleResults.catchAttempts[gLastUsedBall - ITEM_ULTRA_BALL] >= 1
-                    && !gHasFetchedBall)
+                if (gBattleResults.catchAttempts[gLastUsedBall] >= 1
+                    && !gHasFetchedBall
+                    && slot != MAX_MON_ITEMS)
                 {
+                    gLastUsedItem = gLastUsedBall;
                     gBattleScripting.battler = battler;
-                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + slot, 0, 2, &gLastUsedBall);
+                    gBattleMons[battler].items[slot] = gLastUsedItem;
+                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + slot, 0, 2, &gLastUsedItem);
                     MarkBattlerForControllerExec(battler);
                     gHasFetchedBall = TRUE;
-                    gLastUsedItem = gLastUsedBall;
                     BattleScriptPushCursorAndCallback(BattleScript_BallFetch);
                     effect++;
                 }
@@ -12164,7 +12166,7 @@ u8 GetSlot(u8 *availableSlots, u8 size)
 
     //0 = latest to earliest, 1 = earliest to latest, 2 = random
     
-    #if TESTING //Testing defaults to Item Order 0
+    #if TESTING //Testing defaults to Proper Item Order 0
     for (i = size; i >= 0; i--)
         {
                 return availableSlots[i];
