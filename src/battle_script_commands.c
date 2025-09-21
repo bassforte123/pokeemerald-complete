@@ -10397,7 +10397,7 @@ static void Cmd_various(void)
         {
             for (i = 0; i < MAX_MON_ITEMS; i++)
             {
-                if (gBattleMons[battler].items[i] != ITEM_NONE && GetPocketByItemId(gBattleMons[battler].items[i]) == POCKET_BERRIES && CanBattlerGetOrLoseItem(battler, gBattleMons[battler].items[i]))
+                if (gBattleMons[battler].items[i] != ITEM_NONE && GetPocketByItemId(gBattleMons[battler].items[i]) != POCKET_BERRIES && CanBattlerGetOrLoseItem(battler, gBattleMons[battler].items[i]))
                 {
                     if (targetableSlots[0] != MAX_MON_ITEMS)
                         index++;
@@ -10420,8 +10420,9 @@ static void Cmd_various(void)
         }
 
         if (targetableSlots[0] != MAX_MON_ITEMS)
-        {   
-            slot = gLastItemSlot = GetSlot(targetableSlots, index);        
+        {
+            //slot = gLastItemSlot= targetableSlots[0]; // Proper order selection
+            slot = gLastItemSlot = GetSlot(targetableSlots, index); // B_MULTI_ITEM_ORDER order
             gLastUsedItem = GetSlotHeldItem(battler, slot, TRUE);
         }
         else

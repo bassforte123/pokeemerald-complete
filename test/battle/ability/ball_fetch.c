@@ -8,6 +8,8 @@ WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball
     PARAMETRIZE { item = ITEM_POKE_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; }
     PARAMETRIZE { item = ITEM_ULTRA_BALL; }
+    PARAMETRIZE { item = ITEM_HEAVY_BALL; }
+    PARAMETRIZE { item = ITEM_STRANGE_BALL; }
     PARAMETRIZE { item = ITEM_X_ACCURACY; }
 
     GIVEN {
@@ -99,6 +101,7 @@ SINGLE_BATTLE_TEST("Ball Fetch doesn't trigger in Trainer Battles")
     PARAMETRIZE { item = ITEM_POKE_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; }
     PARAMETRIZE { item = ITEM_ULTRA_BALL; }
+    PARAMETRIZE { item = ITEM_STRANGE_BALL; }
     PARAMETRIZE { item = ITEM_X_ACCURACY; }
 
     GIVEN {
@@ -122,6 +125,7 @@ WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball
     PARAMETRIZE { item = ITEM_POKE_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; }
     PARAMETRIZE { item = ITEM_ULTRA_BALL; }
+    PARAMETRIZE { item = ITEM_STRANGE_BALL; }
     PARAMETRIZE { item = ITEM_X_ACCURACY; }
 
     GIVEN {
@@ -186,6 +190,7 @@ WILD_BATTLE_TEST("Ball Fetch only picks up the first failed ball, once per battl
 
     PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_X_ACCURACY; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_ULTRA_BALL; }
+    PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_STRANGE_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; item2 = ITEM_FAST_BALL; }
 
     GIVEN {
@@ -216,6 +221,7 @@ SINGLE_BATTLE_TEST("Ball Fetch doesn't trigger in Trainer Battles (Multi)")
     PARAMETRIZE { item = ITEM_POKE_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; }
     PARAMETRIZE { item = ITEM_ULTRA_BALL; }
+    PARAMETRIZE { item = ITEM_STRANGE_BALL; }
     PARAMETRIZE { item = ITEM_X_ACCURACY; }
 
     GIVEN {

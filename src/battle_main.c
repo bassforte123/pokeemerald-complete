@@ -4751,11 +4751,11 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability)
     // item effects
     if (SearchItemSlots(battlerItems, HOLD_EFFECT_MACHO_BRACE) || SearchItemSlots(battlerItems, HOLD_EFFECT_POWER_ITEM))
         speed /= 2;
-    else if (SearchItemSlots(battlerItems, HOLD_EFFECT_IRON_BALL))
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_IRON_BALL))
         speed /= 2;
-    else if (SearchItemSlots(battlerItems, HOLD_EFFECT_CHOICE_SCARF) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_CHOICE_SCARF) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
         speed = (speed * 150) / 100;
-    else if (SearchItemSlots(battlerItems, HOLD_EFFECT_QUICK_POWDER) && gBattleMons[battler].species == SPECIES_DITTO && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
+    if (SearchItemSlots(battlerItems, HOLD_EFFECT_QUICK_POWDER) && gBattleMons[battler].species == SPECIES_DITTO && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
         speed *= 2;
 
     // various effects

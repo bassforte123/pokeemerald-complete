@@ -1,3 +1,29 @@
+# Multi-Items (Full Release)
+
+This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.13.1.
+
+- Battle Behavior:
+	- Item activations happen once per opportunity.  For example if you have two healing berries and your hp drops below half, only one berry will be eaten.  Likewise, eating a berry means nothing else will activate during that opportunity.
+	- Due to the above, Leftovers is given the lowest priority to keep it from blocking every other item every turn, likewise Life Orb is given the highest priority so that its life drain cannot be sidestepped.  Though other effects can still trigger with Life Orb if you use a non-damaging move and thus don't trigger the life drain for that opportunity.
+	- Passive items that don't need explicit activations such as Charcoal are always active and can also stack effects, though two copies of the exact same item will not stack.
+	- Battle effects that target opponent items they first read which slots are viable targets then select based on the B_MULTI_ITEM_ORDER custom setting.  By default this is set to target latest to earliest, but it can be set to earliest to latest and to random.
+	- Battle effects that move or restore items are locked to the slot. Thief can only steal if the target slot has an item AND the corresponding attacking pokemon's slot is empty.  Thief will not allocate a stolen item to a different free slot.
+	- Fling uses B_MULTI_ITEM_ORDER selection of the attacker's items but also prioritizes non berry items first.
+	- Acrobatics loses most but not all of its bonus if even one item is held, losing up to the full bonus as more items are held.
+
+- Organization Behavior:
+	- Items are given to pokemon in slots from first to last.
+	- Items are taken from pokemon in slots from last to first.  This is so you can generally order items by importance where items in later slots are more likely to either be consumed or swapped around.
+	- There is also a B_HELD_ITEM_CATEGORIZATION option which allows you to specify items to specific slots.  All items have an additional .heldSlot value to designate a slot.  When Categorization is enabled, items can only be given to pokemon under the heldSlot value the item is specified with.  This can for example let you set all berries to heldSlot 1, making slot one a designated berry only slot.
+	- Swapping or moving items through the party or storage interfaces only work on the first slot item to avoid complicating the system.
+
+- Developer Notes:
+	- To use more than 2 items, you'll need to update the MAX_MON_ITEMS value in global.c and main.c along with creating additional MON_DATA_HELD_ITEM variables, allocating space for another helditem varibale in the PokemonSubstructs, and updating the summary screen to account for the new slots.
+	- The rest of the logic however will adjust for the slot numbers, so all the extra work is just in allocating the slot itself.
+	- NOTE that since the held items are stored just before the moves, if you notice a pokemon's first move dissapear or change then that is likely due to the item logic mistakenly targeting a slot beyond what should be allowed.
+	- Please report any bugs or suggestions to Bassforte in the RHH discord.
+
+
 # About `pokeemerald-expansion`
 
 ![Gif that shows debugging functionality that is unique to pokeemerald-expansion such as rerolling Trainer Id, Cheat Start, PC from Debug Menu, Debug PC Fill, Pokemon Sprite Visualizer, Debug Warp to Map, and Battle Debug Menu](https://github.com/user-attachments/assets/cf9dfbee-4c6b-4bca-8e0a-07f116ef891c) ![Gif that shows overworld functionality that is unique to pokeemerald-expansion such as indoor running, BW2 style map popups, overworld followers, DNA Splicers, Gen 1 style fishing, OW Item descriptions, Quick Run from Battle, Use Last Ball, Wild Double Battles, and Catch from EXP](https://github.com/user-attachments/assets/383af243-0904-4d41-bced-721492fbc48e) ![Gif that shows off a number of modern Pokemon battle mechanics happening in the pokeemerald-expansion engine: 2 vs 1 battles, modern Pokemon, items, moves, abilities, fully customizable opponents and partners, Trainer Slides, and generational gimmicks](https://github.com/user-attachments/assets/50c576bc-415e-4d66-a38f-ad712f3316be)
