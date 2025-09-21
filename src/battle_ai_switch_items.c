@@ -1278,7 +1278,7 @@ void ModifySwitchAfterMoveScoring(u32 battler)
 
     if (availableToSwitch == 0)
         return;
-DebugPrintf("Switching");
+
     if (ShouldSwitchIfAllScoresBad(battler))
         gAiLogicData->shouldSwitch |= (1u << battler);
     else if (ShouldStayInToUseMove(battler))
