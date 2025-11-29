@@ -880,8 +880,10 @@
 	.byte 0x9e
 	.endm
 
-	.macro unused_0x9f
+	.macro removeitemwitheffect battler:req, effect:req
 	.byte 0x9f
+	.byte \battler
+	.4byte \effect
 	.endm
 
 	.macro unused_0xA0
