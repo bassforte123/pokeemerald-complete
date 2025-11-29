@@ -73,6 +73,8 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
     }
 }
 
+TO_DO_BATTLE_TEST("Fillet Away fails if the user's Attack, Sp. Atk and Speed are all maxed out")
+
 SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
 {
     GIVEN {
