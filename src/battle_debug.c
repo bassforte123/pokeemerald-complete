@@ -1904,9 +1904,9 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.minValue = 0;
         data->modifyArrows.maxValue = ITEMS_COUNT - 1;
         data->modifyArrows.maxDigits = 3;
-        data->modifyArrows.modifiedValPtr = &gBattleMons[data->battlerId].item;
+        data->modifyArrows.modifiedValPtr = &gBattleMons[data->battlerId].items[0];
         data->modifyArrows.typeOfVal = VAL_U16;
-        data->modifyArrows.currValue = gBattleMons[data->battlerId].item;
+        data->modifyArrows.currValue = gBattleMons[data->battlerId].items[0];
         break;
     case LIST_ITEM_TYPES:
         data->modifyArrows.minValue = 0;

@@ -62,7 +62,7 @@ void ApplyBattlerVisualsForTeraAnim(u32 battler)
 // Returns whether a battler can Terastallize.
 bool32 CanTerastallize(u32 battler)
 {
-    if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
+    if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;
 
     // Prevents Zigzagoon from terastalizing in vanilla.

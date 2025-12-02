@@ -2021,8 +2021,13 @@ static void GiveItemToMon(struct Pokemon *mon, u16 item)
         itemBytes[0] = item;
         itemBytes[1] = item >> 8;
         SetMonData(mon, MON_DATA_HELD_ITEM + slot, itemBytes);
-        TryItemHoldFormChange(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.slotId, gPartyMenu.slotId);
+        TryItemHoldFormChange(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.slotId);
     }
+}
+
+static void BufferBagFullCantTakeItemMessage(u16 itemUnused)
+{
+    StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
 }
 
 static u8 TryTakeMonItem(struct Pokemon *mon)
@@ -2046,7 +2051,7 @@ static u8 TryTakeMonItem(struct Pokemon *mon)
                 DisplayTookHeldItemMessage(mon, item, TRUE); //Moved here to make use of the updated item variable
                 item = ITEM_NONE;
                 SetMonData(mon, MON_DATA_HELD_ITEM + i, &item);
-                TryItemHoldFormChange(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.slotId, gPartyMenu.slotId);
+                TryItemHoldFormChange(&gPlayerParty[gPartyMenu.slotId], gPartyMenu.slotId);
                 return 2;
             }
         }
@@ -2059,11 +2064,6 @@ static u8 TryTakeMonItem(struct Pokemon *mon)
         }
     else
         return 0; //Returns no item to take if it can't find an item to take and none of the slots are a full bag item.
-}
-
-static void BufferBagFullCantTakeItemMessage(u16 itemUnused)
-{
-    StringExpandPlaceholders(gStringVar4, gText_BagFullCouldNotRemoveItem);
 }
 
 #define tHP           data[0]
@@ -7283,8 +7283,8 @@ static bool8 GetBattleEntryEligibility(struct Pokemon *mon)
 
     if (GetMonData(mon, MON_DATA_IS_EGG)
         || GetMonData(mon, MON_DATA_LEVEL) > GetBattleEntryLevelCap()
-        || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY)
-            && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY)
+        || (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY)
+            && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BATTLE_FRONTIER_BATTLE_PYRAMID_LOBBY)
             && hasitem))
     {
         return FALSE;

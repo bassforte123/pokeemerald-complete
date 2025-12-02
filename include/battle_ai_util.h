@@ -50,8 +50,6 @@ enum WeatherState
     WEATHER_INACTIVE_AND_BLOCKED,
 };
 
-typedef bool32 (*MoveFlag)(u32 move);
-
 enum AIConsiderGimmick
 {
     NO_GIMMICK,
@@ -185,7 +183,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
 bool32 HasMoveWithCriticalHitChance(u32 battlerId);
 bool32 HasMoveWithMoveEffectExcept(u32 battlerId, u32 moveEffect, enum BattleMoveEffects exception);
 bool32 HasMoveThatLowersOwnStats(u32 battlerId);
-bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus, u32 atkAbility, u32 defAbility); //u32 atkHoldEffect, u32 defHoldEffect
+bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus, u32 atkAbility, u32 defAbility);
 bool32 HasAnyKnownMove(u32 battlerId);
 bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect);
 bool32 IsNonVolatileStatusMove(u32 moveEffect);
@@ -204,7 +202,7 @@ bool32 HasHealingEffect(u32 battler);
 bool32 IsTrappingMove(u32 move);
 bool32 HasTrappingMoveEffect(u32 battler);
 bool32 IsFlinchGuaranteed(u32 battlerAtk, u32 battlerDef, u32 move);
-bool32 HasChoiceEffect(u32 battler);
+bool32 AI_HasChoiceEffect(u32 battler);
 bool32 HasThawingMove(u32 battler);
 bool32 IsStatRaisingEffect(enum BattleMoveEffects effect);
 bool32 IsStatLoweringEffect(enum BattleMoveEffects effect);

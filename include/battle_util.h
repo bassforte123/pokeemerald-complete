@@ -178,8 +178,8 @@ struct DamageContext
     uq4_12_t typeEffectivenessModifier;
     u32 abilityAtk:16;
     u32 abilityDef:16;
-    enum ItemHoldEffect holdEffectAtk:16;
-    enum ItemHoldEffect holdEffectDef:16;
+    u32 padding3:16;
+    u32 padding4:16;
 };
 
 enum SleepClauseBlock
@@ -276,7 +276,8 @@ u32 SetRandomTarget(u32 battler);
 u32 GetBattleMoveTarget(u16 move, u8 setTarget);
 u8 GetAttackerObedienceForAction();
 u32 GetBattlerItemHoldEffectParam(u32 battler, u32 item);
-bool32 IsMoveMakingContact(u32 move, u32 battlerAtk);
+bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 move);
+bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 move);
 bool32 IsBattlerGrounded(u32 battler);
 u32 GetMoveSlot(u16 *moves, u32 move);
 u32 GetBattlerWeight(u32 battler);
@@ -409,11 +410,13 @@ void RemoveAllHazardsFromField(u32 side);
 bool32 IsHazardOnSideAndClear(u32 side, enum Hazards hazardType);
 void RemoveHazardFromField(u32 side, enum Hazards hazardType);
 bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, u32 move, enum FunctionCallOption option);
-u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u32 defAbility, u32 atkHoldEffect, u32 defHoldEffect);
+u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u32 defAbility);
 bool32 IsSemiInvulnerable(u32 battler, enum SemiInvulnerableExclusion excludeCommander);
 bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move);
 //Multi Items
 bool32 BattlerHasHeldItemEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
+bool32 BattlerHasHeldItemEffectIgnoreAbility(u32 battler, u32 holdEffect, bool32 checkNegating);
+bool32 BattlerHasHeldItemEffectInternal(u32 battler, u32 holdEffect, bool32 checkNegating, bool32 checkAbility);
 u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u8 GetBattlerHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating);
@@ -422,4 +425,5 @@ u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item);
 u8 GetSlot(u8 *availableSlots, u8 size);
 u32 GetBattlerItemHoldEffect(u32 battler, u32 item);
 bool8 BattlerHasBerry(u32 battler);
+bool32 GetBattlerBerry(u32 battler);
 #endif // GUARD_BATTLE_UTIL_H

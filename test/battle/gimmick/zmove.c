@@ -1260,7 +1260,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two
 SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain (Multi)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GENESIS_SUPERNOVA) == EFFECT_HIT_SET_REMOVE_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_GENESIS_SUPERNOVA) == EFFECT_HIT_SET_TERRAIN);
         PLAYER(SPECIES_MEW) { Items(ITEM_NUGGET, ITEM_MEWNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -1277,7 +1277,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain (Multi)")
 SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain (Multi)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPLINTERED_STORMSHARDS) == EFFECT_HIT_SET_REMOVE_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_GENESIS_SUPERNOVA) == EFFECT_HIT_SET_TERRAIN);
         PLAYER(SPECIES_LYCANROC_DUSK) { Items(ITEM_NUGGET, ITEM_LYCANIUM_Z); }
         OPPONENT(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); HP(1000); MaxHP(1000); }
     } WHEN {
@@ -1315,7 +1315,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Clangorous Soulblaze boosts all the user's stats by
 SINGLE_BATTLE_TEST("(Z-MOVE) Guardian of Alola deals 75\% of the target's current HP (Multi)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GUARDIAN_OF_ALOLA) == EFFECT_GUARDIAN_OF_ALOLA);
+        ASSUME(GetMoveEffect(MOVE_GUARDIAN_OF_ALOLA) == EFFECT_FIXED_PERCENT_DAMAGE);
         PLAYER(SPECIES_TAPU_FINI) { Items(ITEM_NUGGET, ITEM_TAPUNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -276,7 +276,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             if (!IsBattleMoveStatus(aiMove) && !AI_DoesChoiceEffectBlockMove(battler, aiMove))
             {
                 // Check if mon has a super effective move
-                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0) && !AI_DoesChoiceItemBlockMove(battler, aiMove))
+                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0))
                     hasSuperEffectiveMove = TRUE;
 
                 // Get maximum damage mon can deal
@@ -828,7 +828,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             move = gBattleMons[battler].moves[i];
-            if (move == MOVE_NONE || AI_DoesChoiceItemBlockMove(battler, move))
+            if (move == MOVE_NONE || AI_DoesChoiceEffectBlockMove(battler, move))
                 continue;
 
             if (AI_GetMoveEffectiveness(move, battler, opposingBattler) >= UQ_4_12(2.0))
@@ -847,7 +847,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             move = gBattleMons[battler].moves[i];
-            if (move == MOVE_NONE || AI_DoesChoiceItemBlockMove(battler, move))
+            if (move == MOVE_NONE || AI_DoesChoiceEffectBlockMove(battler, move))
                 continue;
 
             if (AI_GetMoveEffectiveness(move, battler, opposingBattler) >= UQ_4_12(2.0))
@@ -1037,8 +1037,8 @@ static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
     bool32 moveAffectsTarget = TRUE;
 
     if (lastUsedMove != MOVE_NONE && (AI_GetMoveEffectiveness(lastUsedMove, battler, opposingBattler) == UQ_4_12(0.0)
-        || CanAbilityAbsorbMove(battler, opposingBattler, gAiLogicData->abilities[opposingBattler], lastUsedMove, GetMoveType(lastUsedMove), ABILITY_CHECK_TRIGGER)
-        || CanAbilityBlockMove(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], lastUsedMove, ABILITY_CHECK_TRIGGER)))
+        || CanAbilityAbsorbMove(battler, opposingBattler, gAiLogicData->abilities[opposingBattler], lastUsedMove, CheckDynamicMoveType(GetBattlerMon(battler), lastUsedMove, battler, MON_IN_BATTLE), AI_CHECK)
+        || CanAbilityBlockMove(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], lastUsedMove, AI_CHECK)))
         moveAffectsTarget = FALSE;
 
     if (BATTLER_IS_HOLDING_CHOICE_ITEM_WITHOUT_NEGATION(battler) && IsBattlerItemEnabled(battler))

@@ -302,6 +302,6 @@ SINGLE_BATTLE_TEST("Bug Bite ignores Unnerve")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
         HP_BAR(player);
     } THEN {
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }

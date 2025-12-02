@@ -361,7 +361,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off o
     PARAMETRIZE { move = MOVE_KNOCK_OFF; }
 
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM) == TRUE);
+        ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         PLAYER(SPECIES_SLUGMA) {  Ability(ABILITY_WEAK_ARMOR); Items(ITEM_BLK_APRICORN, ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);

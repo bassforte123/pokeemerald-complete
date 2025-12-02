@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft")
 SINGLE_BATTLE_TEST("Sticky Hold prevents item theft (Multi)")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM));
+        ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
         PLAYER(SPECIES_URSALUNA) { Items(ITEM_MAX_ETHER, ITEM_NONE); }
         OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_MAX_ETHER, ITEM_LIFE_ORB); }
     } WHEN {

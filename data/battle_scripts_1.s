@@ -3377,7 +3377,7 @@ BattleScript_EffectTwoTurnsAttack::
 	tryfiretwoturnmovewithoutcharging BS_ATTACKER, BattleScript_EffectHit @ e.g. Solar Beam
 	call BattleScript_FirstChargingTurn
 	tryfiretwoturnmoveaftercharging BS_ATTACKER, BattleScript_TwoTurnMovesSecondTurn @ e.g. Electro Shot
-	jumpifholdeffect BS_ATTACKER, HOLD_EFFECT_POWER_HERB, BattleScript_TwoTurnMovesSecondPowerHerbActivates, TRUE
+	jumpifholdeffect BS_ATTACKER, HOLD_EFFECT_POWER_HERB, BattleScript_TwoTurnMovesSecondPowerHerbActivates
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectGeomancy::
@@ -5717,84 +5717,11 @@ BattleScript_TargetItemStatRaiseRemoveItemRet:
 BattleScript_TargetItemStatRaise_Luminous_Moss::
 	setlastuseditem BS_TARGET, HOLD_EFFECT_LUMINOUS_MOSS
 	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
+	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
 	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
 	waitanimation
-	statbuffchange BS_TARGET, 0, BattleScript_TargetItemStatRaiseRemoveItemRet
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Luminous_Moss_Print
-BattleScript_TargetItemStatRaise_Luminous_Moss_Print:
-	printstring STRINGID_USINGITEMSTATOFPKMNROSE
-	waitmessage B_WAIT_TIME_LONG
-	removeitemwitheffect BS_TARGET, HOLD_EFFECT_NONE
-BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss:
-	return
-
-BattleScript_TargetItemStatRaise_Snowball::
-	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
-	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
-	waitanimation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	waitanimation
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Snowball_Print
-BattleScript_TargetItemStatRaise_Snowball_Print:
-	printstring STRINGID_USINGITEMSTATOFPKMNROSE
-	waitmessage B_WAIT_TIME_LONG
-	removeitemwitheffect BS_TARGET, HOLD_EFFECT_SNOWBALL
-BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball:
-	return
-
-BattleScript_TargetItemStatRaise_Cell_Battery::
-	setlastuseditem BS_TARGET, HOLD_EFFECT_CELL_BATTERY
-	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
-	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
-	waitanimation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	waitanimation
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Cell_Battery_Print
-BattleScript_TargetItemStatRaise_Cell_Battery_Print:
-	printstring STRINGID_USINGITEMSTATOFPKMNROSE
-	waitmessage B_WAIT_TIME_LONG
-	removeitemwitheffect BS_TARGET, HOLD_EFFECT_CELL_BATTERY
-BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery:
-	return
-
-BattleScript_TargetItemStatRaise_Absorb_Bulb::
-	setlastuseditem BS_TARGET, HOLD_EFFECT_ABSORB_BULB
-	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
-	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
-	waitanimation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	waitanimation
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Absorb_Bulb_Print
-BattleScript_TargetItemStatRaise_Absorb_Bulb_Print:
-	printstring STRINGID_USINGITEMSTATOFPKMNROSE
-	waitmessage B_WAIT_TIME_LONG
-	removeitemwitheffect BS_TARGET, HOLD_EFFECT_ABSORB_BULB
-BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb:
-	return
-
-BattleScript_TargetItemStatRaise_Luminous_Moss::
-	setlastuseditem BS_TARGET, HOLD_EFFECT_LUMINOUS_MOSS
-	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
-	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
-	waitanimation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	waitanimation
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Luminous_Moss_Print
-BattleScript_TargetItemStatRaise_Luminous_Moss_Print:
+	statbuffchange BS_TARGET, 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss
 	printstring STRINGID_USINGITEMSTATOFPKMNROSE
 	waitmessage B_WAIT_TIME_LONG
 	removeitemwitheffect BS_TARGET, HOLD_EFFECT_LUMINOUS_MOSS
@@ -5802,16 +5729,13 @@ BattleScript_TargetItemStatRaiseRemoveItemRet_Luminous_Moss:
 	return
 
 BattleScript_TargetItemStatRaise_Snowball::
+	setlastuseditem BS_TARGET, HOLD_EFFECT_SNOWBALL
 	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
+	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
 	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
 	waitanimation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	waitanimation
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Snowball_Print
-BattleScript_TargetItemStatRaise_Snowball_Print:
+	statbuffchange BS_TARGET, 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball
 	printstring STRINGID_USINGITEMSTATOFPKMNROSE
 	waitmessage B_WAIT_TIME_LONG
 	removeitemwitheffect BS_TARGET, HOLD_EFFECT_SNOWBALL
@@ -5821,15 +5745,11 @@ BattleScript_TargetItemStatRaiseRemoveItemRet_Snowball:
 BattleScript_TargetItemStatRaise_Cell_Battery::
 	setlastuseditem BS_TARGET, HOLD_EFFECT_CELL_BATTERY
 	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
+	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
 	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
 	waitanimation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	waitanimation
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Cell_Battery_Print
-BattleScript_TargetItemStatRaise_Cell_Battery_Print:
+	statbuffchange BS_TARGET, 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery
 	printstring STRINGID_USINGITEMSTATOFPKMNROSE
 	waitmessage B_WAIT_TIME_LONG
 	removeitemwitheffect BS_TARGET, HOLD_EFFECT_CELL_BATTERY
@@ -5839,21 +5759,17 @@ BattleScript_TargetItemStatRaiseRemoveItemRet_Cell_Battery:
 BattleScript_TargetItemStatRaise_Absorb_Bulb::
 	setlastuseditem BS_TARGET, HOLD_EFFECT_ABSORB_BULB
 	copybyte sBATTLER, gBattlerTarget
-	statbuffchange 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
+	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
 	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
 	waitanimation
-	setgraphicalstatchangevalues
-	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
-	waitanimation
-	jumpifholdeffect BS_TARGET, HOLD_EFFECT_SNOWBALL, BattleScript_TargetItemStatRaise_Absorb_Bulb_Print
-BattleScript_TargetItemStatRaise_Absorb_Bulb_Print:
+	statbuffchange BS_TARGET, 0, BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb
 	printstring STRINGID_USINGITEMSTATOFPKMNROSE
 	waitmessage B_WAIT_TIME_LONG
 	removeitemwitheffect BS_TARGET, HOLD_EFFECT_ABSORB_BULB
 BattleScript_TargetItemStatRaiseRemoveItemRet_Absorb_Bulb:
 	return
-
+	
 BattleScript_AttackerItemStatRaise::
 	copybyte sBATTLER, gBattlerAttacker
 	statbuffchange BS_ATTACKER, STAT_CHANGE_ONLY_CHECKING, BattleScript_AttackerItemStatRaiseRet
@@ -6494,6 +6410,7 @@ BattleScript_DefDownSpeedUpRet::
 	return
 
 BattleScript_KnockedOff::
+	printdebug
 	playanimation BS_TARGET, B_ANIM_ITEM_KNOCKOFF
 	printstring STRINGID_PKMNKNOCKEDOFF
 	waitmessage B_WAIT_TIME_LONG

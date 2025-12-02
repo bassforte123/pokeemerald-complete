@@ -476,7 +476,7 @@ bool32 AI_CanBattlerEscape(u32 battler)
 
 bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
 {
-    if (gBattleMons[battlerDef].status2 & (STATUS2_ESCAPE_PREVENTION | STATUS2_WRAPPED))
+    if (gBattleMons[battlerDef].volatiles.wrapped)
         return TRUE;
     if (gBattleMons[battlerDef].volatiles.escapePrevention)
         return TRUE;
@@ -544,7 +544,6 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
     u32 usable = 0;
     u16 *moves = GetMovesArray(attacker);
     u32 moveLimitations = gAiLogicData->moveLimitations[attacker];
-    u32 moveLimitations = gAiLogicData->moveLimitations[attacker];
 
     struct DamageContext ctx = {0};
     ctx.battlerAtk = attacker;
@@ -552,8 +551,6 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[attacker];
     ctx.abilityDef = gAiLogicData->abilities[target];
-    ctx.holdEffectAtk = gAiLogicData->items[attacker];
-    ctx.holdEffectDef = gAiLogicData->items[target];
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -910,8 +907,6 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     ctx.fixedBasePower = SetFixedMoveBasePower(battlerAtk, move);
     ctx.abilityAtk = aiData->abilities[battlerAtk];
     ctx.abilityDef = aiData->abilities[battlerDef];
-    ctx.holdEffectAtk = aiData->holdEffects[battlerAtk];
-    ctx.holdEffectDef = aiData->holdEffects[battlerDef];
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
     u32 movePower = GetMovePower(move);
@@ -1314,8 +1309,6 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
     ctx.abilityDef = gAiLogicData->abilities[battlerDef];
-    ctx.holdEffectAtk = gAiLogicData->items[battlerAtk];
-    ctx.holdEffectDef = gAiLogicData->items[battlerDef];
     typeEffectiveness = CalcTypeEffectivenessMultiplier(&ctx);
 
     RestoreBattlerData(battlerAtk);
@@ -1389,7 +1382,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
         return FALSE;
     if (GetMoveStrikeCount(move) > 1 && !(effect == EFFECT_DRAGON_DARTS && !HasTwoOpponents(battler)))
         return FALSE;
-    if (gAiLogicData->holdEffects[battlerTarget] == HOLD_EFFECT_FOCUS_SASH)
+    if (Ai_BattlerHasHoldEffect(battlerTarget, HOLD_EFFECT_FOCUS_SASH, gAiLogicData))
         return TRUE;
 
     if (!DoesBattlerIgnoreAbilityChecks(battler, gAiLogicData->abilities[battler], move))
@@ -1904,51 +1897,6 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove)
     }
 }
 
-bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove)
-{
-    enum BattleMoveEffects effect = GetMoveEffect(allyMove);
-
-    if (effect != EFFECT_PROTECT)
-    {
-        return FALSE;
-    }
-    else
-    {
-        enum ProtectMethod protectMethod = GetMoveProtectMethod(allyMove);
-
-        if (protectMethod == PROTECT_QUICK_GUARD)
-        {
-            u32 priority = GetBattleMovePriority(battlerAtk, gAiLogicData->abilities[battlerAtk], attackerMove);
-            return (priority > 0);
-        }
-
-        if (IsBattleMoveStatus(attackerMove))
-        {
-            switch (protectMethod)
-            {
-            case PROTECT_NORMAL:
-            case PROTECT_CRAFTY_SHIELD:
-            case PROTECT_MAX_GUARD:
-            case PROTECT_WIDE_GUARD:
-                return TRUE;
-
-            default:
-                return FALSE;
-            }
-        }
-        else
-        {
-            switch (protectMethod)
-            {
-            case PROTECT_CRAFTY_SHIELD:
-                return FALSE;
-            default:
-                return TRUE;
-            }
-        }
-    }
-}
-
 bool32 IsMoveRedirectionPrevented(u32 battlerAtk, u32 move, u32 atkAbility)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_NEGATE_UNAWARE)
@@ -2073,7 +2021,7 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
     if (gBattleMons[battlerDef].statStages[stat] == MIN_STAT_STAGE)
         return FALSE;
 
-    if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_CLEAR_AMULET)
+    if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_CLEAR_AMULET, aiData))
         return FALSE;
 
     u32 move = gAiThinkingStruct->moveConsidered;
@@ -2531,6 +2479,28 @@ bool32 HasMoveThatLowersOwnStats(u32 battlerId)
             {
                 const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(aiMove, j);
                 if (IsSelfStatLoweringEffect(additionalEffect->moveEffect) && additionalEffect->self)
+                    return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}
+
+bool32 HasMoveThatRaisesOwnStats(u32 battlerId)
+{
+    s32 i, j;
+    u32 aiMove;
+    u16 *moves = GetMovesArray(battlerId);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        aiMove = moves[i];
+        if (aiMove != MOVE_NONE && aiMove != MOVE_UNAVAILABLE)
+        {
+            u32 additionalEffectCount = GetMoveAdditionalEffectCount(aiMove);
+            for (j = 0; j < additionalEffectCount; j++)
+            {
+                const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(aiMove, j);
+                if (IsSelfStatRaisingEffect(additionalEffect->moveEffect) && additionalEffect->self)
                     return TRUE;
             }
         }
@@ -3655,7 +3625,7 @@ bool32 IsFlinchGuaranteed(u32 battlerAtk, u32 battlerDef, u32 move)
     return FALSE;
 }
 
-bool32 HasChoiceEffect(u32 battler)
+bool32 AI_HasChoiceEffect(u32 battler)
 {
     u32 ability = gAiLogicData->abilities[battler];
     if (ability == ABILITY_GORILLA_TACTICS)
@@ -3664,9 +3634,9 @@ bool32 HasChoiceEffect(u32 battler)
     if (ability == ABILITY_KLUTZ)
         return FALSE;
 
-    if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_CHOICE_BAND, gAiLogicData)
-     || Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_CHOICE_SCARF, gAiLogicData)
-     || Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_CHOICE_SPECS, gAiLogicData))
+    if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_CHOICE_BAND, gAiLogicData)
+     || Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_CHOICE_SCARF, gAiLogicData)
+     || Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_CHOICE_SPECS, gAiLogicData))
         return TRUE;
     else
         return FALSE;
@@ -3780,7 +3750,7 @@ bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move, s32 damage)
     return FALSE;
 }
 
-bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent, enum DamageCalcContext calcContext)
+bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent)
 {
     u32 maxHP = gBattleMons[battlerAtk].maxHP;
     u32 healAmount = (healPercent * maxHP) / 100;
@@ -4196,7 +4166,7 @@ bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, u32 move)
         switch (GetMoveEffect(move))
         {
         case EFFECT_WISH:
-            return ShouldRecover(battlerAtk, battlerDef, move, 50, AI_DEFENDING); // Switch recovery isn't good idea in doubles
+            return ShouldRecover(battlerAtk, battlerDef, move, 50); // Switch recovery isn't good idea in doubles
         case EFFECT_HEAL_BELL:
             if (hasStatus)
                 return TRUE;
@@ -5519,7 +5489,7 @@ bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct
         return FALSE;
     }
 
-    if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_ABILITY_SHIELD)
+    if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_ABILITY_SHIELD, aiData))
     {
         switch (effect)
         {
@@ -5535,7 +5505,7 @@ bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct
         }
     }
 
-    if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_ABILITY_SHIELD)
+    if (Ai_BattlerHasHoldEffect(battlerAtk, HOLD_EFFECT_ABILITY_SHIELD, aiData))
     {
         switch (effect)
         {
@@ -5658,7 +5628,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
         return GOOD_EFFECT;
     // Conditional ability logic goes here.
     case ABILITY_COMPOUND_EYES:
-        if (HasMoveWithLowAccuracy(battler, FOE(battler), 90, TRUE, aiData->abilities[battler], aiData->abilities[FOE(battler)], aiData->holdEffects[battler], aiData->holdEffects[FOE(battler)]))
+        if (HasMoveWithLowAccuracy(battler, FOE(battler), 90, TRUE, aiData->abilities[battler], aiData->abilities[FOE(battler)]))
             return GOOD_EFFECT;
         break;
     case ABILITY_CONTRARY:

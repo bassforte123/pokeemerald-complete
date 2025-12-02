@@ -265,7 +265,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
     }
 }
 
-DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a weakness berry")
+DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a weakness berry (Multi)")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
@@ -281,7 +281,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
+        EXPECT_EQ(playerLeft->items[1], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[1], ITEM_NONE);
     }
 }

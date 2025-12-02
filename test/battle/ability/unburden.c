@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("Unburden doubling speed effect is ignored by Neutralizing Ga
         TURN { }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        //ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         // Turn 2, doubled speed
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);

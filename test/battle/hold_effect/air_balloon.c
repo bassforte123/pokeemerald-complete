@@ -216,7 +216,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen with Thief or Covet
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(move, MOVE_EFFECT_STEAL_ITEM) == TRUE);
+        ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_REMEDY, ITEM_AIR_BALLOON); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

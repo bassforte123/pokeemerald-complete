@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
         NOT { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF); }
     } THEN {
-        EXPECT(opponent->item == ITEM_LEFTOVERS);
+        EXPECT(opponent->items[0] == ITEM_LEFTOVERS);
     }
 }
 
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if i
         MESSAGE("The opposing Wobbuffet's substitute faded!");
         NOT { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF); }
     } THEN {
-        EXPECT(opponent->item == ITEM_LEFTOVERS);
+        EXPECT(opponent->items[0] == ITEM_LEFTOVERS);
     }
 }
 
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Protect")
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
         }
     } THEN {
-        EXPECT(opponent->item == ITEM_LEFTOVERS);
+        EXPECT(opponent->items[0] == ITEM_LEFTOVERS);
     }
 }
 
@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items if target is immune")
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF);
         }
     } THEN {
-        EXPECT(opponent->item == ITEM_LEFTOVERS);
+        EXPECT(opponent->items[0] == ITEM_LEFTOVERS);
     }
 }
 
@@ -378,7 +378,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if user faints")
         MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
         MESSAGE("Wobbuffet fainted!");
     } THEN {
-        EXPECT(opponent->item == ITEM_ROCKY_HELMET);
+        EXPECT(opponent->items[0] == ITEM_ROCKY_HELMET);
     }
 }
 
@@ -407,7 +407,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consu
         MESSAGE("The opposing Wobbuffet's Air Balloon popped!");
         NOT MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Air Balloon!");
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 

@@ -704,7 +704,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if stolen by a move (Multi)")
     bool32 activate;
     PARAMETRIZE { item = ITEM_NONE; activate = FALSE; }
     PARAMETRIZE { item = ITEM_POTION; activate = TRUE; }
-    ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM) == TRUE);
+    ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_BLK_APRICORN, ITEM_RED_CARD); }

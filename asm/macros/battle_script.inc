@@ -840,8 +840,9 @@
 	.byte 0x95
 	.endm
 
-	.macro unused_96
+	.macro animatewildpokemonafterfailedpokeball battler:req
 	.byte 0x96
+	.byte \battler
 	.endm
 
 	.macro tryinfatuating failInstr:req
@@ -1340,9 +1341,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused ptr:req
+	.macro setnonvolatilestatus trigger:req
 	.byte 0xfd
-	.4byte \ptr
+	.byte \trigger
 	.endm
 
 	.macro tryworryseed failInstr:req
@@ -1399,8 +1400,8 @@
 	callnative BS_AllySwitchSwapBattler
 	.endm
 
-	.macro allyswitchfailchance jumpInstr:req
-	callnative BS_AllySwitchFailChance
+	.macro tryallyswitch jumpInstr:req
+	callnative BS_TryAllySwitch
 	.4byte \jumpInstr
 	.endm
 
@@ -1809,9 +1810,10 @@
 	.4byte \failInstr
 	.endm
 
-@ various command changed to more readable macros
-	.macro cancelmultiturnmoves battler:req
-	various \battler, VARIOUS_CANCEL_MULTI_TURN_MOVES
+	.macro jumpifcangigantamax battler:req, jumpInstr:req
+	callnative BS_JumpIfCanGigantamax
+	.byte \battler
+	.4byte \jumpInstr
 	.endm
 
 	.macro jumpiflastuseditemholdeffect holdEffect:req, secondaryId:req, jumpInstr:req
@@ -1956,12 +1958,18 @@
 	jumpifholdeffect \battler, \holdEffect, \jumpInstr, FALSE
 	.endm
 
-	.macro tryactivatemoxie battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_MOXIE
+	.macro jumpifholdeffect battler:req, holdEffect:req, jumpInstr:req, equal=TRUE
+	callnative BS_JumpIfHoldEffect
+	.byte \battler
+	.byte \holdEffect
+	.4byte \jumpInstr
+	.byte \equal
 	.endm
 
-	.macro tryactivatebeastboost battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BEAST_BOOST
+	.macro jumpifnoally battler:req, jumpInstr:req
+	callnative BS_JumpIfNoAlly
+	.byte \battler
+	.4byte \jumpInstr
 	.endm
 
 	.macro infatuatewithbattler battler:req, infatuateWith:req
@@ -1970,13 +1978,21 @@
 	.byte \infatuateWith
 	.endm
 
-	.macro setlastuseditem battler:req
+	.macro setlastuseditem battler:req, holdEffect:req
 	callnative BS_SetLastUsedItem
 	.byte \battler
+	.4byte \holdEffect
 	.endm
 
-	.macro tryactivatefellstinger battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_FELL_STINGER
+	.macro setlastuseditemcorrosivefling battler:req, type:req
+	callnative BS_SetLastUsedItemCorrosiveFling
+	.byte \battler
+	.byte \type
+	.endm
+
+	.macro trysetfairylock failInstr:req
+	callnative BS_TrySetFairyLock
+	.4byte \failInstr
 	.endm
 
 	.macro getstatvalue stat:req
@@ -2051,8 +2067,8 @@
 	.byte \battler
 	.endm
 
-	.macro setargtobattledamage
-	various BS_ATTACKER, VARIOUS_SET_ARG_TO_BATTLE_DAMAGE
+	.macro resetswitchinabilitybits
+	callnative BS_ResetSwitchInAbilityBits
 	.endm
 
 	.macro updatechoicemoveonlvlup
@@ -2182,15 +2198,13 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trypoisontype attacker:req, target:req, failInstr:req
-	various \attacker, VARIOUS_POISON_TYPE_IMMUNITY
-	.byte \target
+	.macro suckerpunchcheck failInstr:req
+	callnative BS_SuckerPunchCheck
 	.4byte \failInstr
 	.endm
 
-	.macro tryparalyzetype attacker:req, target:req, failInstr:req
-	various \attacker, VARIOUS_PARALYZE_TYPE_IMMUNITY
-	.byte \target
+	.macro setsimplebeam failInstr:req
+	callnative BS_SetSimpleBeam
 	.4byte \failInstr
 	.endm
 
@@ -2217,35 +2231,13 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setlastuseditem battler:req
-	various \battler, VARIOUS_SET_LAST_USED_ITEM
-	.endm
-
-	.macro jumpifabsent battler:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_ABSENT
-	.4byte \jumpInstr
-	.endm
-
-	.macro destroyabilitypopup
-	various BS_ABILITY_BATTLER, VARIOUS_DESTROY_ABILITY_POPUP
-	.endm
-
-	.macro gettotemboost jumpInstr:req
-	various BS_ATTACKER, VARIOUS_TOTEM_BOOST
-	.4byte \jumpInstr
+	.macro trysoak failInstr:req
+	callnative BS_TrySoak
+	.4byte \failInstr
 	.endm
 
 	.macro tryactivategrimneigh, battler:req
 	various \battler, VARIOUS_TRY_ACTIVATE_GRIM_NEIGH
-	.endm
-
-	.macro consumeberry battler:req, fromBattler:req
-	various \battler, VARIOUS_CONSUME_BERRY
-	.byte \fromBattler
-	.endm
-
-	.macro activateitemeffects battler:req
-	various \battler, VARIOUS_MOVEEND_ITEM_EFFECTS
 	.endm
 
 	.macro pickpocketsteal
@@ -2282,8 +2274,8 @@
 	callnative BS_ShowAbilityPopup
 	.endm
 
-	.macro tryactivatebattlebond battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BATTLE_BOND
+	.macro updateabilitypopup
+	callnative BS_UpdateAbilityPopup
 	.endm
 
 	.macro jumpiftargetally jumpInstr:req
@@ -2336,10 +2328,9 @@
 	callnative BS_SetAuroraVeil
 	.endm
 
-	.macro jumpiflastuseditemholdeffect battler:req, holdEffect:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_LAST_USED_ITEM_HOLD_EFFECT
-	.byte \holdEffect
-	.4byte \jumpInstr
+	.macro trythirdtype failInstr:req
+	callnative BS_TryThirdType
+	.4byte \failInstr
 	.endm
 
 	.macro destroyabilitypopup
@@ -2353,10 +2344,6 @@
 
 	.macro activateitemeffects
 	callnative BS_ActivateItemEffects
-	.endm
-
-	.macro lastuseditemtobattlerberry battler:req
-	various \battler, VARIOUS_LAST_USED_ITEM_TO_BATTLER_BERRY
 	.endm
 
 	.macro tryroomservice battler:req, failInstr:req
@@ -2496,10 +2483,9 @@
 	callnative BS_BattlerItemToLastUsedItem
 	.endm
 
-	.macro jumpifabilitycantbesuppressed battler:req, jumpInstr:req
-	callnative BS_JumpIfAbilityCantBeSuppressed
+	.macro lastuseditemtobattlerberry battler:req
+	callnative BS_LastUsedItemToBattlerBerry
 	.byte \battler
-	.4byte \jumpInstr
 	.endm
 
 	.macro setallytonexttarget jumpInstr:req
@@ -2569,11 +2555,6 @@
 	.macro tryboosterenergy onFieldStatus:req
 	callnative BS_TryBoosterEnergy
 	.byte \onFieldStatus
-	.endm
-
-	.macro jumpifnowhiteout jumpInstr:req
-	callnative BS_JumpIfNoWhiteOut
-	.4byte \jumpInstr
 	.endm
 
 	.macro printdebug

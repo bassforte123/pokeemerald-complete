@@ -219,7 +219,7 @@ static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
 {
     u32 ability = gAiLogicData->abilities[battler];
 
-    if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
+    if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, gAiLogicData))
     {
         if (ability == ABILITY_ORICHALCUM_PULSE || ability == ABILITY_PROTOSYNTHESIS)
             return FIELD_EFFECT_POSITIVE;
@@ -246,10 +246,10 @@ static enum FieldEffectOutcome BenefitsFromSandstorm(u32 battler)
      || IS_BATTLER_OF_TYPE(battler, TYPE_ROCK))
         return FIELD_EFFECT_POSITIVE;
 
-    if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
+    if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData) || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
     {
         if (!(IS_BATTLER_ANY_TYPE(FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
-         || gAiLogicData->holdEffects[FOE(battler)] == HOLD_EFFECT_SAFETY_GOGGLES
+         || Ai_BattlerHasHoldEffect(FOE(battler), HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData)
          || DoesAbilityBenefitFromWeather(gAiLogicData->abilities[FOE(battler)], B_WEATHER_SANDSTORM))
             return FIELD_EFFECT_POSITIVE;
         else
@@ -268,7 +268,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
      || HasBattlerSideMoveWithEffect(battler, EFFECT_AURORA_VEIL))
         return FIELD_EFFECT_POSITIVE;
 
-    if ((weather & B_WEATHER_DAMAGING_ANY) && gAiLogicData->holdEffects[battler] != HOLD_EFFECT_SAFETY_GOGGLES)
+    if ((weather & B_WEATHER_DAMAGING_ANY) && Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData))
         return FIELD_EFFECT_NEGATIVE;
 
     if (HasLightSensitiveMove(battler))
@@ -283,7 +283,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
 // Rain
 static enum FieldEffectOutcome BenefitsFromRain(u32 battler)
 {
-    if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
+    if (Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, gAiLogicData))
         return FIELD_EFFECT_NEUTRAL;
 
     if (DoesAbilityBenefitFromWeather(gAiLogicData->abilities[battler], B_WEATHER_RAIN)
