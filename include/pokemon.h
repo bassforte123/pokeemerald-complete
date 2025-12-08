@@ -385,7 +385,6 @@ struct BattlePokemon
     /*0x5D*/ u32 otId;
     /*0x61*/ u8 metLevel;
     /*0x62*/ bool8 isShiny;
-
 };
 
 struct EvolutionParam

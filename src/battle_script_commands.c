@@ -567,7 +567,7 @@ static void Cmd_switchoutabilities(void);
 static void Cmd_jumpifhasnohp(void);
 static void Cmd_jumpifnotcurrentmoveargtype(void);
 static void Cmd_pickup(void);
-static void Cmd_printdebug(void);
+static void Cmd_unused_0xE6(void);
 static void Cmd_unused_0xE7(void);
 static void Cmd_settypebasedhalvers(void);
 static void Cmd_jumpifsubstituteblocks(void);
@@ -826,7 +826,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_jumpifhasnohp,                           //0xE3
     Cmd_jumpifnotcurrentmoveargtype,             //0xE4
     Cmd_pickup,                                  //0xE5
-    Cmd_printdebug,                              //0xE6
+    Cmd_unused_0xE6,                              //0xE6
     Cmd_unused_0xE7,                             //0xE7
     Cmd_settypebasedhalvers,                     //0xE8
     Cmd_jumpifsubstituteblocks,                  //0xE9
@@ -13664,12 +13664,8 @@ static void Cmd_pickup(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void Cmd_printdebug(void)
+static void Cmd_unused_0xE6(void)
 {
-    NATIVE_ARGS();
-    DebugPrintf("DEBUG ATTACKER [%d] Items1:[%d], Item2:[%d]", gBattlerAttacker, gBattleMons[gBattlerAttacker].items[0], gBattleMons[gBattlerAttacker].items[1]);
-    DebugPrintf("DEBUG TARGET [%d] Items1:[%d], Item2:[%d]", gBattlerTarget, gBattleMons[gBattlerTarget].items[0], gBattleMons[gBattlerTarget].items[1]);
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_unused_0xE7(void)

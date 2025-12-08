@@ -1051,7 +1051,7 @@ extern u16 gChosenMove;
 extern u16 gCalledMove;
 extern s32 gBideDmg[MAX_BATTLERS_COUNT];
 extern u16 gLastUsedItem;
-extern u8 gLastItemSlot; //For random item slot selection that should match another random selection
+extern u8 gLastItemSlot; //For random item slot selection that should match another random selection (Multi)
 extern u16 gLastUsedAbility;
 extern u8 gBattlerAttacker;
 extern u8 gBattlerTarget;

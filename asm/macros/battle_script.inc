@@ -2236,19 +2236,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryactivategrimneigh, battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_GRIM_NEIGH
-	.endm
-
-	.macro pickpocketsteal
-	various 0, VARIOUS_PICKPOCKET
-	.endm
-
-	.macro doterrainseed battler:req, failInstr:req
-	various \battler, VARIOUS_TERRAIN_SEED
-	.4byte \failInstr
-	.endm
-
 	.macro handleformchange battler:req, case_:req
 	callnative BS_HandleFormChange
 	.byte \battler
