@@ -479,10 +479,12 @@ SINGLE_BATTLE_TEST("Only one Eject Pack is triggered when holding more than one 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_EJECT_PACK, ITEM_EJECT_PACK); }
-        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WYNAUT) { Items(ITEM_EJECT_PACK, ITEM_EJECT_PACK); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
+        TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(player, 0); }
+        TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(player, 0); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OVERHEAT, player);

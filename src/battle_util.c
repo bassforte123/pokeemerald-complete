@@ -4378,6 +4378,13 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             // Fallthrough
             case ABILITY_ZEN_MODE:
             case ABILITY_SHIELDS_DOWN:
+                if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
+                {
+                    gBattleScripting.battler = battler;
+                    BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeEnd3);
+                    effect++;
+                }
+                break;
             case ABILITY_POWER_CONSTRUCT:
                 if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
                 {
@@ -4387,13 +4394,15 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_BALL_FETCH:
-                if (B_HELD_ITEM_CATEGORIZATION)
+                slot = MAX_MON_ITEMS;
+
+                if (B_HELD_ITEM_CATEGORIZATION
+                 && gBattleMons[battler].items[gItemsInfo[gLastUsedBall].heldSlot] == ITEM_NONE)
                 {
                     slot = gItemsInfo[gLastUsedBall].heldSlot;
                 }
                 else
                 {
-                    slot = MAX_MON_ITEMS;
                     for (int i = 0; i < MAX_MON_ITEMS; i++)
                     {
                         if (gBattleMons[battler].items[i] == ITEM_NONE)
@@ -4404,17 +4413,11 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     }
                 }
 
-                if (gLastUsedBall == 60) // Strange Ball comes in as 60 for some reason, this exception catches that
-                    gLastUsedBall = BALL_STRANGE;
-
-                if (gBattleResults.catchAttempts[gLastUsedBall] >= 1
+                if (gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
                     && !gHasFetchedBall
                     && slot != MAX_MON_ITEMS)
                 {
-                    if (gLastUsedBall != BALL_STRANGE)
-                        gLastUsedItem = gLastUsedBall;
-                    else
-                        gLastUsedItem = ITEM_STRANGE_BALL;
+                    gLastUsedItem = gLastUsedBall;
                     gBattleScripting.battler = battler;
                     gBattleMons[battler].items[slot] = gLastUsedItem;
                     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + slot, 0, 2, &gLastUsedItem);
@@ -5455,7 +5458,7 @@ u32 GetBattlerAbility(u32 battler)
 
 u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker, u32 noAbilityShield)
 {
-    bool32 hasAbilityShield = BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
+    bool32 hasAbilityShield = !noAbilityShield && BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
     bool32 abilityCantBeSuppressed = gAbilitiesInfo[gBattleMons[battler].ability].cantBeSuppressed;
 
     if (abilityCantBeSuppressed)
@@ -7360,8 +7363,25 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
         break;
     case ITEMEFFECT_LIFEORB_SHELLBELL:
         STORE_BATTLER_ITEMS(gBattlerAttacker);
+        
         // Occur after the final hit of a multi-strike move
-        if (SearchItemSlots(battlerItems, HOLD_EFFECT_SHELL_BELL))
+        if (SearchItemSlots(battlerItems, HOLD_EFFECT_LIFE_ORB)) // Life Orb moved to first to ensure the hp drain isn't overwritten (Multi)
+        {
+            if (IsBattlerAlive(gBattlerAttacker)
+                && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+                && (IsBattlerTurnDamaged(gBattlerTarget) || gBattleScripting.savedDmg > 0)
+                && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD)
+                && !IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+            {
+                gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 10;
+                if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
+                    gBattleStruct->moveDamage[gBattlerAttacker] = 1;
+                effect = ITEM_HP_CHANGE;
+                BattleScriptCall(BattleScript_ItemHurtRet);
+                gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_LIFE_ORB);
+            }
+        }
+        else if (SearchItemSlots(battlerItems, HOLD_EFFECT_SHELL_BELL))
         {
             if (gBattleScripting.savedDmg > 0
                 && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
@@ -7384,25 +7404,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                     gBattleStruct->moveDamage[gBattlerAttacker] = -1;
                 BattleScriptCall(BattleScript_ItemHealHP_Ret);
                 effect = ITEM_HP_CHANGE;
-            }
-            else if (SearchItemSlots(battlerItems, HOLD_EFFECT_LIFE_ORB)) // Life Orb moved to first to ensure the hp drain isn't overwritten (Multi)
-            {
-                if (IsBattlerAlive(gBattlerAttacker)
-                    && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-                    && !IsBattleMoveStatus(gCurrentMove)
-                    && (IsBattlerTurnDamaged(gBattlerTarget) || !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)) // Needs the second check in case of Substitute
-                    && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD
-                    && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
-                    && !IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
-                {
-                    gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 10;
-                    if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
-                        gBattleStruct->moveDamage[gBattlerAttacker] = 1;
-                    effect = ITEM_HP_CHANGE;
-                    BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_ItemHurtRet;
-                    gLastUsedItem = SearchItemSlots(battlerItems, HOLD_EFFECT_LIFE_ORB);
-                }
             }
         }
         else if (SearchItemSlots(battlerItems, HOLD_EFFECT_THROAT_SPRAY)) // Does NOT need to be a damaging move
@@ -7937,7 +7938,7 @@ bool8 BattlerHasBerry(u32 battler)
     return FALSE;
 }
 
-bool32 GetBattlerBerry(u32 battler)
+bool32 GetBattlerBerrySlot(u32 battler)
 {
     u8 i;
     u8 targetableSlots[MAX_MON_ITEMS];
@@ -9723,24 +9724,23 @@ static inline uq4_12_t GetAttackerItemsModifier(u32 battlerAtk, uq4_12_t typeEff
 static inline uq4_12_t GetDefenderItemsModifier(struct DamageContext *ctx)
 {
     u32 battlerDef = ctx->battlerDef;
-    u32 moveType = ctx->moveType;
+    u32 moveType = ctx->moveType; // Becomes secondary type for dual type moves and type changes
     u32 itemDef = ITEM_NONE;
-    bool32 hasArg = FALSE;
 
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if (B_FLYING_PRESS_RESIST) //If Flying Press DualType moves should be counted
-            hasArg = GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == GetMoveArgType(gCurrentMove);
-
-        if (GetItemHoldEffect(gBattleMons[battlerDef].items[i]) == HOLD_EFFECT_RESIST_BERRY
-         && (GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == moveType
-         || hasArg))
+        if (GetItemHoldEffect(gBattleMons[battlerDef].items[i]) == HOLD_EFFECT_RESIST_BERRY)
         {
-           itemDef = GetSlotHeldItem(battlerDef, i, TRUE);
-           break;
+            //If B_FLYING_PRESS_RESIST is TRUE, included the second type of dual type moves like Flying Press in the check.
+            if ((GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == GetMoveType(ctx->move)
+             || (B_FLYING_PRESS_RESIST == (GetMoveEffect(ctx->move) == EFFECT_TWO_TYPED_MOVE) //Logic for dual type moves
+             && GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == moveType)))
+            {
+                itemDef = GetSlotHeldItem(battlerDef, i, TRUE);
+                break;
+            }
         }
     }
-
     if(itemDef != ITEM_NONE)
     {
         if (UnnerveOn(battlerDef, itemDef))
@@ -9748,7 +9748,11 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageContext *ctx)
         if ((moveType == TYPE_NORMAL || ctx->typeEffectivenessModifier >= UQ_4_12(2.0)))
         {
             if (ctx->updateFlags)
+            {
                 gSpecialStatuses[battlerDef].berryReduced = TRUE;
+                gSpecialStatuses[battlerDef].berryReducedType = GetBattlerItemHoldEffectParam(battlerDef, itemDef); //prevents multiple reduction berry activations and transfers hiddenpower type to eating function
+            }
+
             return (ctx->abilityDef == ABILITY_RIPEN) ? UQ_4_12(0.25) : UQ_4_12(0.5);
         }
     }

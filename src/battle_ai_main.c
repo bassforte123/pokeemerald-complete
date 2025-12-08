@@ -569,6 +569,12 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
     aiData->hpPercents[battler] = GetHealthPercentage(battler);
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStatArgs(battler, ability);
+
+    if (IsAiBattlerAssumingStab())
+        RecordMovesBasedOnStab(battler);
+
+    if (IsAiBattlerAssumingStatusMoves())
+        RecordStatusMoves(battler);
 }
 
 bool32 Ai_BattlerHasHoldEffect(u32 battler, u32 holdEffect, struct AiLogicData *aiData)
@@ -611,12 +617,6 @@ bool32 Ai_BattlerHasItem(u32 battler, u32 item, struct AiLogicData *aiData)
             return TRUE;
     }
     return FALSE;
-
-    if (IsAiBattlerAssumingStab())
-        RecordMovesBasedOnStab(battler);
-
-    if (IsAiBattlerAssumingStatusMoves())
-        RecordStatusMoves(battler);
 }
 
 #define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit

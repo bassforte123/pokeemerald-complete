@@ -6410,7 +6410,6 @@ BattleScript_DefDownSpeedUpRet::
 	return
 
 BattleScript_KnockedOff::
-	printdebug
 	playanimation BS_TARGET, B_ANIM_ITEM_KNOCKOFF
 	printstring STRINGID_PKMNKNOCKEDOFF
 	waitmessage B_WAIT_TIME_LONG

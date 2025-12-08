@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faint
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+        //NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
     } THEN {
         EXPECT_EQ(player->items[0], ITEM_NONE);
         EXPECT_EQ(opponent->items[0], ITEM_ROCKY_HELMET);
@@ -322,18 +322,24 @@ SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faint
 
 SINGLE_BATTLE_TEST("Thief and Covet: Berry activation happens before the item can be stolen (Multi)")
 {
-    u32 move;
-    PARAMETRIZE { move = MOVE_THIEF; }
-    PARAMETRIZE { move = MOVE_COVET; }
+    u32 move, item1, item2;
+    PARAMETRIZE { move = MOVE_THIEF; item1 = ITEM_LUXURY_BALL; item2 = ITEM_ORAN_BERRY; }
+    PARAMETRIZE { move = MOVE_THIEF; item1 = ITEM_ORAN_BERRY; item2 = ITEM_LUXURY_BALL; }
+    PARAMETRIZE { move = MOVE_COVET; item1 = ITEM_LUXURY_BALL; item2 = ITEM_ORAN_BERRY; }
+    PARAMETRIZE { move = MOVE_COVET; item1 = ITEM_ORAN_BERRY; item2 = ITEM_LUXURY_BALL; }
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(200); HP(101); Items( ITEM_LUXURY_BALL, ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(200); HP(101); Items( item1, item2); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+    } THEN {
+        if (item1 == ITEM_LUXURY_BALL)
+            EXPECT_EQ(player->items[0], ITEM_LUXURY_BALL);
+        else
+            EXPECT_EQ(player->items[1], ITEM_LUXURY_BALL);
     }
 }

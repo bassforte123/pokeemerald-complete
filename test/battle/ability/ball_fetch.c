@@ -125,6 +125,7 @@ WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball
     PARAMETRIZE { item = ITEM_POKE_BALL; }
     PARAMETRIZE { item = ITEM_GREAT_BALL; }
     PARAMETRIZE { item = ITEM_ULTRA_BALL; }
+    PARAMETRIZE { item = ITEM_HEAVY_BALL; }
     PARAMETRIZE { item = ITEM_STRANGE_BALL; }
     PARAMETRIZE { item = ITEM_X_ACCURACY; }
 

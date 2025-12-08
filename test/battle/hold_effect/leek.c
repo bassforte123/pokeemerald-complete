@@ -65,7 +65,6 @@ SINGLE_BATTLE_TEST("Leek increases critical hit ratio by 2 stages for the Farfet
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
         MESSAGE("A critical hit!");
     }
 }

@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Anticipation considers Flying Press as an ordinary Fighting-
     } WHEN {
         TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        //ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
 }

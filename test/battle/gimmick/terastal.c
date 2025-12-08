@@ -768,7 +768,7 @@ SINGLE_BATTLE_TEST("(TERA) Illusion breaks if the Pokémon Terastallizes when il
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Zoroark's Illusion wore off!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
     }
 }
 

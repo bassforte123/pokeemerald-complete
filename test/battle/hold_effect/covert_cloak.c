@@ -279,8 +279,8 @@ SINGLE_BATTLE_TEST("Covert Cloak does not block primary effects (Multi)")
         }
     } THEN { // Can't find good way to test trapping
         if (move == MOVE_JAW_LOCK) {
-            EXPECT(!opponent->volatiles.escapePrevention);
-            EXPECT(!player->volatiles.escapePrevention);
+            EXPECT(opponent->volatiles.escapePrevention);
+            EXPECT(player->volatiles.escapePrevention);
         }
     }
 }

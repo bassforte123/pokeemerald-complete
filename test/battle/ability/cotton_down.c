@@ -8,9 +8,7 @@ SINGLE_BATTLE_TEST("Cotton Down drops speed by one of opposing battler if hit by
         OPPONENT(SPECIES_ELDEGOSS) { Ability(ABILITY_COTTON_DOWN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
-        TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(opponent, ABILITY_COTTON_DOWN);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
@@ -49,9 +47,7 @@ DOUBLE_BATTLE_TEST("Cotton Down drops speed by one of all other battlers on the 
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
-        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_COTTON_DOWN);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
@@ -111,7 +107,6 @@ DOUBLE_BATTLE_TEST("Cotton Down correctly gets blocked by stat reduction prevent
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_COTTON_DOWN);
         NONE_OF {

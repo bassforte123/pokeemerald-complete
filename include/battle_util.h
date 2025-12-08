@@ -425,5 +425,5 @@ u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item);
 u8 GetSlot(u8 *availableSlots, u8 size);
 u32 GetBattlerItemHoldEffect(u32 battler, u32 item);
 bool8 BattlerHasBerry(u32 battler);
-bool32 GetBattlerBerry(u32 battler);
+bool32 GetBattlerBerrySlot(u32 battler);
 #endif // GUARD_BATTLE_UTIL_H

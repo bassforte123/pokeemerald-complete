@@ -268,7 +268,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
      || HasBattlerSideMoveWithEffect(battler, EFFECT_AURORA_VEIL))
         return FIELD_EFFECT_POSITIVE;
 
-    if ((weather & B_WEATHER_DAMAGING_ANY) && Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData))
+    if ((weather & B_WEATHER_DAMAGING_ANY) && !Ai_BattlerHasHoldEffect(battler, HOLD_EFFECT_SAFETY_GOGGLES, gAiLogicData))
         return FIELD_EFFECT_NEGATIVE;
 
     if (HasLightSensitiveMove(battler))

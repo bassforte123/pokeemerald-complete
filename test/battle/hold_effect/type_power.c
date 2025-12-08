@@ -88,8 +88,12 @@ SINGLE_BATTLE_TEST("Type-enhancing items increase the base power of moves by 20%
 SINGLE_BATTLE_TEST("Flying Press activates one damage reduction berry per hit (Multi)")
 {
     s16 damage[3];
+    bool32 paramConfig;
+    PARAMETRIZE { paramConfig = FALSE; }
+    //PARAMETRIZE { paramConfig = TRUE; } TODO
 
     GIVEN {
+        WITH_CONFIG(FLYING_PRESS_RESIST, paramConfig);
         ASSUME(gItemsInfo[ITEM_CHOPLE_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(gItemsInfo[ITEM_CHOPLE_BERRY].holdEffectParam == TYPE_FIGHTING);
         ASSUME(gItemsInfo[ITEM_COBA_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
@@ -106,12 +110,14 @@ SINGLE_BATTLE_TEST("Flying Press activates one damage reduction berry per hit (M
         MESSAGE("The Chople Berry weakened the damage to the opposing Shiftry!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLYING_PRESS, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
-        #if B_FLYING_PRESS_RESIST == FALSE
+        if (paramConfig == FALSE)
+        {
             MESSAGE("Wobbuffet used Flying Press!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLYING_PRESS, player);
             HP_BAR(opponent, captureDamage: &damage[1]);
-        #endif
-        #if B_FLYING_PRESS_RESIST == TRUE //Flying Berry only activates if enabled
+        }
+        else if (paramConfig == TRUE) //Flying Berry only activates if B_FLYING_PRESS_RESIST enabled
+        {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
             MESSAGE("The Coba Berry weakened the damage to the opposing Shiftry!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLYING_PRESS, player);
@@ -119,17 +125,19 @@ SINGLE_BATTLE_TEST("Flying Press activates one damage reduction berry per hit (M
             MESSAGE("Wobbuffet used Flying Press!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FLYING_PRESS, player);
             HP_BAR(opponent, captureDamage: &damage[2]);
-        #endif
+        }
     } THEN {
         EXPECT_EQ(opponent->items[0], ITEM_NONE);
-        #if B_FLYING_PRESS_RESIST == FALSE
+        if (paramConfig == FALSE)
+        {
             EXPECT_EQ(opponent->items[1], ITEM_COBA_BERRY);
             EXPECT_MUL_EQ(damage[0], Q_4_12(2), damage[1]);
-        #endif
-        #if B_FLYING_PRESS_RESIST == TRUE
+        }
+        else if (paramConfig == TRUE)
+        {
             EXPECT_EQ(opponent->items[1], ITEM_NONE);
             EXPECT_EQ(damage[0], damage[1]);
             EXPECT_MUL_EQ(damage[0], Q_4_12(2), damage[2]);
-        #endif
+        }
     }
 }
