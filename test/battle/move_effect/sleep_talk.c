@@ -147,6 +147,24 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Sto
     }
 }
 
+SINGLE_BATTLE_TEST("Sleep Talk deducts power points from itself, not the called move")
+{
+    ASSUME(GetMovePP(MOVE_SLEEP_TALK) == 10);
+    ASSUME(GetMovePP(MOVE_POUND) == 35);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_POUND); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SLEEP_TALK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
+    } THEN {
+        EXPECT_EQ(player->pp[0], 9);
+        EXPECT_EQ(player->pp[1], 35);
+    }
+}
+
 SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk (Multi)")
 {
     GIVEN {

@@ -9060,7 +9060,7 @@ void AnimTask_ShellSideArm(u8 taskId)
 
 void AnimTask_TerrainPulse(u8 taskId)
 {
-    if (IsBattlerTerrainAffected(gBattleAnimAttacker, STATUS_FIELD_TERRAIN_ANY))
+    if (IsBattlerTerrainAffected(gBattleAnimAttacker, GetBattlerAbility(gBattleAnimAttacker), STATUS_FIELD_TERRAIN_ANY))
     {
         if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
             gBattleAnimArgs[0] = TYPE_ELECTRIC;
@@ -9433,7 +9433,7 @@ static void SpriteCB_MaxFlutterby(struct Sprite* sprite)
 {
     s16 target_x;
     s16 target_y;
-    if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
+    if (GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
     {
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &target_x, &target_y);
     }

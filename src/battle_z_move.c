@@ -36,7 +36,6 @@
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "constants/species.h"
-#include "constants/hold_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_move_effects.h"
 #include "constants/abilities.h"
@@ -157,7 +156,6 @@ u32 GetUsableZMove(u32 battler, u32 move)
 
 void ActivateZMove(u32 battler)
 {
-    gBattleStruct->zmove.baseMoves[battler] = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
     SetActiveGimmick(battler, GIMMICK_Z_MOVE);
 }
 
@@ -413,7 +411,7 @@ static void ZMoveSelectionDisplayPpNumber(u32 battler)
 static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 {
     u8 *txtPtr, *end;
-    u32 zMoveType = GetBattleMoveType(zMove);
+    enum Type zMoveType = GetBattleMoveType(zMove);
 
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
@@ -431,7 +429,7 @@ static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 void SetZEffect(void)
 {
     u32 i;
-    u32 effect = GetMoveZEffect(gBattleStruct->zmove.baseMoves[gBattlerAttacker]);
+    u32 effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
     {
@@ -501,7 +499,7 @@ void SetZEffect(void)
     case Z_EFFECT_RECOVER_HP:
         if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
         {
-            gBattleStruct->moveDamage[gBattlerAttacker] = (-1) * gBattleMons[gBattlerAttacker].maxHP;
+            SetHealAmount(gBattlerAttacker, gBattleMons[gBattlerAttacker].maxHP);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_RECOVER_HP;
             BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
             gBattlescriptCurrInstr = BattleScript_RecoverHPZMove;

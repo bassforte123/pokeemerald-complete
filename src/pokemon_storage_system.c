@@ -10223,7 +10223,7 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
                             break;
                         }
                     }
-                    SetBoxMonIconObjMode(sCursorPosition, (hasItem ? ST_OAM_OBJ_NORMAL : ST_OAM_OBJ_BLEND));
+                    SetBoxMonIconObjMode(sCursorPosition, (hasItem ? ST_OAM_OBJ_BLEND : ST_OAM_OBJ_NORMAL));
                 }
         }
     }
