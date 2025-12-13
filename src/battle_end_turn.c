@@ -393,7 +393,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     {
         if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
          || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
+            if (ItemBattleEffects(battler, 0, IsLeftoversActivation))
                 effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
@@ -1299,11 +1299,11 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
          || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
          || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
-         && ItemBattleEffects(battler, 0, holdEffect, IsOrbsActivation))
+         && ItemBattleEffects(battler, 0, IsOrbsActivation))
                 effect = TRUE;
 
         if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE)
-         && ItemBattleEffects(battler, 0, holdEffect, IsWhiteHerbEndTurnActivation))
+         && ItemBattleEffects(battler, 0, IsWhiteHerbEndTurnActivation))
                 effect = TRUE;
 
         gBattleStruct->eventState.endTurnBlock = 0;

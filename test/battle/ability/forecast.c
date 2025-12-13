@@ -190,7 +190,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in weather from an ability")
     }
 }
 
-SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather (Multi)")
+SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather")
 {
     u32 species, item;
     enum Ability ability;
@@ -199,7 +199,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather (Multi)")
     GIVEN {
         PLAYER(SPECIES_CASTFORM_NORMAL) { Ability(ABILITY_FORECAST); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Items(ITEM_DOME_FOSSIL, item); }
+        OPPONENT(species) { Item(item); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {

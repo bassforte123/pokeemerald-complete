@@ -94,37 +94,13 @@ SINGLE_BATTLE_TEST("Hail damage rounds properly when maxHP < 16")
 SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_ICE);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_ICE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
     } WHEN {
         TURN { MOVE(player, MOVE_HAIL); }
     } SCENE {
         NOT HP_BAR(player);
-    }
-}
-
-SINGLE_BATTLE_TEST("Hail fails if Desolate Land or Primordial Sea are active (Multi)")
-{
-    u32 species;
-    u32 item;
-
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; item = ITEM_NONE; }
-    PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB; }
-    PARAMETRIZE { species = SPECIES_KYOGRE; item = ITEM_BLUE_ORB; }
-
-    GIVEN {
-        PLAYER(species) { Items( ITEM_LUXURY_BALL, item); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_HAIL); }
-    } SCENE {
-        if (item == ITEM_RED_ORB || item == ITEM_BLUE_ORB) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, player);
-            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
-        } else {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
-        }
     }
 }

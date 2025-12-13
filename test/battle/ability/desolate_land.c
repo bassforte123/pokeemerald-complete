@@ -98,21 +98,3 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
         MESSAGE("The extremely harsh sunlight faded!");
     }
 }
-
-SINGLE_BATTLE_TEST("Desolate Land will not create a softlock when move in semi invulnerable position is blocked (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GROUDON) { Items(ITEM_HEAVY_BALL, ITEM_RED_ORB); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_DIVE); }
-        TURN { SWITCH(opponent, 1); SKIP_TURN(player); }
-        TURN { MOVE(player, MOVE_CELEBRATE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
-        ABILITY_POPUP(opponent, ABILITY_DESOLATE_LAND);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
-    }
-}

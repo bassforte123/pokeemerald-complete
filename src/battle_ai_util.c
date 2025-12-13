@@ -27,12 +27,12 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
 static u32 GetAIEffectGroupFromMove(u32 battler, u32 move);
 
 // Functions
-static u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilityAtk, enum Ability abilityDef, u32 holdEffectDef, u32 move)
+static u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, struct AiLogicData *aiData)
 {
     if (MoveIgnoresTargetAbility(move))
         return ABILITY_NONE;
 
-    if (holdEffectDef != HOLD_EFFECT_ABILITY_SHIELD && IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
+    if (!Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_ABILITY_SHIELD, aiData) && IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
         return ABILITY_NONE;
 
     return abilityDef;
@@ -478,6 +478,7 @@ bool32 AI_BattlerAtMaxHp(u32 battlerId)
         return TRUE;
     return FALSE;
 }
+
 
 bool32 AI_CanBattlerEscape(u32 battler)
 {
@@ -945,7 +946,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     ctx.weather = weather;
     ctx.fixedBasePower = SetFixedMoveBasePower(battlerAtk, move);
     ctx.abilityAtk = aiData->abilities[battlerAtk];
-    ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, ctx.abilityAtk, aiData->abilities[battlerDef], move);
+    ctx.abilityDef = AI_GetMoldBreakerSanitizedAbility(battlerAtk, battlerDef, ctx.abilityAtk, aiData->abilities[battlerDef], move, aiData);
     ctx.typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(&ctx);
 
     u32 movePower = GetMovePower(move);
@@ -1749,7 +1750,7 @@ enum Ability AI_DecideKnownAbilityForTurn(u32 battlerId)
 
 enum HoldEffect AI_DecideHoldEffectForTurn(u32 battlerId, u32 slot)
 {
-    enum ItemHoldEffect holdEffect = ITEM_NONE; // Failsafe for when user recorded an item but it was consumed
+    enum HoldEffect holdEffect = HOLD_EFFECT_NONE; // Failsafe for when user recorded an item but it was consumed
 
     if (!IsAiBattlerAware(battlerId))
         holdEffect = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffects[slot];
@@ -3109,7 +3110,7 @@ static u32 GetTrapDamage(u32 battler)
     u32 damage = 0;
     if (gBattleMons[battler].volatiles.wrapped)
     {
-        if (Ai_BattlerHasHoldEffect(battlerId, HOLD_EFFECT_BINDING_BAND, gAiLogicData))
+        if (Ai_BattlerHasHoldEffect(gBattleMons[battler].volatiles.wrappedBy, HOLD_EFFECT_BINDING_BAND, gAiLogicData))
             damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
         else
             damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
@@ -3268,8 +3269,7 @@ static bool32 AnyUsefulStatIsRaised(u32 battler)
 static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
 {
     struct Pokemon *mon = &GetBattlerParty(currBattler)[switchBattler];
-    enum Ability = GetMonAbility(mon);   // we know our own party data
-    u32 holdEffectBlocked = FALSE;
+    enum Ability ability = GetMonAbility(mon);   // we know our own party data
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     s32 hazardDamage = 0;
     enum Type type1 = GetSpeciesType(species, 0);
@@ -3280,11 +3280,6 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     if (!AreAnyHazardsOnSide(side))
         return FALSE;
 
-    if (ability == ABILITY_MAGIC_GUARD)
-        return FALSE;
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM || ability == ABILITY_KLUTZ)
-        holdEffectBlocked = TRUE;
-
     if (BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_HEAVY_DUTY_BOOTS, TRUE))
         return FALSE;
 
@@ -3294,8 +3289,8 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
         hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, type1, type2, maxHp);
 
     if (IsHazardOnSide(side, HAZARDS_SPIKES) && ((type1 != TYPE_FLYING && type2 != TYPE_FLYING
-        && ability != ABILITY_LEVITATE && (!holdEffectBlocked || !BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_AIR_BALLOON, TRUE)))
-        || (!holdEffectBlocked || BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_IRON_BALL, TRUE)) || gFieldStatuses & STATUS_FIELD_GRAVITY))
+        && ability != ABILITY_LEVITATE && !BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_AIR_BALLOON, TRUE))
+        || BattlerHasHeldItemEffect(currBattler, HOLD_EFFECT_IRON_BALL, TRUE) || gFieldStatuses & STATUS_FIELD_GRAVITY))
     {
         s32 spikesDmg = maxHp / ((5 - gSideTimers[GetBattlerSide(currBattler)].spikesAmount) * 2);
         if (spikesDmg == 0)
@@ -4015,7 +4010,7 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
 
     if (status & STATUS1_PSN_ANY)
     {
-        if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_TOXIC_ORB)
+        if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_TOXIC_ORB, aiData))
             return FALSE;
 
         if (aiData->abilities[battlerDef] == ABILITY_POISON_HEAL)
@@ -4032,7 +4027,7 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
 
     if (status & STATUS1_BURN)
     {
-        if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_FLAME_ORB)
+        if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FLAME_ORB, aiData))
             return FALSE;
 
         if (aiData->abilities[battlerDef] == ABILITY_FLARE_BOOST && !isHarmless)
@@ -4981,7 +4976,7 @@ void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
     {
         if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)
             || (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_OMNISCIENT) // Not Omniscient but expects physical attacker
-                && gSpeciesInfo[gBattleMons[battlerDef].species].baseAttack >= gSpeciesInfo[gBattleMons[battlerDef].species].baseSpAttack + 10))
+                && GetSpeciesBaseAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) + 10))
         {
             if (GetMoveCategory(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)) == DAMAGE_CATEGORY_PHYSICAL)
                 ADJUST_SCORE_PTR(DECENT_EFFECT);
@@ -5079,7 +5074,7 @@ void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score
     }
 }
 
-bool32 AI_MoveMakesContact(enum Ability ability, u32 move)
+bool32 AI_MoveMakesContact(enum Ability ability, u32 move, u32 battlerAtk)
 {
     if (MoveMakesContact(move)
       && ability != ABILITY_LONG_REACH

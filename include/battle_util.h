@@ -441,6 +441,7 @@ bool32 IsMimikyuDisguised(u32 battler);
 bool32 BattlerHasHeldItemEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 bool32 BattlerHasHeldItemEffectIgnoreAbility(u32 battler, u32 holdEffect, bool32 checkNegating);
 bool32 BattlerHasHeldItemEffectInternal(u32 battler, u32 holdEffect, bool32 checkNegating, bool32 checkAbility);
+bool32 BattlerHasHeldItem(u32 battler, u32 item, bool32 checkNegating);
 u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u8 GetBattlerHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating);

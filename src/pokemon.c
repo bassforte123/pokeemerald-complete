@@ -5316,12 +5316,13 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     u16 evIncrease = 0;
     u16 totalEVs = 0;
     u16 heldItem;
+    u8 holdEffect;
     enum Stat i;
-    int j, multiplier;
+    int j;
+    int multiplier = 1;
     u8 stat;
     u8 bonus;
     u32 currentEVCap = GetCurrentEVCap();
-    bool32 hasboost = MonHasItemHoldEffect(mon, HOLD_EFFECT_POWER_ITEM);
 
     for (j = 0; j < MAX_MON_ITEMS; j++)
     {
@@ -5359,43 +5360,55 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
             if (totalEVs >= currentEVCap)
                 break;
 
-            if (CheckPartyHasHadPokerus(mon, 0))
-                multiplier = 2;
-            else
-                multiplier = 1;
-
             switch (i)
             {
             case STAT_HP:
+                if (j == 0) // Base defeated pokemon EVs should only be added once
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_HP;
                 if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_HP)
-                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_HP + bonus);
+                    evIncrease += bonus;
                 break;
             case STAT_ATK:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_Attack;
                 if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_ATK)
-                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Attack + bonus);
+                    evIncrease += bonus;
                 break;
             case STAT_DEF:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_Defense;
                 if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_DEF)
-                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Defense + bonus);
+                    evIncrease += bonus;
                 break;
             case STAT_SPEED:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_Speed;
                 if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPEED)
-                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Speed + bonus);
+                    evIncrease += bonus;
                 break;
             case STAT_SPATK:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_SpAttack;
                 if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPATK)
-                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpAttack + bonus);
+                    evIncrease += bonus;
                 break;
             case STAT_SPDEF:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_SpDefense;
                 if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPDEF)
-                    evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpDefense + bonus);
+                    evIncrease += bonus;
+                break;
+            default:
                 break;
             }
 
-            evIncrease *= multiplier; // Multiplier split out so that multi item additions happen first and then the multiplier is only applied once
+            if (CheckPartyHasHadPokerus(mon, 0))
+                multiplier *= 2;
 
-            if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
-                evIncrease *= 2;
+            if (MonHasItemHoldEffect(mon, HOLD_EFFECT_MACHO_BRACE)) // Macho Brace always active so it doesn't use the item slot loop
+                 multiplier *= 2;
+
+            evIncrease *= multiplier; // Multiplier split out so that multi item additions happen first and then the multiplier is only applied once
 
             if (totalEVs + (s16)evIncrease > currentEVCap)
                 evIncrease = ((s16)evIncrease + currentEVCap) - (totalEVs + evIncrease);
@@ -7489,7 +7502,6 @@ u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u
 
     for (int i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if (holdEffect == HOLD_EFFECT_FOCUS_SASH)
         item = switchinCandidate.items[i];
         if(GetItemHoldEffect(item) == holdEffect)
             return item;

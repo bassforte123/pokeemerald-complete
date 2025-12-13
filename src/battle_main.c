@@ -3120,10 +3120,10 @@ static void BattleStartClearSetData(void)
     {
         for (j = 0; j < MAX_MON_ITEMS; j++)
         {
-            gBattleStruct->partyState[B_SIDE_PLAYER][i].usedHeldItem[j] = ITEM_NONE;
-            gBattleStruct->partyState[B_SIDE_OPPONENT][i].usedHeldItem[j] = ITEM_NONE;
-            gBattleStruct->itemLost[B_SIDE_PLAYER][i].originalItem[j] = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j);
-            gBattleStruct->itemLost[B_SIDE_OPPONENT][i].originalItem[j] = GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + j);
+            gBattleStruct->partyState[B_SIDE_PLAYER][i].usedHeldItems[j] = ITEM_NONE;
+            gBattleStruct->partyState[B_SIDE_OPPONENT][i].usedHeldItems[j] = ITEM_NONE;
+            gBattleStruct->itemLost[B_SIDE_PLAYER][i][j].originalItem = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j);
+            gBattleStruct->itemLost[B_SIDE_OPPONENT][i][j].originalItem = GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + j);
         }
         gPartyCriticalHits[i] = 0;
     }
@@ -3822,7 +3822,6 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             gBattlerByTurnOrder[i] = i;
             ctx.abilities[i] = GetBattlerAbility(i);
-            ctx.holdEffects[i] = GetBattlerHoldEffect(i);
         }
         for (i = 0; i < gBattlersCount - 1; i++)
         {
@@ -3896,7 +3895,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
         {
             u32 battler = gBattlerByTurnOrder[gBattleStruct->switchInBattlerCounter++];
-            if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnSwitchInFirstTurnActivation))
+            if (ItemBattleEffects(battler, 0, IsOnSwitchInFirstTurnActivation))
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -3906,7 +3905,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
         {
             u32 battler = gBattlerByTurnOrder[gBattleStruct->switchInBattlerCounter++];
-            if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsWhiteHerbFirstTurnActivation))
+            if (ItemBattleEffects(battler, 0, IsWhiteHerbFirstTurnActivation))
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -3926,7 +3925,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
         {
             u32 battler = gBattlerByTurnOrder[gBattleStruct->switchInBattlerCounter++];
-            if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbFirstTurnActivation))
+            if (ItemBattleEffects(battler, 0, IsMirrorHerbFirstTurnActivation))
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -4352,7 +4351,7 @@ static void HandleTurnActionSelectionState(void)
                 case B_ACTION_SWITCH:
                     gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
                     if (gBattleTypeFlags & BATTLE_TYPE_ARENA
-                        || (!CanBattlerEscape(battler) && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SHED_SHELL))
+                        || (!CanBattlerEscape(battler) && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE)))
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, PARTY_ACTION_CANT_SWITCH, PARTY_SIZE, ABILITY_NONE, 0, gBattleStruct->battlerPartyOrders[battler]);
                     }
@@ -4524,7 +4523,7 @@ static void HandleTurnActionSelectionState(void)
                             gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
                             if (IsBattleMoveStatus(gChosenMoveByBattler[battler]) && GetBattlerAbility(battler) == ABILITY_MYCELIUM_MIGHT)
                                 gProtectStructs[battler].myceliumMight = TRUE;
-                            if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_LAGGING_TAIL)
+                            if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LAGGING_TAIL, TRUE))
                                 gProtectStructs[battler].laggingTail = TRUE;
 
                             // Check to see if any gimmicks need to be prepared.
@@ -4903,9 +4902,9 @@ s32 GetWhichBattlerFasterArgs(struct BattleContext *ctx, bool32 ignoreChosenMove
             strikesFirst = 1;
         else if (battler2HasQuickEffect && !battler1HasQuickEffect)
             strikesFirst = -1;
-        else if (BattlerHasHeldItemEffect(ctx->battlerAtk, HOLD_EFFECT_LAGGING_TAIL, TRUE) && !BattlerHasHeldItemEffect(ctx->battlerDef, HOLD_EFFECT_LAGGING_TAIL, TRUE))
+        else if (gProtectStructs[ctx->battlerAtk].laggingTail && !gProtectStructs[ctx->battlerDef].laggingTail)
             strikesFirst = -1;
-        else if (BattlerHasHeldItemEffect(ctx->battlerDef, HOLD_EFFECT_LAGGING_TAIL, TRUE) && !BattlerHasHeldItemEffect(ctx->battlerAtk, HOLD_EFFECT_LAGGING_TAIL, TRUE))
+        else if (gProtectStructs[ctx->battlerDef].laggingTail && !gProtectStructs[ctx->battlerAtk].laggingTail)
             strikesFirst = 1;
         else if (battler1HasStallingAbility && !battler2HasStallingAbility)
             strikesFirst = -1;
@@ -5105,7 +5104,6 @@ static void SetActionsAndBattlersTurnOrder(void)
             for (i = 0; i < gBattlersCount; i++)
             {
                 ctx.abilities[i] = GetBattlerAbility(i);
-                ctx.holdEffects[i] = GetBattlerHoldEffect(i);
             }
             for (i = 0; i < gBattlersCount - 1; i++)
             {
@@ -5274,7 +5272,6 @@ static void TryChangeTurnOrder(void)
     for (i = 0; i < gBattlersCount; i++)
     {
         ctx.abilities[i] = GetBattlerAbility(i);
-        ctx.holdEffects[i] = GetBattlerHoldEffect(i);
     }
     for (i = gCurrentTurnActionNumber; i < gBattlersCount - 1; i++)
     {
@@ -5875,10 +5872,11 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
 {
     enum Type moveType = GetMoveType(move);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    u32 species, heldItem;
+    u32 species;
     enum Type type1, type2, type3;
     enum Ability ability;
     enum Gimmick gimmick = GetActiveGimmick(battler);
+    bool32 utilityUmbrellaAffected = FALSE;
 
     if (state == MON_IN_BATTLE)
     {
@@ -6119,7 +6117,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
 void SetTypeBeforeUsingMove(u32 move, u32 battler)
 {
     enum Type moveType;
-    u32 heldItem = gBattleMons[battler].item;
+    u32 heldGem = ITEM_NONE;
 
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->battlerState[battler].ateBoost = FALSE;

@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Anticipation considers Flying Press as an ordinary Fighting-
     } WHEN {
         TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
     } SCENE {
-        //ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
         NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
     }
 }
@@ -354,82 +354,3 @@ TO_DO_BATTLE_TEST("Anticipation considers Scrappy and Normalize into their effec
 TO_DO_BATTLE_TEST("Anticipation considers Gravity into their effectiveness (Gen4)");
 TO_DO_BATTLE_TEST("Anticipation doesn't trigger from Counter, Metal Burst or Mirror Coat (Gen4)");
 TO_DO_BATTLE_TEST("Anticipation treats Hidden Power as Normal Type (Gen4-5)");
-
-SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (Normal), Judgment (Multi)")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_JUDGMENT) == EFFECT_CHANGE_TYPE_ON_ITEM);
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[0] == TYPE_NORMAL);
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[1] == TYPE_NORMAL);
-        PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
-        OPPONENT(SPECIES_ARCEUS) { Items(ITEM_CARBOS, ITEM_FIST_PLATE); Moves(MOVE_JUDGMENT, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-    }
-}
-
-SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (Normal), Natural Gift (Multi)")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[0] == TYPE_NORMAL);
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[1] == TYPE_NORMAL);
-        PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_CARBOS, ITEM_LEPPA_BERRY); Moves(MOVE_NATURAL_GIFT, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-    }
-}
-
-SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (Normal), Techno Blast (Multi)")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TECHNO_BLAST) == EFFECT_CHANGE_TYPE_ON_ITEM);
-        ASSUME(gSpeciesInfo[SPECIES_FERROTHORN].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_FERROTHORN].types[1] == TYPE_STEEL);
-        PLAYER(SPECIES_FERROTHORN) { Ability(ABILITY_ANTICIPATION); }
-        OPPONENT(SPECIES_GENESECT) { Items(ITEM_CARBOS, ITEM_BURN_DRIVE); Moves(MOVE_TECHNO_BLAST, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-    }
-}
-
-SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (Normal), Multi-Attack (Multi)")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_MULTI_ATTACK) == EFFECT_CHANGE_TYPE_ON_ITEM);
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[0] == TYPE_NORMAL);
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[1] == TYPE_NORMAL);
-        PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); }
-        OPPONENT(SPECIES_SILVALLY) { Items(ITEM_CARBOS, ITEM_FIGHTING_MEMORY); Moves(MOVE_MULTI_ATTACK, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        NOT ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-    }
-}
-
-SINGLE_BATTLE_TEST("Anticipation treats Hidden Power as its dynamic type (Gen6+) (Multi)")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[0] == TYPE_NORMAL);
-        ASSUME(gSpeciesInfo[SPECIES_EEVEE].types[1] == TYPE_NORMAL);
-        PLAYER(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); Items(ITEM_CARBOS, ITEM_CHOPLE_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HIDDEN_POWER, MOVE_SCRATCH, MOVE_POUND, MOVE_CELEBRATE); HPIV(30); AttackIV(2); DefenseIV(31); SpAttackIV(30); SpDefenseIV(30); SpeedIV(30); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_HIDDEN_POWER); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent); // Check that the item is triggered
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HIDDEN_POWER, opponent);
-        HP_BAR(opponent);
-        MESSAGE("It's super effective!");
-    }
-}

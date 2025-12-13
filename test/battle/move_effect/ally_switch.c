@@ -185,24 +185,6 @@ DOUBLE_BATTLE_TEST("Ally Switch doesn't make self-targeting status moves fail")
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally Switch doesn't make self-targeting status moves fail")
-{
-    GIVEN {
-        ASSUME(gMovesInfo[MOVE_HARDEN].target == MOVE_TARGET_USER);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(playerRight, MOVE_HARDEN); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, playerLeft);
-    } THEN {
-        EXPECT_EQ(playerLeft->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
-    }
-}
-
 DOUBLE_BATTLE_TEST("Ally Switch doesn't increase the Protect-like moves counter (Gen5-8)")
 {
     GIVEN {

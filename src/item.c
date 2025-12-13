@@ -12,6 +12,7 @@
 #include "strings.h"
 #include "load_save.h"
 #include "item_use.h"
+#include "battle_util.h"
 #include "battle_pyramid.h"
 #include "battle_pyramid_bag.h"
 #include "graphics.h"
@@ -957,7 +958,7 @@ u32 GetItemSellPrice(u32 itemId)
 
 bool32 BattlerHasHoldEffectChoice(u32 battler)
 {
-    return (BattlerHasHoldEffectChoice(battler, HOLD_EFFECT_CHOICE_BAND, TRUE)
-         || BattlerHasHoldEffectChoice(battler, HOLD_EFFECT_CHOICE_SCARF, TRUE)
-         || BattlerHasHoldEffectChoice(battler, HOLD_EFFECT_CHOICE_SPECS, TRUE));
+    return (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_BAND, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SCARF, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SPECS, TRUE));
 }

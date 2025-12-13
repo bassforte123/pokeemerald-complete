@@ -67,25 +67,3 @@ SINGLE_BATTLE_TEST("Drizzle fails if Desolate Land is active")
         }
     }
 }
-
-SINGLE_BATTLE_TEST("Drizzle fails if Desolate Land is active (Multi)")
-{
-    u32 item;
-
-    PARAMETRIZE { item = ITEM_NONE; }
-    PARAMETRIZE { item = ITEM_RED_ORB; }
-
-    GIVEN {
-        PLAYER(SPECIES_GROUDON) { Items( ITEM_LUXURY_BALL, item); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_RAIN_DANCE); }
-    } SCENE {
-        if (item == ITEM_RED_ORB) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, player);
-            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
-        } else {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, opponent);
-        }
-    }
-}

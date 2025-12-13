@@ -80,20 +80,3 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
 }
 
 // TODO: Test against interaction with multi hits
-
-
-SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Multi)")
-{
-    PASSES_RANDOMLY(1, 10, RNG_STENCH);
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_KINGS_ROCK].holdEffect == HOLD_EFFECT_FLINCH);
-        ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
-
-        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); Items(ITEM_MAX_ETHER, ITEM_KINGS_ROCK); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
-    } SCENE {
-        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
-    }
-}

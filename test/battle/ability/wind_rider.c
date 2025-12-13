@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if switched into Tailw
     }
 }
 
-SINGLE_BATTLE_TEST("Transform doesn't apply the heroic transformation message when copyalizing Gas")
+SINGLE_BATTLE_TEST("Wind Rider activates when it's no longer effected by Neutralizing Gas")
 {
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }

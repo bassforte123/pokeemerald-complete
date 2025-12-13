@@ -164,7 +164,7 @@ static bool32 AI_DoesChoiceEffectBlockMove(u32 battler, u32 move)
 {
     // Choice locked into something else
     if (gAiLogicData->lastUsedMove[battler] != MOVE_NONE && gAiLogicData->lastUsedMove[battler] != move
-    && ((BATTLER_IS_HOLDING_CHOICE_ITEM_WITHOUT_NEGATION(battler) && IsBattlerItemEnabled(battler))
+    && ((BattlerHasHoldEffectChoice(battler) && IsBattlerItemEnabled(battler))
         || gBattleMons[battler].ability == ABILITY_GORILLA_TACTICS))
         return TRUE;
     return FALSE;
@@ -1036,7 +1036,7 @@ static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
         || CanAbilityBlockMove(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], lastUsedMove, AI_CHECK)))
         moveAffectsTarget = FALSE;
 
-    if (BATTLER_IS_HOLDING_CHOICE_ITEM_WITHOUT_NEGATION(battler) && IsBattlerItemEnabled(battler))
+    if (BattlerHasHoldEffectChoice(battler) && IsBattlerItemEnabled(battler))
     {
         if ((GetMoveCategory(lastUsedMove) == DAMAGE_CATEGORY_STATUS || !moveAffectsTarget) && RandomPercentage(RNG_AI_SWITCH_CHOICE_LOCKED, GetSwitchChance(SHOULD_SWITCH_CHOICE_LOCKED)))
             return SetSwitchinAndSwitch(battler, PARTY_SIZE);
@@ -1534,7 +1534,7 @@ static u32 GetFirstNonInvalidMon(u32 firstId, u32 lastId, u32 invalidMons)
     return chosenMonId;
 }
 
-bool32 IsMonGrounded(u8 battler, enum Ability ability, u8 type1, u8 type2)
+bool32 IsMonGrounded(u32 battler, enum Ability ability, enum Type type1, enum Type type2)
 {
     // List that makes mon not grounded
     if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE

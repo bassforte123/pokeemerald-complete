@@ -2127,7 +2127,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_RECYCLE:
             for (i = 0; i < MAX_MON_ITEMS; i++)
-                if (GetUsedHeldItem(battlerAtk, i) != 0 && gBattleMons[battlerAtk].items[i] == 0)
+                if (GetBattlerPartyState(battlerAtk)->usedHeldItems[i] != 0 && gBattleMons[battlerAtk].items[i] == 0)
                     {
                         hasValidSlot = TRUE;
                         break;
@@ -3057,7 +3057,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     }
 
     // Choice items
-    if (BATTLER_IS_HOLDING_CHOICE_ITEM_WITHOUT_NEGATION(battlerAtk) && IsBattlerItemEnabled(battlerAtk))
+    if (BattlerHasHoldEffectChoice(battlerAtk) && IsBattlerItemEnabled(battlerAtk))
     {
         // Don't use user-target moves ie. Swords Dance, with exceptions
         if ((moveTarget & MOVE_TARGET_USER)
@@ -3085,8 +3085,6 @@ static s32 AI_GetWhichBattlerFasterOrTies(u32 battlerAtk, u32 battlerDef, bool32
     ctx.battlerDef = battlerDef;
     ctx.abilities[battlerAtk]  = gAiLogicData->abilities[battlerAtk];
     ctx.abilities[battlerDef]  = gAiLogicData->abilities[battlerDef];
-    ctx.holdEffects[battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
-    ctx.holdEffects[battlerDef] = gAiLogicData->holdEffects[battlerDef];
 
     return GetWhichBattlerFasterOrTies(&ctx, ignoreChosenMoves);
 }
@@ -4126,7 +4124,6 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
     bool32 moveTargetsBothOpponents = hasTwoOpponents && (GetMoveTarget(move) & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
-    bool32 hasBerry = FALSE;
     u32 i;
 
     // The AI should understand that while Dynamaxed, status moves function like Protect.
@@ -4140,7 +4137,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     // don't get baited into encore
     if (gBattleMoveEffects[moveEffect].encourageEncore
      && HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE)
-     && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerAtk] != HOLD_EFFECT_MENTAL_HERB))
+     && (B_MENTAL_HERB < GEN_5 || !Ai_BattlerHasHoldEffect(battlerAtk, HOLD_EFFECT_MENTAL_HERB, aiData)))
      {
         if (!AI_IsAbilityOnSide(battlerAtk, ABILITY_AROMA_VEIL)
          || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef])
@@ -5118,19 +5115,19 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_RECYCLE:
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetBattlerPartyState(battlerAtk)->usedHeldItem[i] != ITEM_NONE)
+            if (GetBattlerPartyState(battlerAtk)->usedHeldItems[i] != ITEM_NONE)
                 {
                     ADJUST_SCORE(WEAK_EFFECT);
                     break;
                 }
-            if (IsRecycleEncouragedItem(GetBattlerPartyState(battlerAtk, GetBattlerPartyState(battlerAtk)->usedHeldItem[i])))
+            if (IsRecycleEncouragedItem(GetBattlerPartyState(battlerAtk)->usedHeldItems[i]))
                 {
                     ADJUST_SCORE(WEAK_EFFECT);
                     break;
                 }
             if (aiData->abilities[battlerAtk] == ABILITY_RIPEN)
             {
-                u32 item = GetBattlerPartyState(battlerAtk)->usedHeldItem[i];
+                u32 item = GetBattlerPartyState(battlerAtk)->usedHeldItems[i];
                 u32 toHeal = (GetItemHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / GetItemHoldEffectParam(item);
 
                 if (IsStatBoostingBerry(item) && aiData->hpPercents[battlerAtk] > 60)
@@ -5733,6 +5730,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     bool32 hasPartner = HasPartner(battlerAtk);
     u32 i;
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
+    bool32 hasBerry = BattlerHasBerry(battlerDef);
 
     // check move additional effects that are likely to happen
     for (i = 0; i < additionalEffectCount; i++)
@@ -6050,7 +6048,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
                 {
                     if (ShouldCureStatus(battlerAtk, battlerDef, aiData))
                         ADJUST_SCORE(DECENT_EFFECT);
-                    else if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_FLAME_ORB || aiData->holdEffects[battlerDef] == HOLD_EFFECT_TOXIC_ORB)
+                    else if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_FLAME_ORB, aiData) || Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_TOXIC_ORB, aiData))
                         ADJUST_SCORE(WEAK_EFFECT);
                     else
                         ADJUST_SCORE(BAD_EFFECT);

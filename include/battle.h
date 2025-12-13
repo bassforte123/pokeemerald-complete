@@ -606,7 +606,7 @@ struct PartyState
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
     u32 sentOut:1;
     u32 padding:9;
-    u16 usedHeldItem;
+    u16 usedHeldItems[MAX_MON_ITEMS];
 };
 
 struct EventStates

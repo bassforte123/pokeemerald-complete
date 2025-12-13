@@ -262,7 +262,7 @@ static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, u32 item)
 
     if (IsBattlerTurnDamaged(battlerDef)
      && IsBattlerAlive(battlerAtk)
-     && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, ability, GetBattlerHoldEffect(battlerAtk), gCurrentMove)
+     && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, ability, gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, ability, ABILITY_MAGIC_GUARD))
     {
         SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 6);
@@ -297,7 +297,7 @@ static enum ItemEffect TrySnowball(u32 battlerDef)
      && IsBattlerTurnDamaged(battlerDef)
      && GetBattleMoveType(gCurrentMove) == TYPE_ICE)
     {
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        BattleScriptCall(BattleScript_TargetItemStatRaise_Snowball);
         SET_STATCHANGER(STAT_ATK, 1, FALSE);
         effect = ITEM_STATS_CHANGE;
     }
@@ -313,7 +313,7 @@ static enum ItemEffect TryLuminousMoss(u32 battlerDef)
      && IsBattlerTurnDamaged(battlerDef)
      && GetBattleMoveType(gCurrentMove) == TYPE_WATER)
     {
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        BattleScriptCall(BattleScript_TargetItemStatRaise_Luminous_Moss);
         SET_STATCHANGER(STAT_SPDEF, 1, FALSE);
         effect = ITEM_STATS_CHANGE;
     }
@@ -329,7 +329,7 @@ static enum ItemEffect TryCellBattery(u32 battlerDef)
      && IsBattlerTurnDamaged(battlerDef)
      && GetBattleMoveType(gCurrentMove) == TYPE_ELECTRIC)
     {
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        BattleScriptCall(BattleScript_TargetItemStatRaise_Cell_Battery);
         SET_STATCHANGER(STAT_ATK, 1, FALSE);
         effect = ITEM_STATS_CHANGE;
     }
@@ -346,7 +346,7 @@ static enum ItemEffect TryAbsorbBulb(u32 battlerDef)
      && GetBattleMoveType(gCurrentMove) == TYPE_WATER)
     {
         effect = ITEM_STATS_CHANGE;
-        BattleScriptCall(BattleScript_TargetItemStatRaise);
+        BattleScriptCall(BattleScript_TargetItemStatRaise_Absorb_Bulb);
         SET_STATCHANGER(STAT_SPATK, 1, FALSE);
     }
 
@@ -553,7 +553,7 @@ static enum ItemEffect TryShellBell(u32 battlerAtk)
      && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))
     {
-        SetHealAmount(battlerAtk, gBattleScripting.savedDmg / GetBattlerHoldEffectParam(battlerAtk));
+        SetHealAmount(battlerAtk, gBattleScripting.savedDmg / GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHeldItemWithEffect(battlerAtk, HOLD_EFFECT_SHELL_BELL, TRUE)));
         BattleScriptCall(BattleScript_ItemHealHP_Ret);
         effect = ITEM_HP_CHANGE;
     }
@@ -583,17 +583,19 @@ static enum ItemEffect TryLifeOrb(u32 battlerAtk)
 static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, u32 item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
+    u8 barbSlot = GetBattlerHeldItemSlotWithEffect(battlerDef, HOLD_EFFECT_STICKY_BARB, TRUE);
 
     if (IsBattlerTurnDamaged(battlerDef)
-     && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, GetBattlerAbility(battlerAtk), GetBattlerHoldEffect(battlerAtk), gCurrentMove)
+     && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, GetBattlerAbility(battlerAtk), gCurrentMove)
      && !DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
      && IsBattlerAlive(battlerAtk)
-     && CanStealItem(battlerAtk, battlerDef, item)
-     && gBattleMons[battlerAtk].item == ITEM_NONE)
+     && CanStealItem(battlerAtk, battlerDef, gBattleMons[battlerDef].items[barbSlot])
+     && gBattleMons[battlerAtk].items[barbSlot] == ITEM_NONE)
     {
         // No sticky hold checks.
+        gLastUsedItem = gBattleMons[battlerDef].items[barbSlot];
         gEffectBattler = battlerDef;
-        StealTargetItem(battlerAtk, battlerDef);  // Attacker takes target's barb
+        StealTargetItem(battlerAtk, battlerDef, barbSlot);  // Attacker takes target's barb
         BattleScriptCall(BattleScript_StickyBarbTransfer);
         effect = ITEM_EFFECT_OTHER;
     }
@@ -1065,196 +1067,225 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTimin
     return effect;
 }
 
-enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, ActivationTiming timing)
+enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u32 item;
-
-    if (timing == IsOnBerryActivation || timing == IsOnFlingActivation)
-        item = gLastUsedItem;
-    else
-        item = gBattleMons[itemBattler].item;
-
-    if (holdEffect == HOLD_EFFECT_NONE
-     || !timing(holdEffect)
-     || IsUnnerveBlocked(itemBattler, item))
-        return effect;
+    enum HoldEffect holdEffect;
+    bool32 validCheck = FALSE;
+    u32 item, i;
+    u16 battlerItems[MAX_MON_ITEMS];
+    STORE_BATTLER_ITEMS(itemBattler);
 
     if (!IsBattlerAlive(itemBattler)
-     && holdEffect != HOLD_EFFECT_ROWAP_BERRY // Hacky workaround for them right now
-     && holdEffect != HOLD_EFFECT_JABOCA_BERRY
-     && holdEffect != HOLD_EFFECT_ROCKY_HELMET)
+     && !SearchItemSlots(battlerItems, HOLD_EFFECT_ROWAP_BERRY)  // Hacky workaround for them right now
+     && !SearchItemSlots(battlerItems, HOLD_EFFECT_JABOCA_BERRY)
+     && !SearchItemSlots(battlerItems, HOLD_EFFECT_ROCKY_HELMET))
         return effect;
 
-    switch (holdEffect)
+    for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-    case HOLD_EFFECT_DOUBLE_PRIZE:
-        effect = TryDoublePrize(itemBattler);
-        break;
-    case HOLD_EFFECT_ROOM_SERVICE:
-        effect = TryRoomService(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_TERRAIN_SEED:
-        effect = TryTerrainSeeds(itemBattler, item, timing);
-        break;
-    case HOLD_EFFECT_BERSERK_GENE:
-        effect = TryBerserkGene(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_BOOSTER_ENERGY:
-        effect = TryBoosterEnergy(itemBattler, GetBattlerAbility(itemBattler), timing);
-        break;
-    case HOLD_EFFECT_WHITE_HERB:
-        effect = RestoreWhiteHerbStats(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_MIRROR_HERB:
-        effect = TryConsumeMirrorHerb(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_FLINCH: // Kings Rock
-        effect = TryKingsRock(itemBattler, battler, item);
-        break;
-    case HOLD_EFFECT_AIR_BALLOON:
-        effect = TryAirBalloon(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_ROCKY_HELMET:
-        effect = TryRockyHelmet(itemBattler, battler, item);
-        break;
-    case HOLD_EFFECT_WEAKNESS_POLICY:
-        effect = TryWeaknessPolicy(itemBattler);
-        break;
-    case HOLD_EFFECT_SNOWBALL:
-        effect = TrySnowball(itemBattler);
-        break;
-    case HOLD_EFFECT_LUMINOUS_MOSS:
-        effect = TryLuminousMoss(itemBattler);
-        break;
-    case HOLD_EFFECT_CELL_BATTERY:
-        effect = TryCellBattery(itemBattler);
-        break;
-    case HOLD_EFFECT_ABSORB_BULB:
-        effect = TryAbsorbBulb(itemBattler);
-        break;
-    case HOLD_EFFECT_JABOCA_BERRY:
-        effect = TryJabocaBerry(itemBattler, battler, item);
-        break;
-    case HOLD_EFFECT_ROWAP_BERRY:
-        effect = TryRowapBerry(itemBattler, battler, item);
-        break;
-    case HOLD_EFFECT_ENIGMA_BERRY: // consume and heal if hit by super effective move
-        effect = TrySetEnigmaBerry(itemBattler, battler);
-        break;
-    case HOLD_EFFECT_BLUNDER_POLICY:
-        effect = TryBlunderPolicy(itemBattler);
-        break;
-    case HOLD_EFFECT_MENTAL_HERB:
-        effect = TryMentalHerb(itemBattler);
-        break;
-    case HOLD_EFFECT_THROAT_SPRAY:
-        effect = TryThroatSpray(itemBattler);
-        break;
-    case HOLD_EFFECT_KEE_BERRY:  // consume and boost defense if used physical move
-        effect = DamagedStatBoostBerryEffect(itemBattler, battler, STAT_DEF, DAMAGE_CATEGORY_PHYSICAL);
-        break;
-    case HOLD_EFFECT_MARANGA_BERRY:  // consume and boost sp. defense if used special move
-        effect = DamagedStatBoostBerryEffect(itemBattler, battler, STAT_SPDEF, DAMAGE_CATEGORY_SPECIAL);
-        break;
-    case HOLD_EFFECT_SHELL_BELL:
-        effect = TryShellBell(itemBattler);
-        break;
-    case HOLD_EFFECT_LIFE_ORB:
-        effect = TryLifeOrb(itemBattler);
-        break;
-    case HOLD_EFFECT_STICKY_BARB:
-        if (timing == IsOnTargetHitActivation)
-            effect = TryStickyBarbOnTargetHit(itemBattler, battler, item);
+        if (timing != IsOnFlingActivation
+         && GetItemHoldEffect(battlerItems[i]) != HOLD_EFFECT_NONE
+         && timing(GetItemHoldEffect(battlerItems[i]))
+         && !IsUnnerveBlocked(itemBattler, battlerItems[i])
+         && !(timing == IsOnSwitchInFirstTurnActivation && gSpecialStatuses[itemBattler].switchInItemDone == TRUE))
+        {
+            validCheck = TRUE;
+            break;
+        }
+    }
+
+    // Exceptions for items being used without being held by the user
+    if ((timing == IsOnBerryActivation && GetItemPocket(gLastUsedItem) == POCKET_BERRIES) //Harvest and Bug Bite
+     || (timing == IsOnFlingActivation && GetItemHoldEffect(gLastUsedItem) != HOLD_EFFECT_NONE)) //Fling
+        validCheck = TRUE;
+
+    if (!validCheck)
+        return effect;
+
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (timing == IsOnFlingActivation || timing == IsOnBerryActivation) // Fling and BugBite doesn't use a currently held item.
+            item = gLastUsedItem;
         else
-            effect = TryStickyBarbOnEndTurn(itemBattler, item);
-        break;
-    case HOLD_EFFECT_TOXIC_ORB:
-        effect = TryToxicOrb(itemBattler);
-        break;
-    case HOLD_EFFECT_FLAME_ORB:
-        effect = TryFlameOrb(itemBattler);
-        break;
-    case HOLD_EFFECT_LEFTOVERS:
-        effect = TryLeftovers(itemBattler, holdEffect);
-        break;
-    case HOLD_EFFECT_BLACK_SLUDGE:
-        if (IS_BATTLER_OF_TYPE(itemBattler, TYPE_POISON))
+            item = battlerItems[i];
+        holdEffect = GetItemHoldEffect(item);
+
+        switch (holdEffect)
+        {
+        case HOLD_EFFECT_DOUBLE_PRIZE:
+            effect = TryDoublePrize(itemBattler);
+            break;
+        case HOLD_EFFECT_ROOM_SERVICE:
+            effect = TryRoomService(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_TERRAIN_SEED:
+            effect = TryTerrainSeeds(itemBattler, item, timing);
+            break;
+        case HOLD_EFFECT_BERSERK_GENE:
+            effect = TryBerserkGene(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_BOOSTER_ENERGY:
+            effect = TryBoosterEnergy(itemBattler, GetBattlerAbility(itemBattler), timing);
+            break;
+        case HOLD_EFFECT_WHITE_HERB:
+            effect = RestoreWhiteHerbStats(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_MIRROR_HERB:
+            effect = TryConsumeMirrorHerb(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_FLINCH: // Kings Rock
+            effect = TryKingsRock(itemBattler, secondaryBattler, item);
+            break;
+        case HOLD_EFFECT_AIR_BALLOON:
+            effect = TryAirBalloon(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_ROCKY_HELMET:
+            effect = TryRockyHelmet(itemBattler, secondaryBattler, item);
+            break;
+        case HOLD_EFFECT_WEAKNESS_POLICY:
+            effect = TryWeaknessPolicy(itemBattler);
+            break;
+        case HOLD_EFFECT_SNOWBALL:
+            effect = TrySnowball(itemBattler);
+            break;
+        case HOLD_EFFECT_LUMINOUS_MOSS:
+            effect = TryLuminousMoss(itemBattler);
+            break;
+        case HOLD_EFFECT_CELL_BATTERY:
+            effect = TryCellBattery(itemBattler);
+            break;
+        case HOLD_EFFECT_ABSORB_BULB:
+            effect = TryAbsorbBulb(itemBattler);
+            break;
+        case HOLD_EFFECT_JABOCA_BERRY:
+            effect = TryJabocaBerry(itemBattler, secondaryBattler, item);
+            break;
+        case HOLD_EFFECT_ROWAP_BERRY:
+            effect = TryRowapBerry(itemBattler, secondaryBattler, item);
+            break;
+        case HOLD_EFFECT_ENIGMA_BERRY: // consume and heal if hit by super effective move
+            effect = TrySetEnigmaBerry(itemBattler, secondaryBattler);
+            break;
+        case HOLD_EFFECT_BLUNDER_POLICY:
+            effect = TryBlunderPolicy(itemBattler);
+            break;
+        case HOLD_EFFECT_MENTAL_HERB:
+            effect = TryMentalHerb(itemBattler);
+            break;
+        case HOLD_EFFECT_THROAT_SPRAY:
+            effect = TryThroatSpray(itemBattler);
+            break;
+        case HOLD_EFFECT_KEE_BERRY:  // consume and boost defense if used physical move
+            effect = DamagedStatBoostBerryEffect(itemBattler, secondaryBattler, STAT_DEF, DAMAGE_CATEGORY_PHYSICAL);
+            break;
+        case HOLD_EFFECT_MARANGA_BERRY:  // consume and boost sp. defense if used special move
+            effect = DamagedStatBoostBerryEffect(itemBattler, secondaryBattler, STAT_SPDEF, DAMAGE_CATEGORY_SPECIAL);
+            break;
+        case HOLD_EFFECT_SHELL_BELL:
+            effect = TryShellBell(itemBattler);
+            break;
+        case HOLD_EFFECT_LIFE_ORB:
+            effect = TryLifeOrb(itemBattler);
+            break;
+        case HOLD_EFFECT_STICKY_BARB:
+            if (timing == IsOnTargetHitActivation)
+                effect = TryStickyBarbOnTargetHit(itemBattler, secondaryBattler, item);
+            else
+                effect = TryStickyBarbOnEndTurn(itemBattler, item);
+            break;
+        case HOLD_EFFECT_TOXIC_ORB:
+            effect = TryToxicOrb(itemBattler);
+            break;
+        case HOLD_EFFECT_FLAME_ORB:
+            effect = TryFlameOrb(itemBattler);
+            break;
+        case HOLD_EFFECT_LEFTOVERS:
             effect = TryLeftovers(itemBattler, holdEffect);
-        else
-            effect = TryBlackSludgeDamage(itemBattler, holdEffect);
-        break;
-    case HOLD_EFFECT_CURE_PAR: // Cheri Berry
-        effect = TryCureParalysis(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_CURE_PSN: // Pecha Berry
-        effect = TryCurePoison(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_CURE_BRN: // Rawst Berry
-        effect = TryCureBurn(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_CURE_FRZ: // Aspear Berry
-        effect = TryCureFreezeOrFrostbite(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_CURE_SLP: // Chesto Berry
-        effect = TryCureSleep(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_CURE_CONFUSION: // Persim Berry
-        effect = TryCureConfusion(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_CURE_STATUS: // Lum Berry
-        effect = TryCureAnyStatus(itemBattler, timing);
-        break;
-    case HOLD_EFFECT_RESTORE_HP: // Oran / Sitrus Berry / Berry Juice
-        effect = ItemHealHp(itemBattler, item, FIXED_HEAL_AMOUNT, timing);
-        break;
-    case HOLD_EFFECT_RESTORE_PCT_HP: // Sitrus Berry
-        effect = ItemHealHp(itemBattler, item, PERCENT_HEAL_AMOUNT, timing);
-        break;
-    case HOLD_EFFECT_RESTORE_PP: // Leppa Berry
-        effect = ItemRestorePp(itemBattler, item, timing);
-        break;
-    case HOLD_EFFECT_CONFUSE_SPICY: // Figy Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SPICY, timing);
-        break;
-    case HOLD_EFFECT_CONFUSE_DRY: // Wiki Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_DRY, timing);
-        break;
-    case HOLD_EFFECT_CONFUSE_SWEET: // Mago Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SWEET, timing);
-        break;
-    case HOLD_EFFECT_CONFUSE_BITTER: // Aguav Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_BITTER, timing);
-        break;
-    case HOLD_EFFECT_CONFUSE_SOUR: // Iapapa Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SOUR, timing);
-        break;
-    case HOLD_EFFECT_ATTACK_UP: // Liechi Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_ATK, timing);
-        break;
-    case HOLD_EFFECT_DEFENSE_UP: // Ganlon Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_DEF, timing);
-        break;
-    case HOLD_EFFECT_SPEED_UP: // Salac Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_SPEED, timing);
-        break;
-    case HOLD_EFFECT_SP_ATTACK_UP: // Petaya Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_SPATK, timing);
-        break;
-    case HOLD_EFFECT_SP_DEFENSE_UP: // Apicot Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_SPDEF, timing);
-        break;
-    case HOLD_EFFECT_CRITICAL_UP: // Lansat Berry
-        effect = CriticalHitRatioUp(itemBattler, item, timing);
-        break;
-    case HOLD_EFFECT_RANDOM_STAT_UP: // Starf Berry
-        effect = RandomStatRaiseBerry(itemBattler, item, timing);
-        break;
-    case HOLD_EFFECT_MICLE_BERRY:
-        effect = TrySetMicleBerry(itemBattler, item, timing);
-        break;
-    default:
-        break;
+            break;
+        case HOLD_EFFECT_BLACK_SLUDGE:
+            if (IS_BATTLER_OF_TYPE(itemBattler, TYPE_POISON))
+                effect = TryLeftovers(itemBattler, holdEffect);
+            else
+                effect = TryBlackSludgeDamage(itemBattler, holdEffect);
+            break;
+        case HOLD_EFFECT_CURE_PAR: // Cheri Berry
+            effect = TryCureParalysis(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_CURE_PSN: // Pecha Berry
+            effect = TryCurePoison(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_CURE_BRN: // Rawst Berry
+            effect = TryCureBurn(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_CURE_FRZ: // Aspear Berry
+            effect = TryCureFreezeOrFrostbite(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_CURE_SLP: // Chesto Berry
+            effect = TryCureSleep(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_CURE_CONFUSION: // Persim Berry
+            effect = TryCureConfusion(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_CURE_STATUS: // Lum Berry
+            effect = TryCureAnyStatus(itemBattler, timing);
+            break;
+        case HOLD_EFFECT_RESTORE_HP: // Oran / Sitrus Berry / Berry Juice
+            effect = ItemHealHp(itemBattler, item, FIXED_HEAL_AMOUNT, timing);
+            break;
+        case HOLD_EFFECT_RESTORE_PCT_HP: // Sitrus Berry
+            effect = ItemHealHp(itemBattler, item, PERCENT_HEAL_AMOUNT, timing);
+            break;
+        case HOLD_EFFECT_RESTORE_PP: // Leppa Berry
+            effect = ItemRestorePp(itemBattler, item, timing);
+            break;
+        case HOLD_EFFECT_CONFUSE_SPICY: // Figy Berry
+            effect = HealConfuseBerry(itemBattler, item, FLAVOR_SPICY, timing);
+            break;
+        case HOLD_EFFECT_CONFUSE_DRY: // Wiki Berry
+            effect = HealConfuseBerry(itemBattler, item, FLAVOR_DRY, timing);
+            break;
+        case HOLD_EFFECT_CONFUSE_SWEET: // Mago Berry
+            effect = HealConfuseBerry(itemBattler, item, FLAVOR_SWEET, timing);
+            break;
+        case HOLD_EFFECT_CONFUSE_BITTER: // Aguav Berry
+            effect = HealConfuseBerry(itemBattler, item, FLAVOR_BITTER, timing);
+            break;
+        case HOLD_EFFECT_CONFUSE_SOUR: // Iapapa Berry
+            effect = HealConfuseBerry(itemBattler, item, FLAVOR_SOUR, timing);
+            break;
+        case HOLD_EFFECT_ATTACK_UP: // Liechi Berry
+            effect = StatRaiseBerry(itemBattler, item, STAT_ATK, timing);
+            break;
+        case HOLD_EFFECT_DEFENSE_UP: // Ganlon Berry
+            effect = StatRaiseBerry(itemBattler, item, STAT_DEF, timing);
+            break;
+        case HOLD_EFFECT_SPEED_UP: // Salac Berry
+            effect = StatRaiseBerry(itemBattler, item, STAT_SPEED, timing);
+            break;
+        case HOLD_EFFECT_SP_ATTACK_UP: // Petaya Berry
+            effect = StatRaiseBerry(itemBattler, item, STAT_SPATK, timing);
+            break;
+        case HOLD_EFFECT_SP_DEFENSE_UP: // Apicot Berry
+            effect = StatRaiseBerry(itemBattler, item, STAT_SPDEF, timing);
+            break;
+        case HOLD_EFFECT_CRITICAL_UP: // Lansat Berry
+            effect = CriticalHitRatioUp(itemBattler, item, timing);
+            break;
+        case HOLD_EFFECT_RANDOM_STAT_UP: // Starf Berry
+            effect = RandomStatRaiseBerry(itemBattler, item, timing);
+            break;
+        case HOLD_EFFECT_MICLE_BERRY:
+            effect = TrySetMicleBerry(itemBattler, item, timing);
+            break;
+        default:
+            break;
+        }
+        if (effect != ITEM_NO_EFFECT || timing == IsOnFlingActivation) // Fling uses a thrown item so it doesn't need to cycle through held ones
+        {
+            gLastUsedItem = item;
+            break;
+        }    
     }
 
     if (effect == ITEM_STATUS_CHANGE)
@@ -1265,7 +1296,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, ActivationTiming
 
     if (effect)
     {
-        gLastUsedItem = item;
+        gSpecialStatuses[itemBattler].switchInItemDone = TRUE;
         gBattleScripting.battler = gPotentialItemEffectBattler = itemBattler;
         if ((item >= FIRST_BERRY_INDEX && item <= LAST_BERRY_INDEX))
             GetBattlerPartyState(itemBattler)->ateBerry = TRUE;
