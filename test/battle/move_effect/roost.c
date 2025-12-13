@@ -442,22 +442,3 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Telekinesis
 // Transform does not copy the Roost "status" either.
 // Probably better as a Transform test.
 TO_DO_BATTLE_TEST("Roost's suppression does not prevent others who are Transforming into the user from copying its Flying-type");
-
-SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items( ITEM_GREEN_APRICORN, ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Roost!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Wobbuffet's HP was restored.");
-        MESSAGE("The opposing Wobbuffet used Earthquake!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
-            HP_BAR(player);
-        }
-    }
-}

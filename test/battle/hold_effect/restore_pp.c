@@ -18,6 +18,6 @@ SINGLE_BATTLE_TEST("Restore PP berry activates immediately on switch in")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }

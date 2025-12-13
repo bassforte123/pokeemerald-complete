@@ -625,9 +625,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro removeitem battler:req
+	.macro removeitemwitheffect battler:req, effect:req
 	.byte 0x6a
 	.byte \battler
+	.4byte \effect
 	.endm
 
 	.macro atknameinbuff1
@@ -679,7 +680,7 @@
 	.byte 0x75
 	.endm
 
-	.macro unused_0x78
+	.macro unused_0x76
 	.byte 0x76
 	.endm
 
@@ -882,10 +883,8 @@
 	.byte 0x9e
 	.endm
 
-	.macro removeitemwitheffect battler:req, effect:req
+	.macro unused_0x9f
 	.byte 0x9f
-	.byte \battler
-	.4byte \effect
 	.endm
 
 	.macro unused_0xA0

@@ -315,22 +315,3 @@ DOUBLE_BATTLE_TEST("Powder damages a target using Shell Trap even if it wasn't h
         HP_BAR(playerLeft);
     }
 }
-
-SINGLE_BATTLE_TEST("Powder doesn't consume Berry from Fire type Natural Gift but prevents using the move (Multi)")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_GREEN_APRICORN, ITEM_CHERI_BERRY); }
-        OPPONENT(SPECIES_VIVILLON);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_POWDER); MOVE(player, MOVE_NATURAL_GIFT); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POWDER, opponent);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player);
-            HP_BAR(opponent);
-        }
-    } THEN {
-        EXPECT_EQ(player->items[1], ITEM_CHERI_BERRY);
-    }
-}

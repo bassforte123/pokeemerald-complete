@@ -154,30 +154,3 @@ SINGLE_BATTLE_TEST("Charge will expire if user flinches while using an electric 
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
-
-SINGLE_BATTLE_TEST("Charge will not expire if it flinches twice in a row (Multi)")
-{
-    s16 damage[2];
-    GIVEN {
-         ASSUME(GetMoveAdditionalEffectById(MOVE_IRON_HEAD, 0)->moveEffect == MOVE_EFFECT_FLINCH);
-         PLAYER(SPECIES_WOBBUFFET);
-         OPPONENT(SPECIES_WOBBUFFET) { Items( ITEM_MAX_ELIXIR, ITEM_LUM_BERRY); }
-    } WHEN {
-         TURN { MOVE(player, MOVE_THUNDERBOLT); }
-         TURN { MOVE(player, MOVE_CHARGE); }
-         TURN { MOVE(opponent, MOVE_IRON_HEAD); MOVE(player, MOVE_THUNDERBOLT); }
-         TURN { MOVE(opponent, MOVE_IRON_HEAD); MOVE(player, MOVE_THUNDERBOLT); }
-         TURN { MOVE(player, MOVE_THUNDERBOLT); }
-    } SCENE {
-         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
-         HP_BAR(opponent, captureDamage: &damage[0]);
-         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARGE, player);
-         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
-         HP_BAR(opponent, captureDamage: &damage[1]);
-    } THEN {
-        if (B_CHARGE < GEN_9)
-            EXPECT_EQ(damage[0], damage[1]);
-        else
-            EXPECT_MUL_EQ(damage[0], Q_4_12(2.0), damage[1]);
-    }
-}

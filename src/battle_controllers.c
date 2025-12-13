@@ -3149,7 +3149,7 @@ void UpdateFriendshipFromXItem(u32 battler)
 
     if (friendship < X_ITEM_MAX_FRIENDSHIP)
     {
-        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE, GetItemHoldEffect(heldItem));
+        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE);
 
         if (friendship > MAX_FRIENDSHIP)
             friendship = MAX_FRIENDSHIP;

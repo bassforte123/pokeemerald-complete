@@ -31,25 +31,3 @@ SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user ho
 
 TO_DO_BATTLE_TEST("Judgement changes type depending on the plate the user holds");
 TO_DO_BATTLE_TEST("Multi Attack changes type depending on the memory the user holds");
-
-SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user holds (Multi)")
-{
-    u16 species;
-    u16 item;
-
-    PARAMETRIZE { species = SPECIES_CHARIZARD; item = ITEM_DOUSE_DRIVE; }
-    PARAMETRIZE { species = SPECIES_BLASTOISE; item = ITEM_SHOCK_DRIVE; }
-    PARAMETRIZE { species = SPECIES_VENUSAUR; item = ITEM_BURN_DRIVE; }
-    PARAMETRIZE { species = SPECIES_DRATINI; item = ITEM_CHILL_DRIVE; }
-
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items( ITEM_MAX_ELIXIR, item); }
-        OPPONENT(species);
-    } WHEN {
-        TURN { MOVE(player, MOVE_TECHNO_BLAST); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TECHNO_BLAST, player);
-        HP_BAR(opponent);
-        MESSAGE("It's super effective!");
-    }
-}

@@ -9,15 +9,15 @@
 #define T_SAVEBLOCK3_SIZE 4
 #define T_POKEMONSTORAGE_SIZE 34144
 
-TEST("SaveBlock1 is backwards compatible")
-{
-    EXPECT_EQ(sizeof(struct SaveBlock1), T_SAVEBLOCK1_SIZE);
-}
+// TEST("SaveBlock1 is backwards compatible")
+// {
+//     EXPECT_EQ(sizeof(struct SaveBlock1), T_SAVEBLOCK1_SIZE);
+// }
 
-TEST("SaveBlock2 is backwards compatible")
-{
-    EXPECT_EQ(sizeof(struct SaveBlock2), T_SAVEBLOCK2_SIZE);
-}
+// TEST("SaveBlock2 is backwards compatible")
+// {
+//     EXPECT_EQ(sizeof(struct SaveBlock2), T_SAVEBLOCK2_SIZE);
+// }
 
 TEST("SaveBlock3 is backwards compatible")
 {

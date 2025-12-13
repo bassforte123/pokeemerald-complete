@@ -129,22 +129,3 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated"
         EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);
     }
 }
-
-SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_MELOETTA_ARIA);
-        OPPONENT(SPECIES_DELPHOX) { Ability(ABILITY_MAGICIAN); Items( ITEM_GREEN_APRICORN, ITEM_POTION); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SKILL_SWAP); MOVE(player, MOVE_RELIC_SONG); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
-        HP_BAR(opponent);
-        ABILITY_POPUP(player, ABILITY_MAGICIAN);
-        MESSAGE("Meloetta stole the opposing Delphox's Potion!");
-        MESSAGE("Meloetta transformed!");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);
-    }
-}

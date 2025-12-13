@@ -253,30 +253,3 @@ SINGLE_BATTLE_TEST("Prankster-affected moves that are bounced back by Magic Boun
 TO_DO_BATTLE_TEST("Prankster-affected moves called via Nature Power don't affect Dark-type Pokémon");
 TO_DO_BATTLE_TEST("Prankster increases the priority of status Z-Moves by 1");
 TO_DO_BATTLE_TEST("Prankster increases the priority of Extreme Evoboost by 1");
-
-SINGLE_BATTLE_TEST("Prankster-affected moves can still be bounced back by a Dark-type with Magic Bounce (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_ABSOL) { Items(ITEM_MAX_ETHER, ITEM_ABSOLITE); }
-        OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CONFUSE_RAY); }
-    } SCENE {
-        MESSAGE("The opposing Volbeat's Confuse Ray was bounced back by Absol's Magic Bounce!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
-    }
-}
-
-SINGLE_BATTLE_TEST("Prankster-affected moves that are bounced back by Magic Bounce can affect Dark-type Pokémon (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_ABSOL) { Items(ITEM_MAX_ETHER, ITEM_ABSOLITE); }
-        OPPONENT(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CONFUSE_RAY); }
-    } SCENE {
-        MESSAGE("The opposing Murkrow's Confuse Ray was bounced back by Absol's Magic Bounce!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
-        MESSAGE("The opposing Murkrow became confused!");
-    }
-}

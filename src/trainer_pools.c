@@ -170,6 +170,8 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         monIndex = pickFunctions.OtherFunction(trainer, poolIndexArray, partyIndex, monsCount, battleTypeFlags, rules);
     u32 chosenTags = trainer->party[monIndex].tags;
     u16 chosenSpecies = trainer->party[monIndex].species;
+    u16 chosenItem = ITEM_NONE;
+    u16 currentItem = ITEM_NONE;
     enum NationalDexOrder chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
     //  If tag was required, change pool rule to account for the required tag already being picked
     u32 tagsToEliminate = 0;
@@ -197,7 +199,6 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         {
             u32 currentTags = trainer->party[poolIndexArray[currIndex]].tags;
             u16 currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
-            u16 currentItem = ITEM_NONE;
             enum NationalDexOrder currentNatDex = gSpeciesInfo[currentSpecies].natDexNum;
             if (currentTags & tagsToEliminate)
             {
@@ -209,7 +210,6 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
                 poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
             for (k = 0; k < MAX_MON_ITEMS; k++)
             {
-                currentItem = trainer->party[poolIndexArray[currIndex]].heldItem[k];
                 if (rules->itemClause && currentItem != ITEM_NONE)
                 {
                     if (rules->itemClauseExclusions)
@@ -233,8 +233,10 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
                     {
                         for (i = 0; i < MAX_MON_ITEMS; i++)
                         {
-                                if (trainer->party[monIndex].heldItem[i] == currentItem)
+                                if (trainer->party[monIndex].heldItem[i] == trainer->party[poolIndexArray[currIndex]].heldItem[k])
                                 {
+                                    currentItem = trainer->party[poolIndexArray[currIndex]].heldItem[k];
+                                    chosenItem = trainer->party[monIndex].heldItem[i];
                                     poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
                                 }
                         }
