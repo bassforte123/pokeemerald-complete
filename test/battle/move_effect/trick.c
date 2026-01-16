@@ -10,8 +10,8 @@ SINGLE_BATTLE_TEST("Trick swaps held items")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } THEN {
-        EXPECT(player->item == ITEM_LUM_BERRY);
-        EXPECT(opponent->item == ITEM_SITRUS_BERRY);
+        EXPECT(player->items[0] == ITEM_LUM_BERRY);
+        EXPECT(opponent->items[0] == ITEM_SITRUS_BERRY);
     }
 }
 
@@ -23,8 +23,8 @@ SINGLE_BATTLE_TEST("Trick succeeds if only the user has an item")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
-        EXPECT(opponent->item == ITEM_SITRUS_BERRY);
+        EXPECT(player->items[0] == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_SITRUS_BERRY);
     }
 }
 
@@ -36,8 +36,8 @@ SINGLE_BATTLE_TEST("Trick succeeds if only the target has an item")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } THEN {
-        EXPECT(player->item == ITEM_LUM_BERRY);
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_LUM_BERRY);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
@@ -51,8 +51,8 @@ SINGLE_BATTLE_TEST("Trick fails if both battlers have no held item")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
@@ -72,8 +72,8 @@ SINGLE_BATTLE_TEST("Trick fails if either item is Mail")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == atkItem);
-        EXPECT(opponent->item == defItem);
+        EXPECT(player->items[0] == atkItem);
+        EXPECT(opponent->items[0] == defItem);
     }
 }
 
@@ -93,8 +93,8 @@ SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == atkItem);
-        EXPECT(opponent->item == defItem);
+        EXPECT(player->items[0] == atkItem);
+        EXPECT(opponent->items[0] == defItem);
     }
 }
 
@@ -114,8 +114,8 @@ SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == atkItem);
-        EXPECT(opponent->item == defItem);
+        EXPECT(player->items[0] == atkItem);
+        EXPECT(opponent->items[0] == defItem);
     }
 }
 
@@ -134,8 +134,8 @@ SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == atkItem);
-        EXPECT(opponent->item == defItem);
+        EXPECT(player->items[0] == atkItem);
+        EXPECT(opponent->items[0] == defItem);
     }
 }
 
@@ -149,8 +149,8 @@ SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->item == ITEM_LUM_BERRY);
+        EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[0] == ITEM_LUM_BERRY);
     }
 }
 
@@ -164,8 +164,8 @@ SINGLE_BATTLE_TEST("Trick fails against Sticky Hold")
     } SCENE {
         MESSAGE("The opposing Wobbuffet's Sticky Hold made Trick ineffective!");
     } THEN {
-        EXPECT(player->item == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->item == ITEM_LUM_BERRY);
+        EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[0] == ITEM_LUM_BERRY);
     }
 }
 
@@ -179,7 +179,7 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->item == ITEM_LUM_BERRY);
+        EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[0] == ITEM_LUM_BERRY);
     }
 }

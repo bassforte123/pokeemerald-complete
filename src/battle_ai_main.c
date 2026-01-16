@@ -2119,15 +2119,25 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-20);
             break;
         case EFFECT_TRICK:
-            if ((gBattleMons[battlerAtk].item == ITEM_NONE && aiData->items[battlerDef] == ITEM_NONE)
-              || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].item)
-              || !CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
-              || !CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
-              || !CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerAtk].item)
-              || aiData->abilities[battlerAtk] == ABILITY_STICKY_HOLD
-              || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD
-              || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
+            bool32 trickcheck = FALSE;
+            
+            if (aiData->abilities[battlerAtk] != ABILITY_STICKY_HOLD
+             || aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
+            {
+                for (i=0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (!((gBattleMons[battlerAtk].items[i] == ITEM_NONE && aiData->items[battlerDef][i] == ITEM_NONE)
+                    || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].items[i])
+                    || !CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef][i])
+                    || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)))
+                    {
+                        trickcheck = TRUE;
+                    }
+                }
+            }
+            if (!trickcheck)
                 ADJUST_SCORE(-10);
+            break;
         case EFFECT_KNOCK_OFF:
         case EFFECT_CORROSIVE_GAS:
             if (aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
@@ -5763,6 +5773,9 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     u32 i;
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
     bool32 hasBerry = BattlerHasBerry(battlerDef);
+
+    if (IsSheerForceAffected(move, aiData->abilities[battlerAtk]))
+    return score;
 
     // check move additional effects that are likely to happen
     for (i = 0; i < additionalEffectCount; i++)

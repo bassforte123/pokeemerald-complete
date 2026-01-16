@@ -17967,7 +17967,7 @@ void BS_TryBestow(void)
     u8 targetableSlots[MAX_MON_ITEMS];
     targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
     
-    if (!GetBattlerAbility(gBattlerAttacker) == ABILITY_STICKY_HOLD)
+    if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
     {
         for (int i = 0; i < MAX_MON_ITEMS; i++)
         {
@@ -18618,7 +18618,7 @@ void BS_TryAbsorbToxicSpikesOnFaint(void)
         return;
     }
 
-    if (IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler))
+    if (IsBattlerGrounded(battler, GetBattlerAbility(battler))
      && IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
     {
         gSideTimers[side].toxicSpikesAmount = 0;

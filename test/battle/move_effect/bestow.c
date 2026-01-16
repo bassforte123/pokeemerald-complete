@@ -102,8 +102,8 @@ SINGLE_BATTLE_TEST("Bestow fails if the user has Sticky Hold")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->item == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 
