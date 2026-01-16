@@ -987,6 +987,7 @@ struct moveWithPP {
 #define SpDefenseIV(spDefenseIV) SpDefenseIV_(__LINE__, spDefenseIV)
 #define SpeedIV(speedIV) SpeedIV_(__LINE__, speedIV)
 #define Item(item) Item_(__LINE__, item)
+#define Items(item1, ...) do { u32 items_[MAX_MON_ITEMS] = {item1, __VA_ARGS__}; Items_(__LINE__, items_); } while(0)
 #define Moves(move1, ...) do { u16 moves_[MAX_MON_MOVES] = {move1, __VA_ARGS__}; Moves_(__LINE__, moves_); } while(0)
 #define MovesWithPP(movewithpp1, ...) MovesWithPP_(__LINE__, (struct moveWithPP[MAX_MON_MOVES]) {movewithpp1, __VA_ARGS__})
 #define Friendship(friendship) Friendship_(__LINE__, friendship)
@@ -1028,6 +1029,7 @@ void SpAttackIV_(u32 sourceLine, u32 spAttackIV);
 void SpDefenseIV_(u32 sourceLine, u32 spDefenseIV);
 void SpeedIV_(u32 sourceLine, u32 speedIV);
 void Item_(u32 sourceLine, u32 item);
+void Items_(u32 sourceLine, u32 items[MAX_MON_ITEMS]);
 void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES]);
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES]);
 void Friendship_(u32 sourceLine, u32 friendship);

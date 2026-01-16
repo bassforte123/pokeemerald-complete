@@ -322,7 +322,7 @@ struct ApprenticeMon
 {
     u16 species;
     u16 moves[MAX_MON_MOVES];
-    u16 item;
+    u16 item[MAX_MON_ITEMS];
 };
 
 // This is for past players Apprentices or Apprentices received via Record Mix.
@@ -346,7 +346,7 @@ struct Apprentice
 struct BattleTowerPokemon
 {
     u16 species;
-    u16 heldItem;
+    u16 heldItem[MAX_MON_ITEMS];
     u16 moves[MAX_MON_MOVES];
     u8 level;
     u8 ppBonuses;
@@ -498,7 +498,7 @@ struct BattleFrontier
               u8 pikeHintedRoomType:4;
               u8 pikeHealingRoomsDisabled:1;
     /*0xE11*/ //u8 padding2;
-    /*0xE12*/ u16 pikeHeldItemsBackup[FRONTIER_PARTY_SIZE];
+    /*0xE12*/ u16 pikeHeldItemsBackup[FRONTIER_PARTY_SIZE][MAX_MON_ITEMS];
     /*0xE18*/ u16 pyramidPrize;
     /*0xE1A*/ u16 pyramidWinStreaks[FRONTIER_LVL_MODE_COUNT];
     /*0xE1E*/ u16 pyramidRecordStreaks[FRONTIER_LVL_MODE_COUNT];
@@ -620,7 +620,7 @@ struct SecretBaseParty
     u32 personality[PARTY_SIZE];
     u16 moves[PARTY_SIZE * MAX_MON_MOVES];
     u16 species[PARTY_SIZE];
-    u16 heldItems[PARTY_SIZE];
+    u16 heldItem[PARTY_SIZE][MAX_MON_ITEMS];
     u8 levels[PARTY_SIZE];
     u8 EVs[PARTY_SIZE];
 };

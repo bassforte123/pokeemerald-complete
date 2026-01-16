@@ -564,7 +564,8 @@ static void CreateShedinja(u32 preEvoSpecies, u32 postEvoSpecies, struct Pokemon
             CopyMon(&gPlayerParty[gPlayerPartyCount], mon, sizeof(struct Pokemon));
             SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_SPECIES, &evolutions[i].targetSpecies);
             SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_NICKNAME, GetSpeciesName(evolutions[i].targetSpecies));
-            SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_HELD_ITEM, &data);
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+                SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_HELD_ITEM + j, &data);
             SetMonData(&gPlayerParty[gPlayerPartyCount], MON_DATA_MARKINGS, &data);
             if (P_SHEDINJA_BALL >= GEN_4)
             {

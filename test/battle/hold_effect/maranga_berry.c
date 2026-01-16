@@ -86,7 +86,7 @@ DOUBLE_BATTLE_TEST("Maranga Berry doesn't trigger if partner was hit")
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
     } THEN {
-        EXPECT(opponentRight->item == ITEM_MARANGA_BERRY);
+        EXPECT(opponentRight->items[0] == ITEM_MARANGA_BERRY);
     }
 }
 

@@ -40,8 +40,8 @@ union TRANSPARENT StatChangeFlags
     };
 };
 
-s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectAtk);
-s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectAtk);
+s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, enum Ability abilityAtk, enum Ability abilityDef);
+s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, enum Ability abilityAtk, enum Ability abilityDef);
 s32 GetCritHitOdds(s32 critChanceIndex);
 bool32 HasBattlerActedThisTurn(u32 battler);
 u32 GetBattlerTurnOrderNum(u32 battler);
@@ -64,7 +64,7 @@ bool32 IsShieldsDownProtected(u32 battler, enum Ability ability);
 u32 IsAbilityStatusProtected(u32 battler, enum Ability ability);
 bool32 TryResetBattlerStatChanges(u8 battler);
 bool32 CanCamouflage(u8 battlerId);
-void StealTargetItem(u8 battlerStealer, u8 battlerItem);
+void StealTargetItem(u8 battlerStealer, u8 battlerItem, u8 slot);
 u8 GetCatchingBattler(void);
 bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, enum Type moveType);
 bool32 IsMoveNotAllowedInSkyBattles(u32 move);

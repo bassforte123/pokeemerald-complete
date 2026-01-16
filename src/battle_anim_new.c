@@ -9012,8 +9012,8 @@ void AnimTask_PurpleFlamesOnTarget(u8 taskId)
 
 void AnimTask_TechnoBlast(u8 taskId)
 {
-    if (GetItemHoldEffect(gBattleMons[gBattleAnimAttacker].item) == HOLD_EFFECT_DRIVE)
-        gBattleAnimArgs[0] = GetItemSecondaryId(gBattleMons[gBattleAnimAttacker].item);
+    if (BattlerHasHeldItemEffect(gBattleAnimAttacker, HOLD_EFFECT_DRIVE, TRUE))
+        gBattleAnimArgs[0] = GetItemSecondaryId(GetBattlerHeldItemWithEffect(gBattleAnimAttacker, HOLD_EFFECT_DRIVE, TRUE));
     else
         gBattleAnimArgs[0] = 0;
     DestroyAnimVisualTask(taskId);
@@ -9040,8 +9040,10 @@ static void SpriteCB_TwinkleOnBattler(struct Sprite *sprite)
 
 void AnimTask_PrimalReversion(u8 taskId)
 {
-    if (gBattleMons[gBattleAnimAttacker].item == ITEM_RED_ORB || gBattleMons[gBattleAnimAttacker].item == ITEM_BLUE_ORB)
-        gBattleAnimArgs[0] = gBattleMons[gBattleAnimAttacker].item;
+    if (BattlerHasHeldItemEffect(gBattleAnimAttacker, ITEM_RED_ORB, TRUE))
+        gBattleAnimArgs[0] = ITEM_RED_ORB;
+    else if (BattlerHasHeldItemEffect(gBattleAnimAttacker, ITEM_BLUE_ORB, TRUE))
+        gBattleAnimArgs[0] = ITEM_BLUE_ORB;
     else
         gBattleAnimArgs[0] = 0;
     DestroyAnimVisualTask(taskId);
@@ -9058,7 +9060,7 @@ void AnimTask_ShellSideArm(u8 taskId)
 
 void AnimTask_TerrainPulse(u8 taskId)
 {
-    if (IsBattlerTerrainAffected(gBattleAnimAttacker, GetBattlerAbility(gBattleAnimAttacker), GetBattlerHoldEffect(gBattleAnimAttacker), STATUS_FIELD_TERRAIN_ANY))
+    if (IsBattlerTerrainAffected(gBattleAnimAttacker, GetBattlerAbility(gBattleAnimAttacker), STATUS_FIELD_TERRAIN_ANY))
     {
         if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
             gBattleAnimArgs[0] = TYPE_ELECTRIC;

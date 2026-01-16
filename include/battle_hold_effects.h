@@ -27,7 +27,7 @@ struct HoldEffectInfo
 extern const struct HoldEffectInfo gHoldEffectsInfo[];
 
 typedef bool32 (*ActivationTiming)(enum HoldEffect holdEffect);
-enum ItemEffect ItemBattleEffects(u32 primaryBattler, u32 secondaryBattler, enum HoldEffect holdEffect, ActivationTiming timing);
+enum ItemEffect ItemBattleEffects(u32 primaryBattler, u32 secondaryBattler, ActivationTiming timing);
 
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect);
 bool32 IsOnSwitchInFirstTurnActivation(enum HoldEffect holdEffect);

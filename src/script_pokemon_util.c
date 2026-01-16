@@ -91,13 +91,14 @@ void HasEnoughMonsForDoubleBattle(void)
 
 static bool8 CheckPartyMonHasHeldItem(u16 item)
 {
-    int i;
+    int i, j;
 
     for(i = 0; i < PARTY_SIZE; i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
-        if (species != SPECIES_NONE && species != SPECIES_EGG && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM) == item)
-            return TRUE;
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            if (species != SPECIES_NONE && species != SPECIES_EGG && GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j) == item)
+                return TRUE;
     }
     return FALSE;
 }
@@ -111,7 +112,7 @@ bool8 DoesPartyHaveEnigmaBerry(void)
     return hasItem;
 }
 
-void CreateScriptedWildMon(u16 species, u8 level, u16 item)
+void CreateScriptedWildMon(u16 species, u8 level, u16 item, u16 item2)
 {
     u8 heldItem[2];
 
@@ -126,8 +127,14 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
         heldItem[1] = item >> 8;
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
     }
+    if (item2)
+    {
+        heldItem[0] = item2;
+        heldItem[1] = item2 >> 8;
+        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM + 1, heldItem);
+    }
 }
-void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species2, u8 level2, u16 item2)
+void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item, u16 item1, u16 species2, u8 level2, u16 item2, u16 item3)
 {
     u8 heldItem1[2];
     u8 heldItem2[2];
@@ -138,11 +145,17 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
         CreateMonWithNature(&gEnemyParty[0], species1, level1, 32, PickWildMonNature());
     else
         CreateMon(&gEnemyParty[0], species1, level1, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+    if (item)
+    {
+        heldItem1[0] = item;
+        heldItem1[1] = item >> 8;
+        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem1);
+    }
     if (item1)
     {
         heldItem1[0] = item1;
         heldItem1[1] = item1 >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem1);
+        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM + 1, heldItem1);
     }
 
     if (OW_SYNCHRONIZE_NATURE > GEN_3)
@@ -154,6 +167,12 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
         heldItem2[0] = item2;
         heldItem2[1] = item2 >> 8;
         SetMonData(&gEnemyParty[1], MON_DATA_HELD_ITEM, heldItem2);
+    }
+    if (item3)
+    {
+        heldItem2[0] = item3;
+        heldItem2[1] = item3 >> 8;
+        SetMonData(&gEnemyParty[1], MON_DATA_HELD_ITEM + 1, heldItem2);
     }
 }
 
@@ -332,7 +351,7 @@ void SetTeraType(struct ScriptContext *ctx)
  * if side/slot are assigned, it will create the mon at the assigned party location
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
  */
-static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
+static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, u16 item2, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
 {
     enum NationalDexOrder nationalDexNum;
     int sentToPc;
@@ -424,6 +443,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
 
     // held item
     SetMonData(&mon, MON_DATA_HELD_ITEM, &item);
+    SetMonData(&mon, MON_DATA_HELD_ITEM + 1, &item2);
 
     // In case a mon with a form changing item is given. Eg: SPECIES_ARCEUS_NORMAL with ITEM_SPLASH_PLATE will transform into SPECIES_ARCEUS_WATER upon gifted.
     targetSpecies = GetFormChangeTargetSpecies(&mon, FORM_CHANGE_ITEM_HOLD, 0);
@@ -476,14 +496,14 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     return sentToPc;
 }
 
-u32 ScriptGiveMon(u16 species, u8 level, u16 item)
+u32 ScriptGiveMon(u16 species, u8 level, u16 item, u16 item2)
 {
     u8 evs[NUM_STATS]        = {0, 0, 0, 0, 0, 0};
     u8 ivs[NUM_STATS]        = {MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1,   // We pass "MAX_PER_STAT_IVS + 1" here to ensure that
                                 MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1};  // ScriptGiveMonParameterized won't touch the stats' IV.
     u16 moves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
 
-    return ScriptGiveMonParameterized(0, PARTY_SIZE, species, level, item, ITEM_POKE_BALL, NUM_NATURES, NUM_ABILITY_PERSONALITY, MON_GENDERLESS, evs, ivs, moves, SHINY_MODE_RANDOM, FALSE, NUMBER_OF_MON_TYPES, 0);
+    return ScriptGiveMonParameterized(0, PARTY_SIZE, species, level, item, item2, ITEM_POKE_BALL, NUM_NATURES, NUM_ABILITY_PERSONALITY, MON_GENDERLESS, evs, ivs, moves, SHINY_MODE_RANDOM, FALSE, NUMBER_OF_MON_TYPES, 0);
 }
 
 #define PARSE_FLAG(n, default_) (flags & (1 << (n))) ? VarGet(ScriptReadHalfword(ctx)) : (default_)
@@ -499,16 +519,17 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
     u32 flags         = ScriptReadWord(ctx);
     u16 item          = PARSE_FLAG(0, ITEM_NONE);
-    u8 ball           = PARSE_FLAG(1, ITEM_POKE_BALL);
-    u8 nature         = PARSE_FLAG(2, NUM_NATURES);
-    u8 abilityNum     = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
-    u8 gender         = PARSE_FLAG(4, MON_GENDERLESS); // TODO: Find a better way to assign a random gender.
-    u8 hpEv           = PARSE_FLAG(5, 0);
-    u8 atkEv          = PARSE_FLAG(6, 0);
-    u8 defEv          = PARSE_FLAG(7, 0);
-    u8 speedEv        = PARSE_FLAG(8, 0);
-    u8 spAtkEv        = PARSE_FLAG(9, 0);
-    u8 spDefEv        = PARSE_FLAG(10, 0);
+    u16 item2         = PARSE_FLAG(1, ITEM_NONE);
+    u8 ball           = PARSE_FLAG(2, ITEM_POKE_BALL);
+    u8 nature         = PARSE_FLAG(3, NUM_NATURES);
+    u8 abilityNum     = PARSE_FLAG(4, NUM_ABILITY_PERSONALITY);
+    u8 gender         = PARSE_FLAG(5, MON_GENDERLESS); // TODO: Find a better way to assign a random gender.
+    u8 hpEv           = PARSE_FLAG(6, 0);
+    u8 atkEv          = PARSE_FLAG(7, 0);
+    u8 defEv          = PARSE_FLAG(8, 0);
+    u8 speedEv        = PARSE_FLAG(9, 0);
+    u8 spAtkEv        = PARSE_FLAG(10, 0);
+    u8 spDefEv        = PARSE_FLAG(11, 0);
     u8 hpIv           = Random() % (MAX_PER_STAT_IVS + 1);
     u8 atkIv          = Random() % (MAX_PER_STAT_IVS + 1);
     u8 defIv          = Random() % (MAX_PER_STAT_IVS + 1);
@@ -547,20 +568,20 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
             }
         }
     }
-    hpIv                     = PARSE_FLAG(11, hpIv);
-    atkIv                    = PARSE_FLAG(12, atkIv);
-    defIv                    = PARSE_FLAG(13, defIv);
-    speedIv                  = PARSE_FLAG(14, speedIv);
-    spAtkIv                  = PARSE_FLAG(15, spAtkIv);
-    spDefIv                  = PARSE_FLAG(16, spDefIv);
-    u16 move1                = PARSE_FLAG(17, MOVE_NONE);
-    u16 move2                = PARSE_FLAG(18, MOVE_NONE);
-    u16 move3                = PARSE_FLAG(19, MOVE_NONE);
-    u16 move4                = PARSE_FLAG(20, MOVE_NONE);
-    enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
-    bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
-    enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
-    u8 dmaxLevel             = PARSE_FLAG(24, 0);
+    hpIv                     = PARSE_FLAG(12, hpIv);
+    atkIv                    = PARSE_FLAG(13, atkIv);
+    defIv                    = PARSE_FLAG(14, defIv);
+    speedIv                  = PARSE_FLAG(15, speedIv);
+    spAtkIv                  = PARSE_FLAG(16, spAtkIv);
+    spDefIv                  = PARSE_FLAG(17, spDefIv);
+    u16 move1                = PARSE_FLAG(18, MOVE_NONE);
+    u16 move2                = PARSE_FLAG(19, MOVE_NONE);
+    u16 move3                = PARSE_FLAG(20, MOVE_NONE);
+    u16 move4                = PARSE_FLAG(21, MOVE_NONE);
+    enum ShinyMode shinyMode = PARSE_FLAG(22, SHINY_MODE_RANDOM);
+    bool8 gmaxFactor         = PARSE_FLAG(23, FALSE);
+    enum Type teraType       = PARSE_FLAG(24, NUMBER_OF_MON_TYPES);
+    u8 dmaxLevel             = PARSE_FLAG(25, 0);
 
     u8 evs[NUM_STATS]        = {hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv};
     u8 ivs[NUM_STATS]        = {hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv};
@@ -571,7 +592,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     else
         Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_Result = ScriptGiveMonParameterized(side, slot, species, level, item, ball, nature, abilityNum, gender, evs, ivs, moves, shinyMode, gmaxFactor, teraType, dmaxLevel);
+    gSpecialVar_Result = ScriptGiveMonParameterized(side, slot, species, level, item, item2, ball, nature, abilityNum, gender, evs, ivs, moves, shinyMode, gmaxFactor, teraType, dmaxLevel);
 }
 
 #undef PARSE_FLAG

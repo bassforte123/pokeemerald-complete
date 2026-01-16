@@ -299,7 +299,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can be switched out by Eject Butt
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is switched out with the Eject Button!");
     } THEN {
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
 
@@ -398,7 +398,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not immune to Knock Off")
         MESSAGE("The opposing Wobbuffet used Knock Off!");
         MESSAGE("The opposing Wobbuffet knocked off Wobbuffet's Potion!");
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 

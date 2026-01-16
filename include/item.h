@@ -101,6 +101,7 @@ struct Item
     u8 notConsumed:1;
     enum Pocket pocket:5;
     enum ItemSortType sortType;
+    u8 heldSlot;
     u8 type;
     u8 battleUsage;
     u8 flingPower;
@@ -248,6 +249,25 @@ u32 GetItemFlingPower(u32 itemId);
 u32 GetItemStatus1Mask(u16 itemId);
 bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile volatile);
 u32 GetItemSellPrice(u32 itemId);
-bool32 IsHoldEffectChoice(enum HoldEffect holdEffect);
+bool32 BattlerHasHoldEffectChoice(u32 battler);
+
+static inline u32 SearchItemSlots(u16 *battlerItems, u16 effect)
+{
+  for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+  {
+    if (GetItemHoldEffect(battlerItems[i]) == effect)
+        return battlerItems[i];
+  }
+  return ITEM_NONE;
+}
+
+// Returns if item found in SearchItemSlots array
+static inline u32 HasSearchItems(u16 *battlerItems, u16 effect)
+{
+  if (SearchItemSlots(battlerItems, effect) == MAX_MON_ITEMS)
+    return FALSE;
+
+  return SearchItemSlots(battlerItems, effect) == MAX_MON_ITEMS;
+}
 
 #endif // GUARD_ITEM_H

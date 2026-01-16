@@ -5695,13 +5695,16 @@ static void ResetSketchedMoves(void)
 
 static void RestoreDomePlayerPartyHeldItems(void)
 {
-    int i;
+    int i, j;
 
     for (i = 0; i < DOME_BATTLE_PARTY_SIZE; i++)
     {
         int playerMonId = gSaveBlock2Ptr->frontier.selectedPartyMons[gSelectedOrderFromParty[i] - 1] - 1;
-        u16 item = GetMonData(GetSavedPlayerPartyMon(playerMonId), MON_DATA_HELD_ITEM, NULL);
-        SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
+        for(j = 0; j < MAX_MON_ITEMS; j++)
+        {
+            u16 item = GetMonData(GetSavedPlayerPartyMon(playerMonId), MON_DATA_HELD_ITEM + j, NULL);
+            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j, &item);
+        }
     }
 }
 

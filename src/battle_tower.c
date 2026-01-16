@@ -1600,7 +1600,8 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
     }
 
     SetMonData(dst, MON_DATA_FRIENDSHIP, &friendship);
-    SetMonData(dst, MON_DATA_HELD_ITEM, &fmon->heldItem);
+    for (j = 0; j < MAX_MON_ITEMS; j++)
+        SetMonData(dst, MON_DATA_HELD_ITEM + j, &fmon->heldItem[j]);
 
     // try to set ability. Otherwise, random of non-hidden as per vanilla
     if (fmon->ability != ABILITY_NONE)
@@ -1658,7 +1659,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
 static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
 {
-    s32 i, j;
+    s32 i, j, k, l;
     u16 chosenMonIndices[MAX_FRONTIER_PARTY_SIZE];
     u8 level = SetFacilityPtrsGetLevel();
     u8 fixedIV = 0;
@@ -1735,10 +1736,21 @@ static void FillTrainerParty(u16 trainerId, u8 firstMonId, u8 monCount)
         // Ensure this Pokemon's held item isn't a duplicate.
         for (j = 0; j < i + firstMonId; j++)
         {
-            if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL) != ITEM_NONE
-             && GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL) == gFacilityTrainerMons[monId].heldItem)
-                break;
+            for (k = 0; k < MAX_MON_ITEMS; k++)
+            {
+                if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM + k, NULL) != ITEM_NONE)
+                {
+                    for (l = 0; l < MAX_MON_ITEMS; l++)
+                    {
+                        if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM + k, NULL) == gFacilityTrainerMons[monId].heldItem[l])
+                        {   
+                            goto frontiermatch;
+                        }
+                    }
+                }
+            }
         }
+        frontiermatch:
         if (j != i + firstMonId)
             continue;
 
@@ -1934,10 +1946,14 @@ static void HandleSpecialTrainerBattleEnd(void)
         }
         break;
     case SPECIAL_BATTLE_SECRET_BASE:
+        u16 itemBefore;
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            u16 itemBefore = GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HELD_ITEM);
-            SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &itemBefore);
+            for (int j = 0; j < MAX_MON_ITEMS; j++)
+            {
+                itemBefore = GetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HELD_ITEM + j);
+                SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j, &itemBefore);
+            }
         }
         break;
     case SPECIAL_BATTLE_EREADER:
@@ -1999,10 +2015,14 @@ void DoSpecialTrainerBattle(void)
         BattleTransition_StartOnField(GetSpecialBattleTransition(B_TRANSITION_GROUP_B_TOWER));
         break;
     case SPECIAL_BATTLE_SECRET_BASE:
+        u16 itemBefore;
         for (i = 0; i < PARTY_SIZE; i++)
         {
-            u16 itemBefore = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
-            SetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HELD_ITEM, &itemBefore);
+            for (int j = 0; j < MAX_MON_ITEMS; j++)
+            {
+                itemBefore = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j);
+                SetMonData(GetSavedPlayerPartyMon(i), MON_DATA_HELD_ITEM + j, &itemBefore);
+            }
         }
         CreateTask(Task_StartBattleAfterTransition, 1);
         PlayMapChosenOrBattleBGM(0);
@@ -3015,7 +3035,8 @@ void FillPartnerParty(u16 trainerId)
             CreateMon(&gPlayerParty[i + 3], partyData[i].species, partyData[i].lvl, 0, TRUE, personality, OT_ID_PRESET, otID);
             j = partyData[i].isShiny;
             SetMonData(&gPlayerParty[i + 3], MON_DATA_IS_SHINY, &j);
-            SetMonData(&gPlayerParty[i + 3], MON_DATA_HELD_ITEM, &partyData[i].heldItem);
+            for (int l = 0; l < MAX_MON_ITEMS; l++)
+                SetMonData(&gPlayerParty[i + 3], MON_DATA_HELD_ITEM + l, &partyData[i].heldItem[l]);
             CustomTrainerPartyAssignMoves(&gPlayerParty[i + 3], &partyData[i]);
 
             SetMonData(&gPlayerParty[i + 3], MON_DATA_IVS, &(partyData[i].iv));
@@ -3429,7 +3450,7 @@ static void SetNextBattleTentOpponent(void)
 
 static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount)
 {
-    s32 i, j;
+    s32 i, j, k, l;
     u16 chosenMonIndices[MAX_FRONTIER_PARTY_SIZE];
     u8 level = SetTentPtrsGetLevel();
     u8 fixedIV = 0;
@@ -3468,10 +3489,21 @@ static void FillTentTrainerParty_(u16 trainerId, u8 firstMonId, u8 monCount)
         // Ensure this Pokemon's held item isn't a duplicate.
         for (j = 0; j < i + firstMonId; j++)
         {
-            if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL) != ITEM_NONE
-             && GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM, NULL) == gFacilityTrainerMons[monId].heldItem)
-                break;
+            for (k = 0; k < MAX_MON_ITEMS; k++)
+            {
+                if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM + k, NULL) != ITEM_NONE)
+                {
+                    for (l = 0; l < MAX_MON_ITEMS; l++)
+                    {                            
+                        if (GetMonData(&gEnemyParty[j], MON_DATA_HELD_ITEM + k, NULL) == gFacilityTrainerMons[monId].heldItem[l])
+                        {
+                            goto tentmatch;
+                        }
+                    }
+                }
+            }
         }
+        tentmatch:
         if (j != i + firstMonId)
             continue;
 

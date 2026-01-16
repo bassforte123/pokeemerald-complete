@@ -46,10 +46,10 @@ DOUBLE_BATTLE_TEST("Magician steal the item from the fastest possible target")
         ABILITY_POPUP(playerLeft, ABILITY_MAGICIAN);
     } THEN {
         if (playerRightSpeed == 4)
-            EXPECT(playerLeft->item == ITEM_POKE_BALL);
+            EXPECT(playerLeft->items[0] == ITEM_POKE_BALL);
         else if (opponentLeftSpeed == 4)
-            EXPECT(playerLeft->item == ITEM_GREAT_BALL);
+            EXPECT(playerLeft->items[0] == ITEM_GREAT_BALL);
         else if (playerRightSpeed == 4)
-            EXPECT(playerLeft->item == ITEM_ULTRA_BALL);
+            EXPECT(playerLeft->items[0] == ITEM_ULTRA_BALL);
     }
 }

@@ -166,7 +166,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
     } THEN {
-        EXPECT(opponentLeft->item == ITEM_NONE);
+        EXPECT(opponentLeft->items[0] == ITEM_NONE);
         EXPECT(playerRight->species == SPECIES_DONDOZO);
     }
 

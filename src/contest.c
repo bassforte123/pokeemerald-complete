@@ -2872,7 +2872,6 @@ static bool8 IsPlayerLinkLeader(void)
 void CreateContestMonFromParty(u8 partyIndex)
 {
     u8 name[max(PLAYER_NAME_LENGTH + 1, POKEMON_NAME_BUFFER_SIZE)];
-    u16 heldItem;
     s16 cool;
     s16 beauty;
     s16 cute;
@@ -2912,21 +2911,20 @@ void CreateContestMonFromParty(u8 partyIndex)
     gContestMons[gContestPlayerMonIndex].otId = GetMonData(&gPlayerParty[partyIndex], MON_DATA_OT_ID);
     gContestMons[gContestPlayerMonIndex].isShiny = GetMonData(&gPlayerParty[partyIndex], MON_DATA_IS_SHINY);
 
-    heldItem = GetMonData(&gPlayerParty[partyIndex], MON_DATA_HELD_ITEM);
     cool   = gContestMons[gContestPlayerMonIndex].cool;
     beauty = gContestMons[gContestPlayerMonIndex].beauty;
     cute   = gContestMons[gContestPlayerMonIndex].cute;
     smart  = gContestMons[gContestPlayerMonIndex].smart;
     tough  = gContestMons[gContestPlayerMonIndex].tough;
-    if      (heldItem == ITEM_RED_SCARF)
+    if (MonHasItem(&gPlayerParty[partyIndex], ITEM_RED_SCARF))
         cool += 20;
-    else if (heldItem == ITEM_BLUE_SCARF)
+    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_BLUE_SCARF))
         beauty += 20;
-    else if (heldItem == ITEM_PINK_SCARF)
+    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_PINK_SCARF))
         cute += 20;
-    else if (heldItem == ITEM_GREEN_SCARF)
+    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_GREEN_SCARF))
         smart += 20;
-    else if (heldItem == ITEM_YELLOW_SCARF)
+    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_YELLOW_SCARF))
         tough += 20;
     if (cool > 255)
         cool = 255;

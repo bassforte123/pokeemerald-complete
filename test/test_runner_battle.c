@@ -2090,6 +2090,23 @@ void Item_(u32 sourceLine, u32 item)
     }
 }
 
+void Items_(u32 sourceLine, u32 items[MAX_MON_ITEMS])
+{
+    s32 i;
+    INVALID_IF(!DATA.currentMon, "Item outside of PLAYER/OPPONENT");
+    
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        INVALID_IF(items[i] >= ITEMS_COUNT, "Illegal item: %d", items[i]);
+            
+        SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM + i, &items[i]);
+        if (GetItemHoldEffect(items[i]) == HOLD_EFFECT_MEGA_STONE)
+            SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_MEGA);
+        if (GetItemHoldEffect(items[i]) == HOLD_EFFECT_Z_CRYSTAL)
+            SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
+    }
+}
+
 void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
 {
     s32 i;
@@ -2463,20 +2480,32 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 
     if (ctx->explicitGimmick && ctx->gimmick != GIMMICK_NONE)
     {
-        u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
-        enum HoldEffect holdEffect = GetItemHoldEffect(item);
+        u32 item = ITEM_NONE;
         u32 species = GetMonData(mon, MON_DATA_SPECIES);
         u32 side = battlerId & BIT_SIDE;
+        bool32 hasMegaStone = FALSE;
+        bool32 hasZCrystal = FALSE;
+
+        for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (GetItemHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + i)) == HOLD_EFFECT_MEGA_STONE)
+                hasMegaStone = TRUE;
+            if (GetItemHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + i)) == HOLD_EFFECT_Z_CRYSTAL)
+                {
+                    item = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+                    hasZCrystal = TRUE;
+                }
+        }
 
         // Check invalid item usage.
-        INVALID_IF(ctx->gimmick == GIMMICK_MEGA && holdEffect != HOLD_EFFECT_MEGA_STONE && species != SPECIES_RAYQUAZA, "Cannot Mega Evolve without a Mega Stone");
-        INVALID_IF(ctx->gimmick == GIMMICK_Z_MOVE && holdEffect != HOLD_EFFECT_Z_CRYSTAL, "Cannot use a Z-Move without a Z-Crystal");
+        INVALID_IF(ctx->gimmick == GIMMICK_MEGA && !hasMegaStone && species != SPECIES_RAYQUAZA, "Cannot Mega Evolve without a Mega Stone");
+        INVALID_IF(ctx->gimmick == GIMMICK_Z_MOVE && !hasZCrystal, "Cannot use a Z-Move without a Z-Crystal");
         INVALID_IF(ctx->gimmick == GIMMICK_Z_MOVE && GetItemSecondaryId(item) != GetMoveType(*moveId)
                    && GetSignatureZMove(*moveId, species, item) == MOVE_NONE
                    && *moveId != MOVE_PHOTON_GEYSER, // exception because test won't recognize Ultra Necrozma pre-Burst
                    "Cannot turn %S into a Z-Move with %S", GetMoveName(ctx->move), GetItemName(item));
-        INVALID_IF(ctx->gimmick != GIMMICK_MEGA && holdEffect == HOLD_EFFECT_MEGA_STONE, "Cannot use another gimmick while holding a Mega Stone");
-        INVALID_IF(ctx->gimmick != GIMMICK_Z_MOVE && ctx->gimmick != GIMMICK_ULTRA_BURST && holdEffect == HOLD_EFFECT_Z_CRYSTAL, "Cannot use another gimmick while holding a Z-Crystal");
+        INVALID_IF(ctx->gimmick != GIMMICK_MEGA && hasMegaStone, "Cannot use another gimmick while holding a Mega Stone");
+        INVALID_IF(ctx->gimmick != GIMMICK_Z_MOVE && ctx->gimmick != GIMMICK_ULTRA_BURST && hasZCrystal, "Cannot use another gimmick while holding a Z-Crystal");
 
         // Check multiple gimmick use.
         SetGimmick(sourceLine, side, DATA.currentMonIndexes[battlerId], ctx->gimmick);

@@ -71,6 +71,6 @@ DOUBLE_BATTLE_TEST("Enigma Berry doesn't trigger if partner was hit")
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
     } THEN {
-        EXPECT(opponentRight->item == ITEM_ENIGMA_BERRY);
+        EXPECT(opponentRight->items[0] == ITEM_ENIGMA_BERRY);
     }
 }

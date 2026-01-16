@@ -75,6 +75,7 @@ struct SpeciesItem
 {
     u16 species;
     u16 item;
+    u16 item2;
 };
 
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon);
@@ -1340,7 +1341,8 @@ void CreateBattleTowerMon(struct Pokemon *mon, struct BattleTowerPokemon *src)
         SetMonMoveSlot(mon, src->moves[i], i);
 
     SetMonData(mon, MON_DATA_PP_BONUSES, &src->ppBonuses);
-    SetMonData(mon, MON_DATA_HELD_ITEM, &src->heldItem);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        SetMonData(mon, MON_DATA_HELD_ITEM + i, &src->heldItem[i]);
     SetMonData(mon, MON_DATA_FRIENDSHIP, &src->friendship);
 
     StringCopy(nickname, src->nickname);
@@ -1402,7 +1404,8 @@ void CreateBattleTowerMon_HandleLevel(struct Pokemon *mon, struct BattleTowerPok
         SetMonMoveSlot(mon, src->moves[i], i);
 
     SetMonData(mon, MON_DATA_PP_BONUSES, &src->ppBonuses);
-    SetMonData(mon, MON_DATA_HELD_ITEM, &src->heldItem);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        SetMonData(mon, MON_DATA_HELD_ITEM + i, &src->heldItem[i]);
     SetMonData(mon, MON_DATA_FRIENDSHIP, &src->friendship);
 
     StringCopy(nickname, src->nickname);
@@ -1461,7 +1464,8 @@ void CreateApprenticeMon(struct Pokemon *mon, const struct Apprentice *src, u8 m
               OT_ID_PRESET,
               otId);
 
-    SetMonData(mon, MON_DATA_HELD_ITEM, &src->party[monId].item);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        SetMonData(mon, MON_DATA_HELD_ITEM + i, &src->party[monId].item[i]);
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonMoveSlot(mon, src->party[monId].moves[i], i);
 
@@ -1512,15 +1516,19 @@ void CreateMonWithEVSpreadNatureOTID(struct Pokemon *mon, u16 species, u8 level,
 void ConvertPokemonToBattleTowerPokemon(struct Pokemon *mon, struct BattleTowerPokemon *dest)
 {
     s32 i;
-    u16 heldItem;
+    u16 heldItem[MAX_MON_ITEMS];
 
     dest->species = GetMonData(mon, MON_DATA_SPECIES, NULL);
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
+    
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        heldItem[i] = GetMonData(mon, MON_DATA_HELD_ITEM + i, NULL);
 
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-        heldItem = ITEM_NONE;
+        if (heldItem[i] == ITEM_ENIGMA_BERRY_E_READER)
+            heldItem[i] = ITEM_NONE;
 
-    dest->heldItem = heldItem;
+        dest->heldItem[i] = heldItem[i];
+    }
 
     for (i = 0; i < MAX_MON_MOVES; i++)
         dest->moves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, NULL);
@@ -1646,6 +1654,7 @@ void CreateEnemyEventMon(void)
     s32 species = gSpecialVar_0x8004;
     s32 level = gSpecialVar_0x8005;
     s32 itemId = gSpecialVar_0x8006;
+    u16 slot;
 
     ZeroEnemyPartyMons();
     CreateEventMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);
@@ -1654,7 +1663,11 @@ void CreateEnemyEventMon(void)
         u8 heldItem[2];
         heldItem[0] = itemId;
         heldItem[1] = itemId >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
+
+        slot = GetNextMonEmptySlot(&gEnemyParty[0], itemId);
+        
+        if (slot != MAX_MON_ITEMS)
+            SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM + slot, heldItem);  //leaving as one item to not mess with the specialVar (Multi)
     }
 }
 
@@ -2459,6 +2472,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_HELD_ITEM:
             retVal = GetSubstruct0(boxMon)->heldItem;
             break;
+        case MON_DATA_HELD_ITEM_TWO:
+            retVal = GetSubstruct0(boxMon)->heldItem2;
+            break;
         case MON_DATA_EXP:
             retVal = GetSubstruct0(boxMon)->experience;
             break;
@@ -2968,6 +2984,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         case MON_DATA_HELD_ITEM:
             SET16(GetSubstruct0(boxMon)->heldItem);
             break;
+        case MON_DATA_HELD_ITEM_TWO:
+            SET16(GetSubstruct0(boxMon)->heldItem2);
+            break;
         case MON_DATA_EXP:
             SET32(GetSubstruct0(boxMon)->experience);
             break;
@@ -3464,7 +3483,8 @@ void CreateSecretBaseEnemyParty(struct SecretBase *secretBaseRecord)
                 OT_ID_RANDOM_NO_SHINY,
                 0);
 
-            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gBattleResources->secretBase->party.heldItems[i]);
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+                SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + j, &gBattleResources->secretBase->party.heldItem[i][j]);
 
             for (j = 0; j < NUM_STATS; j++)
                 SetMonData(&gEnemyParty[i], MON_DATA_HP_EV + j, &gBattleResources->secretBase->party.EVs[i]);
@@ -3686,7 +3706,8 @@ void PokemonToBattleMon(struct Pokemon *src, struct BattlePokemon *dst)
     }
 
     dst->species = GetMonData(src, MON_DATA_SPECIES, NULL);
-    dst->item = GetMonData(src, MON_DATA_HELD_ITEM, NULL);
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+        dst->items[i] = GetMonData(src, MON_DATA_HELD_ITEM + i, NULL);
     dst->ppBonuses = GetMonData(src, MON_DATA_PP_BONUSES, NULL);
     dst->friendship = GetMonData(src, MON_DATA_FRIENDSHIP, NULL);
     dst->experience = GetMonData(src, MON_DATA_EXP, NULL);
@@ -3744,7 +3765,7 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, 
     {                                                                                                   \
         friendshipChange = itemEffect[itemEffectParam];                                                 \
         friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, NULL);                                        \
-        friendship += CalculateFriendshipBonuses(mon,friendshipChange,holdEffect);                      \
+        friendship += CalculateFriendshipBonuses(mon,friendshipChange);                      \
         if (friendship < 0)                                                                             \
             friendship = 0;                                                                             \
         if (friendship > MAX_FRIENDSHIP)                                                                \
@@ -3775,27 +3796,14 @@ bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 mov
     u8 itemEffectParam = ITEM_EFFECT_ARG_START;
     u32 temp1, temp2;
     s8 friendshipChange = 0;
-    enum HoldEffect holdEffect;
     u8 battler = MAX_BATTLERS_COUNT;
     bool32 friendshipOnly = FALSE;
-    u16 heldItem;
     u8 effectFlags;
     s8 evChange;
     u16 evCount;
 
     // Determine the EV cap to use
     u32 maxAllowedEVs = !B_EV_ITEMS_CAP ? MAX_TOTAL_EVS : GetCurrentEVCap();
-
-    // Get item hold effect
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-    #if FREE_ENIGMA_BERRY == FALSE
-        holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-    #else
-        holdEffect = 0;
-    #endif //FREE_ENIGMA_BERRY
-    else
-        holdEffect = GetItemHoldEffect(heldItem);
 
     // Skip using the item if it won't do anything
     if (GetItemEffect(item) == NULL && item != ITEM_ENIGMA_BERRY_E_READER)
@@ -4461,7 +4469,6 @@ u32 GetGMaxTargetSpecies(u32 species)
 bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState)
 {
     u32 i, j;
-    u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM);
     u32 gender = GetMonGender(mon);
     u32 friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, 0);
     u32 attack = GetMonData(mon, MON_DATA_ATK, 0);
@@ -4474,28 +4481,16 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
     u32 removeBagItem = ITEM_NONE;
     u32 removeBagItemCount = 0;
     u32 evolutionTracker = GetMonData(mon, MON_DATA_EVOLUTION_TRACKER, 0);
-    u32 partnerSpecies, partnerHeldItem;
-    enum HoldEffect partnerHoldEffect;
+    u32 partnerSpecies;
+    u8 slot;
 
     if (tradePartner != NULL)
     {
         partnerSpecies = GetMonData(tradePartner, MON_DATA_SPECIES, 0);
-        partnerHeldItem = GetMonData(tradePartner, MON_DATA_HELD_ITEM, 0);
-
-        if (partnerHeldItem == ITEM_ENIGMA_BERRY_E_READER)
-        #if FREE_ENIGMA_BERRY == FALSE
-            partnerHoldEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-        #else
-            partnerHoldEffect = 0;
-        #endif //FREE_ENIGMA_BERRY
-        else
-            partnerHoldEffect = GetItemHoldEffect(partnerHeldItem);
     }
     else
     {
         partnerSpecies = SPECIES_NONE;
-        partnerHeldItem = ITEM_NONE;
-        partnerHoldEffect = HOLD_EFFECT_NONE;
     }
 
     // Check for additional conditions (only if the primary method passes). Skips if there's no additional conditions.
@@ -4537,8 +4532,9 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
                 currentCondition = TRUE;
             break;
         case IF_HOLD_ITEM:
-            if (heldItem == params[i].arg1)
+            if (MonHasItem(mon, params[i].arg1))
             {
+                slot = i;
                 currentCondition = TRUE;
                 removeHoldItem = TRUE;
             }
@@ -4618,7 +4614,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             break;
         // Gen 5
         case IF_TRADE_PARTNER_SPECIES:
-            if (params[i].arg1 == partnerSpecies && partnerHoldEffect != HOLD_EFFECT_PREVENT_EVOLVE)
+            if (params[i].arg1 == partnerSpecies && MonHasItemHoldEffect(tradePartner, HOLD_EFFECT_PREVENT_EVOLVE) == FALSE)
                 currentCondition = TRUE;
             break;
         // Gen 6
@@ -4626,8 +4622,8 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             for (j = 0; j < PARTY_SIZE; j++)
             {
                 u16 currSpecies = GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL);
-                if (GetSpeciesType(currSpecies, 0) == params[i].arg1
-                 || GetSpeciesType(currSpecies, 1) == params[i].arg1)
+                if (gSpeciesInfo[currSpecies].types[0] == params[i].arg1
+                 || gSpeciesInfo[currSpecies].types[1] == params[i].arg1)
                 {
                     currentCondition = TRUE;
                     break;
@@ -4772,7 +4768,12 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
             if (removeHoldItem)
             {
                 u32 heldItem = ITEM_NONE;
-                SetMonData(mon, MON_DATA_HELD_ITEM, &heldItem);
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (GetMonData(mon, MON_DATA_HELD_ITEM + i) == params[slot].arg1) 
+                        SetMonData(mon, MON_DATA_HELD_ITEM + i, &heldItem);
+                }
+                
             }
 
             if (removeBagItem != ITEM_NONE)
@@ -4791,25 +4792,14 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     int i;
     u32 targetSpecies = SPECIES_NONE;
     u32 species = GetMonData(mon, MON_DATA_SPECIES, 0);
-    u32 heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
     u32 level = GetMonData(mon, MON_DATA_LEVEL, 0);
-    enum HoldEffect holdEffect;
     const struct Evolution *evolutions = GetSpeciesEvolutions(species);
 
     if (evolutions == NULL)
         return SPECIES_NONE;
 
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-    #if FREE_ENIGMA_BERRY == FALSE
-        holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-    #else
-        holdEffect = 0;
-    #endif //FREE_ENIGMA_BERRY
-    else
-        holdEffect = GetItemHoldEffect(heldItem);
-
     // Prevent evolution with Everstone, unless we're just viewing the party menu with an evolution item
-    if (holdEffect == HOLD_EFFECT_PREVENT_EVOLVE
+    if (MonHasItemHoldEffect(mon, HOLD_EFFECT_PREVENT_EVOLVE)
         && mode != EVO_MODE_ITEM_CHECK
         && (P_KADABRA_EVERSTONE < GEN_4 || species != SPECIES_KADABRA))
         return SPECIES_NONE;
@@ -5251,31 +5241,13 @@ u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex)
 
 void AdjustFriendship(struct Pokemon *mon, u8 event)
 {
-    u16 species, heldItem;
-    enum HoldEffect holdEffect;
+    u16 species;
     s8 mod;
 
     if (ShouldSkipFriendshipChange())
         return;
 
     species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
-
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
-    {
-        if (gMain.inBattle)
-            holdEffect = gEnigmaBerries[0].holdEffect;
-        else
-        #if FREE_ENIGMA_BERRY == FALSE
-            holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-        #else
-            holdEffect = 0;
-        #endif //FREE_ENIGMA_BERRY
-    }
-    else
-    {
-        holdEffect = GetItemHoldEffect(heldItem);
-    }
 
     if (species && species != SPECIES_EGG)
     {
@@ -5306,7 +5278,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
         }
 
         mod = sFriendshipEventModifiers[event][friendshipLevel];
-        friendship += CalculateFriendshipBonuses(mon,mod,holdEffect);
+        friendship += CalculateFriendshipBonuses(mon,mod);
 
         if (friendship < 0)
             friendship = 0;
@@ -5317,11 +5289,11 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     }
 }
 
-u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect)
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier)
 {
     u32 bonus = 0;
 
-    if ((modifier > 0) && (itemHoldEffect == HOLD_EFFECT_FRIENDSHIP_UP))
+    if ((modifier > 0) && (MonHasItemHoldEffect(mon, HOLD_EFFECT_FRIENDSHIP_UP)))
         bonus += 150 * modifier / 100;
     else
         bonus += modifier;
@@ -5344,107 +5316,113 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     u16 evIncrease = 0;
     u16 totalEVs = 0;
     u16 heldItem;
-    enum HoldEffect holdEffect;
+    u8 holdEffect;
     enum Stat i;
-    int multiplier;
+    int j;
+    int multiplier = 1;
     u8 stat;
     u8 bonus;
     u32 currentEVCap = GetCurrentEVCap();
 
-    heldItem = GetMonData(mon, MON_DATA_HELD_ITEM, 0);
-    if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
+    for (j = 0; j < MAX_MON_ITEMS; j++)
     {
-        if (gMain.inBattle)
-            holdEffect = gEnigmaBerries[0].holdEffect;
-        else
-        #if FREE_ENIGMA_BERRY == FALSE
-            holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
-        #else
-            holdEffect = 0;
-        #endif //FREE_ENIGMA_BERRY
-    }
-    else
-    {
-        holdEffect = GetItemHoldEffect(heldItem);
-    }
-
-    stat = GetItemSecondaryId(heldItem);
-    bonus = GetItemHoldEffectParam(heldItem);
-
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        evs[i] = GetMonData(mon, MON_DATA_HP_EV + i, 0);
-        totalEVs += evs[i];
-    }
-
-    for (i = 0; i < NUM_STATS; i++)
-    {
-        if (totalEVs >= currentEVCap)
-            break;
-
-        if (CheckPartyHasHadPokerus(mon, 0))
-            multiplier = 2;
-        else
-            multiplier = 1;
-
-        switch (i)
+        heldItem = GetMonData(mon, MON_DATA_HELD_ITEM + j, 0);
+        
+        if (heldItem == ITEM_ENIGMA_BERRY_E_READER)
         {
-        case STAT_HP:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_HP)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_HP + bonus) * multiplier;
+            if (gMain.inBattle)
+                holdEffect = gEnigmaBerries[0].holdEffect;
             else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_HP * multiplier;
-            break;
-        case STAT_ATK:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_ATK)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Attack + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Attack * multiplier;
-            break;
-        case STAT_DEF:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_DEF)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Defense + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Defense * multiplier;
-            break;
-        case STAT_SPEED:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPEED)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_Speed + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_Speed * multiplier;
-            break;
-        case STAT_SPATK:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPATK)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpAttack + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpAttack * multiplier;
-            break;
-        case STAT_SPDEF:
-            if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPDEF)
-                evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpDefense + bonus) * multiplier;
-            else
-                evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpDefense * multiplier;
-            break;
-        default:
-            break;
+            #if FREE_ENIGMA_BERRY == FALSE
+                holdEffect = gSaveBlock1Ptr->enigmaBerry.holdEffect;
+            #else
+                holdEffect = 0;
+            #endif //FREE_ENIGMA_BERRY
+        }
+        else
+        {
+            holdEffect = GetItemHoldEffect(heldItem);
         }
 
-        if (holdEffect == HOLD_EFFECT_MACHO_BRACE)
-            evIncrease *= 2;
+        stat = GetItemSecondaryId(heldItem);
+        bonus = GetItemHoldEffectParam(heldItem);
 
-        if (totalEVs + (s16)evIncrease > currentEVCap)
-            evIncrease = ((s16)evIncrease + currentEVCap) - (totalEVs + evIncrease);
-
-        if (evs[i] + (s16)evIncrease > MAX_PER_STAT_EVS)
+        for (i = 0; i < NUM_STATS; i++)
         {
-            int val1 = (s16)evIncrease + MAX_PER_STAT_EVS;
-            int val2 = evs[i] + evIncrease;
-            evIncrease = val1 - val2;
+            evs[i] = GetMonData(mon, MON_DATA_HP_EV + i, 0);
+            totalEVs += evs[i];
         }
+        
+        for (i = 0; i < NUM_STATS; i++)
+        {
+            evIncrease = 0;
+            
+            if (totalEVs >= currentEVCap)
+                break;
 
-        evs[i] += evIncrease;
-        totalEVs += evIncrease;
-        SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
+            switch (i)
+            {
+            case STAT_HP:
+                if (j == 0) // Base defeated pokemon EVs should only be added once
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_HP;
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_HP)
+                    evIncrease += bonus;
+                break;
+            case STAT_ATK:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_Attack;
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_ATK)
+                    evIncrease += bonus;
+                break;
+            case STAT_DEF:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_Defense;
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_DEF)
+                    evIncrease += bonus;
+                break;
+            case STAT_SPEED:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_Speed;
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPEED)
+                    evIncrease += bonus;
+                break;
+            case STAT_SPATK:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_SpAttack;
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPATK)
+                    evIncrease += bonus;
+                break;
+            case STAT_SPDEF:
+                if (j == 0)
+                    evIncrease += gSpeciesInfo[defeatedSpecies].evYield_SpDefense;
+                if (holdEffect == HOLD_EFFECT_POWER_ITEM && stat == STAT_SPDEF)
+                    evIncrease += bonus;
+                break;
+            default:
+                break;
+            }
+
+            if (CheckPartyHasHadPokerus(mon, 0))
+                multiplier *= 2;
+
+            if (MonHasItemHoldEffect(mon, HOLD_EFFECT_MACHO_BRACE)) // Macho Brace always active so it doesn't use the item slot loop
+                 multiplier *= 2;
+
+            evIncrease *= multiplier; // Multiplier split out so that multi item additions happen first and then the multiplier is only applied once
+
+            if (totalEVs + (s16)evIncrease > currentEVCap)
+                evIncrease = ((s16)evIncrease + currentEVCap) - (totalEVs + evIncrease);
+
+            if (evs[i] + (s16)evIncrease > MAX_PER_STAT_EVS)
+            {
+                int val1 = (s16)evIncrease + MAX_PER_STAT_EVS;
+                int val2 = evs[i] + evIncrease;
+                evIncrease = val1 - val2;
+            }
+            evs[i] += evIncrease;
+            totalEVs += evIncrease;
+            SetMonData(mon, MON_DATA_HP_EV + i, &evs[i]);
+        }
     }
 }
 
@@ -6315,16 +6293,13 @@ void SetWildMonHeldItem(void)
         u16 rnd;
         u16 species;
         u16 count = (WILD_DOUBLE_BATTLE) ? 2 : 1;
-        u16 i;
+        u16 i, slot;
         bool32 itemHeldBoost = CanFirstMonBoostHeldItemRarity();
         u16 chanceNoItem = itemHeldBoost ? 20 : 45;
         u16 chanceNotRare = itemHeldBoost ? 80 : 95;
 
         for (i = 0; i < count; i++)
         {
-            if (GetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, NULL) != ITEM_NONE)
-                continue; // prevent overwriting previously set item
-
             rnd = Random() % 100;
             species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, 0);
             if (gMapHeader.mapLayoutId == LAYOUT_ALTERING_CAVE)
@@ -6335,7 +6310,9 @@ void SetWildMonHeldItem(void)
                     // In active Altering Cave, use special item list
                     if (rnd < chanceNotRare)
                         continue;
-                    SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &sAlteringCaveWildMonHeldItems[alteringCaveId].item);
+                    slot = GetNextMonEmptySlot(&gEnemyParty[i], sAlteringCaveWildMonHeldItems[alteringCaveId].item);
+                    if (slot != MAX_MON_ITEMS)
+                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &sAlteringCaveWildMonHeldItems[alteringCaveId].item);
                 }
                 else
                 {
@@ -6343,9 +6320,17 @@ void SetWildMonHeldItem(void)
                     if (rnd < chanceNoItem)
                         continue;
                     if (rnd < chanceNotRare)
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemCommon);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
+                    }
                     else
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemRare);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
+                    }
                 }
             }
             else
@@ -6353,16 +6338,26 @@ void SetWildMonHeldItem(void)
                 if (gSpeciesInfo[species].itemCommon == gSpeciesInfo[species].itemRare && gSpeciesInfo[species].itemCommon != ITEM_NONE)
                 {
                     // Both held items are the same, 100% chance to hold item
-                    SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemCommon);
+                    slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                    if (slot != MAX_MON_ITEMS)
+                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                 }
                 else
                 {
                     if (rnd < chanceNoItem)
                         continue;
                     if (rnd < chanceNotRare)
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemCommon);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
+                    }
                     else
-                        SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM, &gSpeciesInfo[species].itemRare);
+                    {
+                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        if (slot != MAX_MON_ITEMS)
+                            SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
+                    }
                 }
             }
         }
@@ -6835,12 +6830,10 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
     u32 species = GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL);
     u32 targetSpecies = species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
-    u16 heldItem;
     enum Ability ability;
 
     if (formChanges != NULL)
     {
-        heldItem = GetBoxMonData(boxMon, MON_DATA_HELD_ITEM, NULL);
         ability = GetAbilityBySpecies(species, GetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, NULL));
 
         for (i = 0; formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
@@ -6850,16 +6843,16 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                 switch (method)
                 {
                 case FORM_CHANGE_ITEM_HOLD:
-                    if ((heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
+                    if ((BoxMonHasItem(boxMon, formChanges[i].param1) || formChanges[i].param1 == ITEM_NONE)
                      && (ability == formChanges[i].param2 || formChanges[i].param2 == ABILITY_NONE))
                     {
                         // This is to prevent reverting to base form when giving the item to the corresponding form.
                         // Eg. Giving a Zap Plate to an Electric Arceus without an item (most likely to happen when using givemon)
                         bool32 currentItemForm = FALSE;
-                        for (u32 j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
+                        for (int j = 0; formChanges[j].method != FORM_CHANGE_TERMINATOR; j++)
                         {
                             if (species == formChanges[j].targetSpecies
-                                && formChanges[j].param1 == heldItem
+                                && BoxMonHasItem(boxMon, formChanges[j].param1)
                                 && formChanges[j].param1 != ITEM_NONE)
                             {
                                 currentItemForm = TRUE;
@@ -6906,7 +6899,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                     break;
                 case FORM_CHANGE_BEGIN_BATTLE:
                 case FORM_CHANGE_END_BATTLE:
-                    if (heldItem == formChanges[i].param1 || formChanges[i].param1 == ITEM_NONE)
+                    if (BoxMonHasItem(boxMon, formChanges[i].param1) || formChanges[i].param1 == ITEM_NONE)
                         targetSpecies = formChanges[i].targetSpecies;
                     break;
                 case FORM_CHANGE_END_BATTLE_ENVIRONMENT:
@@ -7444,4 +7437,74 @@ bool32 IsSpeciesOfType(u32 species, enum Type type)
      || gSpeciesInfo[species].types[1] == type)
         return TRUE;
     return FALSE;
+}
+
+//Extra Held Item Stuff
+u8 MonHasItem(struct Pokemon *mon, u16 item)
+{
+    u8 i;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++)
+        if(item == GetMonData(mon, MON_DATA_HELD_ITEM + i))
+            return TRUE;
+
+    return FALSE;
+}
+u8 MonHasItemHoldEffect(struct Pokemon *mon, u16 holdEffect)
+{
+    u8 i;
+    u16 item, itemHoldEffect;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        item = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+        itemHoldEffect = GetItemHoldEffect(item);
+        if(holdEffect == itemHoldEffect)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+u8 BoxMonHasItem(struct BoxPokemon *mon, u16 item)
+{
+    u8 i;
+    u16 helditem;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        helditem = GetBoxMonData(mon, MON_DATA_HELD_ITEM + i);
+        if(item == helditem)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+u8 BoxMonHasItemHoldEffect(struct BoxPokemon *mon, u16 holdEffect)
+{
+    u8 i;
+    u16 helditem;
+
+    for(i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        helditem = GetBoxMonData(mon, MON_DATA_HELD_ITEM + i);
+        if(GetItemHoldEffect(helditem) == holdEffect)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+u8 SwitchInCandidateHeldItemWithEffect(struct BattlePokemon switchinCandidate, u16 holdEffect)
+{
+    u16 item = ITEM_NONE;
+
+    for (int i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        item = switchinCandidate.items[i];
+        if(GetItemHoldEffect(item) == holdEffect)
+            return item;
+    }
+    return ITEM_NONE;
 }

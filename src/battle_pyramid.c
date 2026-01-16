@@ -1179,7 +1179,7 @@ static void UpdatePyramidLightRadius(void)
 
 static void ClearPyramidPartyHeldItems(void)
 {
-    int i, j;
+    int i, j, k;
     u16 item = 0;
 
     for (i = 0; i < PARTY_SIZE; i++)
@@ -1187,7 +1187,8 @@ static void ClearPyramidPartyHeldItems(void)
         for (j = 0; j < MAX_FRONTIER_PARTY_SIZE; j++)
         {
             if (gSaveBlock2Ptr->frontier.selectedPartyMons[j] != 0 && gSaveBlock2Ptr->frontier.selectedPartyMons[j] - 1 == i)
-                SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
+                for (k = 0; k < MAX_MON_ITEMS; k++)
+                    SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + k, &item);
         }
     }
 }

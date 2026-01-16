@@ -143,7 +143,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
+         && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
          && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -166,7 +166,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-             && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
+             && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
              && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
                 SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -364,7 +364,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
          && !IsBattlerAtMaxHp(battler)
          && !gBattleMons[battler].volatiles.healBlock
          && !IsSemiInvulnerable(battler, CHECK_ALL)
-         && IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler)))
+         && IsBattlerGrounded(battler, GetBattlerAbility(battler)))
         {
             SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             BattleScriptExecute(BattleScript_GrassyTerrainHeals);
@@ -390,11 +390,15 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         break;
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsLeftoversActivation))
-            effect = TRUE;
+    {
+        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
+            if (ItemBattleEffects(battler, 0, IsLeftoversActivation))
+                effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
+    }
     }
 
     return effect;
@@ -626,7 +630,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
+            if (BattlerHasHeldItemEffect(gBattleMons[battler].volatiles.wrappedBy, HOLD_EFFECT_BINDING_BAND, TRUE))
                 bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
             else
                 bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
@@ -882,13 +886,12 @@ static bool32 HandleEndTurnYawn(u32 battler)
          && !IsLeafGuardProtected(battler, ability))
         {
             gEffectBattler = gBattlerTarget = battler;
-            enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-            if (IsBattlerTerrainAffected(battler, ability, holdEffect, STATUS_FIELD_ELECTRIC_TERRAIN))
+            if (IsBattlerTerrainAffected(battler, ability, STATUS_FIELD_ELECTRIC_TERRAIN))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
             }
-            else if (IsBattlerTerrainAffected(battler, ability, holdEffect, STATUS_FIELD_MISTY_TERRAIN))
+            else if (IsBattlerTerrainAffected(battler, ability, STATUS_FIELD_MISTY_TERRAIN))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_MISTY;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
@@ -1292,23 +1295,17 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     }
     case THIRD_EVENT_BLOCK_ITEMS:
     {
-        // TODO: simplify
-        enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-        switch (holdEffect)
-        {
-        case HOLD_EFFECT_FLAME_ORB:
-        case HOLD_EFFECT_STICKY_BARB:
-        case HOLD_EFFECT_TOXIC_ORB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsOrbsActivation))
+
+        if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
+         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
+         && ItemBattleEffects(battler, 0, IsOrbsActivation))
                 effect = TRUE;
-            break;
-        case HOLD_EFFECT_WHITE_HERB:
-            if (ItemBattleEffects(battler, 0, holdEffect, IsWhiteHerbEndTurnActivation))
+
+        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE)
+         && ItemBattleEffects(battler, 0, IsWhiteHerbEndTurnActivation))
                 effect = TRUE;
-            break;
-        default:
-            break;
-        }
+
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;

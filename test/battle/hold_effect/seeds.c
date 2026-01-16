@@ -160,7 +160,7 @@ SINGLE_BATTLE_TEST("Seeds get consumed in Terrain even if holder is not affected
         ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 

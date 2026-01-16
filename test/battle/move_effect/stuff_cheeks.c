@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks raises Defense by 2 stages after consuming the 
         MESSAGE("Skwovet's Defense sharply rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
