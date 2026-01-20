@@ -5,8 +5,8 @@
 SINGLE_BATTLE_TEST("Trick swaps held items")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } THEN {
@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Trick swaps held items")
 SINGLE_BATTLE_TEST("Trick succeeds if only the user has an item")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Trick succeeds if only the target has an item")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } THEN {
@@ -65,8 +65,8 @@ SINGLE_BATTLE_TEST("Trick fails if either item is Mail")
     PARAMETRIZE { atkItem = ITEM_ORAN_BERRY;  defItem = ITEM_ORANGE_MAIL; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(atkItem); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(defItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(defItem); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
@@ -86,8 +86,8 @@ SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal")
     PARAMETRIZE { atkItem = ITEM_SITRUS_BERRY; defItem = ITEM_FIGHTINIUM_Z; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(atkItem); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(defItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(defItem); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
@@ -107,8 +107,8 @@ SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone")
     PARAMETRIZE { atkSpecies = SPECIES_WOBBUFFET; atkItem = ITEM_SITRUS_BERRY; defSpecies = SPECIES_BLAZIKEN; defItem = ITEM_BLAZIKENITE; }
 
     GIVEN {
-        PLAYER(atkSpecies) { Item(atkItem); }
-        OPPONENT(defSpecies) { Item(defItem); }
+        PLAYER(atkSpecies) { Items(atkItem); }
+        OPPONENT(defSpecies) { Items(defItem); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
@@ -127,8 +127,8 @@ SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form")
     PARAMETRIZE { atkItem = ITEM_SITRUS_BERRY; defItem = ITEM_GRISEOUS_CORE; }
 
     GIVEN {
-        PLAYER(SPECIES_GIRATINA_ORIGIN) { Item(atkItem); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(defItem); }
+        PLAYER(SPECIES_GIRATINA_ORIGIN) { Items(atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(defItem); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
@@ -142,8 +142,8 @@ SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form")
 SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
@@ -157,8 +157,8 @@ SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold")
 SINGLE_BATTLE_TEST("Trick fails against Sticky Hold")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
@@ -172,8 +172,8 @@ SINGLE_BATTLE_TEST("Trick fails against Sticky Hold")
 SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); Speed(50); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SITRUS_BERRY); Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LUM_BERRY); Speed(100); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_TRICK); }
     } SCENE {
@@ -181,5 +181,172 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
     } THEN {
         EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
         EXPECT(opponent->items[0] == ITEM_LUM_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick swaps held items (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } THEN {
+        EXPECT(player->items[1] == ITEM_LUM_BERRY);
+        EXPECT(opponent->items[1] == ITEM_SITRUS_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick succeeds if only the user has an item (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } THEN {
+        EXPECT(player->items[1] == ITEM_NONE);
+        EXPECT(opponent->items[1] == ITEM_SITRUS_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick succeeds if only the target has an item (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } THEN {
+        EXPECT(player->items[1] == ITEM_LUM_BERRY);
+        EXPECT(opponent->items[1] == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick fails if either item is Mail (Multi)")
+{
+    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+
+    ASSUME(ItemIsMail(ITEM_ORANGE_MAIL));
+    PARAMETRIZE { atkItem = ITEM_ORANGE_MAIL; defItem = ITEM_NONE; }
+    PARAMETRIZE { atkItem = ITEM_ORAN_BERRY;  defItem = ITEM_ORANGE_MAIL; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, defItem); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->items[1] == atkItem);
+        EXPECT(opponent->items[1] == defItem);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal (Multi)")
+{
+    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+
+    ASSUME(GetItemHoldEffect(ITEM_FIGHTINIUM_Z) == HOLD_EFFECT_Z_CRYSTAL);
+    PARAMETRIZE { atkItem = ITEM_FIGHTINIUM_Z; defItem = ITEM_NONE; }
+    PARAMETRIZE { atkItem = ITEM_SITRUS_BERRY; defItem = ITEM_FIGHTINIUM_Z; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, defItem); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->items[1] == atkItem);
+        EXPECT(opponent->items[1] == defItem);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone (Multi)")
+{
+    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    u16 atkSpecies = SPECIES_WOBBUFFET, defSpecies = SPECIES_WOBBUFFET;
+
+    PARAMETRIZE { atkSpecies = SPECIES_BLAZIKEN; atkItem = ITEM_BLAZIKENITE; defSpecies = SPECIES_WOBBUFFET; defItem = ITEM_SITRUS_BERRY; }
+    PARAMETRIZE { atkSpecies = SPECIES_WOBBUFFET; atkItem = ITEM_SITRUS_BERRY; defSpecies = SPECIES_BLAZIKEN; defItem = ITEM_BLAZIKENITE; }
+
+    GIVEN {
+        PLAYER(atkSpecies) { Items(ITEM_NONE, atkItem); }
+        OPPONENT(defSpecies) { Items(ITEM_NONE, defItem); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->items[1] == atkItem);
+        EXPECT(opponent->items[1] == defItem);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form (Multi)")
+{
+    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+
+    PARAMETRIZE { atkItem = ITEM_GRISEOUS_CORE; defItem = ITEM_SITRUS_BERRY; }
+    PARAMETRIZE { atkItem = ITEM_SITRUS_BERRY; defItem = ITEM_GRISEOUS_CORE; }
+
+    GIVEN {
+        PLAYER(SPECIES_GIRATINA_ORIGIN) { Items(ITEM_NONE, atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, defItem); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->items[1] == atkItem);
+        EXPECT(opponent->items[1] == defItem);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->items[1] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[1] == ITEM_LUM_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick fails against Sticky Hold (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_NONE, ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet's Sticky Hold made Trick ineffective!");
+    } THEN {
+        EXPECT(player->items[1] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[1] == ITEM_LUM_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_LUM_BERRY); Speed(100); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_TRICK); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->items[1] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[1] == ITEM_LUM_BERRY);
     }
 }

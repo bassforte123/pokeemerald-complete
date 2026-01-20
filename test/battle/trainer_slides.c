@@ -172,7 +172,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_LOPUNNY) {Item(ITEM_LOPUNNITE); };
+        OPPONENT(SPECIES_LOPUNNY) {Items(ITEM_LOPUNNITE); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -187,7 +187,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Z Move")
     gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_Z_MOVE;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {
@@ -210,5 +210,37 @@ SINGLE_BATTLE_TEST("Trainer Slide: Dynamax")
     } SCENE {
         MESSAGE("This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution (Multi)")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_MEGA_EVOLUTION;
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_LOPUNNY) {Items(ITEM_ORAN_BERRY, ITEM_LOPUNNITE); };
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        MESSAGE("This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        MESSAGE("The opposing Lopunny has Mega Evolved into Mega Lopunny!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Trainer Slide: Z Move (Multi)")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_Z_MOVE;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY, ITEM_NORMALIUM_Z); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        MESSAGE("This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");
+        MESSAGE("The opposing Wobbuffet unleashes its full-force Z-Move!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
     }
 }

@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { HP(300); Item(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(300); Items(ITEM_SITRUS_BERRY); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry")
 SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on damage taken")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_AIR_BALLOON); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); }
@@ -177,3 +177,32 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break FALSE, failin
 }
 
 TO_DO_BATTLE_TEST("Baton Pass passes Substitutes");
+
+SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].battleUsage == EFFECT_ITEM_RESTORE_HP);
+        PLAYER(SPECIES_WOBBUFFET) { HP(300); Items(ITEM_PECHA_BERRY, ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Substitute's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        MESSAGE("Wobbuffet put in a substitute!");
+        NOT MESSAGE("Wobbuffet's Air Balloon popped!");
+    }
+}

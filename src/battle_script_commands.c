@@ -9018,6 +9018,7 @@ static void Cmd_removeitemwitheffect(void)
      && GetMoveEffect(gCurrentMove) != EFFECT_CORROSIVE_GAS)
         GetBattlerPartyState(battler)->usedHeldItems[slot] = itemId; // Remember if switched out
 
+
     // // Clear vanilla slot as a redundancy
     // if (slot == 0)
     //     gBattleMons[battler].item = ITEM_NONE;
@@ -13586,7 +13587,8 @@ static void Cmd_tryrecycleitem(void)
     {
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i] != ITEM_NONE)
+            if (GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i] != ITEM_NONE
+             && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE)
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
@@ -13598,7 +13600,8 @@ static void Cmd_tryrecycleitem(void)
     {
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetBattlerPartyState(gBattlerTarget)->usedHeldItems[i] != ITEM_NONE)
+            if (GetBattlerPartyState(gBattlerTarget)->usedHeldItems[i] != ITEM_NONE
+             && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE)
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
@@ -13610,7 +13613,8 @@ static void Cmd_tryrecycleitem(void)
     {
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetItemPocket(GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i]) == POCKET_BERRIES)
+            if (GetItemPocket(GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[i]) == POCKET_BERRIES
+             && gBattleMons[gBattlerAttacker].items[i] == ITEM_NONE)
             {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
                     index++;
@@ -15852,8 +15856,8 @@ static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 
                                 if (GetMonData(monDef, MON_DATA_SPECIES) == evolutions[i].params[j].arg1
                                 && GetMonData(monDef, MON_DATA_HELD_ITEM + k) == evolutions[i].params[j].arg2)
                                     SetMonData(monAtk, MON_DATA_EVOLUTION_TRACKER, &val);
-                                break;
                             }
+                            break;
                     }
                     return;
                 }

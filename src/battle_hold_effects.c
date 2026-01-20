@@ -1076,40 +1076,24 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, Activat
     u16 battlerItems[MAX_MON_ITEMS];
     STORE_BATTLER_ITEMS(itemBattler);
 
-    if (!IsBattlerAlive(itemBattler)
-     && !SearchItemSlots(battlerItems, HOLD_EFFECT_ROWAP_BERRY)  // Hacky workaround for them right now
-     && !SearchItemSlots(battlerItems, HOLD_EFFECT_JABOCA_BERRY)
-     && !SearchItemSlots(battlerItems, HOLD_EFFECT_ROCKY_HELMET))
-        return effect;
-
-    for (i = 0; i < MAX_MON_ITEMS; i++)
-    {
-        if (timing != IsOnFlingActivation
-         && GetItemHoldEffect(battlerItems[i]) != HOLD_EFFECT_NONE
-         && timing(GetItemHoldEffect(battlerItems[i]))
-         && !IsUnnerveBlocked(itemBattler, battlerItems[i])
-         && !(timing == IsOnSwitchInFirstTurnActivation && gSpecialStatuses[itemBattler].switchInItemDone == TRUE))
-        {
-            validCheck = TRUE;
-            break;
-        }
-    }
-
-    // Exceptions for items being used without being held by the user
-    if ((timing == IsOnBerryActivation && GetItemPocket(gLastUsedItem) == POCKET_BERRIES) //Harvest and Bug Bite
-     || (timing == IsOnFlingActivation && GetItemHoldEffect(gLastUsedItem) != HOLD_EFFECT_NONE)) //Fling
-        validCheck = TRUE;
-
-    if (!validCheck)
-        return effect;
-
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
         if (timing == IsOnFlingActivation || timing == IsOnBerryActivation) // Fling and BugBite doesn't use a currently held item.
             item = gLastUsedItem;
         else
             item = battlerItems[i];
+
         holdEffect = GetItemHoldEffect(item);
+        if (holdEffect == HOLD_EFFECT_NONE
+         || !timing(holdEffect)
+         || IsUnnerveBlocked(itemBattler, item))
+            continue;
+
+        if (!IsBattlerAlive(itemBattler)
+         && holdEffect != HOLD_EFFECT_ROWAP_BERRY // Hacky workaround for them right now
+         && holdEffect != HOLD_EFFECT_JABOCA_BERRY
+         && holdEffect != HOLD_EFFECT_ROCKY_HELMET)
+            continue;
 
         switch (holdEffect)
         {
@@ -1285,7 +1269,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, Activat
         {
             gLastUsedItem = item;
             break;
-        }    
+        }
     }
 
     if (effect == ITEM_STATUS_CHANGE)

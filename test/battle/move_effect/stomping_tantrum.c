@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user failed to a
     s16 damage[3];
     PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_POTION); };
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_LUM_BERRY); };
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Items(ITEM_POTION); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Items(ITEM_LUM_BERRY); };
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); MOVE(opponent, MOVE_THUNDER_WAVE); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRICK);  }
@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will not deal double if it missed")
     s16 damage[2];
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); };
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_BRIGHTPOWDER); };
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM, hit: FALSE); }
@@ -151,6 +151,57 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user was immune 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         MESSAGE("It doesn't affect the opposing Pidgey…");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(2.0), damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user failed to attack due to paralysis (Multi)")
+{
+    s16 damage[3];
+    PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Items(ITEM_PECHA_BERRY, ITEM_POTION); };
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Items(ITEM_PECHA_BERRY, ITEM_LUM_BERRY); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); MOVE(opponent, MOVE_THUNDER_WAVE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRICK);  }
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, opponent);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        HP_BAR(opponent, captureDamage: &damage[2]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(2.0), damage[1]);
+        EXPECT_EQ(damage[0], damage[2]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Stomping Tantrum will not deal double if it missed (Multi)")
+{
+    s16 damage[2];
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_BRIGHTPOWDER); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM, hit: FALSE); }
+        TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        MESSAGE("Wobbuffet's attack missed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STOMPING_TANTRUM, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {

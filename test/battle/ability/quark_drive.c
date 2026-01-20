@@ -205,7 +205,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Ene
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
+        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Items(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
     } WHEN {
         TURN { SWITCH(player, 1); }
@@ -221,8 +221,8 @@ SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); Item(ITEM_BOOSTER_ENERGY); }
+        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Items(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); Items(ITEM_BOOSTER_ENERGY); }
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_TRANSFORM); }
     } SCENE {
@@ -233,6 +233,42 @@ SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
     } THEN {
         EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
         EXPECT_EQ(opponent->items[0], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(opponent->ability, ABILITY_QUARK_DRIVE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Energy (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); }
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+    } THEN {
+        EXPECT_EQ(player->items[1], ITEM_BOOSTER_ENERGY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_IRON_TREADS) { Ability(ABILITY_QUARK_DRIVE); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_TRANSFORM); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
+        NOT ABILITY_POPUP(opponent, ABILITY_QUARK_DRIVE);
+    } THEN {
+        EXPECT_EQ(player->items[1], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(opponent->items[1], ITEM_BOOSTER_ENERGY);
         EXPECT_EQ(opponent->ability, ABILITY_QUARK_DRIVE);
     }
 }

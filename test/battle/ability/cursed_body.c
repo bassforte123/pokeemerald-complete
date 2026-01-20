@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle")
         ASSUME(GetItemHoldEffect(ITEM_CHOICE_SCARF) == HOLD_EFFECT_CHOICE_SCARF);
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         ASSUME(GetMoveCategory(MOVE_CELEBRATE) == DAMAGE_CATEGORY_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_CHOICE_SCARF); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TAUNT); }
@@ -90,3 +90,23 @@ SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution")
 TO_DO_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move")
 TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move") // Rotom Powers can restore Z-Moves
 TO_DO_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
+
+SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Multi)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_CHOICE_SCARF) == HOLD_EFFECT_CHOICE_SCARF);
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetMoveCategory(MOVE_CELEBRATE) == DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CHOICE_SCARF); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TAUNT); }
+        TURN { FORCED_MOVE(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+            MESSAGE("Wobbuffet's Struggle was disabled by the opposing Frillish's Cursed Body!");
+        }
+    }
+}

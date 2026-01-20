@@ -223,7 +223,7 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
-        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Item(ITEM_CHOICE_BAND); Attack(120); Defense(60); SpAttack(150); SpDefense(60); }
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Items(ITEM_CHOICE_BAND); Attack(120); Defense(60); SpAttack(150); SpDefense(60); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -251,5 +251,23 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Items(ITEM_ORAN_BERRY, ITEM_CHOICE_BAND); Attack(120); Defense(60); SpAttack(150); SpDefense(60); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
 }

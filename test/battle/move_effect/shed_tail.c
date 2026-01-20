@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Shed Tail's HP cost can trigger a berry before the user swit
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SITRUS_BERRY); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Shed Tail fails if there are no usable Pokémon left")
 SINGLE_BATTLE_TEST("Shed Tail's HP cost doesn't trigger effects that trigger on damage taken")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_AIR_BALLOON); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -123,5 +123,36 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute with 1/4 of user maximum heal
             MESSAGE("Bulbasaur's substitute faded!");
         else
             NOT MESSAGE("Bulbasaur's substitute faded!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Shed Tail's HP cost can trigger a berry before the user switches out (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].battleUsage == EFFECT_ITEM_RESTORE_HP);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHED_TAIL); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
+        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
+        SEND_IN_MESSAGE("Wynaut");
+    }
+}
+
+SINGLE_BATTLE_TEST("Shed Tail's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHED_TAIL); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
+        MESSAGE("Wobbuffet shed its tail to create a decoy!");
+        NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }

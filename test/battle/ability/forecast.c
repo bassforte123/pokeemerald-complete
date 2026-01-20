@@ -199,7 +199,7 @@ SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather")
     GIVEN {
         PLAYER(SPECIES_CASTFORM_NORMAL) { Ability(ABILITY_FORECAST); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Item(item); }
+        OPPONENT(species) { Items(item); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
@@ -444,5 +444,37 @@ DOUBLE_BATTLE_TEST("Forecast reverts Castform back after Teraform Zero clears we
         ABILITY_POPUP(playerRight, ABILITY_FORECAST);
     } THEN {
         EXPECT_EQ(playerRight->species, SPECIES_CASTFORM_NORMAL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather (Multi)")
+{
+    u32 species, item;
+    enum Ability ability;
+    PARAMETRIZE { species = SPECIES_KYOGRE; ability = ABILITY_PRIMORDIAL_SEA; item = ITEM_BLUE_ORB; }
+    PARAMETRIZE { species = SPECIES_GROUDON; ability = ABILITY_DESOLATE_LAND; item = ITEM_RED_ORB; }
+    GIVEN {
+        PLAYER(SPECIES_CASTFORM_NORMAL) { Ability(ABILITY_FORECAST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Items(ITEM_PECHA_BERRY, item); }
+    } WHEN {
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ability);
+        ABILITY_POPUP(player, ABILITY_FORECAST);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
+        MESSAGE("Castform transformed!");
+    } THEN {
+        switch (ability)
+        {
+        case ABILITY_DESOLATE_LAND:
+            EXPECT_EQ(player->species, SPECIES_CASTFORM_SUNNY);
+            break;
+        case ABILITY_PRIMORDIAL_SEA:
+            EXPECT_EQ(player->species, SPECIES_CASTFORM_RAINY);
+            break;
+        default:
+            break;
+        }
     }
 }

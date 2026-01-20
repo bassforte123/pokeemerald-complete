@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Sleep Talk can still use moves with no PP")
 SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_BAND); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_FLY, MOVE_DIG); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_CHOICE_BAND); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_FLY, MOVE_DIG); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
@@ -185,5 +185,23 @@ SINGLE_BATTLE_TEST("Sleep Talk deducts power points from itself, not the called 
     } THEN {
         EXPECT_EQ(player->pp[0], 9);
         EXPECT_EQ(player->pp[1], 35);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CHOICE_BAND); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SCRATCH, MOVE_FLY, MOVE_DIG); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SLEEP_TALK); }
+        TURN { MOVE(player, MOVE_SLEEP_TALK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
     }
 }

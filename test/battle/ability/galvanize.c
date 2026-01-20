@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Natural Gift's type")
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ability); Item(ITEM_ORAN_BERRY); }
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ability); Items(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
@@ -132,7 +132,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Judgment / Techno Blast / Multi-Att
         ASSUME(gItemsInfo[ITEM_WATER_MEMORY].holdEffect == HOLD_EFFECT_MEMORY);
         ASSUME(gItemsInfo[ITEM_WATER_MEMORY].secondaryId == TYPE_WATER);
         ASSUME(GetSpeciesType(SPECIES_VAPOREON, 0) == TYPE_WATER);
-        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); Item(item); }
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); Items(item); }
         OPPONENT(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); }
     } WHEN {
         TURN { MOVE(player, move); }
@@ -169,3 +169,54 @@ TO_DO_BATTLE_TEST("Galvanize doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Galvanize doesn't affect damaging Z-Move types");
 TO_DO_BATTLE_TEST("(DYNAMAX) Galvanize turns Max Strike into Max Lightning when not used by Gigantamax Pikachu/Toxtricity");
 //TO_DO_BATTLE_TEST("(DYNAMAX) Galvanize doesn't turn Max Strike into Max Lightning when used by Gigantamax Pikachu/Toxtricity, instead becoming G-Max Volt Crash/Stun Shock"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.
+
+SINGLE_BATTLE_TEST("Galvanize doesn't affect Natural Gift's type (Multi)")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_STURDY; }
+    PARAMETRIZE { ability = ABILITY_GALVANIZE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
+        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ability); Items(ITEM_GREAT_BALL, ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_BELDUM);
+    } WHEN {
+        TURN { MOVE(player, MOVE_NATURAL_GIFT); }
+    } SCENE {
+        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player); }
+        MESSAGE("It doesn't affect the opposing Beldum…");
+    }
+}
+
+SINGLE_BATTLE_TEST("Galvanize doesn't affect Judgment / Techno Blast / Multi-Attack's type (Multi)")
+{
+    u16 move, item;
+    PARAMETRIZE { move = MOVE_JUDGMENT; item = ITEM_SPLASH_PLATE; }
+    PARAMETRIZE { move = MOVE_TECHNO_BLAST; item = ITEM_DOUSE_DRIVE; }
+    PARAMETRIZE { move = MOVE_MULTI_ATTACK; item = ITEM_WATER_MEMORY; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_JUDGMENT) == EFFECT_CHANGE_TYPE_ON_ITEM);
+        ASSUME(GetMoveEffect(MOVE_TECHNO_BLAST) == EFFECT_CHANGE_TYPE_ON_ITEM);
+        ASSUME(GetMoveEffect(MOVE_MULTI_ATTACK) == EFFECT_CHANGE_TYPE_ON_ITEM);
+        ASSUME(gItemsInfo[ITEM_SPLASH_PLATE].holdEffect == HOLD_EFFECT_PLATE);
+        ASSUME(gItemsInfo[ITEM_SPLASH_PLATE].secondaryId == TYPE_WATER);
+        ASSUME(gItemsInfo[ITEM_DOUSE_DRIVE].holdEffect == HOLD_EFFECT_DRIVE);
+        ASSUME(gItemsInfo[ITEM_DOUSE_DRIVE].secondaryId == TYPE_WATER);
+        ASSUME(gItemsInfo[ITEM_WATER_MEMORY].holdEffect == HOLD_EFFECT_MEMORY);
+        ASSUME(gItemsInfo[ITEM_WATER_MEMORY].secondaryId == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_VAPOREON, 0) == TYPE_WATER);
+        PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); Items(ITEM_GREAT_BALL, item); }
+        OPPONENT(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        NOT { ANIMATION(ANIM_TYPE_MOVE, move, player); }
+        if (move == MOVE_JUDGMENT)
+            MESSAGE("The opposing Vaporeon's Water Absorb made Judgment useless!");
+        else if (move == MOVE_TECHNO_BLAST)
+            MESSAGE("The opposing Vaporeon's Water Absorb made Techno Blast useless!");
+        else if (move == MOVE_MULTI_ATTACK)
+            MESSAGE("The opposing Vaporeon's Water Absorb made Multi-Attack useless!");
+    }
+}

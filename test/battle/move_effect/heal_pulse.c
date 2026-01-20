@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Heal Pulse ignores accurace checks")
 {
     GIVEN {
         PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_BRIGHT_POWDER); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_BRIGHT_POWDER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_PULSE); }
@@ -98,5 +98,20 @@ SINGLE_BATTLE_TEST("Floral Healing heals the target by 2/3rd of it's maxHP if Gr
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLORAL_HEALING, opponent);
         HP_BAR(player, damage: -maxHP * 2 / 3);
+    }
+}
+
+SINGLE_BATTLE_TEST("Heal Pulse ignores accurace checks (Multi)")
+{
+    GIVEN {
+        PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_PECHA_BERRY, ITEM_BRIGHT_POWDER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_PULSE); }
+    } SCENE {
+        s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAL_PULSE, opponent);
+        HP_BAR(player, damage: -maxHP / 2);
     }
 }

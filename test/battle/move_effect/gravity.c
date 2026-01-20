@@ -70,10 +70,42 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
 
     GIVEN {
         AI_FLAGS(aiFlags);
-        PLAYER(SPECIES_WOBBUFFET) { Item(foeItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(foeItem); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_GRAVITY, MOVE_HEADBUTT, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_EARTH_POWER); Item(friendItem);  }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_EARTH_POWER); Items(friendItem);  }
+    } WHEN {
+    if (move == MOVE_THUNDER || (foeItem == ITEM_AIR_BALLOON && friendItem != ITEM_AIR_BALLOON))
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_GRAVITY); }
+    else
+        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_GRAVITY); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI uses Gravity (Multi)")
+{
+    u32 move, friendItem, foeItem;
+    u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
+
+    PARAMETRIZE { move = MOVE_THUNDER; friendItem = ITEM_NONE; foeItem = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_AIR_BALLOON; }
+    PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_NONE; foeItem = ITEM_AIR_BALLOON; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  move = MOVE_THUNDER; friendItem = ITEM_NONE; foeItem = ITEM_NONE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_NONE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_AIR_BALLOON; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  move = MOVE_HEADBUTT; friendItem = ITEM_NONE; foeItem = ITEM_AIR_BALLOON; }
+
+    GIVEN {
+        AI_FLAGS(aiFlags);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, foeItem); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_GRAVITY, MOVE_HEADBUTT, MOVE_TAUNT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_EARTH_POWER); Items(ITEM_PECHA_BERRY, friendItem);  }
     } WHEN {
     if (move == MOVE_THUNDER || (foeItem == ITEM_AIR_BALLOON && friendItem != ITEM_AIR_BALLOON))
         TURN { EXPECT_MOVE(opponentLeft, MOVE_GRAVITY); }

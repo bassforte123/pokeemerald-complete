@@ -102,8 +102,8 @@ AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI")
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_TINKATON) { Ability(ability); Speed(3); }
-        OPPONENT(SPECIES_PONYTA) { Level(1); Item(ITEM_EJECT_PACK); Moves(MOVE_OVERHEAT); Speed(4); } // Forces switchout
-        OPPONENT(SPECIES_VIKAVOLT) { HP(1); Speed(1); Ability(ABILITY_LEVITATE); Moves(MOVE_FLAMETHROWER); Item(item); }
+        OPPONENT(SPECIES_PONYTA) { Level(1); Items(ITEM_EJECT_PACK); Moves(MOVE_OVERHEAT); Speed(4); } // Forces switchout
+        OPPONENT(SPECIES_VIKAVOLT) { HP(1); Speed(1); Ability(ABILITY_LEVITATE); Moves(MOVE_FLAMETHROWER); Items(item); }
         OPPONENT(SPECIES_HYPNO) { Speed(1); Moves(MOVE_IRON_HEAD); }
     } WHEN {
         if ((ability == ABILITY_MOLD_BREAKER) && (item != ITEM_ABILITY_SHIELD))
@@ -113,3 +113,25 @@ AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI (Multi)")
+{
+    enum Ability ability = ABILITY_NONE, item = ITEM_NONE;
+
+    PARAMETRIZE { ability = ABILITY_OWN_TEMPO, item = ITEM_NONE ; }
+    PARAMETRIZE { ability = ABILITY_MOLD_BREAKER, item = ITEM_NONE ; }
+    PARAMETRIZE { ability = ABILITY_MOLD_BREAKER, item = ITEM_ABILITY_SHIELD ; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_TINKATON) { Ability(ability); Speed(3); }
+        OPPONENT(SPECIES_PONYTA) { Level(1); Items(ITEM_PECHA_BERRY, ITEM_EJECT_PACK); Moves(MOVE_OVERHEAT); Speed(4); } // Forces switchout
+        OPPONENT(SPECIES_VIKAVOLT) { HP(1); Speed(1); Ability(ABILITY_LEVITATE); Moves(MOVE_FLAMETHROWER); Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_HYPNO) { Speed(1); Moves(MOVE_IRON_HEAD); }
+    } WHEN {
+        if ((ability == ABILITY_MOLD_BREAKER) && (item != ITEM_ABILITY_SHIELD))
+            TURN { MOVE(player, MOVE_MUD_SLAP); EXPECT_SEND_OUT(opponent, 2); }
+        else
+            TURN { MOVE(player, MOVE_MUD_SLAP); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}

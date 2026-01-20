@@ -10,7 +10,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves")
 {
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) {Item(ITEM_BLUE_ORB);}
+        PLAYER(SPECIES_KYOGRE) {Items(ITEM_BLUE_ORB);}
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); }
@@ -35,7 +35,7 @@ DOUBLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves and prints th
         ASSUME(!IsBattleMoveStatus(MOVE_ERUPTION));
         ASSUME(GetMoveType(MOVE_ERUPTION) == TYPE_FIRE);
         ASSUME(GetMoveTarget(MOVE_ERUPTION) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_KYOGRE) {Item(ITEM_BLUE_ORB); {Speed(5);}}
+        PLAYER(SPECIES_KYOGRE) {Items(ITEM_BLUE_ORB); {Speed(5);}}
         PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(10);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(8);}
@@ -55,7 +55,7 @@ DOUBLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves and prints th
 SINGLE_BATTLE_TEST("Primordial Sea does not block a move if Pokémon is asleep and uses a Fire-type move") // Sleep/confusion/paralysis all happen before the check for primal weather
 {
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) {Item(ITEM_BLUE_ORB);}
+        PLAYER(SPECIES_KYOGRE) {Items(ITEM_BLUE_ORB);}
         OPPONENT(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); }
@@ -80,7 +80,7 @@ SINGLE_BATTLE_TEST("Primordial Sea blocks weather-setting moves")
         ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         ASSUME(GetMoveEffect(MOVE_SNOWSCAPE) == EFFECT_SNOWSCAPE);
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        PLAYER(SPECIES_KYOGRE) { Items(ITEM_BLUE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Primordial Sea prevents other weather abilities")
     PARAMETRIZE { ability = ABILITY_SNOW_WARNING; species = SPECIES_ABOMASNOW; }
 
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        PLAYER(SPECIES_KYOGRE) { Items(ITEM_BLUE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {
@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Primordial Sea prevents other weather abilities")
 SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Delta Stream")
 {
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        PLAYER(SPECIES_KYOGRE) { Items(ITEM_BLUE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
     } WHEN {
@@ -131,9 +131,9 @@ SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Delta Stream")
 SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")
 {
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
+        PLAYER(SPECIES_KYOGRE) { Items(ITEM_BLUE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_GROUDON) { Items(ITEM_RED_ORB); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
@@ -141,5 +141,27 @@ SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")
         MESSAGE("The sunlight turned extremely harsh!");
     } THEN {
         EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) {Items(ITEM_PECHA_BERRY, ITEM_BLUE_ORB);}
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); }
+        TURN { MOVE(opponent, MOVE_EMBER); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Ember!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        MESSAGE("The Fire-type attack fizzled out in the heavy rain!");
+        NOT HP_BAR(player);
+        MESSAGE("The opposing Wobbuffet used Ember!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        MESSAGE("The Fire-type attack fizzled out in the heavy rain!");
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(player->hp, player->maxHP);
     }
 }

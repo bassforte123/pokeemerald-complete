@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move")
 {
     GIVEN {
         PLAYER(SPECIES_DRAGONITE);
-        OPPONENT(SPECIES_ALTARIA) { Item(ITEM_ALTARIANITE); }
+        OPPONENT(SPECIES_ALTARIA) { Items(ITEM_ALTARIANITE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type")
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_SYLVEON) { Ability(ability); Item(ITEM_ORAN_BERRY); }
+        PLAYER(SPECIES_SYLVEON) { Ability(ability); Items(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Judgment / Techno Blast / Multi-Atta
         ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].holdEffect == HOLD_EFFECT_MEMORY);
         ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].secondaryId == TYPE_ELECTRIC);
         ASSUME(GetSpeciesType(SPECIES_DIGLETT, 0) == TYPE_GROUND);
-        PLAYER(SPECIES_SYLVEON) { Ability(ABILITY_PIXILATE); Item(item); }
+        PLAYER(SPECIES_SYLVEON) { Ability(ABILITY_PIXILATE); Items(item); }
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
         TURN { MOVE(player, move); }
@@ -147,3 +147,17 @@ TO_DO_BATTLE_TEST("Pixilate doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale");
+
+SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DRAGONITE);
+        OPPONENT(SPECIES_ALTARIA) { Items(ITEM_PECHA_BERRY, ITEM_ALTARIANITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("It's super effective!");
+    }
+}

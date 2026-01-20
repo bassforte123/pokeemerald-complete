@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     GIVEN {
         ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(species) { Speed(6); Ability(ability); Item(heldItem); }
+        OPPONENT(species) { Speed(6); Ability(ability); Items(heldItem); }
     } WHEN {
         TURN { }
     } SCENE {
@@ -460,6 +460,49 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Pr
             } else if (move == MOVE_OBSTRUCT) {
                 MESSAGE("Wobbuffet's Defense harshly fell!");
             }
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from Iron Ball (Multi)")
+{
+    u32 j, species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
+    u16 heldItem = ITEM_NONE;
+    static const u16 heldItems[] = {
+        ITEM_NONE,
+        ITEM_IRON_BALL,
+    };
+    for (j = 0; j < ARRAY_COUNT(heldItems); j++)
+    {
+        PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; heldItem = heldItems[j]; }
+        PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; heldItem = heldItems[j]; }
+        PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; heldItem = heldItems[j]; }
+    }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(species) { Speed(6); Ability(ability); Items(ITEM_PECHA_BERRY, heldItem); }
+    } WHEN {
+        TURN { }
+    } SCENE {
+        NOT ABILITY_POPUP(opponent, ability);
+        if (heldItem == ITEM_IRON_BALL) {
+            MESSAGE("Wobbuffet used Celebrate!");
+            if (ability == ABILITY_FULL_METAL_BODY)
+                MESSAGE("The opposing Solgaleo used Celebrate!");
+            else if (ability == ABILITY_WHITE_SMOKE)
+                MESSAGE("The opposing Torkoal used Celebrate!");
+            else
+                MESSAGE("The opposing Metang used Celebrate!");
+        } else {
+            if (ability == ABILITY_FULL_METAL_BODY)
+                MESSAGE("The opposing Solgaleo used Celebrate!");
+            else if (ability == ABILITY_WHITE_SMOKE)
+                MESSAGE("The opposing Torkoal used Celebrate!");
+            else
+                MESSAGE("The opposing Metang used Celebrate!");
+            MESSAGE("Wobbuffet used Celebrate!");
         }
     }
 }

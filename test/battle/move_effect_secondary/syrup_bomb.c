@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Amulet")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_CLEAR_AMULET); }
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
     } SCENE {
@@ -211,6 +211,25 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user faints")
         HP_BAR(player);
         MESSAGE("Wobbuffet fainted!");
         SEND_IN_MESSAGE("Wynaut");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
+            MESSAGE("The opposing Wobbuffet's Speed fell!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Amulet (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CLEAR_AMULET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SYRUP_BOMB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
+        MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
             MESSAGE("The opposing Wobbuffet's Speed fell!");
