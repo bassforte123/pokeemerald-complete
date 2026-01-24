@@ -4794,7 +4794,19 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability)
     else if (ability == ABILITY_QUARK_DRIVE && !(gBattleMons[battler].volatiles.transformed) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battler].boosterEnergyActivated))
         speed = (GetParadoxBoostedStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
     else if (ability == ABILITY_UNBURDEN && gDisableStructs[battler].unburdenActive)
-        speed *= 2;
+    {
+        u8 occupiedSlots = MAX_MON_ITEMS;
+        for (int i = 0; i < MAX_MON_ITEMS; i++)
+            if (gBattleMons[battler].items[i] == ITEM_NONE)
+                occupiedSlots--;
+
+        if (occupiedSlots == 0)
+            speed *= 2; // Normal boosted speed with no items at all
+        else if (occupiedSlots == 1 && MAX_MON_ITEMS > 1) // Only apply additional math if there are more than one item slot
+            speed = uq4_12_multiply(speed, UQ_4_12(1.33)); // If pokemon has 1 item, speed boost reduced to 33% since there's a major jump between having no items and having even 1
+        else if (MAX_MON_ITEMS > 1) // Further items then evenly reduce the remaining boost down to 1x effectiveness at full load
+            speed = uq4_12_multiply(speed, uq4_12_subtract(UQ_4_12(1.33),uq4_12_multiply(uq4_12_divide(UQ_4_12(0.33), UQ_4_12(MAX_MON_ITEMS - 1)), UQ_4_12(speed - 1)))); 
+    }
 
     // player's badge boost
     if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))

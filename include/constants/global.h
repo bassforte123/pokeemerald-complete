@@ -115,7 +115,7 @@
 #define TRAINER_ID_LENGTH 4
 #define MAX_MON_MOVES 4
 #define ALL_MOVES_MASK ((1 << MAX_MON_MOVES) - 1)
-#define MAX_MON_ITEMS 2 // Number of items that can be held by a pokemon
+#define MAX_MON_ITEMS 2 // Number of items that can be held by a pokemon (Must be greater than 1 for this standalone branch)
 
 #define CONTESTANT_COUNT 4
 #define CONTEST_CATEGORY_COOL      0

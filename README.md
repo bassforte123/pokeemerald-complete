@@ -3,13 +3,18 @@
 This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.13.1.
 
 - Battle Behavior:
-	- Item activations happen once per opportunity.  For example if you have two healing berries and your hp drops below half, only one berry will be eaten.  Likewise, eating a berry means nothing else will activate during that opportunity.
-	- Due to the above, Leftovers is given the lowest priority to keep it from blocking every other item every turn, likewise Life Orb is given the highest priority so that its life drain cannot be sidestepped.  Though other effects can still trigger with Life Orb if you use a non-damaging move and thus don't trigger the life drain for that opportunity.
+	- Item activations generally happen once per opportunity and by first slot.  For example if you have a poisoned and injured pokemon switch in with a healing and a poison cure berry, the healing berry will be eaten and the poison berry has to wait until the next activation chance like after an attack.
+	- Some windows have exceptions such as the Terrain Seeds which have a sort of special activation sequence and can stack with Room Service.
+	- As a result, Air Balloon's intro message and Rocky Helm are given low priority so they don't always overwrite the other effects in their window.  Likewise, Air Balloon popping is given higher priority to prevent it from being shielded by other items.
+	- Leftovers and Black Sludge are given a special exception where both can activate together.  The message will give Black Sludge priority but the resulting HP change is the total between the two.
+	- Shell Bell and Life Orb are given a special exception where both can activate together, the resulting message will be based on whether healing or damage is greater.
 	- Passive items that don't need explicit activations such as Charcoal are always active and can also stack effects, though two copies of the exact same item will not stack.
 	- Battle effects that target opponent items they first read which slots are viable targets then select based on the B_MULTI_ITEM_ORDER custom setting.  By default this is set to target latest to earliest, but it can be set to earliest to latest and to random.
 	- Battle effects that move or restore items are locked to the slot. Thief can only steal if the target slot has an item AND the corresponding attacking pokemon's slot is empty.  Thief will not allocate a stolen item to a different free slot.
 	- Fling uses B_MULTI_ITEM_ORDER selection of the attacker's items but also prioritizes non berry items first.
 	- Acrobatics loses most but not all of its bonus if even one item is held, losing up to the full bonus as more items are held.
+	- Unburden uses the same logic as Acrobatics where a partial bonus is given as long as some held item slots are empty.
+	- In the event of Evolution using different held items (Clampearl), the first valid evolution will get priority and activate.  Also note that the evolution process eats all valid evolution items, so even though Clampearl will only evolve into Huntail, both Deep Sea items would get consumed in the process.
 
 - Organization Behavior:
 	- Items are given to pokemon in slots from first to last.
