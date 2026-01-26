@@ -50,6 +50,7 @@ SINGLE_BATTLE_TEST("Custap Berry activates even if the opposing mon switches out
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority bracket when HP is below 1/4 (Multi)")
 {
     GIVEN {
@@ -93,3 +94,4 @@ SINGLE_BATTLE_TEST("Custap Berry activates even if the opposing mon switches out
         MESSAGE("Regirock can act faster than normal, thanks to its Custap Berry!");
     }
 }
+#endif

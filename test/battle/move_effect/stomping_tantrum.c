@@ -158,6 +158,7 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user was immune 
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user failed to attack due to paralysis (Multi)")
 {
     s16 damage[3];
@@ -208,3 +209,4 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will not deal double if it missed (Multi)")
         EXPECT_MUL_EQ(damage[0], Q_4_12(2.0), damage[1]);
     }
 }
+#endif

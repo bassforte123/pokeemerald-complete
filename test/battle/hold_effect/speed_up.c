@@ -88,6 +88,7 @@ DOUBLE_BATTLE_TEST("Salac Berry does not miss timing miss timing")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Salac Berry raises the holder's Speed by one stage when HP drops to 1/4 or below (Multi)")
 {
     u32 move;
@@ -167,3 +168,4 @@ DOUBLE_BATTLE_TEST("Salac Berry does not miss timing miss timing (Multi)")
         MESSAGE("The opposing Wobbuffet was hurt by the sea of fire!");
     }
 }
+#endif

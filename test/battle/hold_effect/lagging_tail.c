@@ -30,6 +30,7 @@ DOUBLE_BATTLE_TEST("Lagging Tail priority bracket will not change if the item is
     }
 }
 
+#if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Lagging Tail priority bracket will not change if the item is removed is changed mid-turn (Multi)")
 {
     GIVEN {
@@ -53,3 +54,4 @@ DOUBLE_BATTLE_TEST("Lagging Tail priority bracket will not change if the item is
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft); // Now last because of Tricking Lagging Tail onto itself
     }
 }
+#endif

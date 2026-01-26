@@ -161,6 +161,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes: Only three layers can be set up")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon (Multi)")
 {
     u32 species = SPECIES_WOBBUFFET;
@@ -208,3 +209,4 @@ SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon (Multi)")
         }
     }
 }
+#endif

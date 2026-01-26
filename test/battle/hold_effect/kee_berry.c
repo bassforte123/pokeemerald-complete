@@ -106,6 +106,7 @@ SINGLE_BATTLE_TEST("Kee Berry doesn't trigger if the move was boosted by Sheer F
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Kee Berry raises the holder's Defense by one stage when hit by a physical move (Multi)")
 {
     u16 move;
@@ -204,3 +205,4 @@ SINGLE_BATTLE_TEST("Kee Berry doesn't trigger if the move was boosted by Sheer F
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
     }
 }
+#endif

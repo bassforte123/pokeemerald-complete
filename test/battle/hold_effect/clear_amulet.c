@@ -120,6 +120,7 @@ SINGLE_BATTLE_TEST("Clear Amulet protects from Protect's secondary effects")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Clear Amulet prevents Intimidate (Multi)")
 {
     s16 turnOneHit;
@@ -233,3 +234,4 @@ SINGLE_BATTLE_TEST("Clear Amulet protects from Protect's secondary effects (Mult
         }
     }
 }
+#endif

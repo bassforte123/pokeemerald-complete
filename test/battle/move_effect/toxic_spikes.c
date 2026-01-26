@@ -292,6 +292,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes: Only two layers can be set up")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon (Multi)")
 {
     u32 species = SPECIES_WOBBUFFET;
@@ -423,3 +424,4 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in after Primal Rever
         STATUS_ICON(player, poison: TRUE);
     }
 }
+#endif

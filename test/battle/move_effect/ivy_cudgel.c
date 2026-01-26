@@ -50,6 +50,7 @@ SINGLE_BATTLE_TEST("Ivy Cudgel does not change the move type if used by Pokémon
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Ivy Cudgel changes the move type depending on the form of Ogerpon (Multi)")
 {
     u16 species;
@@ -93,3 +94,4 @@ SINGLE_BATTLE_TEST("Ivy Cudgel does not change the move type if used by Pokémon
         MESSAGE("It's super effective!"); // Should be super effective everytime if type isnt being changed
     }
 }
+#endif

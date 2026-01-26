@@ -305,6 +305,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Grudge does not deplete PP of a Z-Move (Multi)")
 {
     GIVEN {
@@ -383,3 +384,4 @@ SINGLE_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Fl
         EXPECT_GT(opponent->pp[3], 0);
     }
 }
+#endif

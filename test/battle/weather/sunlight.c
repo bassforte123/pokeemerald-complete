@@ -68,6 +68,7 @@ SINGLE_BATTLE_TEST("Sunny Day fails if Primordial Sea is active")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Sunny Day fails if Primordial Sea is active (Multi)")
 {
     u32 item;
@@ -89,3 +90,4 @@ SINGLE_BATTLE_TEST("Sunny Day fails if Primordial Sea is active (Multi)")
         }
     }
 }
+#endif

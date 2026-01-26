@@ -394,6 +394,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores Choice Band", s16 damage)
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+) (Multi)", s16 damage)
 {
     u16 ability;
@@ -443,3 +444,4 @@ SINGLE_BATTLE_TEST("Beat Up ignores Choice Band (Multi)", s16 damage)
             EXPECT_EQ(results[i].damage, results[0].damage);
     }
 }
+#endif

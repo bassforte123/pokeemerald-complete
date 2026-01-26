@@ -285,6 +285,7 @@ SINGLE_BATTLE_TEST("Multi Hit moves will not disrupt Destiny Bond flag")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Multi hit Moves hit at least four times with Loaded Dice (Multi)")
 {
     PASSES_RANDOMLY(50, 100, RNG_LOADED_DICE);
@@ -371,3 +372,4 @@ SINGLE_BATTLE_TEST("Scale Shot decreases defense and increases speed after killi
         MESSAGE("Bagon's Speed rose!");
     }
 }
+#endif

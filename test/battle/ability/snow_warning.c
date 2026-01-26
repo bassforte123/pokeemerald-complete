@@ -137,6 +137,7 @@ SINGLE_BATTLE_TEST("Snow Warning sets up snow for 8 turns with Icy Rock (Gen9+)"
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Snow Warning sets up hail for 8 turns with Icy Rock (Gen6-8) (Multi)")
 {
     GIVEN {
@@ -194,3 +195,4 @@ SINGLE_BATTLE_TEST("Snow Warning sets up snow for 8 turns with Icy Rock (Gen9+) 
         MESSAGE("The snow stopped.");
     }
 }
+#endif

@@ -136,6 +136,7 @@ DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with burs
     }
 }
 
+#if MAX_MON_TRAITS > 1
 WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader's Crest increases tracker (Multi)")
 {
     GIVEN {
@@ -263,3 +264,4 @@ DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with burs
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
     }
 }
+#endif

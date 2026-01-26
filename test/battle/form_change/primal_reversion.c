@@ -333,6 +333,7 @@ DOUBLE_BATTLE_TEST("Primal reversion and other switch-in effects trigger for all
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Primal reversion happens for Groudon only when holding Red Orb (Multi)")
 {
     u16 heldItem;
@@ -664,3 +665,4 @@ DOUBLE_BATTLE_TEST("Primal reversion and other switch-in effects trigger for all
         EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
+#endif

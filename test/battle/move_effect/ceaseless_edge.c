@@ -95,6 +95,7 @@ SINGLE_BATTLE_TEST("Ceaseless Edge does not set up hazards if target was not hit
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints (Multi)")
 {
     GIVEN {
@@ -110,3 +111,4 @@ SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints (Multi
         NOT MESSAGE("Spikes were scattered on the ground all around the opposing team!");
     }
 }
+#endif

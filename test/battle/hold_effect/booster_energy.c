@@ -332,6 +332,7 @@ DOUBLE_BATTLE_TEST("Booster Energy will not activate on terrain if user has Prot
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Booster Energy will activate Quark Drive after Electric Terrain ends (Multi)")
 {
     GIVEN {
@@ -657,3 +658,4 @@ DOUBLE_BATTLE_TEST("Booster Energy will not activate on terrain if user has Prot
         ABILITY_POPUP(playerLeft, ABILITY_PROTOSYNTHESIS); // Activation after all terrains
     }
 }
+#endif

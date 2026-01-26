@@ -158,6 +158,7 @@ SINGLE_BATTLE_TEST("Life Orb does not activate on a charge turn")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Life Orb activates when users attack is succesful (Multi)")
 {
     GIVEN {
@@ -309,3 +310,4 @@ SINGLE_BATTLE_TEST("Life Orb does not activate on a charge turn (Multi)")
         HP_BAR(player); // Lief Orb
     }
 }
+#endif

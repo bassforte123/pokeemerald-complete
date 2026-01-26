@@ -211,6 +211,7 @@ SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to its busted form (Multi)")
 {
     GIVEN {
@@ -248,3 +249,4 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without bre
         EXPECT_EQ(player->species, SPECIES_MIMIKYU_DISGUISED);
     }
 }
+#endif

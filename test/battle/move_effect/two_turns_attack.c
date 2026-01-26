@@ -470,6 +470,7 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Razor Wind doesn't need to charge with Power Herb (Multi)")
 {
     GIVEN {
@@ -678,3 +679,4 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb (Multi)"
         HP_BAR(opponent);
     }
 }
+#endif

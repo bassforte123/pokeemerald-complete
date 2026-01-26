@@ -158,6 +158,7 @@ SINGLE_BATTLE_TEST("Move Raging Bull changes it's type depending on the Tauros F
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora Veil if it misses (Multi)")
 {
     u16 move;
@@ -182,3 +183,4 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
         }
     }
 }
+#endif

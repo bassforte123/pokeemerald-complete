@@ -76,6 +76,7 @@ SINGLE_BATTLE_TEST("Sand Spit triggers even if the user is knocked out by the hi
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Sand Spit sets up sandstorm for 8 turns when hit with Smooth Rock (Multi)")
 {
     GIVEN {
@@ -105,3 +106,4 @@ SINGLE_BATTLE_TEST("Sand Spit sets up sandstorm for 8 turns when hit with Smooth
         MESSAGE("The sandstorm subsided.");
     }
 }
+#endif

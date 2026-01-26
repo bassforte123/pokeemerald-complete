@@ -107,6 +107,7 @@ SINGLE_BATTLE_TEST("Chilly Reception changes the weather, even if the user canno
 
 TO_DO_BATTLE_TEST("Chilly Reception doesn't announce its move if it's called by a different move");
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Chilly Reception switches the user out, even if the weather does not change (Multi)")
 {
     GIVEN {
@@ -124,3 +125,4 @@ SINGLE_BATTLE_TEST("Chilly Reception switches the user out, even if the weather 
         MESSAGE("Rain continues to fall.");
     }
 }
+#endif

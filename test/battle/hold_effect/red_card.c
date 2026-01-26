@@ -539,6 +539,7 @@ SINGLE_BATTLE_TEST("Red Card activates before Eject Pack")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Red Card switches the attacker with a random non-fainted replacement (Multi)")
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
@@ -1071,3 +1072,4 @@ SINGLE_BATTLE_TEST("Red Card activates before Eject Pack (Multi)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
+#endif

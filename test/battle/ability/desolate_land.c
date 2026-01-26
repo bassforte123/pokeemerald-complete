@@ -178,6 +178,7 @@ SINGLE_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves (Multi)")
 {
     GIVEN {
@@ -348,3 +349,4 @@ SINGLE_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea (Multi)")
         EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
     }
 }
+#endif

@@ -111,6 +111,7 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Protect's secondary effects")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Protective Pads protected moves still make direct contact (Multi)", s16 damage)
 {
     enum Ability ability;
@@ -214,3 +215,4 @@ SINGLE_BATTLE_TEST("Protective Pads protects from Protect's secondary effects (M
         }
     }
 }
+#endif

@@ -158,6 +158,7 @@ DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Refle
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if it misses (Multi)")
 {
     u32 move;
@@ -186,3 +187,4 @@ SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Ref
         }
     }
 }
+#endif

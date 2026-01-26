@@ -355,6 +355,7 @@ TO_DO_BATTLE_TEST("Anticipation considers Gravity into their effectiveness (Gen4
 TO_DO_BATTLE_TEST("Anticipation doesn't trigger from Counter, Metal Burst or Mirror Coat (Gen4)");
 TO_DO_BATTLE_TEST("Anticipation treats Hidden Power as Normal Type (Gen4-5)");
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (Normal), Judgment (Multi)")
 {
     GIVEN {
@@ -433,3 +434,4 @@ SINGLE_BATTLE_TEST("Anticipation treats Hidden Power as its dynamic type (Gen6+)
         MESSAGE("It's super effective!");
     }
 }
+#endif

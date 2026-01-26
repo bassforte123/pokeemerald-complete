@@ -21,6 +21,7 @@ SINGLE_BATTLE_TEST("Quick Claw activates 20% of the time")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Quick Claw activates 20% of the time (Multi)")
 {
     PASSES_RANDOMLY(2, 10, RNG_QUICK_CLAW);
@@ -34,3 +35,4 @@ SINGLE_BATTLE_TEST("Quick Claw activates 20% of the time (Multi)")
         MESSAGE("The opposing Wobbuffet used Celebrate!");
     }
 }
+#endif

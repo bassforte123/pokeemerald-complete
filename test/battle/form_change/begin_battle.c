@@ -75,6 +75,7 @@ SINGLE_BATTLE_TEST("Zamazenta's Iron Head becomes Behemoth Bash upon form change
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Zacian changes into its Crowned Form when holding the Rusted Sword upon battle start (Multi)")
 {
     u16 item;
@@ -136,3 +137,4 @@ SINGLE_BATTLE_TEST("Zamazenta's Iron Head becomes Behemoth Bash upon form change
         EXPECT_EQ(player->moves[0], MOVE_BEHEMOTH_BASH);
     }
 }
+#endif

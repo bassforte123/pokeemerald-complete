@@ -444,6 +444,7 @@ DOUBLE_BATTLE_TEST("Intimidate will not miss timing for competitive")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Intimidate and Eject Button don't force the opponent to Attack (Multi)")
 {
     GIVEN {
@@ -616,3 +617,4 @@ DOUBLE_BATTLE_TEST("Intimidate will not miss timing for competitive (Multi)")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
     }
 }
+#endif

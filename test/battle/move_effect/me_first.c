@@ -101,6 +101,7 @@ SINGLE_BATTLE_TEST("Me Frist deducts power points from itself, not the copied mo
 
 // TO_DO_BATTLE_TEST: Not everything has been tested
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Me First can be selected if users holds Assault Vest (Multi)")
 {
     GIVEN {
@@ -112,3 +113,4 @@ SINGLE_BATTLE_TEST("Me First can be selected if users holds Assault Vest (Multi)
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, player);
     }
 }
+#endif

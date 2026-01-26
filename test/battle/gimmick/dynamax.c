@@ -1744,6 +1744,7 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-lowering Max Moves, without showing a message")
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-increasing Max Moves, without showing a message")
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can be switched out by Eject Button (Multi)")
 {
     GIVEN {
@@ -1880,3 +1881,4 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax is reverted before switch out (Multi)")
         MESSAGE("Wobbuffet used Scratch!");
     }
 }
+#endif

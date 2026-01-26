@@ -179,6 +179,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption, but befo
     }
 }
 
+#if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes an item (Multi)")
 {
     GIVEN {
@@ -355,3 +356,4 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption, but befo
         EXPECT_EQ(playerRight->items[1], ITEM_NONE);
     }
 }
+#endif

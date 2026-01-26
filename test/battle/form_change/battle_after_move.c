@@ -130,6 +130,7 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated"
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated (Multi)")
 {
     GIVEN {
@@ -148,3 +149,4 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated 
         EXPECT_EQ(player->species, SPECIES_MELOETTA_PIROUETTE);
     }
 }
+#endif

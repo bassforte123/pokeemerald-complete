@@ -691,6 +691,7 @@ TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from status Z-Moves are not inverted by
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Extreme Evoboost are inverted by Contrary")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Clangorous Soulblaze are inverted by Contrary")
 
+#if MAX_MON_TRAITS > 1
 // Basic Functionality
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority (Multi)")
 {
@@ -1379,3 +1380,4 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Revelation Dance always transforms into Breakneck
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from status Z-Moves are not inverted by Contrary (Multi)")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Extreme Evoboost are inverted by Contrary (Multi)")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Clangorous Soulblaze are inverted by Contrary (Multi)")
+#endif

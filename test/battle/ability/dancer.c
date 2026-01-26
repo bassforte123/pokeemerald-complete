@@ -377,6 +377,7 @@ TO_DO_BATTLE_TEST("Dancer can still copy status moves if the user is holding an 
 TO_DO_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out")
 TO_DO_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat")
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Dancer can copy Teeter Dance (Multi)")
 {
     GIVEN {
@@ -486,3 +487,4 @@ DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suct
     }
 }
 
+#endif

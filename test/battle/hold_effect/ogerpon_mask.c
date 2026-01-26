@@ -35,6 +35,7 @@ SINGLE_BATTLE_TEST("Ogerpon Masks increase the base power of moves by 20%", s16 
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Ogerpon Masks increase the base power of moves by 20% (Multi)", s16 damage)
 {
     u32 species;
@@ -58,3 +59,4 @@ SINGLE_BATTLE_TEST("Ogerpon Masks increase the base power of moves by 20% (Multi
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.2), results[3].damage);
     }
 }
+#endif

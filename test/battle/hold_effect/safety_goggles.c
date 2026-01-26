@@ -76,6 +76,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Safety Goggles block powder and spore moves (Multi)")
 {
     GIVEN {
@@ -145,3 +146,4 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect (Multi)")
         }
     }
 }
+#endif

@@ -48,6 +48,7 @@ SINGLE_BATTLE_TEST("Crit Chance: Raising critical hit rate to 3 guarantees a cri
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Crit Chance: Raising critical hit rate to 3 guarantees a critical hit (Gen 6+) (Multi)")
 {
     u32 genConfig = 0, passes, trials;
@@ -71,3 +72,4 @@ SINGLE_BATTLE_TEST("Crit Chance: Raising critical hit rate to 3 guarantees a cri
         MESSAGE("A critical hit!");
     }
 }
+#endif

@@ -118,6 +118,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Stuff Cheeks")
 }
 
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Stuff Cheeks cannot be used if the user doesn't hold a berry (Multi)")
 {
     u16 item = 0;
@@ -215,3 +216,4 @@ AI_SINGLE_BATTLE_TEST("AI uses Stuff Cheeks (Multi)")
         TURN { EXPECT_MOVE(opponent, MOVE_STUFF_CHEEKS); }
     }
 }
+#endif

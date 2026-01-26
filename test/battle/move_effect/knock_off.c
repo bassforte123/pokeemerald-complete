@@ -438,6 +438,7 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consu
     }
 }
 
+#if MAX_MON_TRAITS > 1
 WILD_BATTLE_TEST("Knock Off does not remove item when used by Wild Pokemon (Gen 5+) (Multi)")
 {
     GIVEN {
@@ -868,3 +869,4 @@ SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consu
         EXPECT(opponent->items[1] == ITEM_NONE);
     }
 }
+#endif

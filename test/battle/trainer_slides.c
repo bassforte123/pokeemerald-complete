@@ -213,6 +213,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Dynamax")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution (Multi)")
 {
     gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_MEGA_EVOLUTION;
@@ -244,3 +245,4 @@ SINGLE_BATTLE_TEST("Trainer Slide: Z Move (Multi)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, opponent);
     }
 }
+#endif

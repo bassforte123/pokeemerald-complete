@@ -16,6 +16,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Sticky Hold prevents item theft (Multi)")
 {
     GIVEN {
@@ -30,3 +31,4 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft (Multi)")
         MESSAGE("The opposing Gastrodon's Sticky Hold made Thief ineffective!");
     }
 }
+#endif

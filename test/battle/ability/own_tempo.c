@@ -144,6 +144,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items (Multi)")
 {
     GIVEN {
@@ -158,3 +159,4 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items (Multi)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
+#endif

@@ -187,6 +187,7 @@ SINGLE_BATTLE_TEST("Flying-type Tera Blast does not have its priority boosted by
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Stellar-type Tera Blast activates a Stellar-type Pokemon's Weakness Policy (Multi)")
 {
     GIVEN {
@@ -201,3 +202,4 @@ SINGLE_BATTLE_TEST("Stellar-type Tera Blast activates a Stellar-type Pokemon's W
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }
 }
+#endif

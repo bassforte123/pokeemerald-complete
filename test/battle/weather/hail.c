@@ -105,6 +105,7 @@ SINGLE_BATTLE_TEST("Hail doesn't do damage when weather is negated")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Hail fails if Desolate Land or Primordial Sea are active (Multi)")
 {
     u32 species;
@@ -128,3 +129,4 @@ SINGLE_BATTLE_TEST("Hail fails if Desolate Land or Primordial Sea are active (Mu
         }
     }
 }
+#endif

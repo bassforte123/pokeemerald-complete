@@ -32,6 +32,7 @@ SINGLE_BATTLE_TEST("Room Serive decreases the holder's seep by one stage")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Room Serive decreases the holder's seep by one stage (Multi)")
 {
     GIVEN {
@@ -57,3 +58,4 @@ SINGLE_BATTLE_TEST("Room Serive decreases the holder's seep by one stage (Multi)
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
+#endif

@@ -81,6 +81,7 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move")
 
 // TODO: Test against interaction with multi hits
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Multi)")
 {
     PASSES_RANDOMLY(1, 10, RNG_STENCH);
@@ -96,3 +97,4 @@ SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Multi)")
         MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
     }
 }
+#endif

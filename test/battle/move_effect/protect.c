@@ -773,6 +773,7 @@ DOUBLE_BATTLE_TEST("Wide Guard is still activate even if user is switched out du
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't reduce Z-Move demage (Multi)", s16 damage)
 {
     bool32 protected;
@@ -876,3 +877,4 @@ DOUBLE_BATTLE_TEST("Wide Guard is still activate even if user is switched out du
         }
     }
 }
+#endif

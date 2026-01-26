@@ -75,6 +75,7 @@ DOUBLE_BATTLE_TEST("Enigma Berry doesn't trigger if partner was hit")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Enigma Berry recovers 25% of HP if hit by super effective move (Multi)")
 {
     GIVEN {
@@ -143,3 +144,4 @@ DOUBLE_BATTLE_TEST("Enigma Berry doesn't trigger if partner was hit (Multi)")
         EXPECT(opponentRight->items[1] == ITEM_ENIGMA_BERRY);
     }
 }
+#endif

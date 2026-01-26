@@ -100,6 +100,7 @@ SINGLE_BATTLE_TEST("Unburden doubling speed effect is ignored by Neutralizing Ga
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Unburden doubles speed once user uses item (Multi)")
 {
     GIVEN {
@@ -198,3 +199,4 @@ SINGLE_BATTLE_TEST("Unburden doubling speed effect is ignored by Neutralizing Ga
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
+#endif

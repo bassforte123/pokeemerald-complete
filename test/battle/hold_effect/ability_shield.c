@@ -204,6 +204,7 @@ TO_DO_BATTLE_TEST("Ability Shield prevents the user's Receiver from changing its
 TO_DO_BATTLE_TEST("Ability Shield protects against Wandering Spirit");
 TO_DO_BATTLE_TEST("Ability Shield protects against Mummy/Lingering Aroma");
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas (Multi)")
 {
     u32 item;
@@ -401,3 +402,4 @@ TO_DO_BATTLE_TEST("Ability Shield prevents the user's Trace from changing its ab
 TO_DO_BATTLE_TEST("Ability Shield prevents the user's Receiver from changing its ability (Multi)");
 TO_DO_BATTLE_TEST("Ability Shield protects against Wandering Spirit (Multi)");
 TO_DO_BATTLE_TEST("Ability Shield protects against Mummy/Lingering Aroma (Multi)");
+#endif

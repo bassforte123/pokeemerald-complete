@@ -105,6 +105,7 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp. Atk, Sp. Def, or Speed by two stages (Multi)")
 {
     PASSES_RANDOMLY(1, 5, RNG_RANDOM_STAT_UP);
@@ -203,3 +204,4 @@ SINGLE_BATTLE_TEST("Starf Berry randomly raises the holder's Attack, Defense, Sp
         EXPECT_EQ(boostedStats, 1);
     }
 }
+#endif

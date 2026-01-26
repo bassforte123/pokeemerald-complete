@@ -81,6 +81,7 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
 
 TO_DO_BATTLE_TEST("Weather Ball doesn't double its power or change type if Cloud Nine/Air Lock is on the field");
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Rock-type move in a Sandstorm (Multi)", s16 damage)
 {
     u16 move;
@@ -117,3 +118,4 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(4.0), results[1].damage); // double base power + type effectiveness.
     }
 }
+#endif

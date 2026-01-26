@@ -75,6 +75,7 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
 
 TO_DO_BATTLE_TEST("Fillet Away fails if the user's Attack, Sp. Atk and Speed are all maxed out")
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
 {
     GIVEN {
@@ -90,3 +91,4 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }
+#endif

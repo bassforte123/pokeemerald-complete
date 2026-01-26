@@ -278,6 +278,7 @@ TO_DO_BATTLE_TEST("Normalize makes Flying Press do Normal/Flying damage");
 TO_DO_BATTLE_TEST("Normalize doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Normalize doesn't affect damaging Z-Move types");
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrify's effect (Multi)")
 {
     GIVEN {
@@ -349,3 +350,4 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Judgment / Techno Blast / Multi-Att
         MESSAGE("It doesn't affect the opposing Diglett…");
     }
 }
+#endif

@@ -54,6 +54,7 @@ DOUBLE_BATTLE_TEST("Magician steal the item from the fastest possible target")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Magician gets self-damage recoil after stealing Life Orb (Multi)")
 {
     GIVEN {
@@ -106,3 +107,4 @@ DOUBLE_BATTLE_TEST("Magician steal the item from the fastest possible target (Mu
             EXPECT(playerLeft->items[1] == ITEM_ULTRA_BALL);
     }
 }
+#endif

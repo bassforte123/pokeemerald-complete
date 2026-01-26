@@ -210,6 +210,7 @@ WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falli
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-HP but healed via held item back above the threshold (Multi)")
 {
     GIVEN {
@@ -278,3 +279,4 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }
+#endif

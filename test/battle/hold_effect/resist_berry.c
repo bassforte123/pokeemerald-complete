@@ -144,6 +144,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the dama
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half (Multi)", s16 damage)
 {
     u32 move = 0, item = 0, defender = 0;
@@ -264,3 +265,4 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the dama
         ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_CLAW, player);
     }
 }
+#endif

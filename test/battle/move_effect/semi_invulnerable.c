@@ -249,6 +249,7 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves apply a status that won't block cert
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb (Multi)")
 {
     u16 move;
@@ -352,3 +353,4 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves don't need to charge with Power Herb
         HP_BAR(opponent);
     }
 }
+#endif

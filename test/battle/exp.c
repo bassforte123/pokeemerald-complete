@@ -150,6 +150,7 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
 
 #endif // I_EXP_SHARE_ITEM
 
+#if MAX_MON_TRAITS > 1
 WILD_BATTLE_TEST("Lucky Egg boosts gained exp points by 50% (Multi)", s32 exp)
 {
     u32 item = 0;
@@ -226,3 +227,4 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
 }
 
 #endif // I_EXP_SHARE_ITEM
+#endif

@@ -101,6 +101,7 @@ SINGLE_BATTLE_TEST("Stealth Rock damage terastalized mons with the correct amoun
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button is triggered (Multi)")
 {
     GIVEN {
@@ -143,3 +144,4 @@ DOUBLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button 
         EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
     }
 }
+#endif

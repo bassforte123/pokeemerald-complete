@@ -32,6 +32,7 @@ SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user ho
 TO_DO_BATTLE_TEST("Judgement changes type depending on the plate the user holds");
 TO_DO_BATTLE_TEST("Multi Attack changes type depending on the memory the user holds");
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user holds (Multi)")
 {
     u16 species;
@@ -53,3 +54,4 @@ SINGLE_BATTLE_TEST("Techno Blast changes type depending on the drive the user ho
         MESSAGE("It's super effective!");
     }
 }
+#endif

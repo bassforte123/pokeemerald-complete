@@ -316,6 +316,7 @@ DOUBLE_BATTLE_TEST("Powder damages a target using Shell Trap even if it wasn't h
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Powder doesn't consume Berry from Fire type Natural Gift but prevents using the move (Multi)")
 {
     GIVEN {
@@ -334,3 +335,4 @@ SINGLE_BATTLE_TEST("Powder doesn't consume Berry from Fire type Natural Gift but
         EXPECT_EQ(player->items[1], ITEM_CHERI_BERRY);
     }
 }
+#endif

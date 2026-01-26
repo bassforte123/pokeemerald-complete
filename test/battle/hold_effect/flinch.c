@@ -35,6 +35,7 @@ SINGLE_BATTLE_TEST("Kings Rock does not increase flinch chance of a move that ha
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Kings Rock holder will flinch the target 10% of the time (Multi)")
 {
     PASSES_RANDOMLY(10, 100, RNG_HOLD_EFFECT_FLINCH);
@@ -63,3 +64,4 @@ SINGLE_BATTLE_TEST("Kings Rock does not increase flinch chance of a move that ha
         MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
     }
 }
+#endif

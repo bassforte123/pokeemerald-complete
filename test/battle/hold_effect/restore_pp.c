@@ -22,6 +22,7 @@ SINGLE_BATTLE_TEST("Restore PP berry activates immediately on switch in")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Restore PP berry activates immediately on switch in (Multi)")
 {
     GIVEN {
@@ -37,3 +38,4 @@ SINGLE_BATTLE_TEST("Restore PP berry activates immediately on switch in (Multi)"
         EXPECT(player->items[1] == ITEM_NONE);
     }
 }
+#endif

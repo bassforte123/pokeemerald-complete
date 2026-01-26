@@ -208,6 +208,7 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon switched in by U-turn: player side (Multi)")
 {
     GIVEN {
@@ -302,3 +303,4 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints (M
         HP_BAR(opponent);
     }
 }
+#endif

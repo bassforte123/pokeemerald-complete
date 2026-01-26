@@ -53,6 +53,7 @@ SINGLE_BATTLE_TEST("Confusion self hit does not consume Gems")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Confusion self hit does not consume Gems (Multi)")
 {
     u32 genConfig, pctChance;
@@ -75,3 +76,4 @@ SINGLE_BATTLE_TEST("Confusion self hit does not consume Gems (Multi)")
         MESSAGE("It hurt itself in its confusion!");
     }
 }
+#endif

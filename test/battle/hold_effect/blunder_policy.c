@@ -66,6 +66,7 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to P
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Blunder Policy raises the users speed by 2 stages if the user misses (Multi)")
 {
     PASSES_RANDOMLY(3, 10, RNG_ACCURACY);
@@ -125,3 +126,4 @@ SINGLE_BATTLE_TEST("Blunder Policy will never trigger if the move fails due to P
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
+#endif

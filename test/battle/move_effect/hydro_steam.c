@@ -49,6 +49,7 @@ SINGLE_BATTLE_TEST("Hydro Steam is affected by Utility Umbrella", s16 damage)
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Hydro Steam is affected by Utility Umbrella (Multi)", s16 damage)
 {
     u32 itemPlayer;
@@ -70,3 +71,4 @@ SINGLE_BATTLE_TEST("Hydro Steam is affected by Utility Umbrella (Multi)", s16 da
         EXPECT_MUL_EQ(results[2].damage, Q_4_12(0.5), results[0].damage);
     }
 }
+#endif

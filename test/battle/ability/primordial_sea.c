@@ -144,6 +144,7 @@ SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves (Multi)")
 {
     GIVEN {
@@ -165,3 +166,4 @@ SINGLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves (Multi)")
         EXPECT_EQ(player->hp, player->maxHP);
     }
 }
+#endif

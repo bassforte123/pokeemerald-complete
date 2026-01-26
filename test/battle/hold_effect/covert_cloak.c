@@ -203,6 +203,7 @@ SINGLE_BATTLE_TEST("Covert Cloak does not prevent ability stat changes")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Covert Cloak blocks secondary effects (Multi)")
 {
     u16 move;
@@ -399,3 +400,4 @@ SINGLE_BATTLE_TEST("Covert Cloak does not prevent ability stat changes (Multi)")
         MESSAGE("Wobbuffet's Speed fell!");
     }
 }
+#endif

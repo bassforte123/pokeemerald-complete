@@ -311,6 +311,7 @@ DOUBLE_BATTLE_TEST("Pickup doesn't trigger more than once per turn")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Pickup grants an item used by another Pokémon (Multi)")
 {
     GIVEN {
@@ -615,3 +616,4 @@ DOUBLE_BATTLE_TEST("Pickup doesn't trigger more than once per turn (Multi)")
         EXPECT_LT(playerLeft->hp, playerLeft->maxHP/2);
     }
 }
+#endif

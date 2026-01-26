@@ -111,6 +111,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse does not boost physical moves if holder has
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Orichalcum Pulse sets up sun for 8 turns with Heat Rock (Multi)")
 {
     GIVEN {
@@ -179,3 +180,4 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse does not boost physical moves if holder has
         EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.3333), results[0].damage);
     }
 }
+#endif

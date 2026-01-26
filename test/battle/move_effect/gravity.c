@@ -82,6 +82,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 AI_DOUBLE_BATTLE_TEST("AI uses Gravity (Multi)")
 {
     u32 move, friendItem, foeItem;
@@ -113,3 +114,4 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity (Multi)")
         TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_GRAVITY); }
     }
 }
+#endif

@@ -91,6 +91,7 @@ TO_DO_BATTLE_TEST("Cursed Body disables the move that called another move instea
 TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move") // Rotom Powers can restore Z-Moves
 TO_DO_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Multi)")
 {
     GIVEN {
@@ -110,3 +111,4 @@ SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Multi)")
         }
     }
 }
+#endif

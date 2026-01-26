@@ -312,6 +312,7 @@ SINGLE_BATTLE_TEST("Protosynthesis retains its boosted stat after Neutralizing G
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy (Multi)")
 {
     GIVEN {
@@ -360,3 +361,4 @@ SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an 
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     }
 }
+#endif

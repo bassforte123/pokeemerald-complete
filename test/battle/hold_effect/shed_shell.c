@@ -66,6 +66,7 @@ SINGLE_BATTLE_TEST("Shed Shell does not allow Teleport when trapped")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Shed Shell allows switching out even when trapped by Mean Look (Multi)")
 {
     GIVEN {
@@ -125,3 +126,4 @@ SINGLE_BATTLE_TEST("Shed Shell does not allow Teleport when trapped (Multi)")
         MESSAGE("But it failed!"); 
     }
 }
+#endif

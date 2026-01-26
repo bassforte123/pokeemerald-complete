@@ -112,6 +112,7 @@ SINGLE_BATTLE_TEST("Tangling Hair will trigger if move is boosted by Sheer Force
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Tangling Hair does not cause Rocky Helmet miss activation (Multi)")
 {
     GIVEN {
@@ -148,3 +149,4 @@ SINGLE_BATTLE_TEST("Tangling Hair Speed stat drop triggers defiant and keeps ori
         MESSAGE("The opposing Pawniard was hurt by Dugtrio's Rocky Helmet!");
     }
 }
+#endif

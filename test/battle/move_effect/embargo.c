@@ -392,6 +392,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Primal Reversion")
 TO_DO_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves")
 TO_DO_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money")
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Embargo blocks the effect of an affected Pokémon's held item (Multi)")
 {
     GIVEN {
@@ -777,3 +778,4 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Primal Reversion (Multi)")
 
 TO_DO_BATTLE_TEST("Embargo doesn't prevent the usage of Z-Moves (Multi)")
 TO_DO_BATTLE_TEST("Embargo doesn't block held item effects that affect prize money (Multi)")
+#endif

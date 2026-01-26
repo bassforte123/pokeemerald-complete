@@ -104,6 +104,7 @@ SINGLE_BATTLE_TEST("Drizzle sets up permanent rain (Gen3-5)")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+) (Multi)")
 {
     GIVEN {
@@ -131,3 +132,4 @@ SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+) (Mul
         MESSAGE("The rain stopped.");
     }
 }
+#endif

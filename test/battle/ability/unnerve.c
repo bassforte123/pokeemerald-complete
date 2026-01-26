@@ -124,6 +124,7 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 // Remember to add a PARAMETRIZE for As One in the following tests:
 SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own berries (Multi)")
 {
@@ -185,3 +186,4 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive (Multi
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
     }
 }
+#endif

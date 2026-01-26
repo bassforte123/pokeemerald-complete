@@ -705,6 +705,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
     }
 }
 
+#if MAX_MON_TRAITS > 1
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100 (Multi)")
 {
     u32 moveStart = 0;
@@ -1354,3 +1355,4 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900 (Multi)")
         TURN {  EXPECT_MOVE(opponentLeft, move); }
     }
 }
+#endif

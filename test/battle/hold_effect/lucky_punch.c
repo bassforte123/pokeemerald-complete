@@ -24,6 +24,7 @@ SINGLE_BATTLE_TEST("Lucky Punch increases critical hit ratio by 2 stages for Cha
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Lucky Punch increases critical hit ratio by 2 stages for Chansey (Multi)")
 {
     u32 genConfig, passes, trials;
@@ -46,3 +47,4 @@ SINGLE_BATTLE_TEST("Lucky Punch increases critical hit ratio by 2 stages for Cha
         MESSAGE("A critical hit!");
     }
 }
+#endif

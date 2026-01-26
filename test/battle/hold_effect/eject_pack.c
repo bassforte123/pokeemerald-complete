@@ -362,6 +362,7 @@ DOUBLE_BATTLE_TEST("Eject Pack will trigger on the fastest mon at the end of the
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Eject Pack does not cause the new Pokémon to lose HP due to it's held Life Orb (Multi)")
 {
     GIVEN {
@@ -717,3 +718,4 @@ DOUBLE_BATTLE_TEST("Eject Pack will trigger on the fastest mon at the end of the
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
     }
 }
+#endif

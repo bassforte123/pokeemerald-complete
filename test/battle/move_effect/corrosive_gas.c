@@ -121,6 +121,7 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
 TO_DO_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon behind a Substitute");
 TO_DO_BATTLE_TEST("Corrosive Gas doesn't destroy items if they change the Pokémon's form"); // Giratina, Genesect, Silvally, Zacian, Zamazenta. Bulbapedia hasn't confirmed Arceus or Ogerpon, but it's a safe assumption that they will also fail.
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Corrosive Gas destroys the target's item or fails if the target has no item (Multi)")
 {
     u16 item;
@@ -232,3 +233,4 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
         EXPECT_EQ(opponentRight->items[1], ITEM_NONE);
     }
 }
+#endif

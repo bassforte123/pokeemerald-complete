@@ -418,7 +418,8 @@ DOUBLE_BATTLE_TEST("Transistor Damage calculation", s16 damage)
         EXPECT_EQ(damagePlayerRight, expectedDamageTransistorPhys);
     }
 }
- 
+
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Damage calculation matches Gen6+ (Muscle Band, crit) (Multi)")
 {
     s16 dmg;
@@ -555,3 +556,4 @@ SINGLE_BATTLE_TEST("Gem boosted Damage calculation (Multi)")
         EXPECT_EQ(expectedDamage, dmg);
     }
 }
+#endif

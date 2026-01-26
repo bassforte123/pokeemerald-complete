@@ -127,6 +127,7 @@ SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activat
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activating (Multi)")
 {
     u32 item;
@@ -148,3 +149,4 @@ SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activat
         }
     }
 }
+#endif

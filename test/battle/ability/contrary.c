@@ -271,6 +271,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectIn
 
 TO_DO_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
 
+#if MAX_MON_TRAITS > 1
 AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectInPlus instead of as a neutral effect (Multi)")
 {
     GIVEN{
@@ -297,3 +298,4 @@ AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectIn
         }
     }
 }
+#endif

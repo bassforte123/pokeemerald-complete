@@ -126,6 +126,7 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute with 1/4 of user maximum heal
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Shed Tail's HP cost can trigger a berry before the user switches out (Multi)")
 {
     GIVEN {
@@ -156,3 +157,4 @@ SINGLE_BATTLE_TEST("Shed Tail's HP cost doesn't trigger effects that trigger on 
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }
+#endif
