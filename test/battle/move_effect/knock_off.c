@@ -887,7 +887,7 @@ SINGLE_BATTLE_TEST("Knock Off triggers Unburden (Multi)")
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         MESSAGE("Wobbuffet used Celebrate!");
     } THEN {
-        EXPECT(opponent->item == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_NONE);
     }
 }
 

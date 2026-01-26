@@ -1492,8 +1492,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 
             u32 accuracy = GetTotalAccuracy(gBattlerAttacker,
                                             battlerDef,
-                                            move,
-                                            holdEffectAtk);
+                                            move);
 
             if (!RandomPercentage(RNG_ACCURACY, accuracy))
             {
@@ -5710,8 +5709,8 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
             && IsBattlerTurnDamaged(battlerDef)
             && !gSpecialStatuses[battlerAtk].gemBoost)   // In base game, gems are consumed after magician would activate.
             {
-            u32 numMagicianTargets = 0;
-            u32 magicianTargets = 0;
+                u32 numMagicianTargets = 0;
+                u32 magicianTargets = 0;
 
                 for (i = 0; i < gBattlersCount; i++)
                 {
@@ -5726,32 +5725,29 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                     }
                 }
 
-                if (numMagicianTargets == 0)
+                if (numMagicianTargets != 0)
                 {
-                    effect = FALSE;
-                    break;
-                }
+                    u8 battlers[4] = {0, 1, 2, 3};
+                    if (numMagicianTargets > 1)
+                        SortBattlersBySpeed(battlers, FALSE);
 
-                u8 battlers[4] = {0, 1, 2, 3};
-                if (numMagicianTargets > 1)
-                    SortBattlersBySpeed(battlers, FALSE);
+                    for (u32 i = 0; i < gBattlersCount; i++)
+                    {
+                        u32 battler = battlers[i];
 
-                for (u32 i = 0; i < gBattlersCount; i++)
-                {
-                    u32 battler = battlers[i];
+                        if (!(magicianTargets & 1u << battler))
+                            continue;
 
-                    if (!(magicianTargets & 1u << battler))
-                        continue;
-
-                        gLastUsedAbility = ABILITY_MAGICIAN;
-                        StealTargetItem(battlerAtk, battler, slot);
-                        gBattlerAbility = battlerAtk;
-                        gEffectBattler = battler;
-                        PushTraitStack(battlerAtk, ABILITY_MAGICIAN);
-                        BattleScriptCall(BattleScript_MagicianActivates);
-                        effect = TRUE;
-                        break; // found target to steal from
+                            gLastUsedAbility = ABILITY_MAGICIAN;
+                            StealTargetItem(battlerAtk, battler, slot);
+                            gBattlerAbility = battlerAtk;
+                            gEffectBattler = battler;
+                            PushTraitStack(battlerAtk, ABILITY_MAGICIAN);
+                            BattleScriptCall(BattleScript_MagicianActivates);
+                            effect = TRUE;
+                            break; // found target to steal from
                     }
+                }
             }
         }
     }
@@ -6475,7 +6471,8 @@ static void Cmd_moveend(void)
                     {
                         slot = gLastItemSlot = GetSlot(targetableSlots, index);
                         BestowItem(BATTLE_PARTNER(i), i, slot);
-                        gLastUsedAbility = gBattleMons[BATTLE_PARTNER(i)].ability;
+                        gLastUsedAbility = ABILITY_SYMBIOSIS;
+                        PushTraitStack(BATTLE_PARTNER(i), ABILITY_SYMBIOSIS);
                         gEffectBattler = i;
                         gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(i);
                         gBattlerAttacker = i;
@@ -9038,7 +9035,7 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd)
             slot = gLastItemSlot = GetSlot(targetableSlots, index);
             BestowItem(BATTLE_PARTNER(battler), battler, slot);
             gLastUsedAbility = ABILITY_SYMBIOSIS;
-        PushTraitStack(BATTLE_PARTNER(battler), ABILITY_SYMBIOSIS);
+            PushTraitStack(BATTLE_PARTNER(battler), ABILITY_SYMBIOSIS);
             gEffectBattler = battler;
             gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
             if (moveEnd)
@@ -15144,10 +15141,10 @@ void BS_TrySymbiosis(void)
         {
             slot = gLastItemSlot = GetSlot(targetableSlots, index);
             BestowItem(partner, battler, slot);
-            gLastUsedAbility = gBattleMons[partner].ability;
+            gLastUsedAbility = ABILITY_SYMBIOSIS;
             gBattleScripting.battler = gBattlerAbility = partner;
             gEffectBattler = battler;
-        PushTraitStack(partner, ABILITY_SYMBIOSIS);
+            PushTraitStack(partner, ABILITY_SYMBIOSIS);
             BattleScriptCall(BattleScript_SymbiosisActivates);
             return;
         }
@@ -15910,8 +15907,8 @@ void BS_TryIntimidateEjectPack(void)
 
     if (ejectPackBattler && ejectPackPartnerBattler)
     {
-        u32 battlerSpeed = GetBattlerTotalSpeedStat(battler, GetBattlerAbility(battler));
-        u32 partnerbattlerSpeed = GetBattlerTotalSpeedStat(partnerBattler, GetBattlerAbility(partnerBattler));
+        u32 battlerSpeed = GetBattlerTotalSpeedStat(battler);
+        u32 partnerbattlerSpeed = GetBattlerTotalSpeedStat(partnerBattler);
 
         if (battlerSpeed >= partnerbattlerSpeed)
             affectedBattler = battler;

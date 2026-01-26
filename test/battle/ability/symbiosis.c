@@ -378,8 +378,8 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes an
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
+        EXPECT_EQ(playerLeft->items[0], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[0], ITEM_NONE);
     }
 }
 
@@ -406,8 +406,8 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partners berry eaten from bug bite 
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
+        EXPECT_EQ(playerLeft->items[0], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[0], ITEM_NONE);
     }
 }
 
@@ -434,9 +434,9 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner bestows its item (Multi)")
         MESSAGE("The opposing Staravia was burned!");
         STATUS_ICON(opponentLeft, STATUS1_BURN);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
-        EXPECT_EQ(opponentLeft->item, ITEM_FLAME_ORB);
+        EXPECT_EQ(playerLeft->items[0], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[0], ITEM_NONE);
+        EXPECT_EQ(opponentLeft->items[0], ITEM_FLAME_ORB);
     }
 }
 
@@ -461,8 +461,8 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item (Multi)")
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
+        EXPECT_EQ(playerLeft->items[0], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[0], ITEM_NONE);
     }
 }
 
@@ -482,8 +482,8 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
+        EXPECT_EQ(playerLeft->items[0], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[0], ITEM_NONE);
     }
 }
 
@@ -505,8 +505,8 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption and move 
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
+        EXPECT_EQ(playerLeft->items[0], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[0], ITEM_NONE);
     }
 }
 
@@ -528,7 +528,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption, but befo
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
     } THEN {
-        EXPECT_EQ(playerLeft->item, ITEM_TOXIC_ORB);
-        EXPECT_EQ(playerRight->item, ITEM_NONE);
+        EXPECT_EQ(playerLeft->items[0], ITEM_TOXIC_ORB);
+        EXPECT_EQ(playerRight->items[0], ITEM_NONE);
     }
 }

@@ -1192,9 +1192,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
      && aiData->effectiveness[battlerAtk][BATTLE_PARTNER(battlerDef)][gAiThinkingStruct->movesetIndex] != UQ_4_12(0.0))
         ADJUST_SCORE(-5);
 
-    if (DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
-        abilityDef = ABILITY_NONE;
-
     // check non-user target
     if (!(moveTarget & MOVE_TARGET_USER))
     {
@@ -4445,7 +4442,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_MULTI_HIT:
     case EFFECT_TRIPLE_KICK:
     case EFFECT_POPULATION_BOMB:
-        if (AI_MoveMakesContact(move, battlerAtk, battlerAtk)
+        if (AI_MoveMakesContact(move, battlerAtk)
           && !AISearchTraits(AIBattlerTraits, ABILITY_MAGIC_GUARD)
           && Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_ROCKY_HELMET, aiData))
             ADJUST_SCORE(-2);

@@ -2104,7 +2104,7 @@ static bool32 CanAbilityTrapOpponent(enum Ability ability, u32 opponent, u32 spe
         else
             return TRUE;
     }
-    else if (ability == ABILITY_ARENA_TRAP && IsBattlerGrounded(opponent, gAiLogicData->holdEffects[opponent]))
+    else if (ability == ABILITY_ARENA_TRAP && IsBattlerGrounded(opponent))
         return TRUE;
     else if ((ability == ABILITY_MAGNET_PULL || SpeciesHasInnate(species, ABILITY_MAGNET_PULL)) && IS_BATTLER_OF_TYPE(opponent, TYPE_STEEL))
         return TRUE;

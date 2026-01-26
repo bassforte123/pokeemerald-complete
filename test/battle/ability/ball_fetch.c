@@ -143,9 +143,9 @@ WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball
             NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
     } THEN {
         if (item != ITEM_X_ACCURACY)
-            EXPECT_EQ(player->item, item);
+            EXPECT_EQ(player->items[0], item);
         else
-            EXPECT_EQ(player->item, ITEM_NONE);
+            EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -157,7 +157,7 @@ WILD_BATTLE_TEST("Ball Fetch doesn't trigger if the Pokémon is already holding 
     PARAMETRIZE { item = ITEM_NUGGET; }
 
     GIVEN {
-        PLAYER(SPECIES_YAMPER) { Ability(ABILITY_RATTLED); Innates(ABILITY_BALL_FETCH); Item(item); }
+        PLAYER(SPECIES_YAMPER) { Ability(ABILITY_RATTLED); Innates(ABILITY_BALL_FETCH); Items(item, item); }
         OPPONENT(SPECIES_METAGROSS);
     } WHEN {
         TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
@@ -178,9 +178,9 @@ WILD_BATTLE_TEST("Ball Fetch doesn't trigger if the Pokémon is already holding 
         }
     } THEN {
         if (item == ITEM_NONE)
-            EXPECT_EQ(player->item, ITEM_GREAT_BALL);
+            EXPECT_EQ(player->items[0], ITEM_GREAT_BALL);
         else
-            EXPECT_EQ(player->item, item);
+            EXPECT_EQ(player->items[0], item);
     }
 }
 
@@ -211,7 +211,7 @@ WILD_BATTLE_TEST("Ball Fetch only picks up the first failed ball, once per battl
         MESSAGE("The wild Metagross received Great Ball from Yamper!");
         NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -233,7 +233,7 @@ SINGLE_BATTLE_TEST("Ball Fetch doesn't trigger in Trainer Battles (Multi)")
     } SCENE {
         NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 

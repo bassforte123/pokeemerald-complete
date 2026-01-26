@@ -4135,7 +4135,7 @@ u8 IsRunningFromBattleImpossible(u32 battler)
         if ((BattlerHasTrait(i - 1, ABILITY_SHADOW_TAG))
          && (B_SHADOW_TAG_ESCAPE >= GEN_4 && !BattlerHasTrait(battler, ABILITY_SHADOW_TAG)))
             ability = ABILITY_SHADOW_TAG;
-        if ((BattlerHasTrait(i - 1, ABILITY_ARENA_TRAP)) && IsBattlerGrounded(battler, GetBattlerHoldEffect(battler)))
+        if ((BattlerHasTrait(i - 1, ABILITY_ARENA_TRAP)) && IsBattlerGrounded(battler))
             ability = ABILITY_ARENA_TRAP;
         if ((BattlerHasTrait(i - 1, ABILITY_MAGNET_PULL)) && IS_BATTLER_OF_TYPE(battler, TYPE_STEEL))
             ability = ABILITY_MAGNET_PULL;

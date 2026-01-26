@@ -450,6 +450,6 @@ SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Ene
         ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
     }
 }

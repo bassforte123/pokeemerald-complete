@@ -477,7 +477,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
         EXPECT(player->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);
     }
 }
@@ -502,9 +502,9 @@ DOUBLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         MESSAGE("The opposing Wynaut returned its stats to normal using its White Herb!");
     } THEN {
-        EXPECT(opponentLeft->item == ITEM_NONE);
+        EXPECT(opponentLeft->items[0] == ITEM_NONE);
         EXPECT(opponentLeft->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);
-        EXPECT(opponentRight->item == ITEM_NONE);
+        EXPECT(opponentRight->items[0] == ITEM_NONE);
         EXPECT(opponentRight->statStages[STAT_DEF] = DEFAULT_STAT_STAGE);
     }
 }
@@ -528,7 +528,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
             MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
         }
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
         EXPECT(player->statStages[STAT_DEF] = DEFAULT_STAT_STAGE - 1);
         EXPECT(player->statStages[STAT_SPDEF] = DEFAULT_STAT_STAGE - 1);
     }
@@ -559,7 +559,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet returned its stats to normal using its White Herb!");
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
         EXPECT(player->statStages[STAT_SPEED] = DEFAULT_STAT_STAGE);
     }
 }
@@ -648,7 +648,7 @@ SINGLE_BATTLE_TEST("White Herb has correct interactions with Intimidate triggere
         }
     } THEN {
         if (ability == ABILITY_COMPETITIVE) {
-            EXPECT(player->item == ITEM_NONE);
+            EXPECT(player->items[0] == ITEM_NONE);
             EXPECT(player->statStages[STAT_ATK] = DEFAULT_STAT_STAGE);
             EXPECT(player->statStages[STAT_SPATK] = DEFAULT_STAT_STAGE + 2);
         } else {

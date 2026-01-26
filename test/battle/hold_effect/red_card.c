@@ -565,7 +565,7 @@ SINGLE_BATTLE_TEST("Red Card does not activate if stolen by Magician (Multi)")
             }
         }
     } THEN {
-        EXPECT(player->item == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
     }
 }
 
