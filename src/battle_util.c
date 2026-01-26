@@ -4659,56 +4659,96 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                     break;
                 }
             }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HARVEST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HARVEST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+            {
                 for (i = 0; i < MAX_MON_ITEMS; i++)
                 {
-                 && (IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
-                 && gBattleMons[battler].items[i] == ITEM_NONE
-                 && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
-                 && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
-                {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
-                PushTraitStack(battler, ABILITY_HARVEST);
-                    BattleScriptExecute(BattleScript_HarvestActivates);
-                    effect++;
+                    if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
+                     && gBattleMons[battler].items[i] == ITEM_NONE
+                     && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
+                     && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                    {
+                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
+                        PushTraitStack(battler, ABILITY_HARVEST);
+                        BattleScriptExecute(BattleScript_HarvestActivates);
+                        effect++;
+                        break;
                     }
-                break;
-            }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BALL_FETCH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-             && gBattleMons[battler].item == ITEM_NONE
-             && gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
-             && !gHasFetchedBall)
+                }
+            }    
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BALL_FETCH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
             {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                gLastUsedItem = gLastUsedBall;
-                gBattleScripting.battler = battler;
-                gBattleMons[battler].item = gLastUsedItem;
-                BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, 2, &gLastUsedItem);
-                MarkBattlerForControllerExec(battler);
-                gHasFetchedBall = TRUE;
-                PushTraitStack(battler, ABILITY_BALL_FETCH);
-                BattleScriptExecute(BattleScript_BallFetch);
-                effect++;
-                break;
-            }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-			{
-                if (gDisableStructs[battler].cudChew == TRUE)
+                slot = MAX_MON_ITEMS;
+
+                if (!(gBattleTypeFlags & BATTLE_TYPE_RAID)
+                 && B_HELD_ITEM_CATEGORIZATION
+                 && gBattleMons[battler].items[gItemsInfo[gLastUsedBall].heldSlot] == ITEM_NONE)
+                {
+                    slot = gItemsInfo[gLastUsedBall].heldSlot;
+                }
+                else
+                {
+                    for (int i = 0; i < MAX_MON_ITEMS; i++)
+                    {
+                        if (gBattleMons[battler].items[i] == ITEM_NONE)
+                        {
+                            slot = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
+                    && !gHasFetchedBall
+                    && slot != MAX_MON_ITEMS)
                 {
                     gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                    gLastUsedItem = gLastUsedBall;
                     gBattleScripting.battler = battler;
-                    gDisableStructs[battler].cudChew = FALSE;
-                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
-                    GetBattlerPartyState(battler)->usedHeldItem = ITEM_NONE;
-                    PushTraitStack(battler, ABILITY_CUD_CHEW);
-                    BattleScriptExecute(BattleScript_CudChewActivates);
+                    gBattleMons[battler].items[slot] = gLastUsedItem;
+                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + slot, 0, 2, &gLastUsedItem);
+                    MarkBattlerForControllerExec(battler);
+                    gHasFetchedBall = TRUE;
+                    BattleScriptExecute(BattleScript_BallFetch);
                     effect++;
                     break;
                 }
-                    else if (!gDisableStructs[battler].cudChew && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+			{
+                for (slot = 0; slot < MAX_MON_ITEMS; slot++)
                 {
-                    gDisableStructs[battler].cudChew = TRUE;
+                    if (gDisableStructs[battler].cudChew[slot])
+                    {
+                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                        gBattleScripting.battler = battler;
+                        gDisableStructs[battler].cudChew[slot] = FALSE;
+                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[slot];
+                        GetBattlerPartyState(battler)->usedHeldItems[slot] = ITEM_NONE;
+                        PushTraitStack(battler, ABILITY_CUD_CHEW);
+                        BattleScriptExecute(BattleScript_CudChewActivates);
+                        effect++;
+                        break;
+                    }
+                }
+
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (!gDisableStructs[battler].cudChew[i] && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                    {
+                        if (targetableSlots[0] != MAX_MON_ITEMS)
+                            index++;
+                        targetableSlots[index] = i;
+                    }
+                }
+
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                {
+                    slot = gLastItemSlot = GetSlot(targetableSlots, index);
+                    {
+                        gDisableStructs[battler].cudChew[slot] = TRUE;
+                    }
                 }
 			}
 
