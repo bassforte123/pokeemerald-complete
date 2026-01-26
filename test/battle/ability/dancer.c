@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Dancer can copy Teeter Dance")
     GIVEN {
         ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
         PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Item(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Items(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TEETER_DANCE); }
     } SCENE {
@@ -40,8 +40,8 @@ DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targe
         ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
         ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Item(ITEM_LUM_BERRY); }
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WYNAUT) { Items(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Items(ITEM_LUM_BERRY); }
         OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_TEETER_DANCE); }
@@ -158,7 +158,7 @@ SINGLE_BATTLE_TEST("Dancer-called attacks do not trigger Life Orb if target is i
         ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
         ASSUME(GetSpeciesType(SPECIES_ORICORIO_POM_POM, 0) == TYPE_ELECTRIC || GetSpeciesType(SPECIES_ORICORIO_POM_POM, 1) == TYPE_ELECTRIC);
         PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
-        OPPONENT(SPECIES_ORICORIO_POM_POM) { Ability(ABILITY_DANCER); Item(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_ORICORIO_POM_POM) { Ability(ABILITY_DANCER); Items(ITEM_LIFE_ORB); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ROOST); MOVE(player, MOVE_REVELATION_DANCE); }
     } SCENE {
@@ -283,7 +283,7 @@ DOUBLE_BATTLE_TEST("Dancer still activates after Red Card")
         PLAYER(SPECIES_WOBBUFFET) ;
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
         PLAYER(SPECIES_CHANSEY);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD); }
         OPPONENT(SPECIES_BULBASAUR);
         OPPONENT(SPECIES_SHUCKLE);
     } WHEN {
@@ -309,7 +309,7 @@ DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suct
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SUCTION_CUPS); }
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
         PLAYER(SPECIES_CHANSEY);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD); }
         OPPONENT(SPECIES_BULBASAUR);
         OPPONENT(SPECIES_SHUCKLE);
     } WHEN {
@@ -376,7 +376,7 @@ TO_DO_BATTLE_TEST("Dancer tries to copy a status move but fails if it's under Ta
 TO_DO_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest")
 TO_DO_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out")
 TO_DO_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat")
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Dancer can copy a dance move immediately after it was used and allow the user of Dancer to still use its move (Multi)")
 {
     GIVEN {
@@ -567,3 +567,115 @@ TO_DO_BATTLE_TEST("Dancer tries to copy a status move but fails if it's under Ta
 TO_DO_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest (Multi)")
 TO_DO_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out (Multi)")
 TO_DO_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat (Multi)")
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Dancer can copy Teeter Dance (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
+        PLAYER(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Items(ITEM_PECHA_BERRY, ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TEETER_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targets (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { Items(ITEM_PECHA_BERRY, ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Items(ITEM_PECHA_BERRY, ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TEETER_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponentLeft);
+        MESSAGE("Wobbuffet became confused!");
+        MESSAGE("Wynaut became confused!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer-called attacks do not trigger Life Orb if target is immune (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_REVELATION_DANCE));
+        ASSUME(GetMoveEffect(MOVE_REVELATION_DANCE) == EFFECT_REVELATION_DANCE);
+        ASSUME(GetMoveEffect(MOVE_ROOST) == EFFECT_ROOST);
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
+        ASSUME(GetSpeciesType(SPECIES_ORICORIO_POM_POM, 0) == TYPE_ELECTRIC || GetSpeciesType(SPECIES_ORICORIO_POM_POM, 1) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_ORICORIO_POM_POM) { Ability(ABILITY_DANCER); Items(ITEM_PECHA_BERRY, ITEM_LIFE_ORB); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ROOST); MOVE(player, MOVE_REVELATION_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, opponent);
+        ABILITY_POPUP(player, ABILITY_LIGHTNING_ROD);
+        NOT HP_BAR(opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer still activates after Red Card (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) ;
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
+        PLAYER(SPECIES_CHANSEY);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_BULBASAUR);
+        OPPONENT(SPECIES_SHUCKLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Fiery Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentLeft);
+        // Red card trigger
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("Chansey was dragged out!");
+        // Dancer
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suction Cups (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SUCTION_CUPS); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
+        PLAYER(SPECIES_CHANSEY);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_BULBASAUR);
+        OPPONENT(SPECIES_SHUCKLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Fiery Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentLeft);
+        // red card trigger
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("Wobbuffet anchors itself with Suction Cups!");
+        NOT MESSAGE("Chansey was dragged out!");
+        // Dancer
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        HP_BAR(opponentLeft);
+    }
+}
+#endif

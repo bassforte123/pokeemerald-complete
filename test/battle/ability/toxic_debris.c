@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Toxic Debris activates if user faints after physical hit")
 SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates")
 {
     GIVEN {
-        PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); Item(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); Items(ITEM_AIR_BALLOON); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
@@ -140,7 +140,7 @@ DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even whe
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
     }
 }
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side if hit by a physical attack (Multi)")
 {
     u32 move;
@@ -274,3 +274,21 @@ DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even whe
         MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_TOXIC_DEBRIS); Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
+        MESSAGE("Poison spikes were scattered on the ground all around the opposing team!");
+        MESSAGE("Glimmora's Air Balloon popped!");
+    }
+}
+#endif

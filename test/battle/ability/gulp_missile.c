@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transform
 SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming")
 {
     GIVEN {
-        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Item(ITEM_POWER_HERB); }
+        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DIVE); }
@@ -169,7 +169,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Item(ITEM_ROCKY_HELMET); }
+        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_ROCKY_HELMET); }
         OPPONENT(SPECIES_DRAGAPULT) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SURF); MOVE(opponent, MOVE_SCRATCH); }
@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Gulp Missile triggered by explosion doesn't freeze the game"
         TURN { MOVE(opponent, MOVE_SURF); MOVE(player, MOVE_EXPLOSION); }
     }
 }
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gulping form if max HP is over 1/2 (Multi)")
 {
     GIVEN {
@@ -397,3 +397,54 @@ SINGLE_BATTLE_TEST("Gulp Missile triggered by explosion doesn't freeze the game 
         TURN { MOVE(opponent, MOVE_SURF); MOVE(player, MOVE_EXPLOSION); }
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_PECHA_BERRY, ITEM_POWER_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DIVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
+        MESSAGE("Cramorant became fully charged due to its Power Herb!");
+        ABILITY_POPUP(player, ABILITY_GULP_MISSILE);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_CRAMORANT_GULPING);
+    }
+}
+
+SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense and still triggers other effects after (Multi)")
+{
+    // Make sure attacker and target are correct after triggering the ability
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
+    PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_PECHA_BERRY, ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_DRAGAPULT) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SURF); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(player, ABILITY_GULP_MISSILE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_GULP_MISSILE);
+        HP_BAR(opponent);
+        if (ability == ABILITY_INFILTRATOR) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            MESSAGE("The opposing Dragapult's Defense fell!");
+        } else {
+            ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
+        }
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        HP_BAR(opponent);
+    }
+}
+#endif

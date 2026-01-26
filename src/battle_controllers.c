@@ -68,7 +68,7 @@ void HandleLinkBattleSetup(void)
 
 void SetUpBattleVarsAndBirchZigzagoon(void)
 {
-    s32 i;
+    s32 i, j;
 
     gBattleMainFunc = BeginBattleIntroDummy;
 
@@ -91,7 +91,8 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
         ZeroEnemyPartyMons();
         CreateMon(&gEnemyParty[0], SPECIES_ZIGZAGOON, 2, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
         i = 0;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, &i);
+        for (j = 0; j < MAX_MON_ITEMS; j++)
+            SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM + j, &i);
     }
 }
 
@@ -1401,7 +1402,9 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
     {
     case REQUEST_ALL_BATTLE:
         battleMon.species = GetMonData(&party[monId], MON_DATA_SPECIES);
-        battleMon.item = GetMonData(&party[monId], MON_DATA_HELD_ITEM);
+        battleMon.items[0] = GetMonData(&party[monId], MON_DATA_HELD_ITEM);  //Not used (Multi)
+        for (size = 0; size < MAX_MON_ITEMS; size++)
+            battleMon.items[size] = GetMonData(&party[monId], MON_DATA_HELD_ITEM + size);
         for (size = 0; size < MAX_MON_MOVES; size++)
         {
             battleMon.moves[size] = GetMonData(&party[monId], MON_DATA_MOVE1 + size);
@@ -1469,6 +1472,12 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         break;
     case REQUEST_HELDITEM_BATTLE:
         data16 = GetMonData(&party[monId], MON_DATA_HELD_ITEM);
+        dst[0] = data16;
+        dst[1] = data16 >> 8;
+        size = 2;
+        break;
+    case REQUEST_HELDITEM_BATTLE_TWO:
+        data16 = GetMonData(&party[monId], MON_DATA_HELD_ITEM_TWO);
         dst[0] = data16;
         dst[1] = data16 >> 8;
         size = 2;
@@ -1731,7 +1740,10 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
             u8 iv;
 
             SetMonData(&party[monId], MON_DATA_SPECIES, &battlePokemon->species);
-            SetMonData(&party[monId], MON_DATA_HELD_ITEM, &battlePokemon->item);
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                SetMonData(&party[monId], MON_DATA_HELD_ITEM + i, &battlePokemon->items[i]);  
+            }
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
                 SetMonData(&party[monId], MON_DATA_MOVE1 + i, &battlePokemon->moves[i]);
@@ -1769,6 +1781,9 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
         break;
     case REQUEST_HELDITEM_BATTLE:
         SetMonData(&party[monId], MON_DATA_HELD_ITEM, &gBattleResources->bufferA[battler][3]);
+        break;
+    case REQUEST_HELDITEM_BATTLE_TWO:
+        SetMonData(&party[monId], MON_DATA_HELD_ITEM_TWO, &gBattleResources->bufferA[battler][3]);
         break;
     case REQUEST_MOVES_PP_BATTLE:
         for (i = 0; i < MAX_MON_MOVES; i++)
@@ -3180,7 +3195,7 @@ void UpdateFriendshipFromXItem(u32 battler)
 
     if (friendship < X_ITEM_MAX_FRIENDSHIP)
     {
-        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE, GetItemHoldEffect(heldItem));
+        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE);
 
         if (friendship > MAX_FRIENDSHIP)
             friendship = MAX_FRIENDSHIP;

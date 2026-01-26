@@ -82,7 +82,23 @@ SINGLE_BATTLE_TEST("Stone Axe fails to set up hazards if user faints")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STONE_AXE); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STONE_AXE, player);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the opposing Wobbuffet's Rocky Helmet!");
+        NOT MESSAGE("Pointed stones float in the air around the opposing team!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Stone Axe fails to set up hazards if user faints (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, MOVE_STONE_AXE); SEND_OUT(player, 1); }
     } SCENE {

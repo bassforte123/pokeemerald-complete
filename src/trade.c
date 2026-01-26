@@ -155,7 +155,7 @@ struct InGameTrade {
     u32 otId;
     u8 conditions[CONTEST_CATEGORIES_COUNT];
     u32 personality;
-    u16 heldItem;
+    u16 heldItem[MAX_MON_ITEMS];
     u8 mailNum;
     u8 otName[TRAINER_NAME_LENGTH + 1];
     u8 otGender;
@@ -306,7 +306,7 @@ static void SpriteCB_BouncingPokeballDepart(struct Sprite *);
 static void SpriteCB_BouncingPokeballDepartEnd(struct Sprite *);
 static void SpriteCB_BouncingPokeballArrive(struct Sprite *);
 static void BufferInGameTradeMonName(void);
-static void GetInGameTradeMail(struct Mail *, const struct InGameTrade *);
+static void GetInGameTradeMail(struct Mail *, const struct InGameTrade *, u8 slot);
 static void CB2_UpdateLinkTrade(void);
 static void CB2_WaitTradeComplete(void);
 static void CB2_SaveAndEndTrade(void);
@@ -4560,24 +4560,27 @@ static void CreateInGameTradePokemonInternal(u8 whichPlayerMon, u8 whichInGameTr
     SetMonData(pokemon, MON_DATA_MET_LOCATION, &metLocation);
 
     mailNum = 0;
-    if (inGameTrade->heldItem != ITEM_NONE)
+    for (u32 i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if (ItemIsMail(inGameTrade->heldItem))
+        if (inGameTrade->heldItem[i] != ITEM_NONE)
         {
-            GetInGameTradeMail(&mail, inGameTrade);
-            gTradeMail[0] = mail;
-            SetMonData(pokemon, MON_DATA_MAIL, &mailNum);
-            SetMonData(pokemon, MON_DATA_HELD_ITEM, &inGameTrade->heldItem);
-        }
-        else
-        {
-            SetMonData(pokemon, MON_DATA_HELD_ITEM, &inGameTrade->heldItem);
+            if (ItemIsMail(inGameTrade->heldItem[i]))
+            {
+                GetInGameTradeMail(&mail, inGameTrade, i);
+                gTradeMail[0] = mail;
+                SetMonData(pokemon, MON_DATA_MAIL, &mailNum);
+                SetMonData(pokemon, MON_DATA_HELD_ITEM + i, &inGameTrade->heldItem[i]);
+            }
+            else
+            {
+                SetMonData(pokemon, MON_DATA_HELD_ITEM + i, &inGameTrade->heldItem[i]);
+            }
         }
     }
     CalculateMonStats(&gEnemyParty[0]);
 }
 
-static void GetInGameTradeMail(struct Mail *mail, const struct InGameTrade *trade)
+static void GetInGameTradeMail(struct Mail *mail, const struct InGameTrade *trade, u8 slot)
 {
     s32 i;
 
@@ -4592,7 +4595,8 @@ static void GetInGameTradeMail(struct Mail *mail, const struct InGameTrade *trad
     mail->trainerId[2] = trade->otId >> 8;
     mail->trainerId[3] = trade->otId;
     mail->species = trade->species;
-    mail->itemId = trade->heldItem;
+    
+    mail->itemId = trade->heldItem[slot];
 }
 
 u16 GetTradeSpecies(void)

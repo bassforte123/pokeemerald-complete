@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Leftovers recovers 1/16th HP at end of turn")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_LEFTOVERS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Leftovers recovers 1/16th HP at end of turn")
 SINGLE_BATTLE_TEST("Leftovers does nothing if max HP")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LEFTOVERS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {}
@@ -40,7 +40,54 @@ SINGLE_BATTLE_TEST("Leftovers does nothing if max HP")
 SINGLE_BATTLE_TEST("Leftovers does nothing if Heal Block applies")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_LEFTOVERS); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_BLOCK); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            MESSAGE("Wobbuffet restored a little HP using its Leftovers!");
+            HP_BAR(player);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Leftovers recovers 1/16th HP at end of turn (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_PECHA_BERRY, ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet restored a little HP using its Leftovers!");
+        HP_BAR(player, damage: -maxHP / 16);
+    }
+}
+
+SINGLE_BATTLE_TEST("Leftovers does nothing if max HP (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            MESSAGE("Wobbuffet restored a little HP using its Leftovers!");
+            HP_BAR(player);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Leftovers does nothing if Heal Block applies (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_PECHA_BERRY, ITEM_LEFTOVERS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); }

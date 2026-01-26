@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect Natural Gift's type")
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
-        PLAYER(SPECIES_AMAURA) { Ability(ability); Item(ITEM_ORAN_BERRY); }
+        PLAYER(SPECIES_AMAURA) { Ability(ability); Items(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect Judgment / Techno Blast / Multi-A
         ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].holdEffect == HOLD_EFFECT_MEMORY);
         ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].secondaryId == TYPE_ELECTRIC);
         ASSUME(GetSpeciesType(SPECIES_DIGLETT, 0) == TYPE_GROUND);
-        PLAYER(SPECIES_AMAURA) { Ability(ABILITY_REFRIGERATE); Item(item); }
+        PLAYER(SPECIES_AMAURA) { Ability(ABILITY_REFRIGERATE); Items(item); }
         OPPONENT(SPECIES_DIGLETT);
     } WHEN {
         TURN { MOVE(player, move); }
@@ -146,8 +146,7 @@ TO_DO_BATTLE_TEST("Refrigerate doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Refrigerate doesn't affect damaging Z-Move types");
 TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate turns Max Strike into Max Hailstorm when not used by Gigantamax Lapras");
 //TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate doesn't turn Max Strike into Max Hailstorm when used by Gigantamax Lapras, instead becoming G-Max Resonance"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.
-
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Refrigerate turns a Normal-type move into a Ice-type move (Multi)")
 {
     GIVEN {
@@ -287,3 +286,52 @@ TO_DO_BATTLE_TEST("Refrigerate doesn't affect Terrain Pulse's type (Multi)");
 TO_DO_BATTLE_TEST("Refrigerate doesn't affect damaging Z-Move types (Multi)");
 TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate turns Max Strike into Max Hailstorm when not used by Gigantamax Lapras (Multi)");
 //TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate doesn't turn Max Strike into Max Hailstorm when used by Gigantamax Lapras, instead becoming G-Max Resonance (Multi)"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Refrigerate doesn't affect Natural Gift's type (Multi)")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_SNOW_WARNING; }
+    PARAMETRIZE { ability = ABILITY_REFRIGERATE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
+        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
+        PLAYER(SPECIES_AMAURA) { Ability(ability); Items(ITEM_GREAT_BALL, ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_BELDUM);
+    } WHEN {
+        TURN { MOVE(player, MOVE_NATURAL_GIFT); }
+    } SCENE {
+        NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player); }
+        MESSAGE("It doesn't affect the opposing Beldum…");
+    }
+}
+
+SINGLE_BATTLE_TEST("Refrigerate doesn't affect Judgment / Techno Blast / Multi-Attack's type (Multi)")
+{
+    u16 move, item;
+    PARAMETRIZE { move = MOVE_JUDGMENT; item = ITEM_ZAP_PLATE; }
+    PARAMETRIZE { move = MOVE_TECHNO_BLAST; item = ITEM_SHOCK_DRIVE; }
+    PARAMETRIZE { move = MOVE_MULTI_ATTACK; item = ITEM_ELECTRIC_MEMORY; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_JUDGMENT) == EFFECT_CHANGE_TYPE_ON_ITEM);
+        ASSUME(GetMoveEffect(MOVE_TECHNO_BLAST) == EFFECT_CHANGE_TYPE_ON_ITEM);
+        ASSUME(GetMoveEffect(MOVE_MULTI_ATTACK) == EFFECT_CHANGE_TYPE_ON_ITEM);
+        ASSUME(gItemsInfo[ITEM_ZAP_PLATE].holdEffect == HOLD_EFFECT_PLATE);
+        ASSUME(gItemsInfo[ITEM_ZAP_PLATE].secondaryId == TYPE_ELECTRIC);
+        ASSUME(gItemsInfo[ITEM_SHOCK_DRIVE].holdEffect == HOLD_EFFECT_DRIVE);
+        ASSUME(gItemsInfo[ITEM_SHOCK_DRIVE].secondaryId == TYPE_ELECTRIC);
+        ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].holdEffect == HOLD_EFFECT_MEMORY);
+        ASSUME(gItemsInfo[ITEM_ELECTRIC_MEMORY].secondaryId == TYPE_ELECTRIC);
+        ASSUME(GetSpeciesType(SPECIES_DIGLETT, 0) == TYPE_GROUND);
+        PLAYER(SPECIES_AMAURA) { Ability(ABILITY_REFRIGERATE); Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_DIGLETT);
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        NOT { ANIMATION(ANIM_TYPE_MOVE, move, player); }
+        MESSAGE("It doesn't affect the opposing Diglett…");
+    }
+}
+#endif

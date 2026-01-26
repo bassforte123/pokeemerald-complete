@@ -36,7 +36,23 @@ SINGLE_BATTLE_TEST("Chlorophyll doesn't double speed if Cloud Nine/Air Lock is o
 SINGLE_BATTLE_TEST("Chlorophyll doesn't double speed if they have an Utility Umbrella")
 {
     GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { Ability(ABILITY_CHLOROPHYLL); Speed(100); Item(ITEM_UTILITY_UMBRELLA); }
+        PLAYER(SPECIES_VENUSAUR) { Ability(ABILITY_CHLOROPHYLL); Speed(100); Items(ITEM_UTILITY_UMBRELLA); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(199); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SUNNY_DAY); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Chlorophyll doesn't double speed if they have an Utility Umbrella (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { Ability(ABILITY_CHLOROPHYLL); Speed(100); Items(ITEM_PECHA_BERRY, ITEM_UTILITY_UMBRELLA); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(199); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SUNNY_DAY); }

@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Drought sets up sun for 8 turns with Heat Rock (Gen6+)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
-        PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DROUGHT); Item(ITEM_HEAT_ROCK); }
+        PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DROUGHT); Items(ITEM_HEAT_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Drought sets up permanent sun (Gen3-5)")
         NOT MESSAGE("The sunlight faded.");
     }
 }
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Drought sets up sun for 5 turns (Gen6+) (Multi)")
 {
     GIVEN {
@@ -162,3 +162,34 @@ SINGLE_BATTLE_TEST("Drought sets up permanent sun (Gen3-5) (Multi)")
         NOT MESSAGE("The sunlight faded.");
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Drought sets up sun for 8 turns with Heat Rock (Gen6+) (Multi)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DROUGHT); Items(ITEM_PECHA_BERRY, ITEM_HEAT_ROCK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight faded.");
+    }
+}
+#endif

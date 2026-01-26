@@ -26,6 +26,7 @@
     /* Damage settings */ \
     F(BURN_DAMAGE,               burnDamage,              (u32, GEN_COUNT - 1)) \
     F(BURN_FACADE_DMG,           burnFacadeDmg,           (u32, GEN_COUNT - 1)) \
+    F(FLYING_PRESS_RESIST,       flyingPressResist,       (u32, GEN_COUNT - 1)) \
     F(BINDING_DAMAGE,            bindingDamage,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(PSYWAVE_DMG,               psywaveDmg,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(PAYBACK_SWITCH_BOOST,      paybackSwitchBoost,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \

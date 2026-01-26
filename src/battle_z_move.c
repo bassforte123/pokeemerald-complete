@@ -112,8 +112,6 @@ bool32 IsZMove(u32 move)
 
 bool32 CanUseZMove(u32 battler)
 {
-    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
-
     // Check if Player has Z-Power Ring.
     if (!TESTING && (battler == B_POSITION_PLAYER_LEFT
         || (!(gBattleTypeFlags & BATTLE_TYPE_MULTI) && battler == B_POSITION_PLAYER_RIGHT))
@@ -133,7 +131,7 @@ bool32 CanUseZMove(u32 battler)
         return FALSE;
 
     // Check if battler isn't holding a Z-Crystal.
-    if (holdEffect != HOLD_EFFECT_Z_CRYSTAL)
+    if (!BattlerHasHeldItemEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
         return FALSE;
 
     // All checks passed!
@@ -142,11 +140,9 @@ bool32 CanUseZMove(u32 battler)
 
 u32 GetUsableZMove(u32 battler, u32 move)
 {
-    u32 item = gBattleMons[battler].item;
-    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
-
-    if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
+    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
     {
+        u32 item = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE);
         u16 zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
         if (zMove != MOVE_NONE)
             return zMove;  // Signature z move exists
@@ -165,11 +161,7 @@ void ActivateZMove(u32 battler)
 
 bool32 IsViableZMove(u32 battler, u32 move)
 {
-    u32 item;
-    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     int moveSlotIndex;
-
-    item = gBattleMons[battler].item;
 
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_Z_MOVE)
         return FALSE;
@@ -188,8 +180,9 @@ bool32 IsViableZMove(u32 battler, u32 move)
     }
 
     // Check for signature Z-Move or type-based Z-Move.
-    if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
+    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
     {
+        u32 item = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE);
         u16 zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
         if (zMove != MOVE_NONE)
             return TRUE;

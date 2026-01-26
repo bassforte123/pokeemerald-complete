@@ -101,7 +101,7 @@
 
 // Dynamic fields for the Pokémon Skills page
 #define PSS_DATA_WINDOW_SKILLS_HELD_ITEM 0
-#define PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT 1
+#define PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2 1
 #define PSS_DATA_WINDOW_SKILLS_STATS_LEFT 2 // HP, Attack, Defense
 #define PSS_DATA_WINDOW_SKILLS_STATS_RIGHT 3 // Sp. Attack, Sp. Defense, Speed
 #define PSS_DATA_WINDOW_EXP 4 // Exp, next level
@@ -164,7 +164,7 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u16 spatk; // 0x28
         u16 spdef; // 0x2A
         u16 speed; // 0x2C
-        u16 item; // 0x2E
+        u16 item[MAX_MON_ITEMS]; // 0x2E
         u16 friendship; // 0x30
         u8 OTGender; // 0x32
         u8 nature; // 0x33
@@ -284,8 +284,8 @@ static void PrintEggState(void);
 static void PrintEggMemo(void);
 static void Task_PrintSkillsPage(u8);
 static void PrintHeldItemName(void);
+static void PrintHeldItemName2(void);
 static void PrintSkillsPageText(void);
-static void PrintRibbonCount(void);
 static void BufferLeftColumnStats(void);
 static void PrintLeftColumnStats(void);
 static void BufferRightColumnStats(void);
@@ -720,7 +720,7 @@ static const struct WindowTemplate sPageSkillsTemplate[] =
         .paletteNum = 6,
         .baseBlock = 467 + offset,
     },
-    [PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT] = {
+    [PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2] = {
         .bg = 0,
         .tilemapLeft = 20,
         .tilemapTop = 4,
@@ -1592,7 +1592,10 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         sum->exp = GetMonData(mon, MON_DATA_EXP);
         sum->level = GetMonData(mon, MON_DATA_LEVEL);
         sum->abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM);
-        sum->item = GetMonData(mon, MON_DATA_HELD_ITEM);
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            sum->item[i] = GetMonData(mon, MON_DATA_HELD_ITEM + i);
+        }
         sum->pid = GetMonData(mon, MON_DATA_PERSONALITY);
         sum->sanity = GetMonData(mon, MON_DATA_SANITY_IS_BAD_EGG);
 
@@ -3984,7 +3987,7 @@ static void PrintMonTraits(u8 innateIndex)
 static void PrintSkillsPageText(void)
 {
     PrintHeldItemName();
-    PrintRibbonCount();
+    PrintHeldItemName2();
     if(ShouldShowIvEvPrompt())
         ShowUtilityPrompt(SUMMARY_SKILLS_MODE_STATS);
     BufferLeftColumnStats();
@@ -4004,7 +4007,7 @@ static void Task_PrintSkillsPage(u8 taskId)
         PrintHeldItemName();
         break;
     case 2:
-        PrintRibbonCount();
+        PrintHeldItemName2();
         break;
     case 3:
         ChangeStatLabel(SUMMARY_SKILLS_MODE_STATS);
@@ -4037,19 +4040,19 @@ static void PrintHeldItemName(void)
     u32 fontId;
     int x;
 
-    if (sMonSummaryScreen->summary.item == ITEM_ENIGMA_BERRY_E_READER
+    if (sMonSummaryScreen->summary.item[0] == ITEM_ENIGMA_BERRY_E_READER
         && IsMultiBattle() == TRUE
         && (sMonSummaryScreen->curMonIndex == 1 || sMonSummaryScreen->curMonIndex == 4 || sMonSummaryScreen->curMonIndex == 5))
     {
         text = GetItemName(ITEM_ENIGMA_BERRY_E_READER);
     }
-    else if (sMonSummaryScreen->summary.item == ITEM_NONE)
+    else if (sMonSummaryScreen->summary.item[0] == ITEM_NONE)
     {
         text = gText_None;
     }
     else
     {
-        CopyItemName(sMonSummaryScreen->summary.item, gStringVar1);
+        CopyItemName(sMonSummaryScreen->summary.item[0], gStringVar1);
         text = gStringVar1;
     }
 
@@ -4058,24 +4061,45 @@ static void PrintHeldItemName(void)
     PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM), text, x, 1, 0, 0, fontId);
 }
 
-static void PrintRibbonCount(void)
+static inline void TruncateToFirstWordOnly(u8 *str)
+{
+    for (;*str != EOS; str++)
+    {
+        if (*str == CHAR_SPACE)
+        {
+            *str = EOS;
+            break;
+        }
+    }
+}
+
+static void PrintHeldItemName2(void)
 {
     const u8 *text;
+    u32 fontId;
     int x;
 
-    if (sMonSummaryScreen->summary.ribbonCount == 0)
+    if (sMonSummaryScreen->summary.item[1] == ITEM_ENIGMA_BERRY_E_READER
+        && IsMultiBattle() == TRUE
+        && (sMonSummaryScreen->curMonIndex == 1 || sMonSummaryScreen->curMonIndex == 4 || sMonSummaryScreen->curMonIndex == 5))
+    {
+        text = GetItemName(ITEM_ENIGMA_BERRY_E_READER);
+    }
+    else if (sMonSummaryScreen->summary.item[1] == ITEM_NONE)
     {
         text = gText_None;
     }
     else
     {
-        ConvertIntToDecimalStringN(gStringVar1, sMonSummaryScreen->summary.ribbonCount, STR_CONV_MODE_RIGHT_ALIGN, 2);
-        StringExpandPlaceholders(gStringVar4, gText_RibbonsVar1);
-        text = gStringVar4;
+        CopyItemName(sMonSummaryScreen->summary.item[1], gStringVar1);
+        //TruncateToFirstWordOnly(gStringVar1);  // Truncate to first word, can be used for a Berry exclusive item slot since they all end with "Berry"
+        text = gStringVar1;
+        
     }
 
-    x = GetStringCenterAlignXOffset(FONT_NORMAL, text, 70) + 6;
-    PrintTextOnWindow(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_RIBBON_COUNT), text, x, 1, 0, 0);
+    fontId = GetFontIdToFit(text, FONT_NORMAL, 0, WindowTemplateWidthPx(&sPageSkillsTemplate[PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2]) - 8);
+    x = GetStringCenterAlignXOffset(fontId, text, 72) + 6;
+    PrintTextOnWindowWithFont(AddWindowFromTemplateList(sPageSkillsTemplate, PSS_DATA_WINDOW_SKILLS_HELD_ITEM_2), text, x, 1, 0, 0, fontId);
 }
 
 static void BufferStat(u8 *dst, enum Stat statIndex, u32 stat, u32 strId, u32 n)

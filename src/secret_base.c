@@ -769,7 +769,7 @@ static u8 GetAverageEVs(struct Pokemon *pokemon)
 
 void SetPlayerSecretBaseParty(void)
 {
-    u16 i;
+    u16 i,j;
     u16 moveIndex;
     u16 partyId;
     struct SecretBaseParty *party;
@@ -784,7 +784,8 @@ void SetPlayerSecretBaseParty(void)
                 party->moves[i * MAX_MON_MOVES + moveIndex] = MOVE_NONE;
 
             party->species[i] = SPECIES_NONE;
-            party->heldItems[i] = ITEM_NONE;
+            for (j = 0; j < MAX_MON_ITEMS; j++)
+                party->heldItem[i][j] = ITEM_NONE;
             party->levels[i] = 0;
             party->personality[i] = 0;
             party->EVs[i] = 0;
@@ -796,7 +797,8 @@ void SetPlayerSecretBaseParty(void)
                     party->moves[partyId * MAX_MON_MOVES + moveIndex] = GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + moveIndex);
 
                 party->species[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
-                party->heldItems[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM);
+                for (j = 0; j < MAX_MON_ITEMS; j++)
+                    party->heldItem[partyId][j] = GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + j);
                 party->levels[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_LEVEL);
                 party->personality[partyId] = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY);
                 party->EVs[partyId] = GetAverageEVs(&gPlayerParty[i]);

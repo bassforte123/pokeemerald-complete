@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison- and Steel-type targets if it us
         ASSUME(gItemsInfo[ITEM_POISON_BARB].holdEffect == HOLD_EFFECT_TYPE_POWER);
         ASSUME(gItemsInfo[ITEM_POISON_BARB].secondaryId == TYPE_POISON);
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(heldItem); }
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(heldItem); }
         OPPONENT(SPECIES_ODDISH);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion holds a T
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(ITEM_TOXIC_ORB); }
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_ODDISH);
     } WHEN {
         TURN { }
@@ -293,7 +293,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(ITEM_TOXIC_ORB); }
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(ITEM_TOXIC_ORB); }
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
@@ -316,7 +316,7 @@ SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses
         ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
         ASSUME(gItemsInfo[ITEM_POISON_BARB].holdEffect == HOLD_EFFECT_TYPE_POWER);
         ASSUME(gItemsInfo[ITEM_POISON_BARB].secondaryId == TYPE_POISON);
-        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Item(ITEM_POISON_BARB); }
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(ITEM_POISON_BARB); }
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
@@ -351,8 +351,7 @@ SINGLE_BATTLE_TEST("Corrosion does not affect Poison Spikes")
 }
 
 TO_DO_BATTLE_TEST("Dynamax: Corrosion can poison Poison/Steel types if the Pokémon uses G-Max Malodor")
-TO_DO_BATTLE_TEST("Corrosion does not affect Poison Spikes")
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Corrosion can poison or badly poison a Pokemon regardless of its typing (Multi)")
 {
     u16 species;
@@ -704,3 +703,92 @@ SINGLE_BATTLE_TEST("Corrosion does not affect Poison Spikes (Multi)")
 
 TO_DO_BATTLE_TEST("Dynamax: Corrosion can poison Poison/Steel types if the Pokémon uses G-Max Malodor (Multi)")
 TO_DO_BATTLE_TEST("Corrosion does not affect Poison Spikes (Multi)")
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Corrosion can poison Poison- and Steel-type targets if it uses Fling while holding a Toxic Orb or a Poison Barb (Multi)")
+{
+    u16 heldItem;
+
+    PARAMETRIZE { heldItem = ITEM_POISON_BARB; }
+    PARAMETRIZE { heldItem = ITEM_TOXIC_ORB; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(gItemsInfo[ITEM_POISON_BARB].holdEffect == HOLD_EFFECT_TYPE_POWER);
+        ASSUME(gItemsInfo[ITEM_POISON_BARB].secondaryId == TYPE_POISON);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(ITEM_PECHA_BERRY, heldItem); }
+        OPPONENT(SPECIES_ODDISH);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        if (heldItem == ITEM_POISON_BARB)
+            STATUS_ICON(opponent, poison: TRUE);
+        else
+            STATUS_ICON(opponent, badPoison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("If a Poison- or Steel-type Pokémon with Corrosion holds a Toxic Orb, it will badly poison itself (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(ITEM_PECHA_BERRY, ITEM_TOXIC_ORB); }
+        OPPONENT(SPECIES_ODDISH);
+    } WHEN {
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        STATUS_ICON(player, badPoison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Fling while holding a Toxic Orb (Multi)")
+{
+    u16 species;
+
+    PARAMETRIZE { species = SPECIES_ODDISH; }
+    PARAMETRIZE { species = SPECIES_BELDUM; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(ITEM_PECHA_BERRY, ITEM_TOXIC_ORB); }
+        OPPONENT(species);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, badPoison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Corrosion can poison Poison/Steel types if the Pokémon uses Fling while holding a Poison Barb (Multi)")
+{
+    u16 species;
+
+    PARAMETRIZE { species = SPECIES_ODDISH; }
+    PARAMETRIZE { species = SPECIES_BELDUM; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(gItemsInfo[ITEM_POISON_BARB].holdEffect == HOLD_EFFECT_TYPE_POWER);
+        ASSUME(gItemsInfo[ITEM_POISON_BARB].secondaryId == TYPE_POISON);
+        PLAYER(SPECIES_SALANDIT) { Ability(ABILITY_CORROSION); Items(ITEM_PECHA_BERRY, ITEM_POISON_BARB); }
+        OPPONENT(species);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+    }
+}
+#endif

@@ -52,7 +52,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Loaded Dice damage increase from multi hit moves"
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(44); }
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LOADED_DICE); Moves(MOVE_SEED_BOMB, MOVE_BULLET_SEED); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LOADED_DICE); Moves(MOVE_SEED_BOMB, MOVE_BULLET_SEED); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_BULLET_SEED); }
     } SCENE {
@@ -73,7 +73,8 @@ AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy")
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy (Multi)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
@@ -85,3 +86,19 @@ AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy")
         }
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+AI_SINGLE_BATTLE_TEST("AI sees Loaded Dice damage increase from multi hit moves (Multi)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(44); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_LOADED_DICE); Moves(MOVE_SEED_BOMB, MOVE_BULLET_SEED); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_BULLET_SEED); }
+    } SCENE {
+        MESSAGE("Wobbuffet fainted!");
+    }
+}
+#endif

@@ -46,7 +46,7 @@ void GetAIPartyIndexes(u32 battlerId, s32 *firstId, s32 *lastId);
 void AI_TrySwitchOrUseItem(u32 battler);
 u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType);
 bool32 ShouldSwitch(u32 battler);
-bool32 IsMonGrounded(enum HoldEffect heldItemEffect, enum Ability ability, enum Type type1, enum Type type2, u16 species);
+bool32 IsMonGrounded(u32 battler, enum Ability ability, enum Type type1, enum Type type2, u16 species);
 void ModifySwitchAfterMoveScoring(u32 battler);
 
 #endif // GUARD_BATTLE_AI_SWITCH_ITEMS_H

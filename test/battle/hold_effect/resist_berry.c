@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
             ASSUME(GetItemHoldEffectParam(item) == type);
         }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(defender) { Item(item); }
+        OPPONENT(defender) { Items(item); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
         ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(GetItemHoldEffectParam(item) == type);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(defender) { Item(item); }
+        OPPONENT(defender) { Items(item); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16
             ASSUME(GetItemHoldEffectParam(item) == TYPE_NORMAL);
         }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
@@ -132,7 +132,128 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the dama
         ASSUME(GetItemHoldEffectParam(ITEM_BABIRI_BERRY) == TYPE_STEEL);
         ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_MIMIKYU) { Item(ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_MIMIKYU) { Items(ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_METAL_CLAW); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            MESSAGE("The Babiri Berry weakened the damage to the opposing Mimikyu!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_CLAW, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half (Multi)", s16 damage)
+{
+    u32 move = 0, item = 0, defender = 0;
+    enum Type type = TYPE_NONE;
+
+    for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
+    {
+        PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; defender = sMoveItemTable[j][3]; item = ITEM_NONE; }
+        PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; defender = sMoveItemTable[j][3]; item = sMoveItemTable[j][2]; }
+    }
+
+    GIVEN {
+        ASSUME(GetMovePower(move) > 0);
+        ASSUME(GetMoveType(move) == type);
+        ASSUME(GetSpeciesType(defender, 0) == GetSpeciesType(defender, 1));
+        if (type != TYPE_NORMAL) {
+            ASSUME(gTypeEffectivenessTable[type][GetSpeciesType(defender, 0)] > UQ_4_12(1.0));
+        }
+        if (item != ITEM_NONE) {
+            ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
+            ASSUME(GetItemHoldEffectParam(item) == type);
+        }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(defender) { Items(ITEM_PECHA_BERRY, item); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        if (1 == i % 2) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        }
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++) {
+            EXPECT_MUL_EQ(results[j*2].damage, Q_4_12(0.5), results[(j*2)+1].damage);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effective (Multi)", s16 damage)
+{
+    u32 move = 0, item = 0, defender = 0;
+    enum Type type = TYPE_NONE;
+
+    for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++)
+    {
+        if (TYPE_NORMAL == type)
+        {
+            // ITEM_CHILAN_BERRY activates without a weakness
+        }
+        else if (TYPE_FAIRY == type)
+        {
+            PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = sMoveItemTable[j][2]; defender = SPECIES_WOBBUFFET; }
+        }
+        else
+        {
+            PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = sMoveItemTable[j][2]; defender = SPECIES_SABLEYE; }
+        }
+    }
+
+    GIVEN {
+        ASSUME(GetMovePower(move) > 0);
+        ASSUME(uq4_12_multiply(gTypeEffectivenessTable[type][GetSpeciesType(defender, 0)],
+                gTypeEffectivenessTable[type][GetSpeciesType(defender, 1)]) <= UQ_4_12(1.0));
+        ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(GetItemHoldEffectParam(item) == type);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(defender) { Items(ITEM_PECHA_BERRY, item); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle (Multi)", s16 damage)
+{
+    u32 item = 0;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_CHILAN_BERRY; }
+
+    GIVEN {
+        if (item != ITEM_NONE) {
+            ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
+            ASSUME(GetItemHoldEffectParam(item) == TYPE_NORMAL);
+        }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, item); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STRUGGLE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the damage (Multi)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_BABIRI_BERRY) == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(GetItemHoldEffectParam(ITEM_BABIRI_BERRY) == TYPE_STEEL);
+        ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MIMIKYU) { Items(ITEM_PECHA_BERRY, ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_METAL_CLAW); }
     } SCENE {

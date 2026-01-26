@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Belch", s16 damage)
     PARAMETRIZE { ability = ABILITY_SHEER_FORCE; }
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
-        PLAYER(SPECIES_TAUROS) { Ability(ability); HP(1); Item(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_TAUROS) { Ability(ability); HP(1); Items(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BELCH); }
@@ -252,7 +252,7 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Synchronoise", s16 damage)
     PARAMETRIZE { ability = ABILITY_SHEER_FORCE; }
     PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
     GIVEN {
-        PLAYER(SPECIES_TAUROS) { Ability(ability); HP(1); Item(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_TAUROS) { Ability(ability); HP(1); Items(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_CHANSEY);
     } WHEN {
         TURN { MOVE(player, MOVE_SYNCHRONOISE); }
@@ -623,10 +623,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -711,10 +711,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -799,10 +799,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -887,10 +887,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -975,10 +975,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1063,10 +1063,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1151,10 +1151,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1239,10 +1239,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1328,10 +1328,10 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             PARAMETRIZE { move = j; }
     }
     GIVEN {
-        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_BLUK_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Item(ITEM_BLUK_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Item(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_BLUK_BERRY); }
     } WHEN {
         if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
             TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
@@ -1422,7 +1422,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     }
 }
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Magnitude (Multi)", s16 damage)
 {
     enum Ability ability = 0;
@@ -2548,3 +2548,837 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects (Multi)")
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Sheer Force doesn't boost Belch (Multi)", s16 damage)
+{
+    enum Ability ability = 0;
+    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; }
+    PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
+    GIVEN {
+        PLAYER(SPECIES_TAUROS) { Ability(ability); HP(1); Items(ITEM_PECHA_BERRY, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BELCH); }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_NE(results[0].damage, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sheer Force doesn't boost Synchronoise (Multi)", s16 damage)
+{
+    enum Ability ability = 0;
+    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; }
+    PARAMETRIZE { ability = ABILITY_ANGER_POINT; }
+    GIVEN {
+        PLAYER(SPECIES_TAUROS) { Ability(ability); HP(1); Items(ITEM_PECHA_BERRY, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_CHANSEY);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SYNCHRONOISE); }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_NE(results[0].damage, 0);
+    }
+}
+
+// Tests split by generation
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen1) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_POUND; j < MOVES_COUNT_GEN1; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen2) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_SKETCH; j < MOVES_COUNT_GEN2; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen3) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_FAKE_OUT; j < MOVES_COUNT_GEN3; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen4) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_ROOST; j < MOVES_COUNT_GEN4; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen5) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_HONE_CLAWS; j < MOVES_COUNT_GEN5; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen6) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_FLYING_PRESS; j < MOVES_COUNT_GEN6; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen7) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_SHORE_UP; j < MOVES_COUNT_GEN7; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen8) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_DYNAMAX_CANNON; j < MOVES_COUNT_GEN8; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+// Last test should always go up to MOVES_COUNT to catch users moves
+DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to boost (Gen9) (Multi)")
+{
+    s16 damage1, damage2;
+    u32 move = 0;
+    for (u32 j = MOVE_TERA_BLAST; j < MOVES_COUNT; j++)
+    {
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS && !IgnoreMoveForSheerForceBoost(j))
+            PARAMETRIZE { move = j; }
+    }
+    GIVEN {
+        PLAYER(SPECIES_STEELIX) { Ability(ABILITY_SHEER_FORCE); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_STEELIX) { Ability(ABILITY_STURDY); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Level(100); Items(ITEM_PECHA_BERRY, ITEM_BLUK_BERRY); }
+    } WHEN {
+        if (move == MOVE_ALLURING_VOICE || move == MOVE_BURNING_JEALOUSY) // Alluring Voice requires the target to boost stats to have an effect
+            TURN { MOVE(opponentRight, MOVE_AGILITY); MOVE(playerRight, MOVE_AGILITY); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_UPPER_HAND) // Upper Hand requires the target to be using a damaging priority move
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft); MOVE(playerRight, move, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_COUNTER || move == MOVE_UPPER_HAND)
+            TURN { MOVE(opponentRight, MOVE_QUICK_ATTACK, target: playerLeft);
+                   MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft);
+                   MOVE(playerLeft, move, target: opponentRight);
+                   MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_MIRROR_COAT || move == MOVE_METAL_BURST)
+            TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_SUCKER_PUNCH || move == MOVE_THUNDERCLAP)
+            TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        else if (move == MOVE_DREAM_EATER)
+        {
+            TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); MOVE(opponentLeft, MOVE_HYPNOSIS, target: playerRight); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SNORE)
+        {
+            TURN { MOVE(opponentRight, MOVE_HYPNOSIS, target: playerLeft); MOVE(playerRight, MOVE_HYPNOSIS, target: opponentLeft); MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else if (move == MOVE_SPIT_UP || move == MOVE_LAST_RESORT)
+        {
+            TURN { MOVE(playerLeft, MOVE_STOCKPILE); MOVE(opponentLeft, MOVE_STOCKPILE); }
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        }
+        else
+            TURN { MOVE(playerLeft, move, target: opponentRight); MOVE(opponentLeft, move, target: playerRight); }
+        switch (GetMoveEffect(move))
+        {
+            case EFFECT_TWO_TURNS_ATTACK:
+            case EFFECT_SEMI_INVULNERABLE:
+            case EFFECT_SOLAR_BEAM:
+            case EFFECT_SKY_DROP:
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { ; }
+                break;
+            case EFFECT_FUTURE_SIGHT:
+                TURN { ; }
+                TURN { ; }
+                break;
+            case EFFECT_BIDE:
+                TURN { MOVE(opponentRight, MOVE_WATER_GUN, target: playerLeft); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                TURN { SKIP_TURN(playerLeft); SKIP_TURN(opponentLeft); }
+                break;
+            default:
+                break;
+        }
+    } SCENE {
+        if (GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
+        {
+            HP_BAR(opponentRight, captureDamage: &damage1);
+            HP_BAR(playerRight, captureDamage: &damage2);
+        }
+        else
+        {
+            HP_BAR(playerRight, captureDamage: &damage2);
+            HP_BAR(opponentRight, captureDamage: &damage1);
+        }
+    } THEN {
+        if (IsMoveSheerForceBoosted(move)) {
+            if (!(damage1 > damage2))
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_GT(damage1, damage2);
+        } else {
+            if (damage1 != damage2)
+                DebugPrintf("Move that failed: %S", gMovesInfo[move].name);
+            EXPECT_EQ(damage2, damage1);
+        }
+    }
+}
+
+#endif

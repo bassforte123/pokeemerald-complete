@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Item(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Items(ITEM_ROCKY_HELMET); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         HP_BAR(opponent);
     }
 }
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Multi)")
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
@@ -259,3 +259,26 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         HP_BAR(opponent);
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Multi)")
+{
+    PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Items(ITEM_PECHA_BERRY, ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CHARMANDER);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_TAIL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Iron Barbs!");
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Rocky Helmet!");
+        MESSAGE("The opposing Charmander was dragged out!");
+    }
+}
+#endif

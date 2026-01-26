@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "battle_main.h"
 #include "battle_setup.h"
 #include "bg.h"
@@ -88,7 +89,7 @@ struct DexNavSearch
 {
     u16 species;
     u16 moves[MAX_MON_MOVES];
-    u16 heldItem;
+    u16 heldItem; // Wild pokemon start with one held item
     u8 abilityNum;
     u8 potential;
     u8 searchLevel;
@@ -1211,7 +1212,7 @@ static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityN
 {
     struct Pokemon *mon = &gEnemyParty[0];
     u8 iv[3] = {NUM_STATS};
-    u8 i;
+    u8 i, slot;
     u8 perfectIv = 31;
 
     CreateWildMon(species, level);  // shiny rate bonus handled in CreateBoxMon
@@ -1236,7 +1237,11 @@ static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityN
 
     // Set Held Item
     if (item)
-        SetMonData(mon, MON_DATA_HELD_ITEM, &item);
+    {
+        slot = GetNextMonEmptySlot(mon, item);
+        if (slot != MAX_MON_ITEMS)
+                SetMonData(mon, MON_DATA_HELD_ITEM + slot, &item);
+    }
 
     //Set moves
     for (i = 0; i < MAX_MON_MOVES; i++)

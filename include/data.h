@@ -63,7 +63,7 @@ struct TrainerMon
     u32 iv;
     u16 moves[4];
     u16 species;
-    u16 heldItem;
+    u16 heldItem[MAX_MON_ITEMS];
     enum Ability ability;
     u8 lvl;
     u8 ball;

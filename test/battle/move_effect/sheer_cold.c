@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Sheer Cold can be endured by Focus Sash")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_SHEER_COLD); }
     } SCENE {
@@ -84,7 +84,7 @@ TO_DO_BATTLE_TEST("Sheer Cold always fails if the target has a higher level than
 TO_DO_BATTLE_TEST("Sheer Cold's accuracy increases by 1% for every level the user has over the target")
 TO_DO_BATTLE_TEST("Sheer Cold's accuracy decreasaes by 10% if the user is not Ice type")
 TO_DO_BATTLE_TEST("Sheer Cold's ignores non-stage accuracy modifiers") // Gravity, Wide Lens, Compound Eyes
-
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Sheer Cold can hit semi-invulnerable mons when the user has No-Guard (Multi)")
 {
     GIVEN {
@@ -112,3 +112,20 @@ SINGLE_BATTLE_TEST("Sheer Cold can be endured by Sturdy (Multi)")
         ABILITY_POPUP(opponent, ABILITY_STURDY);
     }
 }
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Sheer Cold can be endured by Focus Sash (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHEER_COLD); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHEER_COLD, player);
+        HP_BAR(opponent, hp: 1);
+        MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
+    }
+}
+#endif
