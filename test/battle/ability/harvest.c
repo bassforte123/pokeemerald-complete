@@ -263,7 +263,7 @@ SINGLE_BATTLE_TEST("Harvest can only restore the newest berry consumed that was 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Harvest has a 50% chance to restore a Berry at the end of the turn (Multi)")
 {
     PASSES_RANDOMLY(1, 2, RNG_HARVEST);

@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Sticky Barb gets transferred if its holder is hit by a conta
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Sticky Barb hurts its holder at the end of the turn (Multi)")
 {
     s16 damage;

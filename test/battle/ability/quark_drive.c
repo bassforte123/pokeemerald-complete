@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Quark Drive doesn't activate for a transformed battler")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Quark Drive activates in Electric Terrain before Booster Energy (Multi)")
 {
     GIVEN {

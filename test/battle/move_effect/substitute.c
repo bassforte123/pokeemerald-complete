@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Substitute hits are detected by SUB_HIT, break FALSE, failin
 
 TO_DO_BATTLE_TEST("Baton Pass passes Substitutes");
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Substitute's HP cost can trigger a berry (Multi)")
 {
     GIVEN {

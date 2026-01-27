@@ -312,7 +312,7 @@ SINGLE_BATTLE_TEST("Protosynthesis retains its boosted stat after Neutralizing G
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy (Multi)")
 {
     GIVEN {

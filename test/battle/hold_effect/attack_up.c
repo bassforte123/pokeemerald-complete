@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Liechi Berry raises Attack by one stage when HP drops to 1/4
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Liechi Berry raises the holder's Attack by one stage when HP drops to 1/4 or below (Multi)")
 {
     u32 move;

@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Utility Umbrella blocks Rain damage modifiers", s16 damage)
 
 // Moves and abilities affected by Utility Umbrella have their tests in the respective files
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Utility Umbrella blocks Sun damage modifiers (Multi)", s16 damage)
 {
     u16 setupMove, attackingMove, heldItem;

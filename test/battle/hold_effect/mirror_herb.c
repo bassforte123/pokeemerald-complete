@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Mirror Herb copies all of foe's positive stat changes in a turn (Multi)", s16 damage)
 {
     u32 item;

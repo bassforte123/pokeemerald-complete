@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Throat Spray is not blocked by Sheer Force")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Throat Spray activates after both hits of a spread move (Multi)")
 {
     s16 firstHit, secondHit;

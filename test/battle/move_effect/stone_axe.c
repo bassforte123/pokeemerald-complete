@@ -93,7 +93,7 @@ SINGLE_BATTLE_TEST("Stone Axe fails to set up hazards if user faints")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Stone Axe fails to set up hazards if user faints (Multi)")
 {
     GIVEN {

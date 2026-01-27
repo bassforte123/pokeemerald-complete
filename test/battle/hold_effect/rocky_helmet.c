@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Rocky Helmet damages attacker even if damage is blocked by D
 
 TO_DO_BATTLE_TEST("TODO: Write Rocky Helmet (Hold Effect) test titles")
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Rocky Helmet damages attacker even if damage is blocked by Disguise (Multi)")
 {
     GIVEN {

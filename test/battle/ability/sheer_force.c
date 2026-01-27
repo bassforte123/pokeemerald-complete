@@ -1423,7 +1423,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Sheer Force doesn't boost Belch (Multi)", s16 damage)
 {
     enum Ability ability = 0;

@@ -348,7 +348,7 @@ DOUBLE_BATTLE_TEST("Instruct message references the correct battlers")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Instruct-called status moves don't fail if holding Assault Vest (Multi)")
 {
     GIVEN {

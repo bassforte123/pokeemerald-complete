@@ -117,7 +117,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen by Thief")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Air Balloon prevents the holder from taking damage from ground type moves (Multi)")
 {
     GIVEN {

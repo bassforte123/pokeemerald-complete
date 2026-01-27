@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Natural Gift removes the berry if user missed")
 
 TO_DO_BATTLE_TEST("TODO: Write Natural Gift (Move Effect) test titles")
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Natural Gift removes berry if move fails due to an immunity (Multi)")
 {
     GIVEN {

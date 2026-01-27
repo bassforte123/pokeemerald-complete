@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Floral Healing heals the target by 2/3rd of it's maxHP if Gr
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Heal Pulse ignores accurace checks (Multi)")
 {
     GIVEN {

@@ -30,7 +30,7 @@ DOUBLE_BATTLE_TEST("Lagging Tail priority bracket will not change if the item is
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Lagging Tail priority bracket will not change if the item is removed is changed mid-turn (Multi)")
 {
     GIVEN {

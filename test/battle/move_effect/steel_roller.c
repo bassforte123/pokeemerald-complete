@@ -74,7 +74,7 @@ AI_SINGLE_BATTLE_TEST("Steel Roller wont be chosen by AI if there is no terrain 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during attack execution (Multi)")
 {
     GIVEN {

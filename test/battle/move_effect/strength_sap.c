@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held (Multi)", s16 hp)
 {
     u32 item;

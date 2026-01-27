@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Leftovers does nothing if Heal Block applies")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Leftovers recovers 1/16th HP at end of turn (Multi)")
 {
     GIVEN {

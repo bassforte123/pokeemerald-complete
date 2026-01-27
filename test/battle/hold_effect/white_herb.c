@@ -235,7 +235,7 @@ DOUBLE_BATTLE_TEST("White Herb is correctly displayed")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("White Herb restores stats when they're lowered (Multi)")
 {
     GIVEN {

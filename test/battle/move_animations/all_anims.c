@@ -2228,7 +2228,7 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight t
 }
 
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to opponent) (Multi)")
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;

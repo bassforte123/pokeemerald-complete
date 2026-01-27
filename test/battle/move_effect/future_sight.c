@@ -188,7 +188,7 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Future Sight uses Sp. Atk stat of the original user without modifiers (Multi)")
 {
     u32 item;

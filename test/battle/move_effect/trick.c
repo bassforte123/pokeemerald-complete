@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Trick swaps held items (Multi)")
 {
     GIVEN {

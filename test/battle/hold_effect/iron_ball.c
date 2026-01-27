@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Ground-type moves do neutral damage to non-grounded Flying t
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Ground-type moves do neutral damage to non-grounded Flying types holding Iron Ball regardless of other typings (Gen5+) (Multi)")
 {
     u32 config;

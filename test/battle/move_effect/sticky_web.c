@@ -303,7 +303,7 @@ DOUBLE_BATTLE_TEST("Sticky Web setter has their speed lowered with Mirror Armor 
 #define BATTLER_OPPONENT (opponentSetUpper == 0 ? opponentLeft : opponentRight)
 #define BATTLER_PLAYER (playerSetUpper == 0 ? playerLeft : playerRight)
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Sticky Web has correct interactions with Mirror Armor - the battler which set up Sticky Web has its Speed lowered instead (Multi)")
 {
     u8 playerSetUpper, opponentSetUpper; // 0 left, 1 right

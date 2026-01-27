@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Fluffy does not halve damage taken from moves that make dire
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct contact even if protected by Protective Pads (Multi)", s16 damage)
 {
     enum Ability ability;

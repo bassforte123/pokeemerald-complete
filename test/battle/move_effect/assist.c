@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry (Multi)")
 {
     u16 item;

@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Cud Chew will activate Oran Berry effect again on the next t
 
 TO_DO_BATTLE_TEST("Cud Chew will activate Lum Berry effect again on the next turn")
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Cud Chew will activate Kee Berry effect again on the next turn (Multi)")
 {
     GIVEN {

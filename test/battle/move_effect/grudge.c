@@ -305,7 +305,7 @@ SINGLE_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Grudge does not deplete PP of a Z-Move (Multi)")
 {
     GIVEN {

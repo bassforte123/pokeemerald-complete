@@ -130,7 +130,7 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated"
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Relic Song transforms Meloetta after Magician was activated (Multi)")
 {
     GIVEN {

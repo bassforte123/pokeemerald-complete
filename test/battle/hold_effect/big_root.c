@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Big Root increases damage from absorbing Liquid Ooze", s16 d
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves (Multi)", s16 damage, s16 heal)
 {
     u32 item;

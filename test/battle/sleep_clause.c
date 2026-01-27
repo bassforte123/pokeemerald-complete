@@ -1870,7 +1870,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Opponent Spore'ing player's partner after part
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up by using Sleep Talk into a status curing move (Multi)")
 {
     u32 move;

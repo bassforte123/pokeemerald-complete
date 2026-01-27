@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Dusk Mane Necrozma can Ultra Burst holding Ultranecrozium Z (Multi)")
 {
     GIVEN {

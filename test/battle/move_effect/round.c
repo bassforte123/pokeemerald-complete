@@ -113,7 +113,7 @@ DOUBLE_BATTLE_TEST("Round causes opposing Pokémon to use Round immediately")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Round allows other battlers which also selected the moves to immediately use the move, ignoring turn order (Multi)")
 {
     GIVEN {

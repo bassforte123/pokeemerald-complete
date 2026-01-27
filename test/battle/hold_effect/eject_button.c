@@ -251,7 +251,7 @@ SINGLE_BATTLE_TEST("Eject Button activates after Wandring Spirit")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Eject Button is not triggered when there is nothing to switch in (Multi)")
 {
     GIVEN {

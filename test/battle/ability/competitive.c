@@ -336,7 +336,7 @@ SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers it's own 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Competitive activates before White Herb (Multi)")
 {
     u32 move;

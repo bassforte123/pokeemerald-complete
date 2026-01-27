@@ -180,7 +180,7 @@ SINGLE_BATTLE_TEST("Octolock ends after user that set the lock switches out")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Amulet (Multi)")
 {
     GIVEN {

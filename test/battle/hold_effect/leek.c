@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Leek increases critical hit ratio by 2 stages for the Farfet
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Leek increases critical hit ratio by 2 stages for the Farfetch'd Family (Multi)")
 {
     u32 species, genConfig, passes, trials;

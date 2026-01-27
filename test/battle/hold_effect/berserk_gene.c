@@ -304,7 +304,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items"
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Berserk Gene sharply raises attack at the start of a single battle (Multi)", s16 damage)
 {
     u16 item;

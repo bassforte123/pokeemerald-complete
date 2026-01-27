@@ -85,7 +85,7 @@ TO_DO_BATTLE_TEST("Sheer Cold's accuracy increases by 1% for every level the use
 TO_DO_BATTLE_TEST("Sheer Cold's accuracy decreasaes by 10% if the user is not Ice type")
 TO_DO_BATTLE_TEST("Sheer Cold's ignores non-stage accuracy modifiers") // Gravity, Wide Lens, Compound Eyes
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Sheer Cold can be endured by Focus Sash (Multi)")
 {
     GIVEN {

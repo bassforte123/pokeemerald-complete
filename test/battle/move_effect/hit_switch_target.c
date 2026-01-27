@@ -165,7 +165,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Multi)")
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);

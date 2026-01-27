@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("Glaive Rush status last until the the user's next turn")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("If Glaive Rush isn't successful moves targeted at the user don't deal double damage (Multi)", s16 damage)
 {
     bool32 missesGlaiveRush;

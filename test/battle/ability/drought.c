@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Drought sets up permanent sun (Gen3-5)")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Drought sets up sun for 8 turns with Heat Rock (Gen6+) (Multi)")
 {
     GIVEN {

@@ -696,7 +696,7 @@ DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's swit
 
 TO_DO_BATTLE_TEST("Baton Pass doesn't cause Pursuit to increase its power or priority");
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and takes Life Orb damage (Multi)")
 {
     GIVEN {

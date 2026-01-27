@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
 
 TO_DO_BATTLE_TEST("Hidden Power's power is determined by IVs before Gen6");
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 // IV combinations sourced from https://www.smogon.com/forums/threads/hidden-power-iv-combinations.78083/
 SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs (Multi)")
 {

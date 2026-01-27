@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Volt Absorb prevents Cell Battery from activating")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Volt Absorb prevents Cell Battery from activating (Multi)")
 {
     GIVEN {

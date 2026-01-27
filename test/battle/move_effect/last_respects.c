@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Last Respects power is multiplied by the amount of fainted m
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Last Respects power is multiplied by the amount of fainted mon in the user's side - Player (Multi)", s16 damage)
 {
     u32 j = 0, faintCount = 0;

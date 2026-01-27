@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Berserk activates before the hp can be restored on non multi
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Berserk will not activate if the last multi hit move activates a restore berry (Multi)")
 {
     u32 j;

@@ -95,7 +95,7 @@ MULTI_BATTLE_TEST("Multi Battle Tests register partner's status1")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (not HP) (Multi)")
 {
     GIVEN {

@@ -97,7 +97,7 @@ DOUBLE_BATTLE_TEST("Cotton Down correctly gets blocked by stat reduction prevent
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Cotton Down correctly gets blocked by stat reduction preventing abilities (Multi)")
 {
     GIVEN {

@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Custap Berry activates even if the opposing mon switches out
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Custap Berry allows the holder to move first in its priority bracket when HP is below 1/4 (Multi)")
 {
     GIVEN {

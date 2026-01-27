@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Magic Room: An item that can activate will activate once Mag
 
 TO_DO_BATTLE_TEST("TODO: Write Magic Room (Move Effect) test titles")
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Magic Room prevents item hold effects (Multi)")
 {
     GIVEN {

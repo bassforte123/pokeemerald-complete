@@ -60,7 +60,7 @@ TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in 
 TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Confusion");
 TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Rocky Helmet");
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Life Orb (Multi)")
 {
     s16 hits[2];

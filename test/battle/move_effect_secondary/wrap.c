@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon 5 turns (Gen4) or 7 turns (G
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon 5 turns (Gen4) or 7 turns (Gen5+) while holding a Grip Claw (Multi)")
 {
     u32 config;

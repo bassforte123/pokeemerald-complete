@@ -186,7 +186,7 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on a Status activate 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Thief and Covet steal target's held item (Multi)")
 {
     u32 move;

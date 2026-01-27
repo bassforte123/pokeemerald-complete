@@ -253,7 +253,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 AI_SINGLE_BATTLE_TEST("Choiced Pokémon switch out after using a status move once (Multi)")
 {
     u32 j, heldItem = ITEM_NONE;

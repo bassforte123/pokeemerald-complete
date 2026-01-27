@@ -254,7 +254,7 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items (Multi)")
 {
     GIVEN {

@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Room Serive decreases the holder's seep by one stage")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Room Serive decreases the holder's seep by one stage (Multi)")
 {
     GIVEN {

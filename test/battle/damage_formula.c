@@ -419,7 +419,7 @@ DOUBLE_BATTLE_TEST("Transistor Damage calculation", s16 damage)
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Damage calculation matches Gen6+ (Muscle Band, crit) (Multi)")
 {
     s16 dmg;

@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute with 1/4 of user maximum heal
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Shed Tail's HP cost can trigger a berry before the user switches out (Multi)")
 {
     GIVEN {

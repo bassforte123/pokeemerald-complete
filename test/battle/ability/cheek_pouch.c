@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Cheek Pouch activation doesn't mutate damage when restoring 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Cheek Pouch activation doesn't mutate damage when restoring HP mid battle (Multi)")
 {
     s16 damage;

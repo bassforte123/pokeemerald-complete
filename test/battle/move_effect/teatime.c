@@ -271,7 +271,7 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Teatime causes the user to consume its Berry, ignoring HP requirements (Multi)")
 {
     GIVEN {

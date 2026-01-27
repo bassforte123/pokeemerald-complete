@@ -207,7 +207,7 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does no
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Spicy Extract bypasses accuracy checks (Multi)")
 {
     PASSES_RANDOMLY(100, 100, RNG_ACCURACY);

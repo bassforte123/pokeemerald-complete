@@ -879,7 +879,7 @@ AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinchi
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target already holds one (Multi)")
 {
     u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;

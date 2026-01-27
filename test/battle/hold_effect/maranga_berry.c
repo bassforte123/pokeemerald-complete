@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Maranga Berry doesn't trigger if the move was boosted by She
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Maranga Berry raises the holder's Sp. Def by one stage when hit by a special move (Multi)")
 {
     u16 move = MOVE_NONE;

@@ -98,7 +98,7 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Special Attack (Multi)", s16 damage)
 {
     u32 species = 0, item = 0;

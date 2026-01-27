@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Apicot Berry raises Sp. Def by one stage when HP drops to 1/
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Apicot Berry raises the holder's Sp. Def by one stage when HP drops to 1/4 or below (Multi)")
 {
     u32 move;

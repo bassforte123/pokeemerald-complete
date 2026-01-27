@@ -81,7 +81,7 @@ DOUBLE_BATTLE_TEST("Frisk triggers for opponent in a Double Battle after switchi
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Frisk triggers in a Single Battle (Multi)")
 {
     GIVEN {

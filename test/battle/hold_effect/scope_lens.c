@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Scope Lens increases the critical hit ratio by 1 stage")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Scope Lens increases the critical hit ratio by 1 stage (Multi)")
 {
     u32 genConfig = 0, passes, trials;

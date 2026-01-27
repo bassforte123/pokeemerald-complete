@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the dam
 
 TO_DO_BATTLE_TEST("TODO: Write Weakness Policy (Hold Effect) test titles")
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the damage (Multi)")
 {
     u32 species;

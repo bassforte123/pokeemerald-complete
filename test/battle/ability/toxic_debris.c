@@ -141,7 +141,7 @@ DOUBLE_BATTLE_TEST("Toxic Debris sets Toxic Spikes on the opposing side even whe
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Air Balloon is popped after Toxic Debris activates (Multi)")
 {
     GIVEN {

@@ -456,7 +456,7 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is active (Multi)")
 {
     GIVEN {

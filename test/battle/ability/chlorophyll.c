@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Chlorophyll doesn't double speed if they have an Utility Umb
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Chlorophyll doesn't double speed if they have an Utility Umbrella (Multi)")
 {
     GIVEN {

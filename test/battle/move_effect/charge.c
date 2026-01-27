@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Charge will expire if user flinches while using an electric 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Charge will expire if user flinches while using an electric move (Multi)")
 {
     s16 damage[2];

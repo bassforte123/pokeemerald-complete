@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
 
 TO_DO_BATTLE_TEST("Entrainment fails on Dynamaxed Pokémon");
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert (Multi)")
 {
     GIVEN {

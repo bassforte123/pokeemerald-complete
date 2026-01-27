@@ -551,7 +551,7 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item (Multi)")
 {
     u16 item;

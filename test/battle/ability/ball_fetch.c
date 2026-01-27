@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Ball Fetch doesn't trigger in Trainer Battles")
 
 TO_DO_BATTLE_TEST("Ball Fetch doesn't trigger in Max Raid Battles");
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball at the end of the turn (Multi)")
 {
     u32 item = 0;

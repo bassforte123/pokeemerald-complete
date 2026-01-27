@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user dies")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Jaboca Berry causes the attacker to lose 1/8 of its max HP if a physical move was used (Multi)")
 {
     s16 damage;

@@ -147,7 +147,7 @@ AI_SINGLE_BATTLE_TEST("AI_IsMoveEffectInPlus - AI should not see secondary effec
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 AI_SINGLE_BATTLE_TEST("HasMoveThatChangesKOThreshold - AI should not see self-targeted speed drops as preventing setup moves in 2hko cases (Multi)")
 {
     u16 move;

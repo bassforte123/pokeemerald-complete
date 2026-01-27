@@ -179,7 +179,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item after Gem consumption, but befo
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes an item (Multi)")
 {
     GIVEN {

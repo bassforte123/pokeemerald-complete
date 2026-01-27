@@ -320,7 +320,7 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatil
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Pecha and Lum Berries cure poison (Multi)")
 {
     u16 item;

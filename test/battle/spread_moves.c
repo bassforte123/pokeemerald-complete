@@ -456,7 +456,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move (Multi)")
 {
     GIVEN {

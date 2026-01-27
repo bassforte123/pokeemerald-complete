@@ -309,7 +309,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first targ
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses (Multi)")
 {
     struct BattlePokemon *chosenTarget = NULL;

@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Tangling Hair will trigger if move is boosted by Sheer Force
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Tangling Hair does not cause Rocky Helmet miss activation (Multi)")
 {
     GIVEN {

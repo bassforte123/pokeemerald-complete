@@ -248,7 +248,7 @@ SINGLE_BATTLE_TEST("Strong winds can be replaced by Primordial Sea")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flying-type weaknesses (Multi)")
 {
     GIVEN {

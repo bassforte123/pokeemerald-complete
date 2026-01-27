@@ -193,7 +193,7 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Venusaur can Mega Evolve holding Venusaurite (Multi)")
 {
     GIVEN {

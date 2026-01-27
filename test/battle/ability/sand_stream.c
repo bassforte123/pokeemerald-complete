@@ -82,7 +82,7 @@ SINGLE_BATTLE_TEST("Sand Stream sets up permanent sandstorm (Gen3-5)")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Sand Stream sets up sandstorm for 8 turns with Smooth Rock (Gen6+) (Multi)")
 {
     GIVEN {

@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Belch can still be used after restoring the consumed berry")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 AI_SINGLE_BATTLE_TEST("AI: Belch has nonzero score after eating a berry (Multi)")
 {
     GIVEN {

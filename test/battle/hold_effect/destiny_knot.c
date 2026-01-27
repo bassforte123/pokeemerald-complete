@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is already infatu
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is targeted (Multi)")
 {
     GIVEN {

@@ -379,7 +379,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Defiant activates before White Herb (Multi)")
 {
     u32 move;

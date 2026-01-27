@@ -201,7 +201,7 @@ SINGLE_BATTLE_TEST("Electric Seed doesn't activate on existing Electric Terrain 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Electric Seed raises the holder's Defense on Electric Terrain (Multi)")
 {
     enum Ability ability;

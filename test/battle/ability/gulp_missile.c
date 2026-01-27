@@ -202,7 +202,7 @@ SINGLE_BATTLE_TEST("Gulp Missile triggered by explosion doesn't freeze the game"
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming (Multi)")
 {
     GIVEN {

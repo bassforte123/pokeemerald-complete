@@ -705,7 +705,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100 (Multi)")
 {
     u32 moveStart = 0;

@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from activating (Multi)")
 {
     u32 item;

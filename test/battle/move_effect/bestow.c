@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item changes its form")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Bestow transfers its held item to the target (Multi)")
 {
     GIVEN {

@@ -124,7 +124,7 @@ AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution (Multi)")
 {
     GIVEN {

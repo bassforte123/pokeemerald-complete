@@ -447,7 +447,7 @@ DOUBLE_BATTLE_TEST("Forecast reverts Castform back after Teraform Zero clears we
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Forecast transforms Castform in primal weather (Multi)")
 {
     u32 species, item;

@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6"
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Belly Drum's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
 {
     GIVEN {

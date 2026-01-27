@@ -400,7 +400,7 @@ Parental Bond does not affect Z-Moves or Max Moves.
 // TONS OF TESTS NEEDED. FOR NOW, THIS SINGLE TEST IS MADE TO MAKE SURE AN ISSUE WAS FIXED.
 
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Parental Bond converts Scratch into a two-strike move (Multi)")
 {
     GIVEN {

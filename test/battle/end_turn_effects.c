@@ -140,7 +140,7 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (double battle) (Multi)")
 {
     s16 healed;

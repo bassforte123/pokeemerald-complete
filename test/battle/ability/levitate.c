@@ -113,7 +113,7 @@ AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 AI_SINGLE_BATTLE_TEST("Levitate is seen correctly by switch AI (Multi)")
 {
     enum Ability ability = ABILITY_NONE, item = ITEM_NONE;

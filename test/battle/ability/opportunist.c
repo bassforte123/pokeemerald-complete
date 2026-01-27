@@ -316,7 +316,7 @@ DOUBLE_BATTLE_TEST("Opportunist and Mirror Herb resolve correctly")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Opportunist and Mirror Herb stack stat increases (Multi)")
 {
     GIVEN {

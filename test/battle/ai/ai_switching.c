@@ -91,7 +91,7 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 // Used to test EXPECT_SWITCH only on partner
 AI_MULTI_BATTLE_TEST("AI partner will not switch mid-turn into a player Pokémon (multi battle)")
 {

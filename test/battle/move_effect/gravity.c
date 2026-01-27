@@ -82,7 +82,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 AI_DOUBLE_BATTLE_TEST("AI uses Gravity (Multi)")
 {
     u32 move, friendItem, foeItem;

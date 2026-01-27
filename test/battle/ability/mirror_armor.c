@@ -229,7 +229,7 @@ SINGLE_BATTLE_TEST("Mirror Armor reflects Obstruct defense drop")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 // This behaviour needs to be verified in the actual games. Currently it's written to follow Showdown's logic.
 DOUBLE_BATTLE_TEST("Mirror Armor lowers Speed of the partner Pokemon after Court Change was used by the opponent after it set up Sticky Web (Multi)")
 {

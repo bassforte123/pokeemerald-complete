@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits (Multi)")
 {
     GIVEN {

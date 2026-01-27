@@ -149,7 +149,7 @@ SINGLE_BATTLE_TEST("Bug Bite ignores Unnerve")
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 // Pretty much copy/paste of the Berry Fling Test.
 SINGLE_BATTLE_TEST("Bug Bite eats the target's berry and immediately gains its effect (Multi)")
 {

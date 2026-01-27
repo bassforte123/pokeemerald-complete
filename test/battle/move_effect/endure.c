@@ -82,7 +82,7 @@ TO_DO_BATTLE_TEST("Endure triggers effects that require damage to be done to the
 TO_DO_BATTLE_TEST("Endure doesn't protect against Future Sight (Gen 2-4)");
 TO_DO_BATTLE_TEST("Endure protects against Future Sight (Gen 5+)");
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due to Eject Button (Multi)")
 {
     GIVEN {

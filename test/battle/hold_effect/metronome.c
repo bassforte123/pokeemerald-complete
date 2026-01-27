@@ -153,7 +153,7 @@ SINGLE_BATTLE_TEST("Metronome Item doesn't increase damage per hit of multi-hit 
     }
 }
 
-#if MAX_MON_TRAITS > 1
+#if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Metronome Item gradually boosts power of consecutively used moves by 20%, up to 100% (Multi)")
 {
     s16 damage[METRONOME_TURNS];
