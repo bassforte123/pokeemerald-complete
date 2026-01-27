@@ -139,7 +139,8 @@ SINGLE_BATTLE_TEST("Retaliate works with self-inflicted fainting")
     }
 }
 
-DOUBLE_BATTLE_TEST("Retaliate works with passive damage (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Retaliate works with passive damage (Traits)")
 {
     s16 damage[2];
     u32 move;
@@ -191,7 +192,7 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Retaliate works with Perish Song (Multi)")
+SINGLE_BATTLE_TEST("Retaliate works with Perish Song (Traits)")
 {
     s16 damage[2];
     GIVEN {
@@ -213,3 +214,4 @@ SINGLE_BATTLE_TEST("Retaliate works with Perish Song (Multi)")
         EXPECT_MUL_EQ(damage[1], Q_4_12(2), damage[0]);
     }
 }
+#endif

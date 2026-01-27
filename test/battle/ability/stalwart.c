@@ -57,7 +57,8 @@ DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirectin
     }
 }
 
-DOUBLE_BATTLE_TEST("Stalwart ignores redirection from Follow-Me (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Stalwart ignores redirection from Follow-Me (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_ARCHALUDON) { Ability(ABILITY_STURDY); Innates(ABILITY_STALWART); }
@@ -74,7 +75,7 @@ DOUBLE_BATTLE_TEST("Stalwart ignores redirection from Follow-Me (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirecting moves (Multi)")
+DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirecting moves (Traits)")
 {
     enum Ability ability;
     u32 species;
@@ -110,3 +111,4 @@ DOUBLE_BATTLE_TEST("Stalwart stops Lightning Rod and Storm Drain from redirectin
         }
     }
 }
+#endif

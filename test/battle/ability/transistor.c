@@ -55,7 +55,8 @@ SINGLE_BATTLE_TEST("Transistor is blocked by neutralizing gas", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Transistor increases Electric-type attack / special attack (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Transistor increases Electric-type attack / special attack (Traits)", s16 damage)
 {
     u32 move;
     enum Ability ability;
@@ -86,3 +87,4 @@ SINGLE_BATTLE_TEST("Transistor increases Electric-type attack / special attack (
         EXPECT_LT(results[4].damage, results[5].damage);
     }
 }
+#endif

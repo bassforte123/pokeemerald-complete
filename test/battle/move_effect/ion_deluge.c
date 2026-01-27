@@ -65,7 +65,8 @@ SINGLE_BATTLE_TEST("Ion Deluge makes Normal type moves Electric type")
 }
 
 // For some reason SINGLE_BATTLE_TEST didn't catch these two issues.
-WILD_BATTLE_TEST("Ion Deluge works the same way as always when used by a mon with Volt Absorb (Multi)")
+#if MAX_MON_TRAITS > 1
+WILD_BATTLE_TEST("Ion Deluge works the same way as always when used by a mon with Volt Absorb (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -83,7 +84,7 @@ WILD_BATTLE_TEST("Ion Deluge works the same way as always when used by a mon wit
     }
 }
 
-WILD_BATTLE_TEST("Ion Deluge works the same way as always when used by a mon with Lightning Rod / Motor Drive (Multi)")
+WILD_BATTLE_TEST("Ion Deluge works the same way as always when used by a mon with Lightning Rod / Motor Drive (Traits)")
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_LIGHTNING_ROD; }
@@ -105,3 +106,4 @@ WILD_BATTLE_TEST("Ion Deluge works the same way as always when used by a mon wit
         MESSAGE("A deluge of ions showers the battlefield!");
     }
 }
+#endif

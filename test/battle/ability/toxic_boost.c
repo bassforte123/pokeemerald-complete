@@ -22,7 +22,8 @@ SINGLE_BATTLE_TEST("Toxic Boost increases Attack by 50% when the Pokémon is poi
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Boost increases Attack by 50% when the Pokémon is poisoned (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Toxic Boost increases Attack by 50% when the Pokémon is poisoned (Traits)", s16 damage)
 {
     u32 status1;
     PARAMETRIZE { status1 = STATUS1_NONE; }
@@ -42,3 +43,4 @@ SINGLE_BATTLE_TEST("Toxic Boost increases Attack by 50% when the Pokémon is poi
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[2].damage);
     }
 }
+#endif

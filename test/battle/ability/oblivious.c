@@ -100,7 +100,8 @@ SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+)")
     }
 }
 
-SINGLE_BATTLE_TEST("Oblivious prevents Infatuation (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Oblivious prevents Infatuation (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ATTRACT) == EFFECT_ATTRACT);
@@ -115,7 +116,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Infatuation (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Oblivious prevents Captivate (Multi)")
+SINGLE_BATTLE_TEST("Oblivious prevents Captivate (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CAPTIVATE) == EFFECT_CAPTIVATE);
@@ -130,7 +131,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Captivate (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Oblivious prevents Taunt (Gen6+) (Multi)")
+SINGLE_BATTLE_TEST("Oblivious prevents Taunt (Gen6+) (Traits)")
 {
     u32 gen = 0;
     PARAMETRIZE { gen = GEN_5; }
@@ -162,7 +163,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Taunt (Gen6+) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7) (Multi)")
+SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
@@ -182,7 +183,7 @@ SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+) (Multi)")
+SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
@@ -198,3 +199,4 @@ SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+) (Multi)")
         MESSAGE("Slowpoke's Oblivious prevents stat loss!");
     }
 }
+#endif

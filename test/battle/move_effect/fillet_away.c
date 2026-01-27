@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Fillet Away fails if user's current HP is half or less than 
 SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger on damage taken")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FILLET_AWAY); }
@@ -74,19 +74,3 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
 }
 
 TO_DO_BATTLE_TEST("Fillet Away fails if the user's Attack, Sp. Atk and Speed are all maxed out")
-
-SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_FILLET_AWAY); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FILLET_AWAY, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
-        MESSAGE("Wobbuffet's Sp. Atk sharply rose!");
-        MESSAGE("Wobbuffet's Speed sharply rose!");
-        NOT MESSAGE("Wobbuffet's Air Balloon popped!");
-    }
-}

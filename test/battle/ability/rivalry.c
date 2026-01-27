@@ -101,7 +101,8 @@ SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the target is genderless", s
     }
 }
 
-SINGLE_BATTLE_TEST("Rivalry increases power by x1.25 towards Pokémon of the same gender (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rivalry increases power by x1.25 towards Pokémon of the same gender (Traits)", s16 damage)
 {
     u16 species;
     enum Ability ability;
@@ -124,7 +125,7 @@ SINGLE_BATTLE_TEST("Rivalry increases power by x1.25 towards Pokémon of the sam
     }
 }
 
-SINGLE_BATTLE_TEST("Rivalry decreases power by x0.75 towards Pokémon of different gender (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Rivalry decreases power by x0.75 towards Pokémon of different gender (Traits)", s16 damage)
 {
     u16 species1, species2;
     enum Ability ability;
@@ -147,7 +148,7 @@ SINGLE_BATTLE_TEST("Rivalry decreases power by x0.75 towards Pokémon of differe
     }
 }
 
-SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the attacker is genderless (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the attacker is genderless (Traits)", s16 damage)
 {
     u16 species;
     enum Ability ability;
@@ -172,7 +173,7 @@ SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the attacker is genderless (
 }
 
 
-SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the target is genderless (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the target is genderless (Traits)", s16 damage)
 {
     u16 species;
     enum Ability ability;
@@ -194,3 +195,4 @@ SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the target is genderless (Mu
         EXPECT(results[2].damage == results[3].damage);
     }
 }
+#endif

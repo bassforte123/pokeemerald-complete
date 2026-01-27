@@ -112,7 +112,8 @@ SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn") // Specific 
     }
 }
 
-SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost type move (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost type move (Traits)")
 {
     u16 move;
     PARAMETRIZE { move = MOVE_FURY_CUTTER; }
@@ -151,7 +152,7 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
     }
 }
 
-SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidate (Gen5-7) (Multi)")
+SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidate (Gen5-7) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
@@ -171,7 +172,7 @@ SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidat
     }
 }
 
-SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+) (Multi)")
+SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
@@ -189,7 +190,7 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+
     }
 }
 
-SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn (Multi)") // Specific test here, because of #3124
+SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn (Traits)") // Specific test here, because of #3124
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
@@ -210,3 +211,4 @@ SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn (Multi)") // S
         SEND_IN_MESSAGE("Wynaut");
     }
 }
+#endif

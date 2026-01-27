@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items")
     GIVEN {
         ASSUME(gItemsInfo[ITEM_BERSERK_GENE].holdEffect == HOLD_EFFECT_BERSERK_GENE);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); Items(ITEM_BERSERK_GENE); };
+        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); Item(ITEM_BERSERK_GENE); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -144,22 +144,8 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items")
     }
 }
 
-SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items (Multi)")
-{
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_BERSERK_GENE].holdEffect == HOLD_EFFECT_BERSERK_GENE);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); Items(ITEM_PECHA_BERRY, ITEM_BERSERK_GENE); };
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        ABILITY_POPUP(opponent, ABILITY_OWN_TEMPO);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-    }
-}
-
-SINGLE_BATTLE_TEST("Own Tempo doesn't prevent Intimidate (Gen3-7) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Own Tempo doesn't prevent Intimidate (Gen3-7) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_7);
@@ -177,7 +163,7 @@ SINGLE_BATTLE_TEST("Own Tempo doesn't prevent Intimidate (Gen3-7) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Own Tempo prevents Intimidate but no other stat down changes (Gen8+) (Multi)")
+SINGLE_BATTLE_TEST("Own Tempo prevents Intimidate but no other stat down changes (Gen8+) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_UPDATED_INTIMIDATE, GEN_8);
@@ -198,7 +184,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents Intimidate but no other stat down changes
     }
 }
 
-SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the opponent (Multi)")
+SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the opponent (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
@@ -212,7 +198,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the opponent (Mul
     }
 }
 
-SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the user (Multi)")
+SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the user (Traits)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_PETAL_DANCE, MOVE_EFFECT_THRASH));
@@ -232,7 +218,7 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from moves by the user (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Mold Breaker ignores Own Tempo (Multi)")
+SINGLE_BATTLE_TEST("Mold Breaker ignores Own Tempo (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
@@ -246,7 +232,7 @@ SINGLE_BATTLE_TEST("Mold Breaker ignores Own Tempo (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Mold Breaker does not prevent Own Tempo from curing confusion right after (Multi)")
+SINGLE_BATTLE_TEST("Mold Breaker does not prevent Own Tempo from curing confusion right after (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
@@ -265,7 +251,7 @@ SINGLE_BATTLE_TEST("Mold Breaker does not prevent Own Tempo from curing confusio
     }
 }
 
-SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items (Multi)")
+SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items (Traits)")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_BERSERK_GENE].holdEffect == HOLD_EFFECT_BERSERK_GENE);
@@ -279,3 +265,4 @@ SINGLE_BATTLE_TEST("Own Tempo prevents confusion from items (Multi)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
+#endif

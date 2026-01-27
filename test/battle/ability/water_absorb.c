@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
     PARAMETRIZE { item = ITEM_LUMINOUS_MOSS; }
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
-        PLAYER(SPECIES_POLIWAG) { Ability(ABILITY_WATER_ABSORB); HP(1); MaxHP(100); Items(item); }
+        PLAYER(SPECIES_POLIWAG) { Ability(ABILITY_WATER_ABSORB); HP(1); MaxHP(100); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BUBBLE); }
@@ -84,30 +84,8 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
     }
 }
 
-SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from activating (Multi)")
-{
-    u32 item;
-    PARAMETRIZE { item = ITEM_ABSORB_BULB; }
-    PARAMETRIZE { item = ITEM_LUMINOUS_MOSS; }
-    GIVEN {
-        ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
-        PLAYER(SPECIES_POLIWAG) { Ability(ABILITY_WATER_ABSORB); HP(1); MaxHP(100); Items(ITEM_PECHA_BERRY, item); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_BUBBLE); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
-        HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        }
-
-    }
-}
-
-SINGLE_BATTLE_TEST("Water Absorb heals 25% when hit by water type moves (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Water Absorb heals 25% when hit by water type moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
@@ -122,7 +100,7 @@ SINGLE_BATTLE_TEST("Water Absorb heals 25% when hit by water type moves (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Water Absorb does not activate if protected (Multi)")
+SINGLE_BATTLE_TEST("Water Absorb does not activate if protected (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
@@ -135,7 +113,7 @@ SINGLE_BATTLE_TEST("Water Absorb does not activate if protected (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Water Absorb activates on status moves (Multi)")
+SINGLE_BATTLE_TEST("Water Absorb activates on status moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SOAK) == TYPE_WATER);
@@ -151,7 +129,7 @@ SINGLE_BATTLE_TEST("Water Absorb activates on status moves (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Water Absorb is only triggered once on multi strike moves (Multi)")
+SINGLE_BATTLE_TEST("Water Absorb is only triggered once on multi strike moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_SHURIKEN) == TYPE_WATER);
@@ -167,7 +145,7 @@ SINGLE_BATTLE_TEST("Water Absorb is only triggered once on multi strike moves (M
     }
 }
 
-SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from activating (Multi)")
+SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from activating (Traits)")
 {
     u32 item;
     PARAMETRIZE { item = ITEM_ABSORB_BULB; }
@@ -189,3 +167,4 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
 
     }
 }
+#endif

@@ -65,7 +65,8 @@ AI_DOUBLE_BATTLE_TEST("AI does not use Purify to heal an ally with Guts")
 TO_DO_BATTLE_TEST("TODO: Write Purify (Move Effect) test titles")
 TO_DO_BATTLE_TEST("Purify doesn't heal HP if the target has Comatose")
 
-AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts (Multi)")
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts (Traits)")
 {
     u32 ability;
 
@@ -84,7 +85,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts (Multi)")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI does not use Purify to heal an ally with Guts (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI does not use Purify to heal an ally with Guts (Traits)")
 {
     u32 ability;
 
@@ -105,4 +106,5 @@ AI_DOUBLE_BATTLE_TEST("AI does not use Purify to heal an ally with Guts (Multi)"
     }
 }
 
-TO_DO_BATTLE_TEST("Purify doesn't heal HP if the target has Comatose (Multi)")
+TO_DO_BATTLE_TEST("Purify doesn't heal HP if the target has Comatose (Traits)")
+#endif

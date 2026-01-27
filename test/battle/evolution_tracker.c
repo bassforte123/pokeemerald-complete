@@ -12,7 +12,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader'
 {
     GIVEN {
         PLAYER(SPECIES_BISHARP);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_LEADERS_CREST); HP(1); }
+        OPPONENT(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -28,8 +28,8 @@ DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing multiple Bisharps holding 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == MOVE_TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_BISHARP);
-        PLAYER(SPECIES_BISHARP) { Items(ITEM_LEADERS_CREST); HP(1); }
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_LEADERS_CREST); HP(1); }
+        PLAYER(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
+        OPPONENT(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_LAVA_PLUME); }
@@ -63,7 +63,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds Lea
     PARAMETRIZE { species = SPECIES_PAWNIARD; }
     GIVEN {
         PLAYER(SPECIES_BISHARP);
-        OPPONENT(species) { Items(ITEM_LEADERS_CREST); HP(1); }
+        OPPONENT(species) { Item(ITEM_LEADERS_CREST); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -77,7 +77,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Pawniard KO-ing a Bisharp that holds Leader
 {
     GIVEN {
         PLAYER(SPECIES_PAWNIARD);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_LEADERS_CREST); HP(1); }
+        OPPONENT(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -92,8 +92,8 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler from contac
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_ROCKY_HELMET) == HOLD_EFFECT_ROCKY_HELMET);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_BISHARP) { Items(ITEM_ROCKY_HELMET); }
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_LEADERS_CREST); HP(1); }
+        PLAYER(SPECIES_BISHARP) { Item(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
@@ -108,7 +108,7 @@ WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with passiv
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
         PLAYER(SPECIES_BISHARP);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_LEADERS_CREST); HP(1); }
+        OPPONENT(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_LEECH_SEED); }
     } SCENE {
@@ -125,135 +125,7 @@ DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with burs
         ASSUME(MoveHasAdditionalEffect(MOVE_FLAME_BURST, MOVE_EFFECT_FLAME_BURST));
         PLAYER(SPECIES_BISHARP);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_LEADERS_CREST); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FLAME_BURST, target: opponentRight); }
-    } SCENE {
-        HP_BAR(opponentLeft, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
-    }
-}
-
-WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that holds Leader's Crest increases tracker (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_BISHARP);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        HP_BAR(opponent, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 1);
-    }
-}
-
-// To be replaced with WILD_DOUBLE_BATTLE_TEST when that is made possible (also see TryUpdateEvolutionTracker)
-DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing multiple Bisharps holding Leader's Crest increases tracker multiple times (Multi)")
-{
-    GIVEN {
-        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == MOVE_TARGET_FOES_AND_ALLY);
-        PLAYER(SPECIES_BISHARP);
-        PLAYER(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_LAVA_PLUME); }
-    } SCENE {
-        HP_BAR(opponentLeft, hp: 0);
-        HP_BAR(playerRight, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 2);
-    }
-}
-
-WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a Bisharp that doesn't hold Leader's Crest doesn't increase tracker (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_BISHARP);
-        OPPONENT(SPECIES_BISHARP) { HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        HP_BAR(opponent, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
-    }
-}
-
-WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing a non-Bisharp that holds Leader's Crest doesn't increase tracker (Multi)")
-{
-    u32 species;
-
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
-    PARAMETRIZE { species = SPECIES_PAWNIARD; }
-    GIVEN {
-        PLAYER(SPECIES_BISHARP);
-        OPPONENT(species) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        HP_BAR(opponent, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
-    }
-}
-
-WILD_BATTLE_TEST("Evolution Tracker: Pawniard KO-ing a Bisharp that holds Leader's Crest doesn't increase tracker (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_PAWNIARD);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        HP_BAR(opponent, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
-    }
-}
-
-WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler from contact effects doesn't increase tracker (Multi)")
-{
-    GIVEN {
-        ASSUME(GetItemHoldEffect(ITEM_ROCKY_HELMET) == HOLD_EFFECT_ROCKY_HELMET);
-        ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY,ITEM_ROCKY_HELMET); }
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        HP_BAR(opponent, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
-    }
-}
-
-WILD_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with passive damage doesn't increase tracker (Multi)")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
-        PLAYER(SPECIES_BISHARP);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_LEECH_SEED); }
-    } SCENE {
-        HP_BAR(opponent, hp: 0);
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EVOLUTION_TRACKER), 0);
-    }
-}
-
-// To be replaced with WILD_DOUBLE_BATTLE_TEST when that is made possible (also see TryUpdateEvolutionTracker)
-DOUBLE_BATTLE_TEST("Evolution Tracker: Bisharp KO-ing eligible battler with bursting flames doesn't increase tracker (Multi)")
-{
-    GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_FLAME_BURST, MOVE_EFFECT_FLAME_BURST));
-        PLAYER(SPECIES_BISHARP);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_BISHARP) { Items(ITEM_PECHA_BERRY, ITEM_LEADERS_CREST); HP(1); }
+        OPPONENT(SPECIES_BISHARP) { Item(ITEM_LEADERS_CREST); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FLAME_BURST, target: opponentRight); }

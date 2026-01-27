@@ -71,42 +71,7 @@ SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon 5 turns (Gen4) or 7 turns (G
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_BINDING_TURNS, config);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GRIP_CLAW); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_WRAP); }
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-        TURN {}
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_WRAP, player);
-        HP_BAR(opponent); // Direct damage
-
-        HP_BAR(opponent); // Residual Damage
-        HP_BAR(opponent); // Residual Damage
-        HP_BAR(opponent); // Residual Damage
-        HP_BAR(opponent); // Residual Damage
-        HP_BAR(opponent); // Residual Damage
-        if (config >= GEN_5) {
-            HP_BAR(opponent); // Residual Damage
-            HP_BAR(opponent); // Residual Damage
-        }
-        NOT HP_BAR(opponent); // Residual Damage
-    }
-}
-
-SINGLE_BATTLE_TEST("Wrap can damage the wrapped mon 5 turns (Gen4) or 7 turns (Gen5+) while holding a Grip Claw (Multi)")
-{
-    u32 config;
-    PARAMETRIZE { config = GEN_4; }
-    PARAMETRIZE { config = GEN_5; }
-    GIVEN {
-        WITH_CONFIG(CONFIG_BINDING_TURNS, config);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_GRIP_CLAW); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_GRIP_CLAW); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WRAP); }

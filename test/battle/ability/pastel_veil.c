@@ -188,7 +188,8 @@ DOUBLE_BATTLE_TEST("Pastel Veil cures partner's poison on switch in")
     }
 }
 
-SINGLE_BATTLE_TEST("Pastel Veil prevents Poison Sting poison (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Pastel Veil prevents Poison Sting poison (Traits)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_POISON_STING, MOVE_EFFECT_POISON) == TRUE);
@@ -202,7 +203,7 @@ SINGLE_BATTLE_TEST("Pastel Veil prevents Poison Sting poison (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil prevents Poison Sting poison on partner (Multi)")
+DOUBLE_BATTLE_TEST("Pastel Veil prevents Poison Sting poison on partner (Traits)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_POISON_STING, MOVE_EFFECT_POISON) == TRUE);
@@ -218,7 +219,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil prevents Poison Sting poison on partner (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Pastel Veil immediately cures Mold Breaker poison (Multi)")
+SINGLE_BATTLE_TEST("Pastel Veil immediately cures Mold Breaker poison (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_PINSIR) { Ability(ABILITY_HYPER_CUTTER); Innates(ABILITY_MOLD_BREAKER); }
@@ -235,7 +236,7 @@ SINGLE_BATTLE_TEST("Pastel Veil immediately cures Mold Breaker poison (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil does not cure Mold Breaker poison on partner (Multi)")
+DOUBLE_BATTLE_TEST("Pastel Veil does not cure Mold Breaker poison on partner (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_PINSIR) { Ability(ABILITY_HYPER_CUTTER); Innates(ABILITY_MOLD_BREAKER); }
@@ -251,7 +252,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil does not cure Mold Breaker poison on partner (Mu
     }
 }
 
-SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison (Multi)")
+SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -266,7 +267,7 @@ SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - right target (Multi)")
+DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - right target (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -283,7 +284,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - right tar
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - left target (Multi)")
+DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - left target (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -300,7 +301,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic bad poison on partner - left targ
     }
 }
 
-SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic Spikes poison (Multi)")
+SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic Spikes poison (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
@@ -316,7 +317,7 @@ SINGLE_BATTLE_TEST("Pastel Veil prevents Toxic Spikes poison (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic Spikes poison on partner (Multi)")
+DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic Spikes poison on partner (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
@@ -334,7 +335,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil prevents Toxic Spikes poison on partner (Multi)"
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil cures partner's poison on initial switch in (Multi)")
+DOUBLE_BATTLE_TEST("Pastel Veil cures partner's poison on initial switch in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -351,7 +352,7 @@ DOUBLE_BATTLE_TEST("Pastel Veil cures partner's poison on initial switch in (Mul
     }
 }
 
-DOUBLE_BATTLE_TEST("Pastel Veil cures partner's poison on switch in (Multi)")
+DOUBLE_BATTLE_TEST("Pastel Veil cures partner's poison on switch in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -368,3 +369,4 @@ DOUBLE_BATTLE_TEST("Pastel Veil cures partner's poison on switch in (Multi)")
         STATUS_ICON(opponentLeft, none: TRUE);
     }
 }
+#endif

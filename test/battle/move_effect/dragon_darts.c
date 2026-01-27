@@ -222,8 +222,8 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(itemLeft); };
-        OPPONENT(SPECIES_WOBBUFFET) { Items(itemRight); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(itemLeft); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(itemRight); };
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: chosenTarget, hit: FALSE); }
     } SCENE {
@@ -240,7 +240,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if one strike misses")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_BRIGHT_POWDER); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft, hit: FALSE); }
@@ -308,8 +308,9 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first targ
         }
     }
 }
+
 #if MAX_MON_TRAITS > 1
-DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and the other one has Volt Absorb (Multi)")
+DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and the other one has Volt Absorb (Traits)")
 {
     struct BattlePokemon *chosenTarget = NULL;
     struct BattlePokemon *finalTarget = NULL;
@@ -335,7 +336,7 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
     }
 }
 
-DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and the other one has Motor Drive (Multi)")
+DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and the other one has Motor Drive (Traits)")
 {
     struct BattlePokemon *chosenTarget = NULL;
     struct BattlePokemon *finalTarget = NULL;
@@ -357,49 +358,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses (Multi)")
-{
-    struct BattlePokemon *chosenTarget = NULL;
-    struct BattlePokemon *finalTarget = NULL;
-    u32 itemLeft, itemRight;
-    PARAMETRIZE { chosenTarget = opponentLeft;  finalTarget = opponentRight; itemLeft = ITEM_BRIGHT_POWDER;  itemRight = ITEM_NONE; }
-    PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentLeft;  itemLeft = ITEM_NONE;           itemRight = ITEM_BRIGHT_POWDER; }
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, itemLeft); };
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, itemRight); };
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: chosenTarget, hit: FALSE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-        HP_BAR(finalTarget);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-        HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
-    }
-}
-
-DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if one strike misses (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_BRIGHT_POWDER); };
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft, hit: FALSE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-        HP_BAR(opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
-        HP_BAR(opponentRight);
         MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }

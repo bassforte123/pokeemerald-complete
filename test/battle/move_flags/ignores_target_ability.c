@@ -95,7 +95,8 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and S
     }
 }
 
-SINGLE_BATTLE_TEST("ignoresTargetAbility moves do not ignore the attacker's own ability (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("ignoresTargetAbility moves do not ignore the attacker's own ability (Traits)", s16 damage)
 {
     enum Ability ability;
     u32 move;
@@ -133,7 +134,7 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do not ignore the attacker's own 
     }
 }
 
-SINGLE_BATTLE_TEST("ignoresTargetAbility moves do ignore target's abilities (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("ignoresTargetAbility moves do ignore target's abilities (Traits)", s16 damage)
 {
     enum Ability ability;
     u32 move;
@@ -162,7 +163,7 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do ignore target's abilities (Mul
     }
 }
 
-SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and Shell Armor to receive critical hits (Multi)")
+SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and Shell Armor to receive critical hits (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -181,3 +182,4 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and S
         MESSAGE("A critical hit!");
     }
 }
+#endif

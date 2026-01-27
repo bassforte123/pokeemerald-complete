@@ -80,7 +80,8 @@ DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target 
     }
 }
 
-SINGLE_BATTLE_TEST("Storm Drain absorbs Water-type moves and increases the Sp. Attack [Gen5+] (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Storm Drain absorbs Water-type moves and increases the Sp. Attack [Gen5+] (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
@@ -110,7 +111,7 @@ SINGLE_BATTLE_TEST("Storm Drain absorbs Water-type moves and increases the Sp. A
     }
 }
 
-DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target the Pokémon with this Ability. (Multi)")
+DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target the Pokémon with this Ability. (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
@@ -150,3 +151,4 @@ DOUBLE_BATTLE_TEST("Storm Drain forces single-target Water-type moves to target 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
     }
 }
+#endif

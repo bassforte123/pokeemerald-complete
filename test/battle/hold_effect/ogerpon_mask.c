@@ -22,31 +22,7 @@ SINGLE_BATTLE_TEST("Ogerpon Masks increase the base power of moves by 20%", s16 
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
-        PLAYER(species) { Items(item); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.2), results[1].damage);
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.2), results[2].damage);
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.2), results[3].damage);
-    }
-}
-
-SINGLE_BATTLE_TEST("Ogerpon Masks increase the base power of moves by 20% (Multi)", s16 damage)
-{
-    u32 species;
-    u32 item;
-    PARAMETRIZE { species = SPECIES_OGERPON_TEAL; item = ITEM_NONE; }
-    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING; item = ITEM_CORNERSTONE_MASK; }
-    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_WELLSPRING_MASK; }
-    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; item = ITEM_HEARTHFLAME_MASK; }
-
-    GIVEN {
-        ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
-        PLAYER(species) { Items(ITEM_PECHA_BERRY, item); }
+        PLAYER(species) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }

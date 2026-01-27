@@ -129,7 +129,8 @@ SINGLE_BATTLE_TEST("Innards Out triggers if Future Sight user is back on the fie
     }
 }
 
-SINGLE_BATTLE_TEST("Innards Out deal dmg on fainting equal to the amount of dmg inflicted on the Innards Out mon (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Innards Out deal dmg on fainting equal to the amount of dmg inflicted on the Innards Out mon (Traits)")
 {
     u16 hp = 0;
     PARAMETRIZE { hp = 5; }
@@ -155,7 +156,7 @@ SINGLE_BATTLE_TEST("Innards Out deal dmg on fainting equal to the amount of dmg 
 }
 
 // According to Showdown Innards Out triggers, but does nothing.
-SINGLE_BATTLE_TEST("Innards Out does not damage Magic Guard Pokemon (Multi)")
+SINGLE_BATTLE_TEST("Innards Out does not damage Magic Guard Pokemon (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_PYUKUMUKU) { HP(1); Ability(ABILITY_UNAWARE); Innates(ABILITY_INNARDS_OUT); }
@@ -172,7 +173,7 @@ SINGLE_BATTLE_TEST("Innards Out does not damage Magic Guard Pokemon (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Innards Out uses correct damage amount for Future Sight (Multi)")
+SINGLE_BATTLE_TEST("Innards Out uses correct damage amount for Future Sight (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
@@ -192,7 +193,7 @@ SINGLE_BATTLE_TEST("Innards Out uses correct damage amount for Future Sight (Mul
     }
 }
 
-SINGLE_BATTLE_TEST("Innards Out doesn't trigger if Future Sight user is not on field (Multi)")
+SINGLE_BATTLE_TEST("Innards Out doesn't trigger if Future Sight user is not on field (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
@@ -215,7 +216,7 @@ SINGLE_BATTLE_TEST("Innards Out doesn't trigger if Future Sight user is not on f
     }
 }
 
-SINGLE_BATTLE_TEST("Innards Out triggers if Future Sight user is back on the field (Multi)")
+SINGLE_BATTLE_TEST("Innards Out triggers if Future Sight user is back on the field (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
@@ -234,3 +235,4 @@ SINGLE_BATTLE_TEST("Innards Out triggers if Future Sight user is back on the fie
         HP_BAR(opponent);
     }
 }
+#endif

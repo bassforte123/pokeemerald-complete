@@ -104,7 +104,8 @@ DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil")
 
 TO_DO_BATTLE_TEST("TODO: Write Rest (Move Effect) test titles")
 
-SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MINIOR_METEOR) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_SHIELDS_DOWN); HP(299); MaxHP(300); }
@@ -118,7 +119,7 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down (Multi)"
     }
 }
 
-DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil (Multi)")
+DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil (Traits)")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_CHIKORITA, 1) == TYPE_GRASS);
@@ -134,3 +135,4 @@ DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil (M
         EXPECT(playerLeft->status1 & STATUS1_SLEEP);
     }
 }
+#endif

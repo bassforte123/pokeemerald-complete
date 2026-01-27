@@ -98,7 +98,8 @@ SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+)")
     }
 }
 
-SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves (Gen6+) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves (Gen6+) (Traits)")
 {
     u32 gen = 0;
     PARAMETRIZE { gen = GEN_5; }
@@ -125,7 +126,7 @@ SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves (Gen6+) (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm (Multi)")
+DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT)    { Speed(50); }
@@ -146,7 +147,7 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail (Multi)")
+DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
@@ -168,7 +169,7 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+) (Multi)")
+SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+) (Traits)")
 {
     u32 config;
     PARAMETRIZE { config = GEN_5; }
@@ -194,3 +195,4 @@ SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+) (Multi)")
             EXPECT_NE(player->status1, 0);
     }
 }
+#endif

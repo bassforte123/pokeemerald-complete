@@ -27,7 +27,8 @@ SINGLE_BATTLE_TEST("Flash Fire boosts fire type moves by 50% but no subsequent i
     }
 }
 
-SINGLE_BATTLE_TEST("Flash Fire boosts fire type moves by 50% but no subsequent increase is applied (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Flash Fire boosts fire type moves by 50% but no subsequent increase is applied (Traits)")
 {
     s16 damage[3];
 
@@ -52,3 +53,4 @@ SINGLE_BATTLE_TEST("Flash Fire boosts fire type moves by 50% but no subsequent i
         EXPECT_EQ(damage[1], damage[2]);
     }
 }
+#endif

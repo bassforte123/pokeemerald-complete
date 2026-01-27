@@ -211,7 +211,8 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
     }
 }
 
-SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
@@ -228,7 +229,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
     }
 }
 
-SINGLE_BATTLE_TEST("Psychic Terrain doesn't blocks priority moves that target the user (Multi)")
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't blocks priority moves that target the user (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); HP(1); }
@@ -243,7 +244,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't blocks priority moves that target th
     }
 }
 
-SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all battlers (Multi)")
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all battlers (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
@@ -257,7 +258,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all
     }
 }
 
-SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all opponents (Multi)")
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all opponents (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
@@ -271,7 +272,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all
     }
 }
 
-DOUBLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target allies (Multi)")
+DOUBLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target allies (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
@@ -287,7 +288,7 @@ DOUBLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all
     }
 }
 
-SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves (Multi)")
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
@@ -301,7 +302,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-invulnerable targets (Multi)")
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-invulnerable targets (Traits)")
 {
     u32 move = 0, shouldWork = 0;
     PARAMETRIZE { move = MOVE_SOLAR_BEAM; shouldWork = FALSE;}
@@ -335,7 +336,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-in
     }
 }
 
-DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Left (Multi)")
+DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Left (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
@@ -352,7 +353,7 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
     }
 }
 
-DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Right (Multi)")
+DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Right (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PSYCHIC_SURGE); }
@@ -368,3 +369,4 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
     }
 }
+#endif

@@ -43,7 +43,8 @@ SINGLE_BATTLE_TEST("Fur Coat has no effect on self-inflicted confusion damage", 
     }
 }
 
-SINGLE_BATTLE_TEST("Fur Coat doubles Defense (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Fur Coat doubles Defense (Traits)", s16 damage)
 {
     u32 ability;
     PARAMETRIZE { ability = ABILITY_FUR_COAT; }
@@ -61,7 +62,7 @@ SINGLE_BATTLE_TEST("Fur Coat doubles Defense (Multi)", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Fur Coat has no effect on self-inflicted confusion damage (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Fur Coat has no effect on self-inflicted confusion damage (Traits)", s16 damage)
 {
     u32 ability;
     PARAMETRIZE { ability = ABILITY_FUR_COAT; }
@@ -79,3 +80,4 @@ SINGLE_BATTLE_TEST("Fur Coat has no effect on self-inflicted confusion damage (M
         EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }
+#endif

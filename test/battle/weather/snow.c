@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Snowscape fails if Desolate Land or Primordial Sea are activ
     PARAMETRIZE { species = SPECIES_KYOGRE; item = ITEM_BLUE_ORB; }
 
     GIVEN {
-        PLAYER(species) { Items(item); }
+        PLAYER(species) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SNOWSCAPE); }

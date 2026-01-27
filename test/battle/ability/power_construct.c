@@ -56,9 +56,10 @@ WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catc
     }
 }
 
-TO_DO_BATTLE_TEST("TODO: Write Power Construct (Ability) test titles (Multi)")
+#if MAX_MON_TRAITS > 1
+TO_DO_BATTLE_TEST("TODO: Write Power Construct (Ability) test titles (Traits)")
 
-SINGLE_BATTLE_TEST("Power Construct switches Zygarde's form when HP is below half (Multi)")
+SINGLE_BATTLE_TEST("Power Construct switches Zygarde's form when HP is below half (Traits)")
 {
     u16 baseSpecies;
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
@@ -82,7 +83,7 @@ SINGLE_BATTLE_TEST("Power Construct switches Zygarde's form when HP is below hal
     }
 }
 
-WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catching (Multi)")
+WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catching (Traits)")
 {
     u16 baseSpecies;
     PARAMETRIZE { baseSpecies = SPECIES_ZYGARDE_10_POWER_CONSTRUCT; }
@@ -110,3 +111,4 @@ WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catc
         EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), baseSpecies);
     }
 }
+#endif

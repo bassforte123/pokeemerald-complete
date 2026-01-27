@@ -137,7 +137,8 @@ SINGLE_BATTLE_TEST("Magic Bounce bounced back status moves can not be bounced ba
     }
 }
 
-SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
@@ -155,7 +156,7 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Magic Bounce bounces back powder moves (Multi)")
+SINGLE_BATTLE_TEST("Magic Bounce bounces back powder moves (Traits)")
 {
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
@@ -174,7 +175,7 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back powder moves (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Magic Bounce cannot bounce back powder moves against Grass Types (Multi)")
+SINGLE_BATTLE_TEST("Magic Bounce cannot bounce back powder moves against Grass Types (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
@@ -194,7 +195,7 @@ SINGLE_BATTLE_TEST("Magic Bounce cannot bounce back powder moves against Grass T
     }
 }
 
-DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foes (Multi)")
+DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foes (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
@@ -220,7 +221,7 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foe
     }
 }
 
-DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field (Multi)")
+DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field (Traits)")
 {
     u32 battlerOne, battlerTwo, abilityBattlerOne, abilityBattlerTwo;
 
@@ -253,7 +254,7 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Magic Bounce bounced back status moves can not be bounced back by Magic Bounce (Multi)")
+SINGLE_BATTLE_TEST("Magic Bounce bounced back status moves can not be bounced back by Magic Bounce (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
@@ -271,3 +272,4 @@ SINGLE_BATTLE_TEST("Magic Bounce bounced back status moves can not be bounced ba
         STATUS_ICON(player, badPoison: TRUE);
     }
 }
+#endif

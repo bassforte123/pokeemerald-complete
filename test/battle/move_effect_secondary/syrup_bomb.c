@@ -127,7 +127,7 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Amulet")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_CLEAR_AMULET); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
     } WHEN {
         TURN { MOVE(player, MOVE_SYRUP_BOMB); }
     } SCENE {
@@ -217,8 +217,9 @@ SINGLE_BATTLE_TEST("Sticky Syrup is removed when the user faints")
         }
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Syrup Bomb is prevented by Bulletproof (Multi)")
+SINGLE_BATTLE_TEST("Syrup Bomb is prevented by Bulletproof (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -235,7 +236,7 @@ SINGLE_BATTLE_TEST("Syrup Bomb is prevented by Bulletproof (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, White Smoke or Full Metal Body (Multi)")
+SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, White Smoke or Full Metal Body (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -283,27 +284,6 @@ SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Body, Whi
             NONE_OF {
                 MESSAGE("The opposing Solgaleo's Speed fell!");
             }
-        }
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Sticky Syrup speed reduction is prevented by Clear Amulet (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CLEAR_AMULET); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SYRUP_BOMB); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SYRUP_BOMB, player);
-        HP_BAR(opponent);
-        MESSAGE("The opposing Wobbuffet got covered in sticky candy syrup!");
-        MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, opponent);
-            MESSAGE("The opposing Wobbuffet's Speed fell!");
         }
     }
 }

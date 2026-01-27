@@ -117,7 +117,8 @@ SINGLE_BATTLE_TEST("Plasma Fists turns normal type dynamax-moves into electric t
     }
 }
 
-SINGLE_BATTLE_TEST("Plasma Fists type-changing effect does not override Pixilate (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Plasma Fists type-changing effect does not override Pixilate (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_KRABBY) { Speed(300); };
@@ -150,3 +151,4 @@ SINGLE_BATTLE_TEST("Plasma Fists type-changing effect is applied after Normalize
         MESSAGE("It's super effective!");
     }
 }
+#endif

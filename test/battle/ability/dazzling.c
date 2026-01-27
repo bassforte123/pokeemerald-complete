@@ -122,7 +122,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean act
     }
 }
 
-DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect the user from priority moves (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect the user from priority moves (Traits)")
 {
     u32 species;
     enum Ability ability, ability2;
@@ -145,7 +146,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect the user fr
     }
 }
 
-DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect users partner from priority moves (Multi)")
+DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect users partner from priority moves (Traits)")
 {
     u32 species;
     enum Ability ability, ability2;
@@ -168,7 +169,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect users partn
     }
 }
 
-DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail don't protect the user from negative priority (Multi)")
+DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail don't protect the user from negative priority (Traits)")
 {
     u32 species;
     enum Ability ability, ability2;
@@ -190,7 +191,7 @@ DOUBLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail don't protect the u
     }
 }
 
-SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect from all multi hit hits with one activation (Multi)")
+SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect from all multi hit hits with one activation (Traits)")
 {
     u32 species;
     enum Ability ability, ability2;
@@ -216,7 +217,7 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect from all mu
     }
 }
 
-SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean activation (Multi)")
+SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean activation (Traits)")
 {
     u32 species, ability, ability2;
 
@@ -248,3 +249,4 @@ TO_DO_BATTLE_TEST("Mold Breaker ignores Dazzling, Queenly Majesty and Armor Tail
 TO_DO_BATTLE_TEST("Instruct-called moves keep their priority, which is considered for Dazzling, Queenly Majesty and Armor Tail")
 
 TO_DO_BATTLE_TEST(" Dazzling, Queenly Majesty and Armor Tail do not block high-priority moves called by other moves") // Metronome, Assist, Nature Power, etc.
+#endif

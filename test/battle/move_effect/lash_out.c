@@ -187,7 +187,8 @@ DOUBLE_BATTLE_TEST("Lash Out damage is not boosted by Treasure of Ruin ability a
     }
 }
 
-SINGLE_BATTLE_TEST("Lash Out damage is only boosted on the turn that Intimidate switches in (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Lash Out damage is only boosted on the turn that Intimidate switches in (Traits)")
 {
     s16 damage[3] = {0};
     u32 move = MOVE_NONE;
@@ -219,7 +220,7 @@ SINGLE_BATTLE_TEST("Lash Out damage is only boosted on the turn that Intimidate 
     }
 }
 
-SINGLE_BATTLE_TEST("Lash Out damage is boosted on turn 1 by switch in abilities (Multi)")
+SINGLE_BATTLE_TEST("Lash Out damage is boosted on turn 1 by switch in abilities (Traits)")
 {
     s16 damage[2] = {0};
     u32 species = SPECIES_NONE, ability = ABILITY_NONE;
@@ -252,7 +253,7 @@ SINGLE_BATTLE_TEST("Lash Out damage is boosted on turn 1 by switch in abilities 
     }
 }
 
-DOUBLE_BATTLE_TEST("Lash Out damage is boosted by Cotton Down activation in doubles (Multi)")
+DOUBLE_BATTLE_TEST("Lash Out damage is boosted by Cotton Down activation in doubles (Traits)")
 {
     s16 damage[2] = {0};
     enum Ability ability = ABILITY_NONE;
@@ -284,7 +285,7 @@ DOUBLE_BATTLE_TEST("Lash Out damage is boosted by Cotton Down activation in doub
     }
 }
 
-DOUBLE_BATTLE_TEST("Lash Out damage is not boosted by Treasure of Ruin ability activation in doubles (Multi)")
+DOUBLE_BATTLE_TEST("Lash Out damage is not boosted by Treasure of Ruin ability activation in doubles (Traits)")
 {
     s16 damage[2] = {0};
     u32 species = SPECIES_NONE, ability = ABILITY_NONE;
@@ -323,3 +324,4 @@ DOUBLE_BATTLE_TEST("Lash Out damage is not boosted by Treasure of Ruin ability a
             EXPECT_EQ(damage[0], damage[1]);
     }
 }
+#endif

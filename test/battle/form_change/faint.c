@@ -56,7 +56,8 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
     }
 }
 
-DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should not cause a message (Multi)") // issue 7795
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should not cause a message (Traits)") // issue 7795
 {
     u32 species;
     PARAMETRIZE { species = SPECIES_CASTFORM; }
@@ -78,3 +79,4 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
         }
     }
 }
+#endif

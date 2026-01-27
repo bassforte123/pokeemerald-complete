@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_GROUDON) { Items(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(player, MOVE_ENTRAINMENT); }
     } SCENE {
@@ -74,18 +74,3 @@ SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
 }
 
 TO_DO_BATTLE_TEST("Entrainment fails on Dynamaxed Pokémon");
-
-SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_GROUDON) { Items(ITEM_PECHA_BERRY, ITEM_RED_ORB); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_ENTRAINMENT); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENTRAINMENT, player);
-        MESSAGE("The extremely harsh sunlight faded!");
-    } THEN {
-        EXPECT(opponent->ability == ABILITY_TELEPATHY);
-    }
-}

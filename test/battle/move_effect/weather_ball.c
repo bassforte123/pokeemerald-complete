@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Rock-type move
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_MAGMAR) { Items(ITEM_SAFETY_GOGGLES); };
+        OPPONENT(SPECIES_MAGMAR) { Item(ITEM_SAFETY_GOGGLES); };
     } WHEN {
         TURN { MOVE(player, move); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_DRAGONAIR) { Items(ITEM_SAFETY_GOGGLES); };
+        OPPONENT(SPECIES_DRAGONAIR) { Item(ITEM_SAFETY_GOGGLES); };
     } WHEN {
         TURN { MOVE(player, move); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
@@ -80,40 +80,3 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
 }
 
 TO_DO_BATTLE_TEST("Weather Ball doesn't double its power or change type if Cloud Nine/Air Lock is on the field");
-
-SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Rock-type move in a Sandstorm (Multi)", s16 damage)
-{
-    u16 move;
-    PARAMETRIZE { move = MOVE_CELEBRATE; }
-    PARAMETRIZE { move = MOVE_SANDSTORM; }
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_MAGMAR) { Items(ITEM_PECHA_BERRY, ITEM_SAFETY_GOGGLES); };
-    } WHEN {
-        TURN { MOVE(player, move); }
-        TURN { MOVE(player, MOVE_WEATHER_BALL); }
-    } SCENE {
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(4.0), results[1].damage); // double base power + type effectiveness.
-    }
-}
-
-SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move in Hail and Snow (Multi)", s16 damage)
-{
-    u16 move;
-    PARAMETRIZE { move = MOVE_CELEBRATE; }
-    PARAMETRIZE { move = MOVE_HAIL; }
-    PARAMETRIZE { move = MOVE_SNOWSCAPE; }
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_DRAGONAIR) { Items(ITEM_PECHA_BERRY, ITEM_SAFETY_GOGGLES); };
-    } WHEN {
-        TURN { MOVE(player, move); }
-        TURN { MOVE(player, MOVE_WEATHER_BALL); }
-    } SCENE {
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(4.0), results[1].damage); // double base power + type effectiveness.
-    }
-}

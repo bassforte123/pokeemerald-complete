@@ -59,7 +59,8 @@ SINGLE_BATTLE_TEST("Embody Aspect activates when it's no longer effected by Neut
     }
 }
 
-SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by one stage (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by one stage (Traits)")
 {
     u16 species;
     enum Ability ability;
@@ -96,3 +97,4 @@ SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by o
             EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
 }
+#endif

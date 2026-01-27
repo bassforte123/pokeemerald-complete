@@ -42,31 +42,7 @@ SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ASSIST, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
-        OPPONENT(SPECIES_ARON) { Items(item); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_ASSIST); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Assist!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSIST, player);
-        MESSAGE("Wobbuffet used Surf!");
-        if (item == ITEM_PASSHO_BERRY) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        } else {
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, player);
-    }
-}
-
-SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry (Multi)")
-{
-    u16 item;
-    PARAMETRIZE { item = ITEM_CHILAN_BERRY; }
-    PARAMETRIZE { item = ITEM_PASSHO_BERRY; }
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ASSIST, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
-        OPPONENT(SPECIES_ARON) { Items(ITEM_GREAT_BALL, item); }
+        OPPONENT(SPECIES_ARON) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_ASSIST); }
     } SCENE {

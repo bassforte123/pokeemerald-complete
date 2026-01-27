@@ -66,9 +66,9 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target al
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Items(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(targetItem); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Items(atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Item(atkItem); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
     } WHEN {
         TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
@@ -85,9 +85,9 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Items(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(targetItem); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Items(atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Item(atkItem); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
     } WHEN {
         TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
@@ -105,9 +105,9 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow around Sticky Hold")
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(targetAbility); Items(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(targetAbility); Item(targetItem); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(atkAbility); Items(atkItem); Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(atkAbility); Item(atkItem); Moves(move, MOVE_SCRATCH); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
     } WHEN {
         TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
@@ -125,9 +125,9 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SUBSTITUTE, MOVE_CELEBRATE); Items(targetItem); Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SUBSTITUTE, MOVE_CELEBRATE); Item(targetItem); Speed(20); }
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Items(atkItem); Speed(1); Attack(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Item(atkItem); Speed(1); Attack(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
     } WHEN {
         TURN {
@@ -437,7 +437,7 @@ AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_STOMPING_TANTRUM); }
-        OPPONENT(species) { Moves(MOVE_CELEBRATE); Items(ITEM_WEAKNESS_POLICY);  }
+        OPPONENT(species) { Moves(MOVE_CELEBRATE); Item(ITEM_WEAKNESS_POLICY);  }
     } WHEN {
         if (species == SPECIES_INCINEROAR)
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
@@ -625,8 +625,8 @@ AI_DOUBLE_BATTLE_TEST("AI sets up weather for its ally")
         AI_FLAGS(aiFlags);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TORNADUS) { Items(ITEM_SAFETY_GOGGLES); Ability(ABILITY_PRANKSTER); Moves(goodWeather, badWeather, MOVE_RETURN, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); Moves(weatherTrigger, MOVE_EARTH_POWER); }
+        OPPONENT(SPECIES_TORNADUS) { Item(ITEM_SAFETY_GOGGLES); Ability(ABILITY_PRANKSTER); Moves(goodWeather, badWeather, MOVE_RETURN, MOVE_TAUNT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); Moves(weatherTrigger, MOVE_EARTH_POWER); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, goodWeather); }
     }
@@ -878,8 +878,9 @@ AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinchi
         TURN { EXPECT_MOVE(opponentLeft, MOVE_FAKE_OUT, target:playerRight); }
     }
 }
+
 #if MAX_MON_TRAITS > 1
-AI_DOUBLE_BATTLE_TEST("AI recognizes its ally's Telepathy (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI recognizes its ally's Telepathy (Traits)")
 {
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
 
@@ -895,7 +896,7 @@ AI_DOUBLE_BATTLE_TEST("AI recognizes its ally's Telepathy (Multi)")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability but will not KO the ally needlessly (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability but will not KO the ally needlessly (Traits)")
 {
     ASSUME(GetMoveTarget(MOVE_BULLDOZE) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
@@ -924,7 +925,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it will benefit the ally (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it will benefit the ally (Traits)")
 {
     ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
     ASSUME(GetMoveType(MOVE_BEAT_UP) == TYPE_DARK);
@@ -950,7 +951,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it wi
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners (Traits)")
 {
     ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
@@ -991,7 +992,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners (Mu
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 4) (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 4) (Traits)")
 {
     KNOWN_FAILING;
     ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
@@ -1017,7 +1018,7 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 5+) (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 5+) (Traits)")
 {
     ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
@@ -1045,7 +1046,7 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
 // Sandstorm is omitted on purpose.
 // Tornadus is currently not willing to set up Sandstorm for its ally, but the actual purpose of this test is to demonstrate that Tornadus or Whimsicott will perform standard VGC openers.
 // Rain Dance, Sunny Day, and Snowscape are the actually important ones; setting up a good Sandstorm test + functionality is less important and will be done in later PRs.
-AI_DOUBLE_BATTLE_TEST("AI sets up weather for its ally (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI sets up weather for its ally (Traits)")
 {
     u32 goodWeather, badWeather, weatherTrigger;
     u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
@@ -1077,7 +1078,7 @@ AI_DOUBLE_BATTLE_TEST("AI sets up weather for its ally (Multi)")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI uses After You to set up Trick Room (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI uses After You to set up Trick Room (Traits)")
 {
     u32 move;
 
@@ -1101,7 +1102,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses After You to set up Trick Room (Multi)")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI uses Trick Room intelligently (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI uses Trick Room intelligently (Traits)")
 {
     u32 move, ability, speed;
 
@@ -1129,7 +1130,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Trick Room intelligently (Multi)")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinching. (Multi)")
+AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinching. (Traits)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE | AI_FLAG_OMNISCIENT);
@@ -1139,150 +1140,6 @@ AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinchi
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_FAKE_OUT, target:playerRight); }
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target already holds one (Multi)")
-{
-    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
-
-    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
-    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
-    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_LEFTOVERS; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, targetItem); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Items(ITEM_PECHA_BERRY, atkItem); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
-    } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items (Multi)")
-{
-    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
-
-    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
-    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_ORANGE_MAIL; }
-    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, targetItem); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Items(ITEM_PECHA_BERRY, atkItem); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
-    } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow around Sticky Hold (Multi)")
-{
-    u16 move = MOVE_NONE, atkItem = ITEM_ORAN_BERRY, targetItem = ITEM_NONE;
-    enum Ability atkAbility = ABILITY_PRESSURE, targetAbility = ABILITY_PRESSURE;
-
-    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE; targetItem = ITEM_LEFTOVERS; }
-    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_PRESSURE;  targetAbility = ABILITY_STICKY_HOLD; targetItem = ITEM_LEFTOVERS; }
-    PARAMETRIZE { move = MOVE_BESTOW; atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE;  targetItem = ITEM_NONE; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Ability(targetAbility); Items(ITEM_PECHA_BERRY, targetItem); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(atkAbility); Items(ITEM_PECHA_BERRY, atkItem); Moves(move, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
-    } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute (Multi)")
-{
-    ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
-
-    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
-
-    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_LEFTOVERS; }
-    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_NONE; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SUBSTITUTE, MOVE_CELEBRATE); Items(ITEM_PECHA_BERRY, targetItem); Speed(20); }
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Items(ITEM_PECHA_BERRY, atkItem); Speed(1); Attack(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
-    } WHEN {
-        TURN {
-            MOVE(playerLeft, MOVE_SUBSTITUTE);
-            MOVE(playerRight, MOVE_CELEBRATE);
-        }
-        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy (Multi)")
-{
-    ASSUME(gItemsInfo[ITEM_WEAKNESS_POLICY].holdEffect == HOLD_EFFECT_WEAKNESS_POLICY);
-    ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
-
-    u32 species;
-    PARAMETRIZE { species = SPECIES_INCINEROAR; }
-    PARAMETRIZE { species = SPECIES_CLEFFA; }
-
-    GIVEN {
-        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_STOMPING_TANTRUM); }
-        OPPONENT(species) { Moves(MOVE_CELEBRATE); Items(ITEM_PECHA_BERRY, ITEM_WEAKNESS_POLICY);  }
-    } WHEN {
-        if (species == SPECIES_INCINEROAR)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
-        else
-            TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
-    }
-}
-
-// Sandstorm is omitted on purpose.
-// Tornadus is currently not willing to set up Sandstorm for its ally, but the actual purpose of this test is to demonstrate that Tornadus or Whimsicott will perform standard VGC openers.
-// Rain Dance, Sunny Day, and Snowscape are the actually important ones; setting up a good Sandstorm test + functionality is less important and will be done in later PRs.
-AI_DOUBLE_BATTLE_TEST("AI sets up weather for its ally (Multi)")
-{
-    u32 goodWeather, badWeather, weatherTrigger;
-    u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
-
-    PARAMETRIZE { goodWeather = MOVE_SUNNY_DAY; badWeather = MOVE_RAIN_DANCE; weatherTrigger = MOVE_SOLAR_BEAM; }
-    PARAMETRIZE { goodWeather = MOVE_RAIN_DANCE; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_THUNDER; }
-    PARAMETRIZE { goodWeather = MOVE_HAIL; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_BLIZZARD; }
-    PARAMETRIZE { goodWeather = MOVE_SNOWSCAPE; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_BLIZZARD; }
-    PARAMETRIZE { goodWeather = MOVE_SANDSTORM; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_SHORE_UP; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  goodWeather = MOVE_SUNNY_DAY; badWeather = MOVE_RAIN_DANCE; weatherTrigger = MOVE_SOLAR_BEAM; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  goodWeather = MOVE_RAIN_DANCE; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_THUNDER; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  goodWeather = MOVE_HAIL; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_BLIZZARD; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  goodWeather = MOVE_SNOWSCAPE; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_BLIZZARD; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  goodWeather = MOVE_SANDSTORM; badWeather = MOVE_SUNNY_DAY; weatherTrigger = MOVE_SHORE_UP; }
-
-    GIVEN {
-        AI_FLAGS(aiFlags);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TORNADUS) { Items(ITEM_PECHA_BERRY, ITEM_SAFETY_GOGGLES); Ability(ABILITY_PRANKSTER); Moves(goodWeather, badWeather, MOVE_RETURN, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SAFETY_GOGGLES); Moves(weatherTrigger, MOVE_EARTH_POWER); }
-    } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, goodWeather); }
     }
 }
 #endif

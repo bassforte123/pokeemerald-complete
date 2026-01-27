@@ -44,7 +44,8 @@ SINGLE_BATTLE_TEST("Sand Veil doesn't increase evasion if Cloud Nine/Air Lock is
     }
 }
 
-SINGLE_BATTLE_TEST("Sand Veil prevents damage from sandstorm (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Sand Veil prevents damage from sandstorm (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CACNEA) { Ability(ABILITY_WATER_ABSORB); Innates(ABILITY_SAND_VEIL); }
@@ -57,7 +58,7 @@ SINGLE_BATTLE_TEST("Sand Veil prevents damage from sandstorm (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Sand Veil increases evasion during sandstorm (Multi)")
+SINGLE_BATTLE_TEST("Sand Veil increases evasion during sandstorm (Traits)")
 {
     PASSES_RANDOMLY(4, 5, RNG_ACCURACY);
     GIVEN {
@@ -72,7 +73,7 @@ SINGLE_BATTLE_TEST("Sand Veil increases evasion during sandstorm (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Sand Veil doesn't increase evasion if Cloud Nine/Air Lock is on the field (Multi)")
+SINGLE_BATTLE_TEST("Sand Veil doesn't increase evasion if Cloud Nine/Air Lock is on the field (Traits)")
 {
     PASSES_RANDOMLY(5, 5, RNG_ACCURACY);
     GIVEN {
@@ -86,3 +87,4 @@ SINGLE_BATTLE_TEST("Sand Veil doesn't increase evasion if Cloud Nine/Air Lock is
         HP_BAR(player);
     }
 }
+#endif

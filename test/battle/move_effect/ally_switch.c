@@ -409,7 +409,8 @@ DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
 // Triple Battles required to test
 //TO_DO_BATTLE_TEST("Ally Switch fails if the user is in the middle of the field in a Triple Battle");
 
-DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail (Traits)")
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STALWART; }
@@ -434,7 +435,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with St
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally switch swaps sky drop targets if being used by partner (Multi)")
+DOUBLE_BATTLE_TEST("Ally switch swaps sky drop targets if being used by partner (Traits)")
 {
     u8 visibility;
     GIVEN {
@@ -471,7 +472,7 @@ DOUBLE_BATTLE_TEST("Ally switch swaps sky drop targets if being used by partner 
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is being held in the air (Multi)")
+DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is being held in the air (Traits)")
 {
     u8 visibility;
     GIVEN {
@@ -508,7 +509,7 @@ DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is be
     }
 }
 
-DOUBLE_BATTLE_TEST("Ally Switch updates attract battler (Multi)")
+DOUBLE_BATTLE_TEST("Ally Switch updates attract battler (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); Gender(MON_MALE); }
@@ -534,3 +535,4 @@ DOUBLE_BATTLE_TEST("Ally Switch updates attract battler (Multi)")
         MESSAGE("Wobbuffet is in love with the opposing Clefairy!"); // tracks attract battler
     }
 }
+#endif

@@ -44,7 +44,8 @@ TO_DO_BATTLE_TEST("Soak/Magic Powder fails if the target is behind a Substitute"
 TO_DO_BATTLE_TEST("Soak/Magic Powder fails if the target is already Water/Psychic");
 TO_DO_BATTLE_TEST("Soak/Magic Powder fails if the target has Multitype or RKS System");
 
-SINGLE_BATTLE_TEST("Soak/Magic Powder's type change is overwitten if the target changes form (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Soak/Magic Powder's type change is overwitten if the target changes form (Traits)")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_SOAK; }
@@ -72,3 +73,4 @@ SINGLE_BATTLE_TEST("Soak/Magic Powder's type change is overwitten if the target 
         MESSAGE("It doesn't affect Mimikyu…");
     }
 }
+#endif

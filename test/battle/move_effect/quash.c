@@ -132,7 +132,8 @@ DOUBLE_BATTLE_TEST("Quash-affected mon that acted early via After You is not aff
     }
 }
 
-DOUBLE_BATTLE_TEST("Quash-affected target will move last in the priority bracket (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Quash-affected target will move last in the priority bracket (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_VOLBEAT) { Speed(10); Ability(ABILITY_ILLUMINATE); Innates(ABILITY_PRANKSTER); }
@@ -149,7 +150,7 @@ DOUBLE_BATTLE_TEST("Quash-affected target will move last in the priority bracket
     }
 }
 
-DOUBLE_BATTLE_TEST("Quash is not affected by dynamic speed (Multi)")
+DOUBLE_BATTLE_TEST("Quash is not affected by dynamic speed (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
@@ -170,7 +171,7 @@ DOUBLE_BATTLE_TEST("Quash is not affected by dynamic speed (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Quash-affected targets move from fastest to slowest (Gen 8+) or from first affected battler to last (Gen 7-) (Multi)")
+DOUBLE_BATTLE_TEST("Quash-affected targets move from fastest to slowest (Gen 8+) or from first affected battler to last (Gen 7-) (Traits)")
 {
     u32 speedLeft, speedRight;
 
@@ -203,7 +204,7 @@ DOUBLE_BATTLE_TEST("Quash-affected targets move from fastest to slowest (Gen 8+)
     }
 }
 
-DOUBLE_BATTLE_TEST("Quash-affected mon that acted early via After You is not affected by dynamic speed (Multi)")
+DOUBLE_BATTLE_TEST("Quash-affected mon that acted early via After You is not affected by dynamic speed (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
@@ -225,3 +226,4 @@ DOUBLE_BATTLE_TEST("Quash-affected mon that acted early via After You is not aff
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight); // this is the relevant part, testing if quash affected battler becomes last to move causing playerRight to not move
     }
 }
+#endif

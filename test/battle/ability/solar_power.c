@@ -69,7 +69,8 @@ SINGLE_BATTLE_TEST("Solar Power doesn't cause the Pokémon to lose 1/8 max HP if
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Power increases a Sp. Attack by x1.5 in Sun (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Solar Power increases a Sp. Attack by x1.5 in Sun (Traits)", s16 damage)
 {
     u32 move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
@@ -90,7 +91,7 @@ SINGLE_BATTLE_TEST("Solar Power increases a Sp. Attack by x1.5 in Sun (Multi)", 
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Power doesn't increases a Sp. Attack if Cloud Nine/Air Lock is on the field (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Solar Power doesn't increases a Sp. Attack if Cloud Nine/Air Lock is on the field (Traits)", s16 damage)
 {
     u32 move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
@@ -109,7 +110,7 @@ SINGLE_BATTLE_TEST("Solar Power doesn't increases a Sp. Attack if Cloud Nine/Air
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Power causes the Pokémon to lose 1/8 max HP in Sun (Multi)")
+SINGLE_BATTLE_TEST("Solar Power causes the Pokémon to lose 1/8 max HP in Sun (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CHARIZARD) { Ability(ABILITY_BLAZE); Innates(ABILITY_SOLAR_POWER); MaxHP(80); HP(80); }
@@ -123,7 +124,7 @@ SINGLE_BATTLE_TEST("Solar Power causes the Pokémon to lose 1/8 max HP in Sun (M
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Power doesn't cause the Pokémon to lose 1/8 max HP if Cloud Nine/Air Lock is on the field (Multi)")
+SINGLE_BATTLE_TEST("Solar Power doesn't cause the Pokémon to lose 1/8 max HP if Cloud Nine/Air Lock is on the field (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CHARIZARD) { Ability(ABILITY_BLAZE); Innates(ABILITY_SOLAR_POWER); MaxHP(80); HP(80); }
@@ -136,3 +137,4 @@ SINGLE_BATTLE_TEST("Solar Power doesn't cause the Pokémon to lose 1/8 max HP if
         EXPECT_EQ(player->hp, player->maxHP);
     }
 }
+#endif

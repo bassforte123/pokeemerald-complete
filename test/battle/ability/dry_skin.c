@@ -112,7 +112,7 @@ SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activat
     PARAMETRIZE { item = ITEM_LUMINOUS_MOSS; }
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
-        PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); Items(item); }
+        PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_BUBBLE); }
@@ -127,29 +127,8 @@ SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activat
     }
 }
 
-SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activating (Multi)")
-{
-    u32 item;
-    PARAMETRIZE { item = ITEM_ABSORB_BULB; }
-    PARAMETRIZE { item = ITEM_LUMINOUS_MOSS; }
-    GIVEN {
-        ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
-        PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); Items(ITEM_PECHA_BERRY, item); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_BUBBLE); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_DRY_SKIN);
-        HP_BAR(player, damage: -50);
-        MESSAGE("Parasect restored HP using its Dry Skin!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        }
-    }
-}
-
-SINGLE_BATTLE_TEST("Dry Skin causes 1/8th Max HP damage in Sun (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Dry Skin causes 1/8th Max HP damage in Sun (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DAMP); Innates(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
@@ -163,9 +142,9 @@ SINGLE_BATTLE_TEST("Dry Skin causes 1/8th Max HP damage in Sun (Multi)")
     }
 }
 
-TO_DO_BATTLE_TEST("Dry Skin doesn't get damaged in Sun if Cloud Nine/Air Lock is on the field (Multi)");
+TO_DO_BATTLE_TEST("Dry Skin doesn't get damaged in Sun if Cloud Nine/Air Lock is on the field (Traits)");
 
-SINGLE_BATTLE_TEST("Dry Skin heals 1/8th Max HP in Rain (Multi)")
+SINGLE_BATTLE_TEST("Dry Skin heals 1/8th Max HP in Rain (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DAMP); Innates(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
@@ -179,9 +158,9 @@ SINGLE_BATTLE_TEST("Dry Skin heals 1/8th Max HP in Rain (Multi)")
     }
 }
 
-TO_DO_BATTLE_TEST("Dry Skin doesn't heal in Rain if Cloud Nine/Air Lock is on the field (Multi)");
+TO_DO_BATTLE_TEST("Dry Skin doesn't heal in Rain if Cloud Nine/Air Lock is on the field (Traits)");
 
-SINGLE_BATTLE_TEST("Dry Skin increases damage taken from Fire-type moves by 25% (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Dry Skin increases damage taken from Fire-type moves by 25% (Traits)", s16 damage)
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_EFFECT_SPORE; }
@@ -209,7 +188,7 @@ SINGLE_BATTLE_TEST("Dry Skin increases damage taken from Fire-type moves by 25% 
     }
 }
 
-SINGLE_BATTLE_TEST("Dry Skin heals 25% when hit by water type moves (Multi)")
+SINGLE_BATTLE_TEST("Dry Skin heals 25% when hit by water type moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
@@ -224,7 +203,7 @@ SINGLE_BATTLE_TEST("Dry Skin heals 25% when hit by water type moves (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Dry Skin does not activate if protected (Multi)")
+SINGLE_BATTLE_TEST("Dry Skin does not activate if protected (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
@@ -237,7 +216,7 @@ SINGLE_BATTLE_TEST("Dry Skin does not activate if protected (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Dry Skin is only triggered once on multi strike moves (Multi)")
+SINGLE_BATTLE_TEST("Dry Skin is only triggered once on multi strike moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_SHURIKEN) == TYPE_WATER);
@@ -253,7 +232,7 @@ SINGLE_BATTLE_TEST("Dry Skin is only triggered once on multi strike moves (Multi
     }
 }
 
-SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activating (Multi)")
+SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activating (Traits)")
 {
     u32 item;
     PARAMETRIZE { item = ITEM_ABSORB_BULB; }
@@ -274,3 +253,4 @@ SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activat
         }
     }
 }
+#endif

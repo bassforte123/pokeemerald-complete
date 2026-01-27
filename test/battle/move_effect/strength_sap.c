@@ -152,32 +152,7 @@ SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_BIG_ROOT].holdEffect == HOLD_EFFECT_BIG_ROOT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); Items(item); }
-        OPPONENT(SPECIES_WOBBUFFET) { Attack(100); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_STRENGTH_SAP); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Strength Sap!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Wobbuffet's Attack fell!");
-        HP_BAR(player, captureDamage: &results[i].hp);
-        MESSAGE("The opposing Wobbuffet had its energy drained!");
-    } FINALLY {
-        EXPECT_GT(abs(results[1].hp), abs(results[0].hp));
-    }
-}
-
-SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held (Multi)", s16 hp)
-{
-    u32 item;
-
-    PARAMETRIZE { item = ITEM_NONE; }
-    PARAMETRIZE { item = ITEM_BIG_ROOT; }
-
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_BIG_ROOT].holdEffect == HOLD_EFFECT_BIG_ROOT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); Items(ITEM_PECHA_BERRY, item); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(200); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET) { Attack(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_STRENGTH_SAP); }

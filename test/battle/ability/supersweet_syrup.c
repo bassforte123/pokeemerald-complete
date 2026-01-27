@@ -82,7 +82,8 @@ SINGLE_BATTLE_TEST("Supersweet Syrup can not further lower opponents evasion if 
     }
 }
 
-SINGLE_BATTLE_TEST("Supersweet Syrup lowers evasion once per battle by one stage (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Supersweet Syrup lowers evasion once per battle by one stage (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -107,7 +108,7 @@ SINGLE_BATTLE_TEST("Supersweet Syrup lowers evasion once per battle by one stage
     }
 }
 
-DOUBLE_BATTLE_TEST("Supersweet Syrup lowers evasion of both opposing mon's in battle (Multi)")
+DOUBLE_BATTLE_TEST("Supersweet Syrup lowers evasion of both opposing mon's in battle (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -127,7 +128,7 @@ DOUBLE_BATTLE_TEST("Supersweet Syrup lowers evasion of both opposing mon's in ba
     }
 }
 
-SINGLE_BATTLE_TEST("Supersweet Syrup can not further lower opponents evasion if it is at minimum stages (Multi)")
+SINGLE_BATTLE_TEST("Supersweet Syrup can not further lower opponents evasion if it is at minimum stages (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_ODDISH);
@@ -162,3 +163,4 @@ SINGLE_BATTLE_TEST("Supersweet Syrup can not further lower opponents evasion if 
         EXPECT_EQ(player->statStages[STAT_EVASION], MIN_STAT_STAGE);
     }
 }
+#endif

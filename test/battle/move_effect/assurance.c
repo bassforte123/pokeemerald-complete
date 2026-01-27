@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged in
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ASSURANCE); }
@@ -60,24 +60,3 @@ TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in 
 TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Confusion");
 TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Rocky Helmet");
 
-SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Life Orb (Multi)")
-{
-    s16 hits[2];
-
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_LIFE_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ASSURANCE); }
-        TURN { MOVE(player, MOVE_POUND); MOVE(opponent, MOVE_ASSURANCE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ASSURANCE, opponent);
-        HP_BAR(player, captureDamage: &hits[0]);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
-        MESSAGE("Wobbuffet was hurt by the Life Orb!");
-        HP_BAR(player, captureDamage: &hits[1]);
-    } THEN {
-        EXPECT_MUL_EQ(hits[0], Q_4_12(2.0), hits[1]);
-    }
-}

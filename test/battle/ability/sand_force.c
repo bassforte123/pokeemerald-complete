@@ -62,7 +62,8 @@ SINGLE_BATTLE_TEST("Sand Force don't increase move power if Cloud Nine/Air Lock 
     }
 }
 
-SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm (Traits)")
 {
     enum Type type1 = GetSpeciesType(SPECIES_SHELLOS, 0);
     enum Type type2 = GetSpeciesType(SPECIES_SHELLOS, 1);
@@ -79,7 +80,7 @@ SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-type moves by 30% in sandstorm (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-type moves by 30% in sandstorm (Traits)", s16 damage)
 {
     u32 moveOpponent, movePlayer;
     PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_ROCK_THROW; }
@@ -105,7 +106,7 @@ SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-t
     }
 }
 
-SINGLE_BATTLE_TEST("Sand Force don't increase move power if Cloud Nine/Air Lock is on the field (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Sand Force don't increase move power if Cloud Nine/Air Lock is on the field (Traits)", s16 damage)
 {
     u32 move;
     PARAMETRIZE { move = MOVE_CELEBRATE; }
@@ -122,3 +123,4 @@ SINGLE_BATTLE_TEST("Sand Force don't increase move power if Cloud Nine/Air Lock 
         EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }
+#endif

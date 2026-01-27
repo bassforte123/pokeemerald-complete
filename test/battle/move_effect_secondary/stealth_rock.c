@@ -20,7 +20,8 @@ SINGLE_BATTLE_TEST("Steath Rock: Rock from G-Max Stonesurge are set up before an
     }
 }
 
-SINGLE_BATTLE_TEST("Steath Rock: Rock from G-Max Stonesurge are set up before any ability activation (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Steath Rock: Rock from G-Max Stonesurge are set up before any ability activation (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_DREDNAW) { GigantamaxFactor(TRUE); }
@@ -33,3 +34,4 @@ SINGLE_BATTLE_TEST("Steath Rock: Rock from G-Max Stonesurge are set up before an
         ABILITY_POPUP(opponent, ABILITY_WEAK_ARMOR);
     }
 }
+#endif

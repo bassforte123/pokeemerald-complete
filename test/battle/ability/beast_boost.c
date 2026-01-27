@@ -223,7 +223,7 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
-        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Items(ITEM_CHOICE_BAND); Attack(120); Defense(60); SpAttack(150); SpDefense(60); }
+        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Item(ITEM_CHOICE_BAND); Attack(120); Defense(60); SpAttack(150); SpDefense(60); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -254,8 +254,9 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions")
     }
 }
 
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking out a target (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking out a target (Traits)")
 {
     u8 stats[] = {1, 1, 1, 1, 1};
     PARAMETRIZE { stats[0] = 255; }
@@ -291,7 +292,7 @@ SINGLE_BATTLE_TEST("Beast Boost boosts the most proficient stat when knocking ou
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
@@ -311,7 +312,7 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't trigger if user is fainted (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed (Traits)")
 {
     u8 stats[] = {1, 1, 1, 1, 1};
 
@@ -344,7 +345,7 @@ SINGLE_BATTLE_TEST("Beast Boost prioritizes stats in the case of a tie in the fo
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost considers Power Split (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost considers Power Split (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_POWER_SPLIT) == EFFECT_POWER_SPLIT);
@@ -364,7 +365,7 @@ SINGLE_BATTLE_TEST("Beast Boost considers Power Split (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost considers Guard Split (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost considers Guard Split (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GUARD_SPLIT) == EFFECT_GUARD_SPLIT);
@@ -384,7 +385,7 @@ SINGLE_BATTLE_TEST("Beast Boost considers Guard Split (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost considers Power Trick (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost considers Power Trick (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_POWER_TRICK) == EFFECT_POWER_TRICK);
@@ -404,7 +405,7 @@ SINGLE_BATTLE_TEST("Beast Boost considers Power Trick (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost considers Wonder Room (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost considers Wonder Room (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
@@ -426,7 +427,7 @@ SINGLE_BATTLE_TEST("Beast Boost considers Wonder Room (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost considers Speed Swap (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost considers Speed Swap (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPEED_SWAP) == EFFECT_SPEED_SWAP);
@@ -447,7 +448,7 @@ SINGLE_BATTLE_TEST("Beast Boost considers Speed Swap (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost doesn't consider stat stages (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost doesn't consider stat stages (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
@@ -467,7 +468,7 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider stat stages (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items (Traits)")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
@@ -485,7 +486,7 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions (Multi)")
+SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_BEAST_BOOST); Status1(STATUS1_BURN); Attack(150); Defense(60); SpAttack(100); SpDefense(60); }
@@ -499,26 +500,6 @@ SINGLE_BATTLE_TEST("Beast Boost doesn't consider status condition reductions (Mu
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Beast Boost doesn't consider held items (Multi)")
-{
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
-        PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_BEAST_BOOST); Items(ITEM_ORAN_BERRY, ITEM_CHOICE_BAND); Attack(120); Defense(60); SpAttack(150); SpDefense(60); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        ABILITY_POPUP(player, ABILITY_BEAST_BOOST);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-    } THEN {
-        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 #endif

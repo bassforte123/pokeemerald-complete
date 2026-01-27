@@ -190,7 +190,8 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid"
     }
 }
 
-SINGLE_BATTLE_TEST("Beads of Ruin reduces Sp. Def if opposing mon's ability doesn't match (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Beads of Ruin reduces Sp. Def if opposing mon's ability doesn't match (Traits)")
 {
     s16 damage[2];
 
@@ -214,7 +215,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin reduces Sp. Def if opposing mon's ability does
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wonder Room (Multi)", s16 damage)
+DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wonder Room (Traits)", s16 damage)
 {
     bool32 useWonderRoom;
     u32 move;
@@ -248,7 +249,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
     }
 }
 
-SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker (Multi)")
+SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker (Traits)")
 {
     u32 ability;
 
@@ -279,7 +280,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Brea
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Breaker (Multi)", s16 damage)
+DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Breaker (Traits)", s16 damage)
 {
     u32 ability;
 
@@ -303,7 +304,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Bre
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid (Multi)", s16 damage)
+DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid (Traits)", s16 damage)
 {
     u32 move;
 
@@ -328,3 +329,4 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid 
         EXPECT_LT(results[0].damage, results[1].damage);
     }
 }
+#endif

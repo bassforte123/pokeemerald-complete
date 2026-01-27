@@ -116,7 +116,8 @@ SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 
 }
 #endif
 
-SINGLE_BATTLE_TEST("Dream Eater works on targets with Comatose (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Dream Eater works on targets with Comatose (Traits)")
 {
     s16 damage;
     s16 healed;
@@ -133,3 +134,4 @@ SINGLE_BATTLE_TEST("Dream Eater works on targets with Comatose (Multi)")
         EXPECT_MUL_EQ(damage, Q_4_12(-1.0/2.0), healed);
     }
 }
+#endif

@@ -203,7 +203,8 @@ SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief fro
     }
 }
 
-SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye prevent accuracy stage reduction from moves (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye prevent accuracy stage reduction from moves (Traits)")
 {
     enum Ability ability, ability2;
     u32 species;
@@ -232,7 +233,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye prevent accuracy stag
     }
 }
 
-SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye ignore target's evasion stat (Multi)")
+SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye ignore target's evasion stat (Traits)")
 {
     enum Ability ability, ability2;
     u32 species;
@@ -256,7 +257,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye ignore target's evasi
     }
 }
 
-SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye are ignored by Mold Breaker abilities (Multi)")
+SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye are ignored by Mold Breaker abilities (Traits)")
 {
     enum Ability abilityPlayer = ABILITY_NONE, abilityOpponent = ABILITY_NONE, ability2 = ABILITY_NONE;
     u16 speciesPlayer = SPECIES_NONE, speciesOpponent = SPECIES_NONE;
@@ -290,7 +291,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye are ignored by Mold B
     }
 }
 
-SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent Topsy-Turvy (Multi)")
+SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent Topsy-Turvy (Traits)")
 {
     enum Ability ability, ability2;
     u32 species;
@@ -331,7 +332,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent Topsy-T
     }
 }
 
-SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent receiving negative Attack stage changes from Baton Pass (Multi)")
+SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent receiving negative Attack stage changes from Baton Pass (Traits)")
 {
     enum Ability ability, ability2;
     u32 species;
@@ -364,7 +365,7 @@ SINGLE_BATTLE_TEST("Keen Eye, Gen9+ Illuminate & Minds Eye don't prevent receivi
     }
 }
 
-SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief from resetting positive accuracy stage changes (Multi)")
+SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief from resetting positive accuracy stage changes (Traits)")
 {
     enum Ability ability, ability2;
     u32 species;
@@ -398,3 +399,4 @@ SINGLE_BATTLE_TEST("Keen Eye & Gen9+ Illuminate don't prevent Spectral Thief fro
         EXPECT_EQ(opponent->statStages[STAT_ACC], DEFAULT_STAT_STAGE);
     }
 }
+#endif

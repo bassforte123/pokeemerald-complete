@@ -67,44 +67,7 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
         ASSUME(gItemsInfo[ITEM_SKY_PLATE].holdEffect == HOLD_EFFECT_PLATE);
         ASSUME(gItemsInfo[ITEM_SKY_PLATE].secondaryId == TYPE_FLYING);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_LUM_BERRY)].type == TYPE_FLYING);
-        OPPONENT(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); Speed(1); Items(heldItem); HPIV(31); AttackIV(3); DefenseIV(31); SpAttackIV(30); SpDefenseIV(30); SpeedIV(30); TeraType(TYPE_FLYING); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); };
-    } WHEN {
-        TURN { MOVE(opponent, move); }
-    } SCENE {
-            MESSAGE("Wobbuffet used Celebrate!");
-        if (move == MOVE_NATURAL_GIFT) {
-            MESSAGE("The opposing Talonflame used Natural Gift!");
-        }
-        else if (move == MOVE_JUDGMENT) {
-            MESSAGE("The opposing Talonflame used Judgment!");
-        }
-        else if (move == MOVE_HIDDEN_POWER) {
-            MESSAGE("The opposing Talonflame used Hidden Power!");
-        }
-        else {
-            MESSAGE("The opposing Talonflame used Tera Blast!");
-        }
-    }
-}
-
-SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural Gift, Judgment, Hidden Power, or Tera Blast (Multi)")
-{
-    u32 move;
-    u16 heldItem;
-    PARAMETRIZE { move = MOVE_NATURAL_GIFT; heldItem = ITEM_LUM_BERRY; }
-    PARAMETRIZE { move = MOVE_JUDGMENT; heldItem = ITEM_SKY_PLATE; }
-    PARAMETRIZE { move = MOVE_HIDDEN_POWER; heldItem = ITEM_NONE; }
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(GetMoveEffect(MOVE_JUDGMENT) == EFFECT_CHANGE_TYPE_ON_ITEM);
-        // IV combinations sourced from https://www.smogon.com/forums/threads/hidden-power-iv-combinations.78083/
-        ASSUME(GetMoveEffect(MOVE_HIDDEN_POWER) == EFFECT_HIDDEN_POWER);
-        ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
-        ASSUME(gItemsInfo[ITEM_SKY_PLATE].holdEffect == HOLD_EFFECT_PLATE);
-        ASSUME(gItemsInfo[ITEM_SKY_PLATE].secondaryId == TYPE_FLYING);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_LUM_BERRY)].type == TYPE_FLYING);
-        OPPONENT(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); Speed(1); Items(ITEM_PECHA_BERRY, heldItem); HPIV(31); AttackIV(3); DefenseIV(31); SpAttackIV(30); SpDefenseIV(30); SpeedIV(30); TeraType(TYPE_FLYING); }
+        OPPONENT(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); Speed(1); Item(heldItem); HPIV(31); AttackIV(3); DefenseIV(31); SpAttackIV(30); SpDefenseIV(30); SpeedIV(30); TeraType(TYPE_FLYING); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); };
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -126,7 +89,8 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
 }
 
 
-SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+) (Traits)")
 {
     u32 hp, config;
     PARAMETRIZE { hp = 100; config = GEN_7; }
@@ -152,7 +116,7 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+) (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves (Multi)")
+SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves (Traits)")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_AERIAL_ACE; }
@@ -176,7 +140,7 @@ SINGLE_BATTLE_TEST("Gale Wings only grants priority to Flying-type moves (Multi)
     }
 }
 
-SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural Gift, Judgment, Hidden Power, or Tera Blast (Multi)")
+SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural Gift, Judgment, Hidden Power, or Tera Blast (Traits)")
 {
     u32 move;
     u16 heldItem;
@@ -212,3 +176,4 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
         }
     }
 }
+#endif

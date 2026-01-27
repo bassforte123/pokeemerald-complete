@@ -115,7 +115,8 @@ SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated")
     }
 }
 
-SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated (Traits)")
 {
     enum Type type1 = GetSpeciesType(SPECIES_STOUTLAND, 0);
     enum Type type2 = GetSpeciesType(SPECIES_STOUTLAND, 1);
@@ -131,3 +132,4 @@ SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated (Multi)"
         NOT HP_BAR(player);
     }
 }
+#endif

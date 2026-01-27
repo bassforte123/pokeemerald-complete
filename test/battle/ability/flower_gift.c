@@ -221,7 +221,8 @@ DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears 
 
 TO_DO_BATTLE_TEST("Flower Gift does not transform Cherrim back to normal when suppressed if Cherrim is Dynamaxed");
 
-SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim in harsh sunlight (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim in harsh sunlight (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_FLOWER_GIFT); }
@@ -237,9 +238,9 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim in harsh sunlight (Multi)")
     }
 }
 
-TO_DO_BATTLE_TEST("Flower Gift doesn't transform Cherrim if Cloud Nine/Air Lock is on the field (Multi)");
+TO_DO_BATTLE_TEST("Flower Gift doesn't transform Cherrim if Cloud Nine/Air Lock is on the field (Traits)");
 
-SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when weather changes (Multi)")
+SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when weather changes (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CHERRIM_OVERCAST) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_FLOWER_GIFT); }
@@ -261,7 +262,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when weather c
     }
 }
 
-SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Nine/Air Lock (Multi)")
+SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Nine/Air Lock (Traits)")
 {
     u32 species = 0;
     enum Ability ability = 0;
@@ -289,7 +290,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Ni
     }
 }
 
-DOUBLE_BATTLE_TEST("Flower Gift increases the attack of Cherrim and its allies by 1.5x (Multi)", s16 damageL, s16 damageR)
+DOUBLE_BATTLE_TEST("Flower Gift increases the attack of Cherrim and its allies by 1.5x (Traits)", s16 damageL, s16 damageR)
 {
     bool32 sunny;
     PARAMETRIZE { sunny = FALSE; }
@@ -324,7 +325,7 @@ DOUBLE_BATTLE_TEST("Flower Gift increases the attack of Cherrim and its allies b
     }
 }
 
-DOUBLE_BATTLE_TEST("Flower Gift increases the Sp. Def of Cherrim and its allies by 1.5x (Multi)", s16 damageL, s16 damageR)
+DOUBLE_BATTLE_TEST("Flower Gift increases the Sp. Def of Cherrim and its allies by 1.5x (Traits)", s16 damageL, s16 damageR)
 {
     bool32 sunny;
     PARAMETRIZE { sunny = FALSE; }
@@ -356,7 +357,7 @@ DOUBLE_BATTLE_TEST("Flower Gift increases the Sp. Def of Cherrim and its allies 
     }
 }
 
-SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it switches out (Multi)")
+SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it switches out (Traits)")
 {
     GIVEN {
         ASSUME(B_WEATHER_FORMS >= GEN_5);
@@ -377,7 +378,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it switches out (Mu
     }
 }
 
-SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it uses a move that forces it to switch out (Multi)")
+SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it uses a move that forces it to switch out (Traits)")
 {
     GIVEN {
         ASSUME(B_WEATHER_FORMS >= GEN_5);
@@ -398,7 +399,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it uses a move that
     }
 }
 
-DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears weather (Multi)")
+DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears weather (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TERAPAGOS_TERASTAL);
@@ -417,4 +418,5 @@ DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears 
     }
 }
 
-TO_DO_BATTLE_TEST("Flower Gift does not transform Cherrim back to normal when suppressed if Cherrim is Dynamaxed (Multi)");
+TO_DO_BATTLE_TEST("Flower Gift does not transform Cherrim back to normal when suppressed if Cherrim is Dynamaxed (Traits)");
+#endif

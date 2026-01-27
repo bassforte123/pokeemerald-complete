@@ -107,7 +107,8 @@ SINGLE_BATTLE_TEST("Effect Spore will check if it can inflict status onto attack
     }
 }
 
-SINGLE_BATTLE_TEST("Effect Spore only inflicts status on contact (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Effect Spore only inflicts status on contact (Traits)")
 {
     u32 move;
 
@@ -138,7 +139,7 @@ SINGLE_BATTLE_TEST("Effect Spore only inflicts status on contact (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Effect Spore causes poison 9% of the time (Multi)")
+SINGLE_BATTLE_TEST("Effect Spore causes poison 9% of the time (Traits)")
 {
     PASSES_RANDOMLY(9, 100, RNG_EFFECT_SPORE);
     GIVEN {
@@ -157,7 +158,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes poison 9% of the time (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Effect Spore causes paralysis 10% of the time (Multi)")
+SINGLE_BATTLE_TEST("Effect Spore causes paralysis 10% of the time (Traits)")
 {
     PASSES_RANDOMLY(10, 100, RNG_EFFECT_SPORE);
     GIVEN {
@@ -176,7 +177,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes paralysis 10% of the time (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Effect Spore causes sleep 11% of the time (Multi)")
+SINGLE_BATTLE_TEST("Effect Spore causes sleep 11% of the time (Traits)")
 {
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
@@ -195,7 +196,7 @@ SINGLE_BATTLE_TEST("Effect Spore causes sleep 11% of the time (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Effect Spore will check if it can inflict status onto attacker, not itself (Multi)")
+SINGLE_BATTLE_TEST("Effect Spore will check if it can inflict status onto attacker, not itself (Traits)")
 {
     PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
     GIVEN {
@@ -212,3 +213,4 @@ SINGLE_BATTLE_TEST("Effect Spore will check if it can inflict status onto attack
         STATUS_ICON(player, sleep: TRUE);
     }
 }
+#endif

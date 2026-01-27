@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transform
 SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming")
 {
     GIVEN {
-        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_POWER_HERB); }
+        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_DIVE); }
@@ -169,7 +169,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_ROCKY_HELMET); }
+        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Item(ITEM_ROCKY_HELMET); }
         OPPONENT(SPECIES_DRAGAPULT) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SURF); MOVE(opponent, MOVE_SCRATCH); }
@@ -201,8 +201,9 @@ SINGLE_BATTLE_TEST("Gulp Missile triggered by explosion doesn't freeze the game"
         TURN { MOVE(opponent, MOVE_SURF); MOVE(player, MOVE_EXPLOSION); }
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gulping form if max HP is over 1/2 (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gulping form if max HP is over 1/2 (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GULP_MISSILE); }
@@ -218,7 +219,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it tr
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gorging form if max HP is under 1/2 (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it transforms into Gorging form if max HP is under 1/2 (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(120); MaxHP(250); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GULP_MISSILE); }
@@ -234,7 +235,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant hits target with Surf it tr
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transforms into one of its forms (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transforms into one of its forms (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GULP_MISSILE); }
@@ -250,7 +251,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) If base Cramorant is under water it transform
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GULP_MISSILE); Item(ITEM_POWER_HERB); }
@@ -267,7 +268,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from tr
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant deal 1/4 of damage opposing mon if hit by a damaging move, Gulping also lowers defense (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant deal 1/4 of damage opposing mon if hit by a damaging move, Gulping also lowers defense (Traits)")
 {
     s16 gulpMissileDamage;
 
@@ -292,7 +293,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant deal 1/4 of damage oppo
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyzes the target if hit by a damaging move (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyzes the target if hit by a damaging move (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(120); MaxHP(250); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GULP_MISSILE); }
@@ -312,7 +313,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Cramorant in Gorging paralyzes the target if 
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) triggers even if the user is fainted by opposing mon (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) triggers even if the user is fainted by opposing mon (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CRAMORANT) { HP(1); MaxHP(250); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GULP_MISSILE); }
@@ -331,7 +332,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) triggers even if the user is fainted by oppos
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense but is prevented by stat reduction preventing abilities (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense but is prevented by stat reduction preventing abilities (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -357,7 +358,7 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense 
     }
 }
 
-SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense and still triggers other effects after (Multi)")
+SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense and still triggers other effects after (Traits)")
 {
     // Make sure attacker and target are correct after triggering the ability
     enum Ability ability;
@@ -388,63 +389,13 @@ SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense 
     }
 }
 
-SINGLE_BATTLE_TEST("Gulp Missile triggered by explosion doesn't freeze the game (Multi)")
+SINGLE_BATTLE_TEST("Gulp Missile triggered by explosion doesn't freeze the game (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CRAMORANT) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GULP_MISSILE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SURF); MOVE(player, MOVE_EXPLOSION); }
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("(Gulp Missile) Power Herb does not prevent Cramaront from transforming (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_PECHA_BERRY, ITEM_POWER_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_DIVE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, player);
-        MESSAGE("Cramorant became fully charged due to its Power Herb!");
-        ABILITY_POPUP(player, ABILITY_GULP_MISSILE);
-        HP_BAR(opponent);
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_CRAMORANT_GULPING);
-    }
-}
-
-SINGLE_BATTLE_TEST("(Gulp Missile) Transformed Cramorant Gulping lowers defense and still triggers other effects after (Multi)")
-{
-    // Make sure attacker and target are correct after triggering the ability
-    enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_INFILTRATOR; }
-    PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
-    GIVEN {
-        ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_CRAMORANT) { Ability(ABILITY_GULP_MISSILE); Items(ITEM_PECHA_BERRY, ITEM_ROCKY_HELMET); }
-        OPPONENT(SPECIES_DRAGAPULT) { Ability(ability); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SURF); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, player);
-        HP_BAR(opponent);
-        ABILITY_POPUP(player, ABILITY_GULP_MISSILE);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        HP_BAR(player);
-        ABILITY_POPUP(player, ABILITY_GULP_MISSILE);
-        HP_BAR(opponent);
-        if (ability == ABILITY_INFILTRATOR) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Dragapult's Defense fell!");
-        } else {
-            ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
-        }
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        HP_BAR(opponent);
     }
 }
 #endif

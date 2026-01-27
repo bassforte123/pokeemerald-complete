@@ -47,7 +47,8 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack 
 
 TO_DO_BATTLE_TEST("Anger Point triggers when a substitute takes the hit (Gen4)");
 
-SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit (Gen5+) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit (Gen5+) (Traits)")
 {
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
@@ -71,7 +72,7 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit
     }
 }
 
-SINGLE_BATTLE_TEST("Anger Point raises Attack stage to maximum after receiving a critical hit (Multi)")
+SINGLE_BATTLE_TEST("Anger Point raises Attack stage to maximum after receiving a critical hit (Traits)")
 {
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
@@ -90,7 +91,7 @@ SINGLE_BATTLE_TEST("Anger Point raises Attack stage to maximum after receiving a
     }
 }
 
-SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack stage (Multi)")
+SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack stage (Traits)")
 {
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
@@ -115,9 +116,9 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack 
     }
 }
 
-TO_DO_BATTLE_TEST("Anger Point triggers when a substitute takes the hit (Gen4) (Multi)");
+TO_DO_BATTLE_TEST("Anger Point triggers when a substitute takes the hit (Gen4) (Traits)");
 
-SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit (Gen5+) (Multi)")
+SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit (Gen5+) (Traits)")
 {
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
@@ -140,3 +141,4 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
+#endif

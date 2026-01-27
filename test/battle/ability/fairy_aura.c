@@ -107,7 +107,8 @@ DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times")
     }
 }
 
-DOUBLE_BATTLE_TEST("Fairy Aura increases the power of all Fairy-type attacks by 33% (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Fairy Aura increases the power of all Fairy-type attacks by 33% (Traits)")
 {
     s16 damage[8];
 
@@ -163,7 +164,7 @@ DOUBLE_BATTLE_TEST("Fairy Aura increases the power of all Fairy-type attacks by 
     }
 }
 
-DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times (Multi)")
+DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times (Traits)")
 {
     s16 damage[6];
 
@@ -211,3 +212,4 @@ DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times (Multi)")
         EXPECT_EQ(damage[5], damage[2]);
     }
 }
+#endif

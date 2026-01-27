@@ -254,7 +254,7 @@ SINGLE_BATTLE_TEST("Defiant activates before White Herb")
     PARAMETRIZE { move = MOVE_GROWL; }
 
     GIVEN {
-        PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); Items(ITEM_WHITE_HERB); }
+        PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); Item(ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -378,8 +378,9 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
     }
 }
+
 #if MAX_MON_TRAITS > 1
-DOUBLE_BATTLE_TEST("Defiant sharply raises player's Attack after Intimidate (Multi)")
+DOUBLE_BATTLE_TEST("Defiant sharply raises player's Attack after Intimidate (Traits)")
 {
     enum Ability abilityLeft, abilityRight;
 
@@ -437,7 +438,7 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises player's Attack after Intimidate (Mul
 }
 
 // Same as above, but for opponent.
-DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate (Multi)")
+DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate (Traits)")
 {
     enum Ability abilityLeft, abilityRight;
 
@@ -494,7 +495,7 @@ DOUBLE_BATTLE_TEST("Defiant sharply raises opponent's Attack after Intimidate (M
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed (Multi)")
+SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -517,7 +518,7 @@ SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Court Changed (Gen8) (Multi)")
+SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Court Changed (Gen8) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_DEFIANT_STICKY_WEB, GEN_8);
@@ -554,7 +555,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Co
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Changed (Gen9) (Multi)")
+SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Changed (Gen9) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_DEFIANT_STICKY_WEB, GEN_9);
@@ -588,7 +589,7 @@ SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Cha
     }
 }
 
-DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally Pokémon (Multi)")
+DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally Pokémon (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_ANGER_POINT); Innates(ABILITY_DEFIANT); }
@@ -624,7 +625,7 @@ DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally Pokémon (M
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant activates before White Herb (Multi)")
+SINGLE_BATTLE_TEST("Defiant activates before White Herb (Traits)")
 {
     u32 move;
 
@@ -663,7 +664,7 @@ SINGLE_BATTLE_TEST("Defiant activates before White Herb (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered (Multi)")
+SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
@@ -689,7 +690,7 @@ SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own stats (Multi)")
+SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own stats (Traits)")
 {
     u32 move;
 
@@ -724,7 +725,7 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own sta
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximum Attack (Multi)")
+SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximum Attack (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TICKLE) == EFFECT_TICKLE);
@@ -754,47 +755,6 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
 
     } THEN {
         EXPECT_EQ(player->statStages[STAT_ATK], MAX_STAT_STAGE);
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Defiant activates before White Herb (Multi)")
-{
-    u32 move;
-
-    PARAMETRIZE { move = MOVE_LEER; }
-    PARAMETRIZE { move = MOVE_GROWL; }
-
-    GIVEN {
-        PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); Items(ITEM_PECHA_BERRY, ITEM_WHITE_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, move); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-
-        ABILITY_POPUP(player, ABILITY_DEFIANT);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Mankey's Attack sharply rose!");
-
-        if (move == MOVE_LEER) {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Mankey returned its stats to normal using its White Herb!");
-        } else {
-            NONE_OF {
-                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-                MESSAGE("Mankey returned its stats to normal using its White Herb!");
-            }
-        }
-    } THEN {
-        if (move == MOVE_LEER) {
-            EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
-            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
-        } else {
-            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
-        }
     }
 }
 #endif

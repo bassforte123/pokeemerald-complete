@@ -101,7 +101,8 @@ SINGLE_BATTLE_TEST("Misty Terrain will fail if there is one already on the field
     }
 }
 
-SINGLE_BATTLE_TEST("Misty Terrain protects grounded battlers from non-volatile status conditions (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Misty Terrain protects grounded battlers from non-volatile status conditions (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -118,3 +119,4 @@ SINGLE_BATTLE_TEST("Misty Terrain protects grounded battlers from non-volatile s
         STATUS_ICON(opponent, badPoison: TRUE);
     }
 }
+#endif

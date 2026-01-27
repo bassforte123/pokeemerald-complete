@@ -126,7 +126,8 @@ SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage
     }
 }
 
-SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if it sets up Tailwind (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if it sets up Tailwind (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -143,7 +144,7 @@ SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if it sets up Tailwind
     }
 }
 
-DOUBLE_BATTLE_TEST("Wind Rider raises Attack by one stage if Tailwind is setup by its partner (Multi)")
+DOUBLE_BATTLE_TEST("Wind Rider raises Attack by one stage if Tailwind is setup by its partner (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -162,7 +163,7 @@ DOUBLE_BATTLE_TEST("Wind Rider raises Attack by one stage if Tailwind is setup b
     }
 }
 
-SINGLE_BATTLE_TEST("Wind Rider doesn't raise Attack if opponent sets up Tailwind (Multi)")
+SINGLE_BATTLE_TEST("Wind Rider doesn't raise Attack if opponent sets up Tailwind (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -181,7 +182,7 @@ SINGLE_BATTLE_TEST("Wind Rider doesn't raise Attack if opponent sets up Tailwind
     }
 }
 
-SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if switched into Tailwind on its side of the field (Multi)")
+SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if switched into Tailwind on its side of the field (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -201,7 +202,7 @@ SINGLE_BATTLE_TEST("Wind Rider raises Attack by one stage if switched into Tailw
     }
 }
 
-SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage (Multi)")
+SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage (Traits)")
 {
     GIVEN {
         ASSUME(IsWindMove(MOVE_GUST));
@@ -221,3 +222,4 @@ SINGLE_BATTLE_TEST("Wind Rider absorbs Wind moves and raises Attack by one stage
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }
+#endif

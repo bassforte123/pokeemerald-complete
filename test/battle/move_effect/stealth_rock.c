@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Stealth Rock damage on switch in based on typing")
 SINGLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button is triggered")
 {
     GIVEN {
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_METAPOD) { Item(ITEM_EJECT_BUTTON); }
         PLAYER(SPECIES_METAPOD);
         OPPONENT(SPECIES_JOLTEON);
     } WHEN {
@@ -56,8 +56,8 @@ SINGLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button 
 DOUBLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button is triggered in double battle")
 {
     GIVEN {
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_EJECT_BUTTON); }
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_METAPOD) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_METAPOD) { Item(ITEM_EJECT_BUTTON); }
         PLAYER(SPECIES_METAPOD);
         OPPONENT(SPECIES_JOLTEON);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -98,48 +98,5 @@ SINGLE_BATTLE_TEST("Stealth Rock damage terastalized mons with the correct amoun
         HP_BAR(player, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_GT(results[0].damage, results[1].damage);
-    }
-}
-
-SINGLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button is triggered (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_PECHA_BERRY, ITEM_EJECT_BUTTON); }
-        PLAYER(SPECIES_METAPOD);
-        OPPONENT(SPECIES_JOLTEON);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_STEALTH_ROCK); MOVE(player, MOVE_HARDEN); }
-        TURN { MOVE(opponent, MOVE_QUICK_ATTACK); MOVE(player, MOVE_HARDEN); SEND_OUT(player, 1); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, opponent);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HARDEN, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        SEND_IN_MESSAGE("Metapod");
-        HP_BAR(player);
-    } THEN {
-        EXPECT_EQ(opponent->hp, opponent->maxHP);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button is triggered in double battle (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_PECHA_BERRY, ITEM_EJECT_BUTTON); }
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_PECHA_BERRY, ITEM_EJECT_BUTTON); }
-        PLAYER(SPECIES_METAPOD);
-        OPPONENT(SPECIES_JOLTEON);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_STEALTH_ROCK); MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft); SEND_OUT(playerLeft, 2); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
-        SEND_IN_MESSAGE("Metapod");
-        HP_BAR(playerLeft);
-    } THEN {
-        EXPECT_EQ(opponentLeft->hp, opponentLeft->maxHP);
     }
 }

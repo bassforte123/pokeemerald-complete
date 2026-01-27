@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Shed Tail's HP cost can trigger a berry before the user swit
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SITRUS_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Shed Tail fails if there are no usable Pokémon left")
 SINGLE_BATTLE_TEST("Shed Tail's HP cost doesn't trigger effects that trigger on damage taken")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -125,8 +125,9 @@ SINGLE_BATTLE_TEST("Shed Tail creates a Substitute with 1/4 of user maximum heal
             NOT MESSAGE("Bulbasaur's substitute faded!");
     }
 }
+
 #if MAX_MON_TRAITS > 1
-AI_SINGLE_BATTLE_TEST("AI will use Shed Tail to pivot to another mon while in damage stalemate with player rather than hard switching (Multi)")
+AI_SINGLE_BATTLE_TEST("AI will use Shed Tail to pivot to another mon while in damage stalemate with player rather than hard switching (Traits)")
 {
     u32 aiFlags;
     PARAMETRIZE { aiFlags = 0; }
@@ -140,39 +141,6 @@ AI_SINGLE_BATTLE_TEST("AI will use Shed Tail to pivot to another mon while in da
         if (aiFlags == 0)
             TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_CONFUSION); }
         TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SHED_TAIL); }
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Shed Tail's HP cost can trigger a berry before the user switches out (Multi)")
-{
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].battleUsage == EFFECT_ITEM_RESTORE_HP);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SITRUS_BERRY); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SHED_TAIL); SEND_OUT(player, 1); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
-        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
-        SEND_IN_MESSAGE("Wynaut");
-    }
-}
-
-SINGLE_BATTLE_TEST("Shed Tail's HP cost doesn't trigger effects that trigger on damage taken (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SHED_TAIL); SEND_OUT(player, 1); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHED_TAIL, player);
-        MESSAGE("Wobbuffet shed its tail to create a decoy!");
-        NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }
 #endif

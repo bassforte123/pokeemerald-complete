@@ -82,7 +82,8 @@ SINGLE_BATTLE_TEST("Dauntless Shield activates when it's no longer effected by N
     }
 }
 
-SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -98,7 +99,7 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage every time it switches in (Gen8) (Multi)")
+SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage every time it switches in (Gen8) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_DAUNTLESS_SHIELD, GEN_8);
@@ -120,7 +121,7 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage every time it s
     }
 }
 
-SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage only once per battle (Gen 9+) (Multi)")
+SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage only once per battle (Gen 9+) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_DAUNTLESS_SHIELD, GEN_9);
@@ -143,3 +144,4 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage only once per b
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
     }
 }
+#endif

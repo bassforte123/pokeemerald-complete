@@ -171,7 +171,8 @@ DOUBLE_BATTLE_TEST("Order Up is always boosted by Sheer Force", s16 damage)
     }
 }
 
-DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form (Traits)")
 {
     u32 species = 0;
     PARAMETRIZE { species = SPECIES_TATSUGIRI_CURLY; }
@@ -219,7 +220,7 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form (Multi)"
     }
 }
 
-DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form even if Tatsugiri fainted inside Dondozo (Multi)")
+DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form even if Tatsugiri fainted inside Dondozo (Traits)")
 {
     u32 species = 0;
     PARAMETRIZE { species = SPECIES_TATSUGIRI_CURLY; }
@@ -271,7 +272,7 @@ DOUBLE_BATTLE_TEST("Order Up increases a stat based on Tatsugiri's form even if 
     }
 }
 
-DOUBLE_BATTLE_TEST("Order Up is boosted by Sheer Force without removing the stat boosting effect (Multi)")
+DOUBLE_BATTLE_TEST("Order Up is boosted by Sheer Force without removing the stat boosting effect (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
@@ -288,7 +289,7 @@ DOUBLE_BATTLE_TEST("Order Up is boosted by Sheer Force without removing the stat
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
     }
 }
-DOUBLE_BATTLE_TEST("Order Up is always boosted by Sheer Force (Multi)", s16 damage)
+DOUBLE_BATTLE_TEST("Order Up is always boosted by Sheer Force (Traits)", s16 damage)
 {
     u32 move;
     enum Ability ability;
@@ -321,3 +322,4 @@ DOUBLE_BATTLE_TEST("Order Up is always boosted by Sheer Force (Multi)", s16 dama
         EXPECT_MUL_EQ(results[0].damage, UQ_4_12(1.3), results[2].damage);
     }
 }
+#endif

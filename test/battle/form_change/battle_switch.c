@@ -21,7 +21,8 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon switching out")
     }
 }
 
-SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon switching out (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon switching out (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_AEGISLASH_SHIELD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_STANCE_CHANGE); }
@@ -40,3 +41,4 @@ SINGLE_BATTLE_TEST("Aegislash reverts to Shield Form upon switching out (Multi)"
         EXPECT_EQ(player->species, SPECIES_AEGISLASH_SHIELD);
     }
 }
+#endif

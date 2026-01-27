@@ -131,7 +131,8 @@ DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but do
     }
 }
 
-SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the Sp. Attack [Gen5+] (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the Sp. Attack [Gen5+] (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
@@ -161,7 +162,7 @@ SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the 
     }
 }
 
-DOUBLE_BATTLE_TEST("Lightning Rod forces single-target Electric-type moves to target the Pokémon with this Ability. (Multi)")
+DOUBLE_BATTLE_TEST("Lightning Rod forces single-target Electric-type moves to target the Pokémon with this Ability. (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
@@ -202,7 +203,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod forces single-target Electric-type moves to ta
     }
 }
 
-DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack (Multi)")
+DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
@@ -228,7 +229,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but does not redirect (Multi)")
+DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but does not redirect (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
@@ -245,3 +246,4 @@ DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but do
         HP_BAR(playerRight);
     }
 }
+#endif

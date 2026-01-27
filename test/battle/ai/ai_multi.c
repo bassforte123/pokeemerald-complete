@@ -2,7 +2,7 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
-AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (multi)")
+AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (multi battle)")
 {
     ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
@@ -63,7 +63,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
 }
 
 // Used to test EXPECT_MOVE only on partner
-AI_MULTI_BATTLE_TEST("AI partner makes sensible move selections in battle (multi)")
+AI_MULTI_BATTLE_TEST("AI partner makes sensible move selections in battle (multi battle)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -196,7 +196,7 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
         BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
         MULTI_PLAYER(SPECIES_WOBBUFFET) { }
         MULTI_PARTNER(SPECIES_WOBBUFFET) { }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Items(item);}
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Item(item);}
         MULTI_OPPONENT_A(SPECIES_VENUSAUR) { Moves(MOVE_GIGA_DRAIN); }
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
     } WHEN {
@@ -250,8 +250,9 @@ AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENE
         }
     }
 }
+
 #if MAX_MON_TRAITS > 1
-AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out 2 (Multi)")
+AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out 2 (Traits)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -263,29 +264,6 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN {MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
-    } THEN {
-        EXPECT_EQ(SPECIES_VENUSAUR, opponentLeft->species);
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out (Multi)")
-{
-    u32 item, move;
-    PARAMETRIZE {item = ITEM_EJECT_BUTTON; move = MOVE_TACKLE;}
-    PARAMETRIZE {item = ITEM_EJECT_PACK; move = MOVE_TAIL_WHIP;}
-    PARAMETRIZE {item = ITEM_NONE; move = MOVE_ROAR;}
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Items(ITEM_PECHA_BERRY, item);}
-        MULTI_OPPONENT_A(SPECIES_VENUSAUR) { Moves(MOVE_GIGA_DRAIN); }
-        MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
-    } WHEN {
-        TURN {MOVE(playerLeft, move, target: opponentLeft); }
     } THEN {
         EXPECT_EQ(SPECIES_VENUSAUR, opponentLeft->species);
     }

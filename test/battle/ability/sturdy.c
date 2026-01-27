@@ -65,7 +65,8 @@ SINGLE_BATTLE_TEST("Sturdy does not prevent non-OHKOs")
     }
 }
 
-SINGLE_BATTLE_TEST("Sturdy prevents OHKO moves (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Sturdy prevents OHKO moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
@@ -82,7 +83,7 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKO moves (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Sturdy prevents OHKOs (Multi)")
+SINGLE_BATTLE_TEST("Sturdy prevents OHKOs (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_ROCK_HEAD); Innates(ABILITY_STURDY); MaxHP(100); HP(100); }
@@ -97,7 +98,7 @@ SINGLE_BATTLE_TEST("Sturdy prevents OHKOs (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Sturdy does not prevent non-OHKOs (Multi)")
+SINGLE_BATTLE_TEST("Sturdy does not prevent non-OHKOs (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GEODUDE) { Ability(ABILITY_ROCK_HEAD); Innates(ABILITY_STURDY); MaxHP(100); HP(99); }
@@ -109,3 +110,4 @@ SINGLE_BATTLE_TEST("Sturdy does not prevent non-OHKOs (Multi)")
         HP_BAR(player, hp: 0);
     }
 }
+#endif

@@ -37,7 +37,7 @@ DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due t
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); Items(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WYNAUT) { HP(1); Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_SQUIRTLE) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -81,30 +81,3 @@ TO_DO_BATTLE_TEST("Endure doesn't trigger effects that require damage to be done
 TO_DO_BATTLE_TEST("Endure triggers effects that require damage to be done to the Pokémon (Gen 5+)"); // Eg. Rough Skin
 TO_DO_BATTLE_TEST("Endure doesn't protect against Future Sight (Gen 2-4)");
 TO_DO_BATTLE_TEST("Endure protects against Future Sight (Gen 5+)");
-
-DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due to Eject Button (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); Items(ITEM_PECHA_BERRY, ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_SQUIRTLE) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN {
-            MOVE(opponentRight, MOVE_ENDURE);
-            MOVE(playerLeft, MOVE_POUND, target: opponentRight);
-            SEND_OUT(opponentRight, 2);
-            MOVE(playerRight, MOVE_POUND, target: opponentRight);
-            SEND_OUT(opponentRight, 3);
-        }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
-        MESSAGE("The opposing Wynaut endured the hit!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
-        NOT MESSAGE("The opposing Squirtle endured the hit!");
-    }
-}

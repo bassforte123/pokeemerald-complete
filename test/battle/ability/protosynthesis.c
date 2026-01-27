@@ -138,7 +138,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Items(ITEM_BOOSTER_ENERGY); }
+        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN { SWITCH(player, 1); }
@@ -146,7 +146,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy")
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     } THEN {
-        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
     }
 }
 
@@ -154,8 +154,8 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Items(ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); Items(ITEM_BOOSTER_ENERGY); }
+        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); Item(ITEM_BOOSTER_ENERGY); }
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_TRANSFORM); }
     } SCENE {
@@ -164,8 +164,8 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_PROTOSYNTHESIS);
     } THEN {
-        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
-        EXPECT_EQ(opponent->items[0], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(opponent->item, ITEM_BOOSTER_ENERGY);
         EXPECT_EQ(opponent->ability, ABILITY_PROTOSYNTHESIS);
     }
 }
@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler")
 SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an Utility Umbrella")
 {
     GIVEN {
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Items(ITEM_UTILITY_UMBRELLA); }
+        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_UTILITY_UMBRELLA); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
     } WHEN {
         TURN { }
@@ -311,8 +311,9 @@ SINGLE_BATTLE_TEST("Protosynthesis retains its boosted stat after Neutralizing G
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTOSYNTHESIS); }
@@ -327,7 +328,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts the highest stat (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not both (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not both (Traits)")
 {
     u16 species;
     u32 move;
@@ -359,7 +360,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not b
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the duration of sunny day (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the duration of sunny day (Traits)")
 {
     u16 turns;
 
@@ -390,7 +391,7 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -406,7 +407,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed (Traits)")
 {
     u8 stats[] = {1, 1, 1, 1, 1};
 
@@ -439,7 +440,7 @@ SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -451,11 +452,11 @@ SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy (Multi
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     } THEN {
-        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -469,12 +470,12 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler (M
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
         NOT ABILITY_POPUP(opponent, ABILITY_PROTOSYNTHESIS);
     } THEN {
-        EXPECT_EQ(player->items[0], ITEM_BOOSTER_ENERGY);
-        EXPECT_EQ(opponent->items[0], ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(player->item, ITEM_BOOSTER_ENERGY);
+        EXPECT_EQ(opponent->item, ITEM_BOOSTER_ENERGY);
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an Utility Umbrella (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an Utility Umbrella (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTOSYNTHESIS); Item(ITEM_UTILITY_UMBRELLA); }
@@ -487,7 +488,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an 
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis doesn't activate if Cloud Nine/Air Lock is on the field (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis doesn't activate if Cloud Nine/Air Lock is on the field (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -506,7 +507,7 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate if Cloud Nine/Air Lock is on
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTOSYNTHESIS); }
@@ -524,7 +525,7 @@ SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis accounts for Sticky Web when determining the boosted stat (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis accounts for Sticky Web when determining the boosted stat (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
@@ -543,7 +544,7 @@ SINGLE_BATTLE_TEST("Protosynthesis accounts for Sticky Web when determining the 
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis keeps its initial boosted stat after Speed is lowered (Multi)")
+SINGLE_BATTLE_TEST("Protosynthesis keeps its initial boosted stat after Speed is lowered (Traits)")
 {
     s16 damage[2];
 
@@ -563,57 +564,6 @@ SINGLE_BATTLE_TEST("Protosynthesis keeps its initial boosted stat after Speed is
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
         EXPECT_EQ(damage[0], damage[1]);
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Protosynthesis activates in Sun before Booster Energy (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
-    } WHEN {
-        TURN { SWITCH(player, 1); }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
-        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-    } THEN {
-        EXPECT_EQ(player->items[1], ITEM_BOOSTER_ENERGY);
-    }
-}
-
-SINGLE_BATTLE_TEST("Protosynthesis doesn't activate for a transformed battler (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); Items(ITEM_PECHA_BERRY, ITEM_BOOSTER_ENERGY); }
-    } WHEN {
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_TRANSFORM); }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
-        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
-        NOT ABILITY_POPUP(opponent, ABILITY_PROTOSYNTHESIS);
-    } THEN {
-        EXPECT_EQ(player->items[1], ITEM_BOOSTER_ENERGY);
-        EXPECT_EQ(opponent->items[1], ITEM_BOOSTER_ENERGY);
-        EXPECT_EQ(opponent->ability, ABILITY_PROTOSYNTHESIS);
-    }
-}
-
-SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an Utility Umbrella (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Items(ITEM_PECHA_BERRY, ITEM_UTILITY_UMBRELLA); }
-        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
-        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     }
 }
 #endif

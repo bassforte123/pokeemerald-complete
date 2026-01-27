@@ -164,7 +164,8 @@ SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered and target is a
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't be lowered (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't be lowered (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -181,7 +182,7 @@ SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't be lowered
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered due to Clear Body and status can't be inflicted (Multi)")
+SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered due to Clear Body and status can't be inflicted (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
@@ -196,3 +197,4 @@ SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered due to Clear Bo
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_THREAD, player);
     }
 }
+#endif

@@ -88,7 +88,8 @@ SINGLE_BATTLE_TEST("Aura Wheel can be turned into a Normal-type move after Morpe
     }
 }
 
-SINGLE_BATTLE_TEST("Aura Wheel changes type depending on Morpeko's form (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Aura Wheel changes type depending on Morpeko's form (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MORPEKO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_HUNGER_SWITCH); }
@@ -107,7 +108,7 @@ SINGLE_BATTLE_TEST("Aura Wheel changes type depending on Morpeko's form (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Aura Wheel can be used by Pokémon transformed into Morpeko (Multi)")
+SINGLE_BATTLE_TEST("Aura Wheel can be used by Pokémon transformed into Morpeko (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MORPEKO) { Moves(MOVE_AURA_WHEEL, MOVE_CELEBRATE); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_HUNGER_SWITCH); }
@@ -119,7 +120,7 @@ SINGLE_BATTLE_TEST("Aura Wheel can be used by Pokémon transformed into Morpeko 
     }
 }
 
-SINGLE_BATTLE_TEST("Aura Wheel can be turned into a Normal-type move after Morpeko gains Normalize (Multi)")
+SINGLE_BATTLE_TEST("Aura Wheel can be turned into a Normal-type move after Morpeko gains Normalize (Traits)")
 {
     bool32 hangryMode;
     PARAMETRIZE { hangryMode = FALSE; }
@@ -144,3 +145,4 @@ SINGLE_BATTLE_TEST("Aura Wheel can be turned into a Normal-type move after Morpe
         }
     }
 }
+#endif

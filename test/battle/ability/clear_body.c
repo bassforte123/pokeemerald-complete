@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     GIVEN {
         ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(species) { Speed(6); Ability(ability); Items(heldItem); }
+        OPPONENT(species) { Speed(6); Ability(ability); Item(heldItem); }
     } WHEN {
         TURN { }
     } SCENE {
@@ -463,8 +463,9 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Pr
         }
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimidate (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimidate (Traits)")
 {
     s16 turnOneHit;
     s16 turnTwoHit;
@@ -501,7 +502,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat stage reduction from moves (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat stage reduction from moves (Traits)")
 {
     u16 move = MOVE_NONE;
     u32 j, species = SPECIES_NONE;
@@ -549,7 +550,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky Web effect on switchin (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky Web effect on switchin (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -578,7 +579,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent stat stage reduction from moves used by the user (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent stat stage reduction from moves used by the user (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -602,7 +603,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent s
     }
 }
 
-SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and White Smoke, but not Full Metal Body (Multi)")
+SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and White Smoke, but not Full Metal Body (Traits)")
 {
     u32 j, k, species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
@@ -663,7 +664,7 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from Iron Ball (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from Iron Ball (Traits)")
 {
     u32 j, species = SPECIES_NONE;
     enum Ability ability = ABILITY_NONE;
@@ -706,7 +707,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from paralysis (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from paralysis (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -743,7 +744,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Attack reduction from burn (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Attack reduction from burn (Traits)", s16 damage)
 {
     bool32 burned = FALSE;
     u32 species;
@@ -768,7 +769,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent A
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent receiving negative stat changes from Baton Pass (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent receiving negative stat changes from Baton Pass (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -799,7 +800,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent r
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Topsy-Turvy (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Topsy-Turvy (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -841,7 +842,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent T
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Spectral Thief from resetting positive stat changes (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Spectral Thief from resetting positive stat changes (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -887,7 +888,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Protect's secondary effects (Multi)")
+SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Protect's secondary effects (Traits)")
 {
     u32 move = MOVE_NONE;
     u32 species = SPECIES_NONE;
@@ -923,51 +924,6 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Pr
             } else if (move == MOVE_OBSTRUCT) {
                 MESSAGE("Wobbuffet's Defense harshly fell!");
             }
-        }
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from Iron Ball (Multi)")
-{
-    u32 j, species = SPECIES_NONE;
-    enum Ability ability = ABILITY_NONE;
-    u16 heldItem = ITEM_NONE;
-    static const u16 heldItems[] = {
-        ITEM_NONE,
-        ITEM_IRON_BALL,
-    };
-    for (j = 0; j < ARRAY_COUNT(heldItems); j++)
-    {
-        PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; heldItem = heldItems[j]; }
-        PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; heldItem = heldItems[j]; }
-        PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; heldItem = heldItems[j]; }
-    }
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_IRON_BALL].holdEffect == HOLD_EFFECT_IRON_BALL);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        OPPONENT(species) { Speed(6); Ability(ability); Items(ITEM_PECHA_BERRY, heldItem); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        NOT ABILITY_POPUP(opponent, ability);
-        if (heldItem == ITEM_IRON_BALL) {
-            MESSAGE("Wobbuffet used Celebrate!");
-            if (ability == ABILITY_FULL_METAL_BODY)
-                MESSAGE("The opposing Solgaleo used Celebrate!");
-            else if (ability == ABILITY_WHITE_SMOKE)
-                MESSAGE("The opposing Torkoal used Celebrate!");
-            else
-                MESSAGE("The opposing Metang used Celebrate!");
-        } else {
-            if (ability == ABILITY_FULL_METAL_BODY)
-                MESSAGE("The opposing Solgaleo used Celebrate!");
-            else if (ability == ABILITY_WHITE_SMOKE)
-                MESSAGE("The opposing Torkoal used Celebrate!");
-            else
-                MESSAGE("The opposing Metang used Celebrate!");
-            MESSAGE("Wobbuffet used Celebrate!");
         }
     }
 }

@@ -208,7 +208,8 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't 
     }
 }
 
-SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6) or 2 (Gen7+) when hit by a physical attack (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6) or 2 (Gen7+) when hit by a physical attack (Traits)")
 {
     u16 move, gen;
 
@@ -246,7 +247,7 @@ SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6
 }
 
 // Oddly specific, but it was a bug at one point.
-SINGLE_BATTLE_TEST("Weak Armor does not trigger when brought in by Dragon Tail and taking Stealth Rock damage (Multi)")
+SINGLE_BATTLE_TEST("Weak Armor does not trigger when brought in by Dragon Tail and taking Stealth Rock damage (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
@@ -276,7 +277,7 @@ SINGLE_BATTLE_TEST("Weak Armor does not trigger when brought in by Dragon Tail a
     }
 }
 
-SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower (Multi)")
+SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower (Traits)")
 {
     u16 gen;
 
@@ -312,7 +313,7 @@ SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower 
     }
 }
 
-SINGLE_BATTLE_TEST("Weak Armor still lowers Defense if Speed can't go any higher (Multi)")
+SINGLE_BATTLE_TEST("Weak Armor still lowers Defense if Speed can't go any higher (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_FLAME_BODY); Innates(ABILITY_WEAK_ARMOR); }
@@ -339,7 +340,7 @@ SINGLE_BATTLE_TEST("Weak Armor still lowers Defense if Speed can't go any higher
     }
 }
 
-SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Defense can't go any lower (Multi)")
+SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Defense can't go any lower (Traits)")
 {
     u32 j;
     GIVEN {
@@ -378,7 +379,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Defense can'
     }
 }
 
-SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't go any higher (Multi)")
+SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't go any higher (Traits)")
 {
     u32 j;
     GIVEN {
@@ -406,3 +407,4 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't 
         EXPECT_EQ(player->statStages[STAT_SPEED], MAX_STAT_STAGE);
     }
 }
+#endif

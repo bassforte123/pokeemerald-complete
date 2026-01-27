@@ -83,7 +83,8 @@ SINGLE_BATTLE_TEST("Mold Breaker ignores Inner Focus")
     }
 }
 
-SINGLE_BATTLE_TEST("Inner Focus doesn't prevent intimidate (Gen3-7) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Inner Focus doesn't prevent intimidate (Gen3-7) (Traits)")
 {
     s16 turnOneHit;
     s16 turnTwoHit;
@@ -110,7 +111,7 @@ SINGLE_BATTLE_TEST("Inner Focus doesn't prevent intimidate (Gen3-7) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Inner Focus prevents intimidate (Gen8+) (Multi)")
+SINGLE_BATTLE_TEST("Inner Focus prevents intimidate (Gen8+) (Traits)")
 {
     s16 turnOneHit;
     s16 turnTwoHit;
@@ -136,7 +137,7 @@ SINGLE_BATTLE_TEST("Inner Focus prevents intimidate (Gen8+) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Inner Focus prevents flinching (Multi)")
+SINGLE_BATTLE_TEST("Inner Focus prevents flinching (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -152,7 +153,7 @@ SINGLE_BATTLE_TEST("Inner Focus prevents flinching (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Mold Breaker ignores Inner Focus (Multi)")
+SINGLE_BATTLE_TEST("Mold Breaker ignores Inner Focus (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_PINSIR) { Ability(ABILITY_HYPER_CUTTER); Innates(ABILITY_MOLD_BREAKER); };
@@ -164,3 +165,4 @@ SINGLE_BATTLE_TEST("Mold Breaker ignores Inner Focus (Multi)")
         MESSAGE("The opposing Zubat flinched and couldn't move!");
     }
 }
+#endif

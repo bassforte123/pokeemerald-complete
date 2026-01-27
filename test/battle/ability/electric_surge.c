@@ -14,7 +14,8 @@ SINGLE_BATTLE_TEST("Electric Surge creates Electric Terrain when entering the ba
     }
 }
 
-SINGLE_BATTLE_TEST("Electric Surge creates Electric Terrain when entering the battle (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Electric Surge creates Electric Terrain when entering the battle (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ELECTRIC_SURGE); }
@@ -26,3 +27,4 @@ SINGLE_BATTLE_TEST("Electric Surge creates Electric Terrain when entering the ba
         MESSAGE("An electric current ran across the battlefield!");
     }
 }
+#endif

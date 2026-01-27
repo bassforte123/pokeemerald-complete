@@ -148,7 +148,8 @@ SINGLE_BATTLE_TEST("Steel Beam is not blocked by Damp")
     }
 }
 
-SINGLE_BATTLE_TEST("Steel Beam hp loss is prevented by Magic Guard (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Steel Beam hp loss is prevented by Magic Guard (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFAIRY) { Ability(ABILITY_CUTE_CHARM); Innates(ABILITY_MAGIC_GUARD); }
@@ -162,7 +163,7 @@ SINGLE_BATTLE_TEST("Steel Beam hp loss is prevented by Magic Guard (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Steel Beam is not blocked by Damp (Multi)")
+SINGLE_BATTLE_TEST("Steel Beam is not blocked by Damp (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
@@ -178,3 +179,4 @@ SINGLE_BATTLE_TEST("Steel Beam is not blocked by Damp (Multi)")
         }
     }
 }
+#endif

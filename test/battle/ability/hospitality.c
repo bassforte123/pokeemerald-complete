@@ -112,7 +112,8 @@ DOUBLE_BATTLE_TEST("Hospitality is blocked by Heal Block")
     }
 }
 
-DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health (Traits)")
 {
     s16 health;
 
@@ -141,7 +142,7 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health on switch-in (Multi)")
+DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health on switch-in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET)
@@ -160,7 +161,7 @@ DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health on switch-in 
     }
 }
 
-DOUBLE_BATTLE_TEST("Hospitality ignores Substitute (Multi)")
+DOUBLE_BATTLE_TEST("Hospitality ignores Substitute (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -180,7 +181,7 @@ DOUBLE_BATTLE_TEST("Hospitality ignores Substitute (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Hospitality does not trigger if there is no ally on the field (Multi)")
+DOUBLE_BATTLE_TEST("Hospitality does not trigger if there is no ally on the field (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1);  }
@@ -201,7 +202,7 @@ DOUBLE_BATTLE_TEST("Hospitality does not trigger if there is no ally on the fiel
     }
 }
 
-DOUBLE_BATTLE_TEST("Hospitality is blocked by Heal Block (Multi)")
+DOUBLE_BATTLE_TEST("Hospitality is blocked by Heal Block (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEAL_BLOCK) == EFFECT_HEAL_BLOCK);
@@ -222,3 +223,4 @@ DOUBLE_BATTLE_TEST("Hospitality is blocked by Heal Block (Multi)")
         }
     }
 }
+#endif

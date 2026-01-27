@@ -32,7 +32,8 @@ SINGLE_BATTLE_TEST("Rocky Payload increases Rock-type move damage", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Rocky Payload increases Rock-type move damage (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rocky Payload increases Rock-type move damage (Traits)", s16 damage)
 {
     u32 move;
     enum Ability ability;
@@ -62,3 +63,4 @@ SINGLE_BATTLE_TEST("Rocky Payload increases Rock-type move damage (Multi)", s16 
         EXPECT_MUL_EQ(results[4].damage, Q_4_12(1.5), results[5].damage); // Power Gem should be affected
     }
 }
+#endif

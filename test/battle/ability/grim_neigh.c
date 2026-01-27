@@ -104,7 +104,8 @@ DOUBLE_BATTLE_TEST("Grim Neigh does not increase damage done by the same move th
     }
 }
 
-DOUBLE_BATTLE_TEST("Grim Neigh raises Sp. Attack by one stage after directly causing a Pokemon to faint (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Grim Neigh raises Sp. Attack by one stage after directly causing a Pokemon to faint (Traits)")
 {
     u32 species = 0, abilityPopUp = 0;
     enum Ability ability = 0;
@@ -135,7 +136,7 @@ DOUBLE_BATTLE_TEST("Grim Neigh raises Sp. Attack by one stage after directly cau
     }
 }
 
-DOUBLE_BATTLE_TEST("Grim Neigh does not trigger if Pokemon faint to indirect damage or damage from other Pokemon (Multi)")
+DOUBLE_BATTLE_TEST("Grim Neigh does not trigger if Pokemon faint to indirect damage or damage from other Pokemon (Traits)")
 {
     u32 species = 0, abilityPopUp = 0;
     enum Ability ability = 0;
@@ -172,7 +173,7 @@ DOUBLE_BATTLE_TEST("Grim Neigh does not trigger if Pokemon faint to indirect dam
     }
 }
 
-DOUBLE_BATTLE_TEST("Grim Neigh does not increase damage done by the same move that causes another Pokemon to faint (Multi)")
+DOUBLE_BATTLE_TEST("Grim Neigh does not increase damage done by the same move that causes another Pokemon to faint (Traits)")
 {
     s16 damage[2];
     u32 species = 0, abilityPopUp = 0;
@@ -206,3 +207,4 @@ DOUBLE_BATTLE_TEST("Grim Neigh does not increase damage done by the same move th
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+#endif

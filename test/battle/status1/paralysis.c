@@ -106,7 +106,8 @@ SINGLE_BATTLE_TEST("Thunder Wave doesn't print an effectiveness message")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target (Multi)")
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -125,3 +126,4 @@ AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target (M
         TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_THUNDER_WAVE); } // Both get -10
     }
 }
+#endif

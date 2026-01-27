@@ -187,7 +187,8 @@ SINGLE_BATTLE_TEST("Mind Blown does not cause the user to lose HP if there is no
     }
 }
 
-SINGLE_BATTLE_TEST("Mind Blown hp loss is prevented by Magic Guard (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Mind Blown hp loss is prevented by Magic Guard (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFAIRY) { Ability(ABILITY_FRIEND_GUARD); Innates(ABILITY_MAGIC_GUARD); }
@@ -201,7 +202,7 @@ SINGLE_BATTLE_TEST("Mind Blown hp loss is prevented by Magic Guard (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Mind Blown is blocked by Damp (Multi)")
+SINGLE_BATTLE_TEST("Mind Blown is blocked by Damp (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
@@ -218,7 +219,7 @@ SINGLE_BATTLE_TEST("Mind Blown is blocked by Damp (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Mind Blown makes the user lose HP even if it is absorbed by Flash Fire (Multi)")
+SINGLE_BATTLE_TEST("Mind Blown makes the user lose HP even if it is absorbed by Flash Fire (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MIND_BLOWN) == TYPE_FIRE);
@@ -232,3 +233,4 @@ SINGLE_BATTLE_TEST("Mind Blown makes the user lose HP even if it is absorbed by 
         HP_BAR(player);
     }
 }
+#endif

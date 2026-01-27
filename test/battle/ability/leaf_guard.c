@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Tox
     GIVEN {
         ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Items(item); }
+        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
         ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Items(item); }
+        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Item(item); }
         OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUNNY_DAY); }
@@ -163,8 +163,9 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on
         HP_BAR(player);
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun (Multi)")
+SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun (Traits)")
 {
     u32 move;
     u16 status;
@@ -194,7 +195,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents non-volatile status conditions in sun (M
     }
 }
 
-SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if Cloud Nine/Air Lock is on the field (Multi)")
+SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if Cloud Nine/Air Lock is on the field (Traits)")
 {
     u32 move, species, ability;
     u16 status;
@@ -230,7 +231,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if
     }
 }
 
-SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Toxic Orb (Multi)")
+SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Toxic Orb (Traits)")
 {
     u32 item;
     PARAMETRIZE { item = ITEM_FLAME_ORB; }
@@ -252,7 +253,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Tox
     }
 }
 
-SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb and Toxic Orb if Cloud Nine/Air Lock is on the field (Multi)")
+SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb and Toxic Orb if Cloud Nine/Air Lock is on the field (Traits)")
 {
     u32 item, species, ability;
     PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
@@ -278,7 +279,7 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb 
     }
 }
 
-SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun (Gen 5+) (Multi)")
+SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun (Gen 5+) (Traits)")
 {
     u32 gen;
     PARAMETRIZE { gen = GEN_4; }
@@ -306,7 +307,7 @@ SINGLE_BATTLE_TEST("Leaf Guard prevents Rest during sun (Gen 5+) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on the field (Multi)")
+SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on the field (Traits)")
 {
     u32 species, ability;
     PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
@@ -324,56 +325,6 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on
         STATUS_ICON(player, sleep: TRUE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
         HP_BAR(player);
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Toxic Orb (Multi)")
-{
-    u32 item;
-    PARAMETRIZE { item = ITEM_FLAME_ORB; }
-    PARAMETRIZE { item = ITEM_TOXIC_ORB; }
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
-        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Items(ITEM_PECHA_BERRY, item); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUNNY_DAY); }
-    } SCENE {
-        if (item == ITEM_FLAME_ORB) {
-            NONE_OF { MESSAGE("Leafeon was burned!"); STATUS_ICON(player, burn: TRUE); }
-        }
-        else {
-            NONE_OF { MESSAGE("Leafeon was badly poisoned!"); STATUS_ICON(player, badPoison: TRUE); }
-        }
-    }
-}
-
-SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb and Toxic Orb if Cloud Nine/Air Lock is on the field (Multi)")
-{
-    u32 item, species, ability;
-    PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
-    PARAMETRIZE { item = ITEM_TOXIC_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
-    PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
-    PARAMETRIZE { item = ITEM_TOXIC_ORB; species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
-        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
-        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Items(ITEM_PECHA_BERRY, item); }
-        OPPONENT(species) { Ability(ability); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUNNY_DAY); }
-    } SCENE {
-        if (item == ITEM_FLAME_ORB) {
-            MESSAGE("Leafeon was burned!");
-            STATUS_ICON(player, burn: TRUE);
-        }
-        else {
-            MESSAGE("Leafeon was badly poisoned!");
-            STATUS_ICON(player, badPoison: TRUE);
-        }
     }
 }
 #endif

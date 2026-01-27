@@ -372,7 +372,7 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate")
 SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_AIR_BALLOON); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
@@ -442,8 +442,9 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Telekinesis
 // Transform does not copy the Roost "status" either.
 // Probably better as a Transform test.
 TO_DO_BATTLE_TEST("Roost's suppression does not prevent others who are Transforming into the user from copying its Flying-type");
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Roost suppresses the user's Flying-typing this turn, then restores it at the end of the turn (Multi)")
+SINGLE_BATTLE_TEST("Roost suppresses the user's Flying-typing this turn, then restores it at the end of the turn (Traits)")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SKARMORY, 0) == TYPE_STEEL);
@@ -470,7 +471,7 @@ SINGLE_BATTLE_TEST("Roost suppresses the user's Flying-typing this turn, then re
 }
 
 // Tested in ORAS
-DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this turn (Multi)")
+DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this turn (Traits)")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_KECLEON, 0) != TYPE_FLYING);
@@ -497,7 +498,7 @@ DOUBLE_BATTLE_TEST("Roost suppresses the user's not-yet-aquired Flying-type this
 }
 
 // Tested in ORAS
-SINGLE_BATTLE_TEST("Roost prevents a Flying-type user from being protected by Delta Stream (Multi)")
+SINGLE_BATTLE_TEST("Roost prevents a Flying-type user from being protected by Delta Stream (Traits)")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_RAYQUAZA, 1) == TYPE_FLYING);
@@ -515,7 +516,7 @@ SINGLE_BATTLE_TEST("Roost prevents a Flying-type user from being protected by De
 }
 
 // https://www.smogon.com/forums/threads/sword-shield-battle-mechanics-research.3655528/page-64#post-9244179
-SINGLE_BATTLE_TEST("Roost's effect is lifted after Grassy Terrain's healing (Multi)")
+SINGLE_BATTLE_TEST("Roost's effect is lifted after Grassy Terrain's healing (Traits)")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_SWELLOW, 0) == TYPE_NORMAL);
@@ -533,7 +534,7 @@ SINGLE_BATTLE_TEST("Roost's effect is lifted after Grassy Terrain's healing (Mul
     }
 }
 
-SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate (Multi)")
+SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_FLYGON) { HP(1); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
@@ -544,27 +545,6 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate (M
         MESSAGE("Flygon used Roost!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
         MESSAGE("Flygon's HP was restored.");
-        MESSAGE("The opposing Wobbuffet used Earthquake!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
-            HP_BAR(player);
-        }
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Roost!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
-        MESSAGE("Wobbuffet's HP was restored.");
         MESSAGE("The opposing Wobbuffet used Earthquake!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);

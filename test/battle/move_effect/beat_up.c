@@ -164,7 +164,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+
 
     GIVEN {
         WITH_CONFIG(CONFIG_BEAT_UP, GEN_5);
-        PLAYER(SPECIES_AZUMARILL) { Ability(ability); Items(item); Moves(MOVE_BEAT_UP); }
+        PLAYER(SPECIES_AZUMARILL) { Ability(ability); Item(item); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -380,7 +380,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores Choice Band", s16 damage)
 
     GIVEN {
         WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
-        PLAYER(SPECIES_URSARING) { Items(item); Moves(MOVE_BEAT_UP); }
+        PLAYER(SPECIES_URSARING) { Item(item); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -394,57 +394,8 @@ SINGLE_BATTLE_TEST("Beat Up ignores Choice Band", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+) (Multi)", s16 damage)
-{
-    u16 ability;
-    u16 item;
-
-    PARAMETRIZE { ability = ABILITY_THICK_FAT;   item = ITEM_NONE; }
-    PARAMETRIZE { ability = ABILITY_HUGE_POWER;  item = ITEM_NONE; }
-    PARAMETRIZE { ability = ABILITY_THICK_FAT;   item = ITEM_CHOICE_BAND; }
-
-    GIVEN {
-        WITH_CONFIG(CONFIG_BEAT_UP, GEN_5);
-        PLAYER(SPECIES_AZUMARILL) { Ability(ability); Items(ITEM_GREAT_BALL, item); Moves(MOVE_BEAT_UP); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_BEAT_UP); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } THEN {
-        if (i == 1)
-            EXPECT_GT(results[i].damage, results[0].damage);
-        if (i == 2)
-            EXPECT_GT(results[i].damage, results[0].damage);
-    }
-}
-
-SINGLE_BATTLE_TEST("Beat Up ignores Choice Band (Multi)", s16 damage)
-{
-    u16 item;
-
-    PARAMETRIZE { item = ITEM_NONE; }
-    PARAMETRIZE { item = ITEM_CHOICE_BAND; }
-
-    GIVEN {
-        WITH_CONFIG(CONFIG_BEAT_UP, GEN_3);
-        PLAYER(SPECIES_URSARING) { Items(ITEM_GREAT_BALL, item); Moves(MOVE_BEAT_UP); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_BEAT_UP); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } THEN {
-        if (item == ITEM_CHOICE_BAND)
-            EXPECT_EQ(results[i].damage, results[0].damage);
-    }
-}
-
-SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -463,7 +414,7 @@ SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+) (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+) (Traits)", s16 damage)
 {
     u16 ability;
     u16 item;
@@ -490,7 +441,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up ignores Huge Power (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up ignores Huge Power (Traits)", s16 damage)
 {
     u16 ability;
 
@@ -512,3 +463,4 @@ SINGLE_BATTLE_TEST("Beat Up ignores Huge Power (Multi)", s16 damage)
             EXPECT_EQ(results[i].damage, results[0].damage);
     }
 }
+#endif

@@ -150,5 +150,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_PREDICT_SWITCH: AI would normally choose predicti
     }
 }
 
-TO_DO_BATTLE_TEST("AI_FLAG_PREDICT_SWITCH: Considers ShouldSwitch and GetMostSuitableMonToSwitchInto from player's perspective (Multi)")
-TO_DO_BATTLE_TEST("AI_FLAG_PREDICT_SWITCH: AI would switch out in trapper-from-player's-perspective case (Multi)")
+#if MAX_MON_TRAITS > 1
+TO_DO_BATTLE_TEST("AI_FLAG_PREDICT_SWITCH: Considers ShouldSwitch and GetMostSuitableMonToSwitchInto from player's perspective (Traits)")
+TO_DO_BATTLE_TEST("AI_FLAG_PREDICT_SWITCH: AI would switch out in trapper-from-player's-perspective case (Traits)")
+#endif

@@ -69,7 +69,8 @@ AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep (Multi)")
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -87,3 +88,4 @@ AI_SINGLE_BATTLE_TEST("AI avoids hypnosis when it can not put target to sleep (M
         TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_HYPNOSIS); } // Both get -10
     }
 }
+#endif

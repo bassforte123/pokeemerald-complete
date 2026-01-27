@@ -157,7 +157,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
@@ -166,7 +166,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
     } THEN {
-        EXPECT(opponentLeft->items[0] == ITEM_NONE);
+        EXPECT(opponentLeft->item == ITEM_NONE);
         EXPECT(playerRight->species == SPECIES_DONDOZO);
     }
 
@@ -456,7 +456,8 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail")
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander will activate once Dondozo switches in (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Commander will activate once Dondozo switches in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -472,7 +473,7 @@ DOUBLE_BATTLE_TEST("Commander will activate once Dondozo switches in (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander increases all stats by 2 stages once it is triggered (Multi)")
+DOUBLE_BATTLE_TEST("Commander increases all stats by 2 stages once it is triggered (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
@@ -493,7 +494,7 @@ DOUBLE_BATTLE_TEST("Commander increases all stats by 2 stages once it is trigger
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri avoids moves targetted towards it (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri avoids moves targetted towards it (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
@@ -511,7 +512,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri avoids moves targetted towards it (Multi
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a field effect while inside Dondozo (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a field effect while inside Dondozo (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
@@ -530,7 +531,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a f
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take poison damage if while inside Dondozo (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take poison damage if while inside Dondozo (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); Status1(STATUS1_POISON); }
@@ -546,7 +547,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take poison damage if while i
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri still avoids moves even when the attacker has No Guard (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri still avoids moves even when the attacker has No Guard (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
@@ -563,7 +564,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri still avoids moves even when the attacke
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affected by Commander until it faints and revived (Multi)")
+DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affected by Commander until it faints and revived (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -585,7 +586,7 @@ DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affect
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or Tatsugiri while it's active (Multi)")
+DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or Tatsugiri while it's active (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
@@ -606,7 +607,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is active (Multi)")
+DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is active (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
@@ -621,13 +622,13 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
     } THEN {
-        EXPECT(opponentLeft->items[0] == ITEM_NONE);
+        EXPECT(opponentLeft->item == ITEM_NONE);
         EXPECT(playerRight->species == SPECIES_DONDOZO);
     }
 
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move if Dondozo faints (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move if Dondozo faints (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
@@ -648,7 +649,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move i
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri takes no damage from multi-target damaging moves (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri takes no damage from multi-target damaging moves (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -674,7 +675,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri takes no damage from multi-target damagi
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander doesn't prevent Transform from working on a Commander Tatsugiri (Multi)")
+DOUBLE_BATTLE_TEST("Commander doesn't prevent Transform from working on a Commander Tatsugiri (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_DONDOZO);
@@ -690,7 +691,7 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Transform from working on a Comman
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Commander Tatsugiri (Multi)")
+DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Commander Tatsugiri (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_DONDOZO);
@@ -709,7 +710,7 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Command
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Perish Song while controlling Dondozo (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Perish Song while controlling Dondozo (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_DONDOZO);
@@ -739,7 +740,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Perish Song while c
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Haze while controlling Dondozo (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Haze while controlling Dondozo (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -760,7 +761,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is still affected by Haze while controll
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot) (Multi)")
+DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot) (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
@@ -783,7 +784,7 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Left Slot) (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot) (Multi)")
+DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot) (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
@@ -806,7 +807,7 @@ DOUBLE_BATTLE_TEST("Commander Attacker is kept (Dondozo Right Slot) (Multi)")
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri does not attack if Dondozo faints the same turn it's switched in (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri does not attack if Dondozo faints the same turn it's switched in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -832,7 +833,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not attack if Dondozo faints the sa
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when a commanded Dondozo faints (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when a commanded Dondozo faints (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_DARTS) == EFFECT_DRAGON_DARTS);
@@ -851,7 +852,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when a 
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when commanding Dondozo (Multi)")
+DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when commanding Dondozo (Traits)")
 {
     bool32 targetPlayerRight;
     PARAMETRIZE { targetPlayerRight = TRUE; }
@@ -877,7 +878,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri does not get hit by Dragon Darts when co
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander will not activate if Dondozo fainted right before Tatsugiri came in (Multi)")
+DOUBLE_BATTLE_TEST("Commander will not activate if Dondozo fainted right before Tatsugiri came in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -893,7 +894,7 @@ DOUBLE_BATTLE_TEST("Commander will not activate if Dondozo fainted right before 
     }
 }
 
-DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail (Multi)")
+DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
@@ -910,23 +911,4 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail (Mu
         NOT MESSAGE("Wobbuffet was dragged out!");
     }
 }
-
-DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is active (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
-        PLAYER(SPECIES_DONDOZO);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
-    } SCENE {
-        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
-        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-    } THEN {
-        EXPECT(opponentLeft->items[1] == ITEM_NONE);
-        EXPECT(playerRight->species == SPECIES_DONDOZO);
-    }
-}
+#endif

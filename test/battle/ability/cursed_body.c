@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle")
         ASSUME(GetItemHoldEffect(ITEM_CHOICE_SCARF) == HOLD_EFFECT_CHOICE_SCARF);
         ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
         ASSUME(GetMoveCategory(MOVE_CELEBRATE) == DAMAGE_CATEGORY_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_CHOICE_SCARF); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TAUNT); }
@@ -90,8 +90,9 @@ SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution")
 TO_DO_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move")
 TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move") // Rotom Powers can restore Z-Moves
 TO_DO_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Cursed Body triggers 30% of the time (Multi)")
+SINGLE_BATTLE_TEST("Cursed Body triggers 30% of the time (Traits)")
 {
     PASSES_RANDOMLY(3, 10, RNG_CURSED_BODY);
     GIVEN {
@@ -106,7 +107,7 @@ SINGLE_BATTLE_TEST("Cursed Body triggers 30% of the time (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Multi)")
+SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Traits)")
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_CHOICE_SCARF) == HOLD_EFFECT_CHOICE_SCARF);
@@ -126,7 +127,7 @@ SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Cursed Body can trigger if the attacker is behind a Substitute (Multi)")
+SINGLE_BATTLE_TEST("Cursed Body can trigger if the attacker is behind a Substitute (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
@@ -142,7 +143,7 @@ SINGLE_BATTLE_TEST("Cursed Body can trigger if the attacker is behind a Substitu
     }
 }
 
-SINGLE_BATTLE_TEST("Cursed Body cannot trigger if the target is behind a Substitute (Multi)")
+SINGLE_BATTLE_TEST("Cursed Body cannot trigger if the target is behind a Substitute (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
@@ -160,7 +161,7 @@ SINGLE_BATTLE_TEST("Cursed Body cannot trigger if the target is behind a Substit
     }
 }
 
-SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution (Multi)")
+SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ROCK_BLAST) == EFFECT_MULTI_HIT);
@@ -177,29 +178,7 @@ SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution (
     }
 }
 
-TO_DO_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move (Multi)")
-TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move (Multi)") // Rotom Powers can restore Z-Moves
-TO_DO_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move (Multi)")
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Multi)")
-{
-    GIVEN {
-        ASSUME(GetItemHoldEffect(ITEM_CHOICE_SCARF) == HOLD_EFFECT_CHOICE_SCARF);
-        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
-        ASSUME(GetMoveCategory(MOVE_CELEBRATE) == DAMAGE_CATEGORY_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CHOICE_SCARF); Moves(MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TAUNT); }
-        TURN { FORCED_MOVE(player); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
-        NONE_OF {
-            ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
-            MESSAGE("Wobbuffet's Struggle was disabled by the opposing Frillish's Cursed Body!");
-        }
-    }
-}
+TO_DO_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move (Traits)")
+TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move (Traits)") // Rotom Powers can restore Z-Moves
+TO_DO_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move (Traits)")
 #endif

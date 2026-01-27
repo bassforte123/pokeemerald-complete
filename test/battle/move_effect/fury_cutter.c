@@ -65,7 +65,8 @@ SINGLE_BATTLE_TEST("Fury Cutter counter is the same for both hits of Parental Bo
     }
 }
 
-SINGLE_BATTLE_TEST("Fury Cutter counter is the same for both hits of Parental Bond (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Fury Cutter counter is the same for both hits of Parental Bond (Traits)")
 {
     s16 damage[4];
 
@@ -88,3 +89,4 @@ SINGLE_BATTLE_TEST("Fury Cutter counter is the same for both hits of Parental Bo
         EXPECT_NE(damage[0], damage[2]);
     }
 }
+#endif

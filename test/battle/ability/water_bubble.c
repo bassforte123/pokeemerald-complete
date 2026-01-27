@@ -20,7 +20,8 @@ SINGLE_BATTLE_TEST("Water Bubble prevents burn from Will-o-Wisp")
     }
 }
 
-SINGLE_BATTLE_TEST("Water Bubble prevents burn from Will-o-Wisp (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Water Bubble prevents burn from Will-o-Wisp (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
@@ -38,3 +39,4 @@ SINGLE_BATTLE_TEST("Water Bubble prevents burn from Will-o-Wisp (Multi)")
         }
     }
 }
+#endif

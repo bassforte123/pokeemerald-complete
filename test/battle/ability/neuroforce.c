@@ -24,7 +24,8 @@ SINGLE_BATTLE_TEST("Neuroforce increases the strength of super-effective moves b
     }
 }
 
-SINGLE_BATTLE_TEST("Neuroforce increases the strength of super-effective moves by 25% (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Neuroforce increases the strength of super-effective moves by 25% (Traits)", s16 damage)
 {
     u32 move;
     enum Ability ability;
@@ -46,3 +47,4 @@ SINGLE_BATTLE_TEST("Neuroforce increases the strength of super-effective moves b
         EXPECT_EQ(results[2].damage, results[3].damage); // Neuroforce doesn't boost the power of other moves
     }
 }
+#endif

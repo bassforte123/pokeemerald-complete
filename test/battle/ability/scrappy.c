@@ -93,7 +93,8 @@ SINGLE_BATTLE_TEST("Scrappy doesn't bypass a Ghost-type's Wonder Guard")
     }
 }
 
-SINGLE_BATTLE_TEST("Scrappy doesn't prevent Intimidate (Gen4-7) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Scrappy doesn't prevent Intimidate (Gen4-7) (Traits)")
 {
     s16 turnOneHit;
     s16 turnTwoHit;
@@ -121,7 +122,7 @@ SINGLE_BATTLE_TEST("Scrappy doesn't prevent Intimidate (Gen4-7) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Scrappy prevents Intimidate (Gen8+) (Multi)")
+SINGLE_BATTLE_TEST("Scrappy prevents Intimidate (Gen8+) (Traits)")
 {
     s16 turnOneHit;
     s16 turnTwoHit;
@@ -147,7 +148,7 @@ SINGLE_BATTLE_TEST("Scrappy prevents Intimidate (Gen8+) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Scrappy allows to hit Ghost-type Pokémon with Normal- and Fighting-type moves (Multi)")
+SINGLE_BATTLE_TEST("Scrappy allows to hit Ghost-type Pokémon with Normal- and Fighting-type moves (Traits)")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
@@ -164,7 +165,7 @@ SINGLE_BATTLE_TEST("Scrappy allows to hit Ghost-type Pokémon with Normal- and F
     }
 }
 
-SINGLE_BATTLE_TEST("Scrappy doesn't bypass a Ghost-type's Wonder Guard (Multi)")
+SINGLE_BATTLE_TEST("Scrappy doesn't bypass a Ghost-type's Wonder Guard (Traits)")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
@@ -184,3 +185,4 @@ SINGLE_BATTLE_TEST("Scrappy doesn't bypass a Ghost-type's Wonder Guard (Multi)")
         MESSAGE("The opposing Shedinja avoided damage with Wonder Guard!");
     }
 }
+#endif

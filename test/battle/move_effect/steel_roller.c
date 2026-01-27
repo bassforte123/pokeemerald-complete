@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during atta
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_STEEL_ROLLER); }
     } SCENE {
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during atta
 SINGLE_BATTLE_TEST("Steel Roller removes Terrain if user is switched out due to Red Card")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
@@ -71,35 +71,5 @@ AI_SINGLE_BATTLE_TEST("Steel Roller wont be chosen by AI if there is no terrain 
         } else {
             TURN { EXPECT_MOVE(opponent, MOVE_ICE_SHARD); }
         }
-    }
-}
-
-SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during attack execution (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_LIFE_ORB); HP(1); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_STEEL_ROLLER); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_ROLLER, opponent);
-        MESSAGE("The electricity disappeared from the battlefield.");
-    }
-}
-
-SINGLE_BATTLE_TEST("Steel Roller removes Terrain if user is switched out due to Red Card (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT);
-    } WHEN {
-        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_STEEL_ROLLER); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEEL_ROLLER, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("The electricity disappeared from the battlefield.");
     }
 }

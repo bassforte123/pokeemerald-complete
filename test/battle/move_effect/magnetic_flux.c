@@ -16,7 +16,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux (Multi)")
+#if MAX_MON_TRAITS > 1
+AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux (Traits)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
@@ -28,3 +29,4 @@ AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux (Multi)")
         TURN {  EXPECT_MOVE(opponentLeft, MOVE_MAGNETIC_FLUX); }
     }
 }
+#endif

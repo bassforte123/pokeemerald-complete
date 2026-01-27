@@ -170,7 +170,8 @@ DOUBLE_BATTLE_TEST("Hazards can trigger Emergency Exit and hazards still activat
     }
 }
 
-SINGLE_BATTLE_TEST("Hazards can trigger Emergency Exit and other hazards don't activate (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Hazards can trigger Emergency Exit and other hazards don't activate (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -202,7 +203,7 @@ SINGLE_BATTLE_TEST("Hazards can trigger Emergency Exit and other hazards don't a
     }
 }
 
-DOUBLE_BATTLE_TEST("Hazards can trigger Emergency Exit and hazards still activate for other battlers (Multi)")
+DOUBLE_BATTLE_TEST("Hazards can trigger Emergency Exit and hazards still activate for other battlers (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
@@ -243,3 +244,4 @@ DOUBLE_BATTLE_TEST("Hazards can trigger Emergency Exit and hazards still activat
         MESSAGE("Wynaut was hurt by the spikes!");
     }
 }
+#endif

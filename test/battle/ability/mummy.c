@@ -99,7 +99,8 @@ SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be suppressed")
     }
 }
 
-SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on contact (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on contact (Traits)")
 {
     u32 move, species;
     enum Ability ability;
@@ -134,7 +135,7 @@ SINGLE_BATTLE_TEST("Mummy/Lingering Aroma replace the attacker's ability on cont
     }
 }
 
-SINGLE_BATTLE_TEST("Mummy and Lingering Aroma don't replace each other (Multi)")
+SINGLE_BATTLE_TEST("Mummy and Lingering Aroma don't replace each other (Traits)")
 {
     enum Ability ability1, species1, ability2, species2, innate1, innate2;
 
@@ -181,7 +182,7 @@ SINGLE_BATTLE_TEST("Mummy and Lingering Aroma don't replace each other (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be suppressed (Multi)")
+SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be suppressed (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -215,3 +216,4 @@ SINGLE_BATTLE_TEST("Mummy doesn't replace abilities that can't be suppressed (Mu
         }
     }
 }
+#endif

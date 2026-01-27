@@ -33,7 +33,8 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up")
     }
 }
 
-SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up (Traits)")
 {
     enum Ability ability;
 
@@ -58,3 +59,4 @@ SINGLE_BATTLE_TEST("Solar Beam does not need a charging turn if Sun is up (Multi
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SOLAR_BEAM, player);
     }
 }
+#endif

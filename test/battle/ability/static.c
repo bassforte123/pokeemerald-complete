@@ -63,7 +63,8 @@ SINGLE_BATTLE_TEST("Static triggers even if attacker is under substitute")
     }
 }
 
-SINGLE_BATTLE_TEST("Static inflicts paralysis on contact (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Static inflicts paralysis on contact (Traits)")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_SCRATCH; }
@@ -92,7 +93,7 @@ SINGLE_BATTLE_TEST("Static inflicts paralysis on contact (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Static triggers 30% of the time (Multi)")
+SINGLE_BATTLE_TEST("Static triggers 30% of the time (Traits)")
 {
     PASSES_RANDOMLY(3, 10, RNG_STATIC);
     GIVEN {
@@ -110,7 +111,7 @@ SINGLE_BATTLE_TEST("Static triggers 30% of the time (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Static triggers even if attacker is under substitute (Multi)")
+SINGLE_BATTLE_TEST("Static triggers even if attacker is under substitute (Traits)")
 {
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_TACKLE));
@@ -124,3 +125,4 @@ SINGLE_BATTLE_TEST("Static triggers even if attacker is under substitute (Multi)
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
+#endif

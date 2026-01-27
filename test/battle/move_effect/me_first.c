@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Me First: If a Consecutively Executed Move is copied, the bo
 SINGLE_BATTLE_TEST("Me First can be selected if users holds Assault Vest")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Items(ITEM_ASSAULT_VEST); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_ASSAULT_VEST); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {
         TURN { MOVE(player, MOVE_ME_FIRST); MOVE(opponent, MOVE_TACKLE); }
@@ -100,15 +100,3 @@ SINGLE_BATTLE_TEST("Me Frist deducts power points from itself, not the copied mo
 }
 
 // TO_DO_BATTLE_TEST: Not everything has been tested
-
-SINGLE_BATTLE_TEST("Me First can be selected if users holds Assault Vest (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Items(ITEM_PECHA_BERRY, ITEM_ASSAULT_VEST); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_ME_FIRST); MOVE(opponent, MOVE_TACKLE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, player);
-    }
-}

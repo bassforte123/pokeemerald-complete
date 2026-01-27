@@ -48,7 +48,8 @@ SINGLE_BATTLE_TEST("Earth Eater activates on status moves")
     }
 }
 
-SINGLE_BATTLE_TEST("Earth Eater heals 25% when hit by ground type moves (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Earth Eater heals 25% when hit by ground type moves (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
@@ -63,7 +64,7 @@ SINGLE_BATTLE_TEST("Earth Eater heals 25% when hit by ground type moves (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Earth Eater does not activate if protected (Multi)")
+SINGLE_BATTLE_TEST("Earth Eater does not activate if protected (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MUD_SLAP) == TYPE_GROUND);
@@ -94,3 +95,4 @@ SINGLE_BATTLE_TEST("Earth Eater activates on status moves (Multi)")
         MESSAGE("Orthworm restored HP using its Earth Eater!");
     }
 }
+#endif

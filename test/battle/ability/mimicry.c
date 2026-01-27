@@ -125,7 +125,8 @@ DOUBLE_BATTLE_TEST("Mimicry triggers after Skill Swap")
     }
 }
 
-SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain (Traits)")
 {
     u32 j;
     u32 terrainMove = MOVE_NONE;
@@ -154,7 +155,7 @@ SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed by Steel Roller and Ice Spinner (Multi)")
+SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed by Steel Roller and Ice Spinner (Traits)")
 {
     u32 j;
     u32 terrainMove = MOVE_NONE;
@@ -187,7 +188,7 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
     }
 }
 
-DOUBLE_BATTLE_TEST("Mimicry can trigger multiple times in a turn (Multi)")
+DOUBLE_BATTLE_TEST("Mimicry can trigger multiple times in a turn (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_STUNFISK_GALAR) { Speed(50); Ability(ABILITY_STATIC); Innates(ABILITY_MIMICRY); }
@@ -210,3 +211,4 @@ DOUBLE_BATTLE_TEST("Mimicry can trigger multiple times in a turn (Multi)")
         EXPECT_EQ(gBattleMons[0].types[2], TYPE_MYSTERY);
     }
 }
+#endif

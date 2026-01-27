@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
-        PLAYER(SPECIES_POLITOED) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DRIZZLE); Items(ITEM_DAMP_ROCK); }
+        PLAYER(SPECIES_POLITOED) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DRIZZLE); Item(ITEM_DAMP_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
@@ -103,8 +103,9 @@ SINGLE_BATTLE_TEST("Drizzle sets up permanent rain (Gen3-5)")
         NOT MESSAGE("The rain stopped.");
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Drizzle summons rain (Multi)", s16 damage)
+SINGLE_BATTLE_TEST("Drizzle summons rain (Traits)", s16 damage)
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_DRIZZLE; }
@@ -126,7 +127,7 @@ SINGLE_BATTLE_TEST("Drizzle summons rain (Multi)", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Drizzle sets up rain for 5 turns (Gen6+) (Multi)")
+SINGLE_BATTLE_TEST("Drizzle sets up rain for 5 turns (Gen6+) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
@@ -148,7 +149,7 @@ SINGLE_BATTLE_TEST("Drizzle sets up rain for 5 turns (Gen6+) (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+) (Multi)")
+SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
@@ -176,7 +177,7 @@ SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+) (Mul
     }
 }
 
-SINGLE_BATTLE_TEST("Drizzle sets up permanent rain (Gen3-5) (Multi)")
+SINGLE_BATTLE_TEST("Drizzle sets up permanent rain (Gen3-5) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_3);
@@ -206,34 +207,5 @@ SINGLE_BATTLE_TEST("Drizzle sets up permanent rain (Gen3-5) (Multi)")
         NOT MESSAGE("The rain stopped.");
     }
 }
-#endif
 
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Drizzle sets up rain for 8 turns with Damp Rock (Gen6+) (Multi)")
-{
-    GIVEN {
-        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
-        PLAYER(SPECIES_POLITOED) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DRIZZLE); Items(ITEM_PECHA_BERRY, ITEM_DAMP_ROCK); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_DRIZZLE);
-        MESSAGE("Rain continues to fall.");
-        MESSAGE("Rain continues to fall.");
-        MESSAGE("Rain continues to fall.");
-        MESSAGE("Rain continues to fall.");
-        MESSAGE("Rain continues to fall.");
-        MESSAGE("Rain continues to fall.");
-        MESSAGE("Rain continues to fall.");
-        MESSAGE("The rain stopped.");
-    }
-}
 #endif

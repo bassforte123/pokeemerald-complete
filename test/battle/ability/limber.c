@@ -37,7 +37,8 @@ SINGLE_BATTLE_TEST("Limber prevents paralysis from Thunder Wave")
     }
 }
 
-SINGLE_BATTLE_TEST("Limber prevents paralysis (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Limber prevents paralysis (Traits)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER_SHOCK, MOVE_EFFECT_PARALYSIS) == TRUE);
@@ -54,7 +55,7 @@ SINGLE_BATTLE_TEST("Limber prevents paralysis (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Limber prevents paralysis from Thunder Wave (Multi)")
+SINGLE_BATTLE_TEST("Limber prevents paralysis from Thunder Wave (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
@@ -71,3 +72,4 @@ SINGLE_BATTLE_TEST("Limber prevents paralysis from Thunder Wave (Multi)")
         }
     }
 }
+#endif

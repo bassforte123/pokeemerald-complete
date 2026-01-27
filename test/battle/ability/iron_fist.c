@@ -25,7 +25,8 @@ SINGLE_BATTLE_TEST("Iron Fist increases the power of punching moves by 20%", s16
     }
 }
 
-SINGLE_BATTLE_TEST("Iron Fist increases the power of punching moves by 20% (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Iron Fist increases the power of punching moves by 20% (Traits)", s16 damage)
 {
     u32 move, ability;
     PARAMETRIZE { move = MOVE_BULLET_PUNCH; ability = ABILITY_IRON_FIST; }
@@ -48,3 +49,4 @@ SINGLE_BATTLE_TEST("Iron Fist increases the power of punching moves by 20% (Mult
         EXPECT_EQ(results[2].damage, results[3].damage); // Iron Fist does not affect non-punching moves
     }
 }
+#endif

@@ -21,7 +21,8 @@ SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales", s16 
 
 TO_DO_BATTLE_TEST("TODO: Write more Mold Breaker (Ability) test titles")
 
-SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales (Multi)", s16 damage)
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales (Traits)", s16 damage)
 {
     u16 ability;
     PARAMETRIZE { ability = ABILITY_SHADOW_TAG; }
@@ -39,4 +40,5 @@ SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales (Multi
     }
 }
 
-TO_DO_BATTLE_TEST("TODO: Write more Mold Breaker (Ability) test titles (Multi)")
+TO_DO_BATTLE_TEST("TODO: Write more Mold Breaker (Ability) test titles (Traits)")
+#endif

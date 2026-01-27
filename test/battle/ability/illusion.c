@@ -132,7 +132,8 @@ SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
 }
 
 //  This test is eyes on only
-SINGLE_BATTLE_TEST("Illusion can only imitate Normal Form terapagos (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Illusion can only imitate Normal Form terapagos (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_ZOROARK) { Moves(MOVE_CELEBRATE); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ILLUSION); }
@@ -153,7 +154,7 @@ SINGLE_BATTLE_TEST("Illusion can only imitate Normal Form terapagos (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks if the target faints (Multi)")
+SINGLE_BATTLE_TEST("Illusion breaks if the target faints (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_ZOROARK) { HP(1); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ILLUSION); }
@@ -169,7 +170,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if the target faints (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints (Multi)")
+SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
@@ -186,7 +187,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot (Multi)")
+SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
@@ -201,7 +202,7 @@ SINGLE_BATTLE_TEST("Illusion cannot imitate if the user is on the last slot (Mul
 }
 
 
-SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute (Multi)")
+SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_DRAGAPULT) {Ability(ABILITY_INFILTRATOR); Speed(1);};
@@ -218,3 +219,4 @@ SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute (Multi)")
     }
 }
 
+#endif

@@ -189,7 +189,8 @@ DOUBLE_BATTLE_TEST("Sword of Ruin's Defense reduction is ignored by Gastro Acid"
     }
 }
 
-SINGLE_BATTLE_TEST("Sword of Ruin reduces Defense if opposing mon's ability doesn't match (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Sword of Ruin reduces Defense if opposing mon's ability doesn't match (Traits)")
 {
     s16 damage[2];
 
@@ -212,7 +213,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin reduces Defense if opposing mon's ability does
     }
 }
 
-SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battlers fainted - Player (Multi)")
+SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battlers fainted - Player (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
@@ -234,7 +235,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battler
     }
 }
 
-SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battlers fainted - Opponent (Multi)")
+SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battlers fainted - Opponent (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
@@ -256,7 +257,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin's message displays correctly after all battler
     }
 }
 
-DOUBLE_BATTLE_TEST("Sword of Ruin increases damage taken by special moves in Wonder Room (Multi)", s16 damage)
+DOUBLE_BATTLE_TEST("Sword of Ruin increases damage taken by special moves in Wonder Room (Traits)", s16 damage)
 {
     bool32 useWonderRoom;
     u32 move;
@@ -290,7 +291,7 @@ DOUBLE_BATTLE_TEST("Sword of Ruin increases damage taken by special moves in Won
     }
 }
 
-SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Breaker attacker (Multi)")
+SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Breaker attacker (Traits)")
 {
     u32 ability;
 
@@ -344,3 +345,4 @@ DOUBLE_BATTLE_TEST("Sword of Ruin's Defense reduction is not ignored by Mold Bre
         EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }
+#endif

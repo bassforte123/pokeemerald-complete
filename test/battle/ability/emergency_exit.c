@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); Items(ITEM_SITRUS_BERRY); };
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); Item(ITEM_SITRUS_BERRY); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUPER_FANG); }
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but 
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); Items(ITEM_ORAN_BERRY); };
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); Item(ITEM_ORAN_BERRY); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SUPER_FANG); SEND_OUT(opponent, 1); }
@@ -53,8 +53,8 @@ DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out
     GIVEN {
         PLAYER(SPECIES_ZAPDOS) { Speed(10); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WIMPOD) { Speed(1); Ability(ABILITY_WIMP_OUT); Items(ITEM_FOCUS_SASH); };
-        OPPONENT(SPECIES_WIMPOD) { Speed(2); Ability(ABILITY_WIMP_OUT); Items(ITEM_FOCUS_SASH); };
+        OPPONENT(SPECIES_WIMPOD) { Speed(1); Ability(ABILITY_WIMP_OUT); Item(ITEM_FOCUS_SASH); };
+        OPPONENT(SPECIES_WIMPOD) { Speed(2); Ability(ABILITY_WIMP_OUT); Item(ITEM_FOCUS_SASH); };
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
         ASSUME(GetMoveEffect(MOVE_AQUA_RING) == EFFECT_AQUA_RING);
         ASSUME(GetItemHoldEffect(ITEM_STICKY_BARB) == HOLD_EFFECT_STICKY_BARB);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(130); Items(ITEM_STICKY_BARB); };
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(130); Item(ITEM_STICKY_BARB); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_AQUA_RING); SEND_OUT(opponent, 1); }
@@ -209,8 +209,9 @@ WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falli
         EXPECT_EQ(gBattleOutcome, B_OUTCOME_PLAYER_TELEPORTED);
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Emergency Exit switches out when taking 50% max-hp damage (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit switches out when taking 50% max-hp damage (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -225,7 +226,7 @@ SINGLE_BATTLE_TEST("Emergency Exit switches out when taking 50% max-hp damage (M
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-HP but healed via held item back above the threshold (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-HP but healed via held item back above the threshold (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET)
@@ -241,7 +242,7 @@ SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but healing via held item is not enough to go back above the threshold (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but healing via held item is not enough to go back above the threshold (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET)
@@ -257,7 +258,7 @@ SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but 
     }
 }
 
-DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out (Multi)")
+DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_ZAPDOS) { Speed(10); }
@@ -276,7 +277,7 @@ DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Burn (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Burn (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -290,7 +291,7 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Burn (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Burn (Traits)")
 {
     // Might fail if users set healing higher than burn damage
     GIVEN {
@@ -307,7 +308,7 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Weather (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Weather (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -321,7 +322,7 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Sticky Barb (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Sticky Barb (Traits)")
 {
     // Might fail if users set healing higher than sticky barb damage
     GIVEN {
@@ -339,7 +340,7 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
     }
 }
 
-SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Salt Cure (Multi)")
+SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Salt Cure (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -353,7 +354,7 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
-WILD_BATTLE_TEST("Emergency Exit makes the pokemon flee during wild battle (Multi)")
+WILD_BATTLE_TEST("Emergency Exit makes the pokemon flee during wild battle (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -370,7 +371,7 @@ WILD_BATTLE_TEST("Emergency Exit makes the pokemon flee during wild battle (Mult
     }
 }
 
-WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp (wild battle) (Multi)")
+WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp (wild battle) (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -386,7 +387,7 @@ WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falli
     }
 }
 
-WILD_BATTLE_TEST("Emergency Exit makes the player ran during wild battle (Multi)")
+WILD_BATTLE_TEST("Emergency Exit makes the player ran during wild battle (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); };
@@ -403,7 +404,7 @@ WILD_BATTLE_TEST("Emergency Exit makes the player ran during wild battle (Multi)
     }
 }
 
-WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp (wild battle player side) (Multi)")
+WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp (wild battle player side) (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(134); };
@@ -416,77 +417,6 @@ WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falli
         ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
     } THEN {
         EXPECT_EQ(gBattleOutcome, B_OUTCOME_PLAYER_TELEPORTED);
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Emergency Exit does not switch out when going below 50% max-HP but healed via held item back above the threshold (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(262); Items(ITEM_PECHA_BERRY, ITEM_SITRUS_BERRY); };
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUPER_FANG); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, player);
-        HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        NOT ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
-    }
-}
-
-SINGLE_BATTLE_TEST("Emergency Exit switches out when going below 50% max-HP but healing via held item is not enough to go back above the threshold (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); Items(ITEM_PECHA_BERRY, ITEM_ORAN_BERRY); };
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SUPER_FANG); SEND_OUT(opponent, 1); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUPER_FANG, player);
-        HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Only the fastest Wimp Out (Emergency Exit) user switches out (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_ZAPDOS) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WIMPOD) { Speed(1); Ability(ABILITY_WIMP_OUT); Items(ITEM_PECHA_BERRY, ITEM_FOCUS_SASH); };
-        OPPONENT(SPECIES_WIMPOD) { Speed(2); Ability(ABILITY_WIMP_OUT); Items(ITEM_PECHA_BERRY, ITEM_FOCUS_SASH); };
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); SEND_OUT(opponentRight, 2); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
-        HP_BAR(opponentLeft);
-        HP_BAR(opponentRight);
-        ABILITY_POPUP(opponentRight, ABILITY_WIMP_OUT);
-    }
-}
-
-SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Sticky Barb (Multi)")
-{
-    // Might fail if users set healing higher than sticky barb damage
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_AQUA_RING) == EFFECT_AQUA_RING);
-        ASSUME(GetItemHoldEffect(ITEM_STICKY_BARB) == HOLD_EFFECT_STICKY_BARB);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(130); Items(ITEM_PECHA_BERRY, ITEM_STICKY_BARB); };
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_AQUA_RING); SEND_OUT(opponent, 1); }
-    } SCENE {
-        HP_BAR(opponent);
-        HP_BAR(opponent);
-        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
 }
 #endif

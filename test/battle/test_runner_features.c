@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Setting level doesn't overwrite set stats")
 SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (not HP)")
 {
     GIVEN {
-        PLAYER(SPECIES_DIANCIE) {Attack(10); Defense(10); Speed(10); SpAttack(10); SpDefense(10); Items(ITEM_DIANCITE);}
+        PLAYER(SPECIES_DIANCIE) {Attack(10); Defense(10); Speed(10); SpAttack(10); SpDefense(10); Item(ITEM_DIANCITE);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(1);}
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -94,8 +94,9 @@ MULTI_BATTLE_TEST("Multi Battle Tests register partner's status1")
         STATUS_ICON(playerRight, STATUS1_BURN);
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Forced abilities activate on switch-in (Multi)")
+SINGLE_BATTLE_TEST("Forced abilities activate on switch-in (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_ALAKAZAM);
@@ -109,26 +110,6 @@ SINGLE_BATTLE_TEST("Forced abilities activate on switch-in (Multi)")
         ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
         MESSAGE("The Electric Terrain activated Kadabra's Quark Drive!");
         MESSAGE("Kadabra's Sp. Atk was heightened!");
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (not HP) (Multi)")
-{
-    GIVEN {
-        PLAYER(SPECIES_DIANCIE) {Attack(10); Defense(10); Speed(10); SpAttack(10); SpDefense(10); Items(ITEM_ORAN_BERRY, ITEM_DIANCITE);}
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(1);}
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
-    } THEN {
-        EXPECT_EQ(player->attack, 10);
-        EXPECT_EQ(player->defense, 10);
-        EXPECT_EQ(player->speed, 10);
-        EXPECT_EQ(player->spAttack, 10);
-        EXPECT_EQ(player->spDefense, 10);
     }
 }
 #endif

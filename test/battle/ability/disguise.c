@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to it
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
-        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); Items(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); Item(ITEM_AIR_BALLOON); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_AERIAL_ACE); }
@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without bre
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ROCKY_HELMET].holdEffect == HOLD_EFFECT_ROCKY_HELMET);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, MOVE_AERIAL_ACE); }
     } SCENE {
@@ -211,7 +211,8 @@ SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish")
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu doesn't lose 1/8 of its max HP upon changing to its busted form (Gen7) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Disguised Mimikyu doesn't lose 1/8 of its max HP upon changing to its busted form (Gen7) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_7);
@@ -229,7 +230,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu doesn't lose 1/8 of its max HP upon changi
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu will lose 1/8 of its max HP upon changing to its busted form (Gen8+) (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu will lose 1/8 of its max HP upon changing to its busted form (Gen8+) (Traits)")
 {
     s16 disguiseDamage;
 
@@ -249,7 +250,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu will lose 1/8 of its max HP upon changing 
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and changes to its busted form (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and changes to its busted form (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
@@ -271,7 +272,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and c
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to its busted form (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to its busted form (Traits)")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
@@ -290,7 +291,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to it
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without breaking the disguise (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
@@ -309,7 +310,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from secondary damage without
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without breaking the disguise (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without breaking the disguise (Traits)")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ROCKY_HELMET].holdEffect == HOLD_EFFECT_ROCKY_HELMET);
@@ -328,7 +329,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without bre
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without breaking the disguise (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without breaking the disguise (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
@@ -346,7 +347,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rough Skin without break
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu is ignored by Mold Breaker (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu is ignored by Mold Breaker (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
@@ -359,7 +360,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu is ignored by Mold Breaker (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu's types revert back to Ghost/Fairy when Disguise is broken (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu's types revert back to Ghost/Fairy when Disguise is broken (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SHADOW_CLAW) == TYPE_GHOST);
@@ -379,7 +380,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu's types revert back to Ghost/Fairy when Di
     }
 }
 
-SINGLE_BATTLE_TEST("Disguised Mimikyu blocks a move after getting Gastro Acid Batton Passed (Multi)")
+SINGLE_BATTLE_TEST("Disguised Mimikyu blocks a move after getting Gastro Acid Batton Passed (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
@@ -398,7 +399,7 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu blocks a move after getting Gastro Acid Ba
     }
 }
 
-SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish (Multi)")
+SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WISH) == EFFECT_WISH);
@@ -413,41 +414,4 @@ SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish (Multi)")
         NOT ABILITY_POPUP(player, ABILITY_DISGUISE);
     }
 }
-
-SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to its busted form (Multi)")
-{
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
-        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_AERIAL_ACE); }
-    } SCENE {
-        MESSAGE("Mimikyu floats in the air with its Air Balloon!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
-        NOT HP_BAR(player);
-        ABILITY_POPUP(player, ABILITY_DISGUISE);
-        MESSAGE("Mimikyu's Air Balloon popped!");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_MIMIKYU_BUSTED);
-    }
-}
-
-SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without breaking the disguise (Multi)")
-{
-    GIVEN {
-        ASSUME(gItemsInfo[ITEM_ROCKY_HELMET].holdEffect == HOLD_EFFECT_ROCKY_HELMET);
-        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_ROCKY_HELMET); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_AERIAL_ACE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, player);
-        HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        HP_BAR(player);
-        MESSAGE("Mimikyu was hurt by the opposing Wobbuffet's Rocky Helmet!");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_MIMIKYU_DISGUISED);
-    }
-}
+#endif

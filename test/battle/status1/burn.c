@@ -96,7 +96,8 @@ AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target (Multi)")
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target (Traits)")
 {
     u32 species;
     enum Ability ability;
@@ -116,3 +117,4 @@ AI_SINGLE_BATTLE_TEST("AI avoids Will-o-Wisp when it can not burn target (Multi)
         TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_WILL_O_WISP); } // Both get -10
     }
 }
+#endif

@@ -157,7 +157,8 @@ SINGLE_BATTLE_TEST("Chloroblast is not affected by Reckless", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Chloroblast hp loss is prevented by Magic Guard (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Chloroblast hp loss is prevented by Magic Guard (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFAIRY) { Ability(ABILITY_FRIEND_GUARD); Innates(ABILITY_MAGIC_GUARD); }
@@ -171,7 +172,7 @@ SINGLE_BATTLE_TEST("Chloroblast hp loss is prevented by Magic Guard (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Chloroblast does not cause recoil damage if the user has Rock Head (Multi)")
+SINGLE_BATTLE_TEST("Chloroblast does not cause recoil damage if the user has Rock Head (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_PRESSURE); Innates(ABILITY_ROCK_HEAD); }
@@ -185,7 +186,7 @@ SINGLE_BATTLE_TEST("Chloroblast does not cause recoil damage if the user has Roc
     }
 }
 
-SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP even if it is absorbed by Sap Sipper (Multi)")
+SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP even if it is absorbed by Sap Sipper (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_CHLOROBLAST) == TYPE_GRASS);
@@ -201,3 +202,4 @@ SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP even if it is
         }
     }
 }
+#endif

@@ -50,7 +50,8 @@ DOUBLE_BATTLE_TEST("Battery does not increase its own Sp. Attack damage")
     }
 }
 
-DOUBLE_BATTLE_TEST("Battery increases Sp. Attack damage of allies by ~30% (Multi)")
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Battery increases Sp. Attack damage of allies by ~30% (Traits)")
 {
     s16 damage[2];
 
@@ -74,7 +75,7 @@ DOUBLE_BATTLE_TEST("Battery increases Sp. Attack damage of allies by ~30% (Multi
     }
 }
 
-DOUBLE_BATTLE_TEST("Battery does not increase its own Sp. Attack damage (Multi)")
+DOUBLE_BATTLE_TEST("Battery does not increase its own Sp. Attack damage (Traits)")
 {
     s16 damage[2];
 
@@ -97,3 +98,4 @@ DOUBLE_BATTLE_TEST("Battery does not increase its own Sp. Attack damage (Multi)"
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+#endif

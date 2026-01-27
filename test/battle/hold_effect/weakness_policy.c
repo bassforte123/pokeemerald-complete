@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the dam
     GIVEN {
         ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Items(ITEM_WEAKNESS_POLICY); Ability(ABILITY_DISGUISE); }
+        OPPONENT(species) { Item(ITEM_WEAKNESS_POLICY); Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_METAL_CLAW); }
     } SCENE {
@@ -29,25 +29,3 @@ SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the dam
 }
 
 TO_DO_BATTLE_TEST("TODO: Write Weakness Policy (Hold Effect) test titles")
-
-SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the damage (Multi)")
-{
-    u32 species;
-
-    PARAMETRIZE { species = SPECIES_MIMIKYU_BUSTED; }
-    PARAMETRIZE { species = SPECIES_MIMIKYU_DISGUISED; }
-
-    GIVEN {
-        ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Items(ITEM_PECHA_BERRY, ITEM_WEAKNESS_POLICY); Ability(ABILITY_DISGUISE); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_METAL_CLAW); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_CLAW, player);
-        if (species == SPECIES_MIMIKYU_BUSTED)
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        else
-            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-    }
-}

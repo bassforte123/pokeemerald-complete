@@ -219,7 +219,8 @@ SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Leech Seed is blocked by Magic Guar
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze causes Absorb users to lose HP instead of heal (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Liquid Ooze causes Absorb users to lose HP instead of heal (Traits)")
 {
     s16 damage;
     s16 healed;
@@ -238,7 +239,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Absorb users to lose HP instead of heal (
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze causes Leech Seed users to lose HP instead of heal (Multi)")
+SINGLE_BATTLE_TEST("Liquid Ooze causes Leech Seed users to lose HP instead of heal (Traits)")
 {
     s16 damage;
     s16 healed;
@@ -257,7 +258,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Leech Seed users to lose HP instead of he
     }
 }
 
-DOUBLE_BATTLE_TEST("Liquid Ooze causes Matcha Gatcha users to lose HP instead of heal (Multi)")
+DOUBLE_BATTLE_TEST("Liquid Ooze causes Matcha Gatcha users to lose HP instead of heal (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MATCHA_GOTCHA) == EFFECT_ABSORB);
@@ -276,7 +277,7 @@ DOUBLE_BATTLE_TEST("Liquid Ooze causes Matcha Gatcha users to lose HP instead of
     }
 }
 
-DOUBLE_BATTLE_TEST("Liquid Ooze will faint Matcha Gatcha users if it deals enough damage (Multi)")
+DOUBLE_BATTLE_TEST("Liquid Ooze will faint Matcha Gatcha users if it deals enough damage (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MATCHA_GOTCHA) == EFFECT_ABSORB);
@@ -295,7 +296,7 @@ DOUBLE_BATTLE_TEST("Liquid Ooze will faint Matcha Gatcha users if it deals enoug
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze causes Strength Sap users to lose HP instead of heal (Multi)")
+SINGLE_BATTLE_TEST("Liquid Ooze causes Strength Sap users to lose HP instead of heal (Traits)")
 {
     s16 lostHp;
     s32 atkStat;
@@ -329,7 +330,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Strength Sap users to lose HP instead of 
 /* * https://bulbapedia.bulbagarden.net/wiki/Liquid_Ooze_(Ability)#In_battle:
    * If the recipient of Leech Seed's effect were to faint due to Liquid Ooze on the same turn as the victim of Leech Seed, then the victim faints before the recipient. This means that the victim's team loses the battle if both teams had their final Pokémon sent out.
  */
-SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder (Multi)")
+SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder (Traits)")
 {
     enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
@@ -356,7 +357,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder 
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze causes Dream Eater users to lose HP instead of heal (Gen 5+) (Multi)")
+SINGLE_BATTLE_TEST("Liquid Ooze causes Dream Eater users to lose HP instead of heal (Gen 5+) (Traits)")
 {
     s16 damage;
     GIVEN {
@@ -381,7 +382,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Dream Eater users to lose HP instead of h
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP instead of heal (Gen 3-4) (Multi)")
+SINGLE_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP instead of heal (Gen 3-4) (Traits)")
 {
     s16 damage;
     GIVEN {
@@ -406,7 +407,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP inst
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Absorb is blocked by Magic Guard (Multi)")
+SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Absorb is blocked by Magic Guard (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFFA) { Ability(ABILITY_CUTE_CHARM); Innates(ABILITY_MAGIC_GUARD); }
@@ -423,7 +424,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Absorb is blocked by Magic Guard (M
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Leech Seed is blocked by Magic Guard (Multi)")
+SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Leech Seed is blocked by Magic Guard (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFFA) { Ability(ABILITY_CUTE_CHARM); Innates(ABILITY_MAGIC_GUARD); }
@@ -436,3 +437,4 @@ SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Leech Seed is blocked by Magic Guar
         NOT HP_BAR(player);
     }
 }
+#endif

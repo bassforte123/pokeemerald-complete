@@ -157,7 +157,8 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
     }
 }
 
-SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -173,7 +174,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it switches in (Gen8) (Multi)")
+SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it switches in (Gen8) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_INTREPID_SWORD, GEN_8);
@@ -195,7 +196,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it swit
     }
 }
 
-SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage only once per battle (Gen9+) (Multi)")
+SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage only once per battle (Gen9+) (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_INTREPID_SWORD, GEN_9);
@@ -220,7 +221,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage only once per batt
 }
 
 
-SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage (Baton Pass) (Multi)")
+SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage (Baton Pass) (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
@@ -242,3 +243,4 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
         }
     }
 }
+#endif

@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Items(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Item(ITEM_ROCKY_HELMET); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
@@ -164,8 +164,9 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         HP_BAR(opponent);
     }
 }
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Multi)")
+SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Traits)")
 {
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
@@ -185,7 +186,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Guard Dog (Multi)")
+SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Guard Dog (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -199,7 +200,7 @@ SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Guard Dog (Mult
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Suction Cups (Multi)")
+SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Suction Cups (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -215,7 +216,7 @@ SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Suction Cups (M
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Immunity negated by Mold Breaker (Multi)")
+SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Immunity negated by Mold Breaker (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
@@ -235,7 +236,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Immunit
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitate negated by Mold Breaker (Multi)")
+SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitate negated by Mold Breaker (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
@@ -257,28 +258,6 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
         NOT STATUS_ICON(opponent, poison: TRUE);
         HP_BAR(opponent);
-    }
-}
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Multi)")
-{
-    PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Items(ITEM_PECHA_BERRY, ITEM_ROCKY_HELMET); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_CHARMANDER);
-    } WHEN {
-        TURN { MOVE(player, MOVE_DRAGON_TAIL); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
-        HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Iron Barbs!");
-        HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Rocky Helmet!");
-        MESSAGE("The opposing Charmander was dragged out!");
     }
 }
 #endif

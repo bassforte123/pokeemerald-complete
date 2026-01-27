@@ -22,7 +22,7 @@ SINGLE_BATTLE_TEST("Steadfast doesn't activate if the user wasn't flinched")
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
         ASSUME(GetItemHoldEffect(ITEM_COVERT_CLOAK) == HOLD_EFFECT_COVERT_CLOAK);
-        PLAYER(SPECIES_LUCARIO) { Ability(ABILITY_STEADFAST); Items(ITEM_COVERT_CLOAK); }
+        PLAYER(SPECIES_LUCARIO) { Ability(ABILITY_STEADFAST); Item(ITEM_COVERT_CLOAK); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_CELEBRATE); }
@@ -54,8 +54,9 @@ DOUBLE_BATTLE_TEST("Steadfast doesn't activate if the user has already moved")
 }
 
 TO_DO_BATTLE_TEST("TODO: Write Steadfast (Ability) test titles")
+
 #if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Steadfast boosts Speed when the user attempts to move but is flinched (Multi)")
+SINGLE_BATTLE_TEST("Steadfast boosts Speed when the user attempts to move but is flinched (Traits)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
@@ -71,7 +72,7 @@ SINGLE_BATTLE_TEST("Steadfast boosts Speed when the user attempts to move but is
     }
 }
 
-SINGLE_BATTLE_TEST("Steadfast doesn't activate if the user wasn't flinched (Multi)")
+SINGLE_BATTLE_TEST("Steadfast doesn't activate if the user wasn't flinched (Traits)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
@@ -88,7 +89,7 @@ SINGLE_BATTLE_TEST("Steadfast doesn't activate if the user wasn't flinched (Mult
     }
 }
 
-DOUBLE_BATTLE_TEST("Steadfast doesn't activate if the user has already moved (Multi)")
+DOUBLE_BATTLE_TEST("Steadfast doesn't activate if the user has already moved (Traits)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_BITE, MOVE_EFFECT_FLINCH));
@@ -107,24 +108,5 @@ DOUBLE_BATTLE_TEST("Steadfast doesn't activate if the user has already moved (Mu
     }
 }
 
-TO_DO_BATTLE_TEST("TODO: Write Steadfast (Ability) test titles (Multi)")
-#endif
-
-#if MAX_MON_ITEMS > 1
-SINGLE_BATTLE_TEST("Steadfast doesn't activate if the user wasn't flinched (Multi)")
-{
-    GIVEN {
-        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        ASSUME(GetItemHoldEffect(ITEM_COVERT_CLOAK) == HOLD_EFFECT_COVERT_CLOAK);
-        PLAYER(SPECIES_LUCARIO) { Ability(ABILITY_STEADFAST); Items(ITEM_PECHA_BERRY, ITEM_COVERT_CLOAK); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_CELEBRATE); }
-    } SCENE {
-        NOT ABILITY_POPUP(player, ABILITY_STEADFAST);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
-    } THEN {
-        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
-    }
-}
+TO_DO_BATTLE_TEST("TODO: Write Steadfast (Ability) test titles (Traits)")
 #endif

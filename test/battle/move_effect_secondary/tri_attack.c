@@ -146,9 +146,10 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze a mon which is alread
 }
 
 #if B_USE_FROSTBITE == TRUE
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/frostbite Pokémon with abilities preventing respective statuses (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/frostbite Pokémon with abilities preventing respective statuses (Traits)")
 #else
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze Pokémon with abilities preventing respective statuses (Multi)")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze Pokémon with abilities preventing respective statuses (Traits)")
 #endif
 {
     u8 statusAnim;
@@ -184,3 +185,4 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze Pokémon with abiliti
         }
     }
 }
+#endif

@@ -134,7 +134,8 @@ SINGLE_BATTLE_TEST("Double Shock user loses its Electric-type if enemy faints")
     }
 }
 
-SINGLE_BATTLE_TEST("Burn Up fails if the user has Protean/Libero and is not a Fire-type (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Burn Up fails if the user has Protean/Libero and is not a Fire-type (Traits)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
@@ -152,3 +153,4 @@ SINGLE_BATTLE_TEST("Burn Up fails if the user has Protean/Libero and is not a Fi
         MESSAGE("But it failed!");
     }
 }
+#endif

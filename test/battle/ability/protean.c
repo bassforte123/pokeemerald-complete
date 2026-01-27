@@ -97,7 +97,8 @@ SINGLE_BATTLE_TEST("Protean/Libero does not change the user's type when using St
     }
 }
 
-SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user to the move used every time (Gen6-8) (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user to the move used every time (Gen6-8) (Traits)")
 {
     u32 ability, species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
@@ -135,7 +136,7 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user to the move used
     }
 }
 
-SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user only once per switch in (Gen9+) (Multi)")
+SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user only once per switch in (Gen9+) (Traits)")
 {
     u32 ability, species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
@@ -173,7 +174,7 @@ SINGLE_BATTLE_TEST("Protean/Libero changes the type of the user only once per sw
     }
 }
 
-SINGLE_BATTLE_TEST("Protean/Libero does not change the user's type when using Struggle (Multi)")
+SINGLE_BATTLE_TEST("Protean/Libero does not change the user's type when using Struggle (Traits)")
 {
     u32 ability, species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
@@ -192,3 +193,4 @@ SINGLE_BATTLE_TEST("Protean/Libero does not change the user's type when using St
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, opponent);
     }
 }
+#endif

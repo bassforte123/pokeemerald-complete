@@ -112,7 +112,8 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
 }
 
 
-SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts only 5 turns (Multi)")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts only 5 turns (Traits)")
 {
     bool32 viaMove;
 
@@ -166,3 +167,4 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
     }
 }
 #endif // B_VAR_STARTING_STATUS
+#endif
