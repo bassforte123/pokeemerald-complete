@@ -166,7 +166,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
     } THEN {
-        EXPECT(opponentLeft->item == ITEM_NONE);
+        EXPECT(opponentLeft->items[0] == ITEM_NONE);
         EXPECT(playerRight->species == SPECIES_DONDOZO);
     }
 
@@ -622,7 +622,7 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
     } THEN {
-        EXPECT(opponentLeft->item == ITEM_NONE);
+        EXPECT(opponentLeft->items[0] == ITEM_NONE);
         EXPECT(playerRight->species == SPECIES_DONDOZO);
     }
 
@@ -909,6 +909,28 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail (Tr
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponentLeft);
         NOT MESSAGE("Wobbuffet was dragged out!");
+    }
+}
+#endif
+
+#if MAX_MON_ITEMS > 1
+DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is active (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+    } THEN {
+        EXPECT(opponentLeft->items[1] == ITEM_NONE);
+        EXPECT(playerRight->species == SPECIES_DONDOZO);
     }
 }
 #endif

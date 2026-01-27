@@ -4294,7 +4294,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                             ctx.moveType = moveType;
                             ctx.isAnticipation = TRUE;
                             modifier = CalcTypeEffectivenessMultiplier(&ctx);
-
                             if (modifier >= UQ_4_12(2.0)
                              || moveEffect == EFFECT_OHKO
                              || moveEffect == EFFECT_SHEER_COLD)
@@ -4655,8 +4654,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                         PushTraitStack(battler, ABILITY_PICKUP);
                         BattleScriptExecute(BattleScript_PickupActivates);
                         effect++;
+                        break;
                     }
-                    break;
                 }
             }
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HARVEST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
@@ -6049,7 +6048,7 @@ u32 BattlerHasKlutz(u32 battler)
      && gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS)
         return FALSE;
 
-    return gBattleMons[battler].ability == ABILITY_KLUTZ;
+    return BattlerHasTrait(battler, ABILITY_KLUTZ);
 }
 
 u32 IsAbilityOnSide(u32 battler, enum Ability ability)

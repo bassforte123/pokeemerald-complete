@@ -157,3 +157,34 @@ DOUBLE_BATTLE_TEST("Brick Break and Psychic Fangs can remove Light Screen, Refle
         HP_BAR(playerLeft);
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Brick Break and Psychic Fangs don't remove Light Screen, Reflect and Aurora Veil if it misses (Multi)")
+{
+    u32 move;
+    u32 breakingMove;
+
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; breakingMove = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_REFLECT;      breakingMove = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_AURORA_VEIL;  breakingMove = MOVE_PSYCHIC_FANGS; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_BRIGHT_POWDER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, move); }
+        TURN { MOVE(player, breakingMove, hit: FALSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNOWSCAPE, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, breakingMove, player);
+            MESSAGE("The wall shattered!");
+            HP_BAR(opponent);
+        }
+    }
+}
+#endif

@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks raises Defense by 2 stages after consuming the 
         MESSAGE("Skwovet's Defense sharply rose!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -128,6 +128,106 @@ SINGLE_BATTLE_TEST("Stuff Cheeks can be used even if Unnerve is present (Traits)
     } SCENE {
         MESSAGE("Skwovet used Stuff Cheeks!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUFF_CHEEKS, player);
+    }
+}
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Stuff Cheeks cannot be used if the user doesn't hold a berry (Multi)")
+{
+    u16 item = 0;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_LIECHI_BERRY; }
+    GIVEN {
+        PLAYER(SPECIES_SKWOVET) { Items(item, ITEM_PECHA_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (item == ITEM_NONE)
+            TURN { MOVE(player, MOVE_STUFF_CHEEKS, allowed: FALSE); MOVE(player, MOVE_CELEBRATE); }
+        else
+            TURN { MOVE(player, MOVE_STUFF_CHEEKS); }
+    } SCENE {
+        if (item == ITEM_NONE)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        else
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STUFF_CHEEKS, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Stuff Cheeks raises Defense by 2 stages after consuming the berry and gaining its effect (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SKWOVET) { Items(ITEM_GREAT_BALL, ITEM_LIECHI_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STUFF_CHEEKS); }
+    } SCENE {
+        MESSAGE("Skwovet used Stuff Cheeks!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STUFF_CHEEKS, player);
+        MESSAGE("Using Liechi Berry, the Attack of Skwovet rose!");
+        MESSAGE("Skwovet's Defense sharply rose!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->items[1], ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Stuff Cheeks can be used even if Unnerve is present (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SKWOVET) { Items(ITEM_LIECHI_BERRY, ITEM_PECHA_BERRY); }
+        OPPONENT(SPECIES_EKANS) { Ability(ABILITY_UNNERVE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_STUFF_CHEEKS); }
+    } SCENE {
+        MESSAGE("Skwovet used Stuff Cheeks!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STUFF_CHEEKS, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Stuff Cheeks can be used even if Magic Room is active (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SKWOVET) { Items(ITEM_LIECHI_BERRY, ITEM_GREAT_BALL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(opponent, MOVE_MAGIC_ROOM);
+            MOVE(player, MOVE_STUFF_CHEEKS);
+        }
+    } SCENE {
+        MESSAGE("Skwovet used Stuff Cheeks!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STUFF_CHEEKS, player);
+        MESSAGE("Using Liechi Berry, the Attack of Skwovet rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Stuff Cheeks fails if the user's berry is removed before they use the move (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        PLAYER(SPECIES_SKWOVET) { Items(ITEM_LIECHI_BERRY, ITEM_PECHA_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); MOVE(player, MOVE_STUFF_CHEEKS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        MESSAGE("Skwovet used Stuff Cheeks!");
+        MESSAGE("But it failed!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Stuff Cheeks (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LIECHI_BERRY, ITEM_PECHA_BERRY); Moves(MOVE_HEADBUTT, MOVE_STUFF_CHEEKS); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_STUFF_CHEEKS); }
     }
 }
 #endif

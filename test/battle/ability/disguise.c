@@ -415,3 +415,43 @@ SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish (Traits)")
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Disguised Mimikyu's Air Balloon will pop upon changing to its busted form (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_AERIAL_ACE); }
+    } SCENE {
+        MESSAGE("Mimikyu floats in the air with its Air Balloon!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, opponent);
+        NOT HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_DISGUISE);
+        MESSAGE("Mimikyu's Air Balloon popped!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_MIMIKYU_BUSTED);
+    }
+}
+
+SINGLE_BATTLE_TEST("Disguised Mimikyu takes damage from Rocky Helmet without breaking the disguise (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_ROCKY_HELMET].holdEffect == HOLD_EFFECT_ROCKY_HELMET);
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_AERIAL_ACE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AERIAL_ACE, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        HP_BAR(player);
+        MESSAGE("Mimikyu was hurt by the opposing Wobbuffet's Rocky Helmet!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_MIMIKYU_DISGUISED);
+    }
+}
+#endif

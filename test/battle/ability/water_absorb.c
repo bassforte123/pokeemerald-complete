@@ -168,3 +168,28 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from activating (Multi)")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_ABSORB_BULB; }
+    PARAMETRIZE { item = ITEM_LUMINOUS_MOSS; }
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
+        PLAYER(SPECIES_POLIWAG) { Ability(ABILITY_WATER_ABSORB); HP(1); MaxHP(100); Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BUBBLE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
+        HP_BAR(player, damage: -25);
+        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        }
+
+    }
+}
+#endif

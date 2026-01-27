@@ -166,3 +166,63 @@ SINGLE_BATTLE_TEST("Snow Warning summons snow (Gen9+) (Traits)")
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Snow Warning sets up hail for 8 turns with Icy Rock (Gen6-8) (Multi)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_SNOW_WARNING, GEN_8);
+        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        PLAYER(SPECIES_ABOMASNOW) { Moves(MOVE_CELEBRATE); Ability(ABILITY_SNOW_WARNING); Items(ITEM_PECHA_BERRY, ITEM_ICY_ROCK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_SNOW_WARNING);
+        MESSAGE("The hail is crashing down.");
+        MESSAGE("The hail is crashing down.");
+        MESSAGE("The hail is crashing down.");
+        MESSAGE("The hail is crashing down.");
+        MESSAGE("The hail is crashing down.");
+        MESSAGE("The hail is crashing down.");
+        MESSAGE("The hail is crashing down.");
+        MESSAGE("The hail stopped.");
+    }
+}
+
+SINGLE_BATTLE_TEST("Snow Warning sets up snow for 8 turns with Icy Rock (Gen9+) (Multi)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_SNOW_WARNING, GEN_9);
+        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_9);
+        PLAYER(SPECIES_ABOMASNOW) { Moves(MOVE_CELEBRATE); Ability(ABILITY_SNOW_WARNING); Items(ITEM_PECHA_BERRY, ITEM_ICY_ROCK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_SNOW_WARNING);
+        MESSAGE("Snow continues to fall.");
+        MESSAGE("Snow continues to fall.");
+        MESSAGE("Snow continues to fall.");
+        MESSAGE("Snow continues to fall.");
+        MESSAGE("Snow continues to fall.");
+        MESSAGE("Snow continues to fall.");
+        MESSAGE("Snow continues to fall.");
+        MESSAGE("The snow stopped.");
+    }
+}
+#endif

@@ -717,3 +717,28 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Pu
 
 TO_DO_BATTLE_TEST("Parental Bond tests (Traits)");
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Parental Bond converts Scratch into a two-strike move (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) != DAMAGE_CATEGORY_STATUS);
+        ASSUME(GetMoveStrikeCount(MOVE_SCRATCH) < 2);
+        ASSUME(GetMoveEffect(MOVE_SCRATCH) == EFFECT_HIT);
+        PLAYER(SPECIES_KANGASKHAN) { Items(ITEM_PECHA_BERRY, ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        MESSAGE("Kangaskhan's Kangaskhanite is reacting to 1's Mega Ring!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
+        MESSAGE("Kangaskhan has Mega Evolved into Mega Kangaskhan!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_KANGASKHAN_MEGA);
+    }
+}
+#endif

@@ -143,3 +143,27 @@ SINGLE_BATTLE_TEST("Primordial Sea can be replaced by Desolate Land")
         EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Primordial Sea blocks damaging Fire-type moves (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) {Items(ITEM_PECHA_BERRY, ITEM_BLUE_ORB);}
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EMBER); }
+        TURN { MOVE(opponent, MOVE_EMBER); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Ember!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        MESSAGE("The Fire-type attack fizzled out in the heavy rain!");
+        NOT HP_BAR(player);
+        MESSAGE("The opposing Wobbuffet used Ember!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
+        MESSAGE("The Fire-type attack fizzled out in the heavy rain!");
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(player->hp, player->maxHP);
+    }
+}
+#endif

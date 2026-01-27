@@ -553,3 +553,24 @@ SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Levitate (T
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Roost does not suppress the ungrounded effect of Air Balloon (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ROOST); MOVE(opponent, MOVE_EARTHQUAKE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Roost!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROOST, player);
+        MESSAGE("Wobbuffet's HP was restored.");
+        MESSAGE("The opposing Wobbuffet used Earthquake!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, opponent);
+            HP_BAR(player);
+        }
+    }
+}
+#endif

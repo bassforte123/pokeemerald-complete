@@ -7589,7 +7589,7 @@ BattleScript_ActivateAsOne::
 	end3
 
 BattleScript_FriskMsgWithPopup::
-	copybyte gBattlerAbility, gBattlerAttacker
+	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
 BattleScript_FriskMsg::
 	printstring STRINGID_FRISKACTIVATES
@@ -7597,7 +7597,7 @@ BattleScript_FriskMsg::
 	return
 
 BattleScript_FriskMsgWithPopup2::
-	copybyte gBattlerAbility, gBattlerAttacker
+	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
 BattleScript_FriskMsg2::
 	printstring STRINGID_FRISKACTIVATES
@@ -7607,7 +7607,7 @@ BattleScript_FriskMsg2::
 	return
 
 BattleScript_FriskMsgWithPopup3::
-	copybyte gBattlerAbility, gBattlerAttacker
+	copybyte gBattlerAbility, sBATTLER
 	call BattleScript_AbilityPopUp
 BattleScript_FriskMsg3::
 	printstring STRINGID_FRISKACTIVATES

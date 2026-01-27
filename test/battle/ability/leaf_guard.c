@@ -328,3 +328,53 @@ SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent Rest if Cloud Nine/Air Lock is on
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Toxic Orb (Multi)")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_FLAME_ORB; }
+    PARAMETRIZE { item = ITEM_TOXIC_ORB; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        if (item == ITEM_FLAME_ORB) {
+            NONE_OF { MESSAGE("Leafeon was burned!"); STATUS_ICON(player, burn: TRUE); }
+        }
+        else {
+            NONE_OF { MESSAGE("Leafeon was badly poisoned!"); STATUS_ICON(player, badPoison: TRUE); }
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Leaf Guard doesn't prevent status conditions from Flame Orb and Toxic Orb if Cloud Nine/Air Lock is on the field (Multi)")
+{
+    u32 item, species, ability;
+    PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
+    PARAMETRIZE { item = ITEM_TOXIC_ORB; species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; }
+    PARAMETRIZE { item = ITEM_FLAME_ORB; species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
+    PARAMETRIZE { item = ITEM_TOXIC_ORB; species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        PLAYER(SPECIES_LEAFEON) { Ability(ABILITY_LEAF_GUARD); Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        if (item == ITEM_FLAME_ORB) {
+            MESSAGE("Leafeon was burned!");
+            STATUS_ICON(player, burn: TRUE);
+        }
+        else {
+            MESSAGE("Leafeon was badly poisoned!");
+            STATUS_ICON(player, badPoison: TRUE);
+        }
+    }
+}
+#endif

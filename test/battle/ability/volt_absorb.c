@@ -212,3 +212,26 @@ SINGLE_BATTLE_TEST("Volt Absorb prevents Cell Battery from activating (Traits)")
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Volt Absorb prevents Cell Battery from activating (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); HP(1); MaxHP(100); Items(ITEM_PECHA_BERRY, ITEM_CELL_BATTERY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_THUNDER_SHOCK); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_VOLT_ABSORB);
+        HP_BAR(player, damage: -25);
+        MESSAGE("Jolteon restored HP using its Volt Absorb!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            MESSAGE("Using Cell Battery, the Attack of Jolteon rose!");
+        }
+
+    }
+}
+#endif

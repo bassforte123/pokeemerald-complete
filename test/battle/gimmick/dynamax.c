@@ -299,7 +299,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can be switched out by Eject Butt
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is switched out with the Eject Button!");
     } THEN {
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
 
@@ -398,7 +398,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not immune to Knock Off")
         MESSAGE("The opposing Wobbuffet used Knock Off!");
         MESSAGE("The opposing Wobbuffet knocked off Wobbuffet's Potion!");
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
     }
 }
 
@@ -1743,3 +1743,142 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
 
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-lowering Max Moves, without showing a message")
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-increasing Max Moves, without showing a message")
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can be switched out by Eject Button (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Scratch!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet is switched out with the Eject Button!");
+    } THEN {
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
+    }
+}
+
+// This is true for all item-removing moves.
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not immune to Knock Off (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Knock Off!");
+        MESSAGE("The opposing Wobbuffet knocked off Wobbuffet's Potion!");
+    } THEN {
+        EXPECT_EQ(player->items[0], ITEM_NONE);
+        EXPECT_EQ(player->items[1], ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by Choice items (Multi)", s16 damage)
+{
+    u16 item;
+    PARAMETRIZE { item = ITEM_CHOICE_BAND; }
+    PARAMETRIZE { item = ITEM_NONE; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, item); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(player, MOVE_ARM_THRUST); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+        MESSAGE("Wobbuffet used Max Knuckle!");
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot use Max Guard while holding Assault Vest (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_ASSAULT_VEST].holdEffect == HOLD_EFFECT_ASSAULT_VEST);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_ASSAULT_VEST); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(player, MOVE_PROTECT, allowed: FALSE); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("Wobbuffet used Max Strike!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Sitrus Berries heal based on a Pokemon's non-Dynamax HP (Multi)", s16 damage)
+{
+    u32 dynamax;
+    PARAMETRIZE { dynamax = GIMMICK_NONE; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
+    GIVEN {
+        ASSUME(I_SITRUS_BERRY_HEAL >= GEN_4);
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SITRUS_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLING); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
+    } SCENE {
+        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of the time (Multi)")
+{
+    PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        PLAYER(SPECIES_SNORLAX) { Items(ITEM_PECHA_BERRY, ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_MUNCHLAX) { Items(ITEM_PECHA_BERRY, ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_APICOT_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_APICOT_BERRY); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_STUFF_CHEEKS); \
+               MOVE(playerRight, MOVE_STUFF_CHEEKS); \
+               MOVE(opponentLeft, MOVE_STUFF_CHEEKS); \
+               MOVE(opponentRight, MOVE_STUFF_CHEEKS); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        // turn 1
+        MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
+        MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
+        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+        // turn 2
+        MESSAGE("Snorlax used G-Max Replenish!");
+        MESSAGE("Snorlax found one Apicot Berry!");
+        MESSAGE("Munchlax found one Apicot Berry!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamax is reverted before switch out (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_SCRATCH); SEND_OUT(player, 1); }
+        TURN { SWITCH(player, 0); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+    }
+}
+#endif

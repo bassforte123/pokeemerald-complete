@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Acrobatics doubles in power if the user has no held item", s
     PARAMETRIZE { heldItem = ITEM_NONE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(heldItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(heldItem, heldItem); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ACROBATICS); }
     } SCENE {

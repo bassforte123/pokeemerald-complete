@@ -17276,7 +17276,6 @@ void BS_TryFriskMessage(void)
             {
                 gLastUsedItem = friskedItem;
                 RecordItemEffectBattle(gBattlerTarget, GetItemHoldEffect(gLastUsedItem)); //GetItemHoldEffect ignores negation so negation doesn't need to be added
-                BattleScriptPushCursor();
 
                 if (friskcount == 1) // If Frisk identifies two mons' items, show the pop-up only once.
                 {

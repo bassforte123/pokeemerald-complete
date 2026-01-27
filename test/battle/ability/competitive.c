@@ -672,3 +672,44 @@ SINGLE_BATTLE_TEST("Competitive doesn't activate if the pokemon lowers it's own 
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Competitive activates before White Herb (Multi)")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_LEER; }
+    PARAMETRIZE { move = MOVE_CONFIDE; }
+
+    GIVEN {
+        PLAYER(SPECIES_IGGLYBUFF) { Ability(ABILITY_COMPETITIVE); Items(ITEM_PECHA_BERRY, ITEM_WHITE_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+
+        ABILITY_POPUP(player, ABILITY_COMPETITIVE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Igglybuff's Sp. Atk sharply rose!");
+
+        if (move == MOVE_LEER) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            MESSAGE("Igglybuff returned its stats to normal using its White Herb!");
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+                MESSAGE("Igglybuff returned its stats to normal using its White Herb!");
+            }
+        }
+    } THEN {
+        if (move == MOVE_LEER) {
+            EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+            EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        } else {
+            EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 1);
+        }
+    }
+}
+#endif

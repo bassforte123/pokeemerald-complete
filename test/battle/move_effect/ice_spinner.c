@@ -123,3 +123,35 @@ AI_SINGLE_BATTLE_TEST("Ice Spinner can be chosen by AI regardless if there is a 
         }
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during attack execution (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_LIFE_ORB); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_ICE_SPINNER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, opponent);
+        NOT MESSAGE("The electricity disappeared from the battlefield.");
+    }
+}
+
+SINGLE_BATTLE_TEST("Ice Spinner will not be remove Terrain if user is switched out due to Red Card (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_ICE_SPINNER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        NOT MESSAGE("The electricity disappeared from the battlefield.");
+    }
+}
+#endif

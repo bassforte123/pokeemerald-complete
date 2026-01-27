@@ -67,3 +67,27 @@ SINGLE_BATTLE_TEST("Sunny Day fails if Primordial Sea is active")
         }
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Sunny Day fails if Primordial Sea is active (Multi)")
+{
+    u32 item;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_BLUE_ORB; }
+
+    GIVEN {
+        PLAYER(SPECIES_KYOGRE) { Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
+    } SCENE {
+        if (item == ITEM_BLUE_ORB) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_PRIMAL_REVERSION, player);
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        }
+    }
+}
+#endif
