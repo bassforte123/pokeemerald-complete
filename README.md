@@ -41,7 +41,7 @@ This is the full release of a Multi-Item system which allows pokemon to hold mor
 	- Leftovers and Black Sludge are given a special exception where both can activate together.  The message will give Black Sludge priority but the resulting HP change is the total between the two.
 	- Shell Bell and Life Orb are given a special exception where both can activate together, the resulting message will be based on whether healing or damage is greater.
 	- Passive items that don't need explicit activations such as Charcoal are always active and can also stack effects, though two copies of the exact same item will not stack.
-	- Battle effects that target opponent items they first read which slots are viable targets then select based on the B_MULTI_ITEM_ORDER custom setting.  By default this is set to target latest to earliest, but it can be set to earliest to latest and to random.
+	- Battle effects that target opponent items first read which slots are viable targets then select based on the B_MULTI_ITEM_ORDER custom setting.  By default this is set to target latest to earliest, but it can be set to earliest to latest and to random.
 	- Battle effects that move or restore items are locked to the slot. Thief can only steal if the target slot has an item AND the corresponding attacking pokemon's slot is empty.  Thief will not allocate a stolen item to a different free slot.
 	- Fling uses B_MULTI_ITEM_ORDER selection of the attacker's items but also prioritizes non berry items first.
 	- Acrobatics loses most but not all of its bonus if even one item is held, losing up to the full bonus as more items are held.
