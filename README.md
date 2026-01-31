@@ -1,3 +1,7 @@
+<img width="480" height="320" alt="image" src="https://github.com/user-attachments/assets/eb38a05c-d586-4659-b045-420c603e9ec1" /> <img width="480" height="320" alt="image" src="https://github.com/user-attachments/assets/6c43a30a-728d-4973-8665-8d725fc44448" />
+
+This Trait and Items branch combines the features found in Trait System an Multi Items to allow multiple abilities and held items to be used by your Pokemon.
+
 # Trait System (Release 1.14.2)
 
 This is the full release of the Multi-Ability function I'm calling the Trait System!
