@@ -1,3 +1,5 @@
+<img width="480" height="320" alt="image" src="https://github.com/user-attachments/assets/95a3e459-ede6-4aee-9952-97e8b0a2e82f" />
+
 # Multi-Items (Full Release)
 
 This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.13.1.
@@ -26,6 +28,7 @@ This is the full release of a Multi-Item system which allows pokemon to hold mor
 	- To use more than 2 items, you'll need to update the MAX_MON_ITEMS value in global.c and main.c along with creating additional MON_DATA_HELD_ITEM variables, allocating space for another helditem varibale in the PokemonSubstructs, and updating the summary screen to account for the new slots.
 	- The rest of the logic however will adjust for the slot numbers, so all the extra work is just in allocating the slot itself.
 	- NOTE that since the held items are stored just before the moves, if you notice a pokemon's first move dissapear or change then that is likely due to the item logic mistakenly targeting a slot beyond what should be allowed.
+ 	- A sample alternate Pokemon Skills page where Berries are specified instead of general Held Items is included.  Just rename the "page_skills(berry)" file to "page_skills", replacing the existing one, to use it.
 	- Please report any bugs or suggestions to Bassforte in the RHH discord.
 
 # About `pokeemerald-expansion`
