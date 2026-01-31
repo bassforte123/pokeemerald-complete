@@ -53,7 +53,7 @@ u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId)
     u8 id, i;
     u16 species;
     u32 personality;
-    u16 slot = GetNextMonEmptySlot(mon, itemId);
+    u16 slot = GetMonNextEmptySlot(mon, itemId);
 
     heldItem[0] = itemId;
     heldItem[1] = itemId >> 8;
@@ -122,7 +122,7 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
     u8 heldItem[2];
     u16 itemId = mail->itemId;
     u8 mailId = GiveMailToMonByItemId(mon, itemId);
-    u16 slot = GetNextMonEmptySlot(mon, itemId);
+    u16 slot = GetMonNextEmptySlot(mon, itemId);
 
     if (mailId == MAIL_NONE || slot == MAX_MON_ITEMS)
         return MAIL_NONE;

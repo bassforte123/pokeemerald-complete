@@ -11613,7 +11613,7 @@ u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating)
 }
 
 //Gets next valid slot to add an item to based categorization flag and item's heldSlot value
-u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
+u8 GetMonNextEmptySlot(struct Pokemon *mon, u16 item)
 {
     u8 i, slot = MAX_MON_ITEMS;
 
@@ -11656,6 +11656,33 @@ u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
     //         }
     //     }
     // }
+
+    return slot;
+}
+
+u8 GetBattlerNextEmptySlot(u32 battler, u16 item)
+{
+    u8 i, slot = MAX_MON_ITEMS;
+
+    //If categorization flag is enabled, items can only be sent to their assigned slots based on their heldSlot value.
+    //Otherwise, items are first sent to empty available slots and if none are found, target the first item slot
+    if (B_HELD_ITEM_CATEGORIZATION)
+    {
+        i = gItemsInfo[item].heldSlot;
+        if (gBattleMons[battler].items[i] == ITEM_NONE)
+            slot = i;
+    }
+    else
+    {
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (gBattleMons[battler].items[i] == ITEM_NONE)
+            {
+                slot = i;
+                break;
+            }
+        }
+    }
 
     return slot;
 }

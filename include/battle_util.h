@@ -448,7 +448,8 @@ u16 GetBattlerHeldItemWithEffect(u32 battler, u32 holdEffect, bool32 checkNegati
 u8 GetBattlerHeldItemSlotWithEffect(u32 battler, u32 holdEffect, bool32 checkNegating);
 u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating);
 u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating);
-u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item);
+u8 GetMonNextEmptySlot(struct Pokemon *mon, u16 item);
+u8 GetBattlerNextEmptySlot(u32 battler, u16 item);
 u8 GetSlot(u8 *availableSlots, u8 size);
 u32 GetBattlerItemHoldEffect(u32 battler, u32 item);
 bool8 BattlerHasBerry(u32 battler);

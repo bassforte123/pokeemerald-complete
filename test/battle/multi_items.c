@@ -1,6 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
+#if MAX_MON_ITEMS > 1
 // Generally one item activation per timing window.
 SINGLE_BATTLE_TEST("Multi - IsOnSwitchInFirstTurnActivation")
 {
@@ -345,3 +346,83 @@ SINGLE_BATTLE_TEST("Multi - onEffect effects do not conflict")
         MESSAGE("Using Room Service, the Speed of Wobbuffet fell!");
     }
 }
+
+#if B_HELD_ITEM_CATEGORIZATION == TRUE
+//If B_HELD_ITEM_CATEGORIZATION is set, pokeball should only be able to go into the specified slot even if another slot is available. 
+WILD_BATTLE_TEST("Multi - Ball Fetch follows Item Categorization")
+{
+    u32 item;
+    PARAMETRIZE {item = ITEM_NONE; }
+    PARAMETRIZE {item = ITEM_NUGGET; }
+
+    GIVEN {
+        PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); Items(item); }
+        OPPONENT(SPECIES_METAGROSS);
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_POKE_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16) );}
+        TURN {}
+    } SCENE {
+        if (item == ITEM_NONE)
+            ABILITY_POPUP(player, ABILITY_BALL_FETCH);
+        else
+            NOT ABILITY_POPUP(player, ABILITY_BALL_FETCH);
+    } THEN {
+        if (item == ITEM_NONE)
+            EXPECT_EQ(player->items[0], ITEM_POKE_BALL);
+        else
+            EXPECT_EQ(player->items[0], item);
+    }
+}
+#endif
+
+#if B_MULTI_ITEM_ORDER == 0
+WILD_BATTLE_TEST("Multi - B_MULTI_ITEM_ORDER targets latest to earliest item slot")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    PARAMETRIZE { move = MOVE_KNOCK_OFF; }
+    PARAMETRIZE { move = MOVE_BUG_BITE; }
+    PARAMETRIZE { move = MOVE_PLUCK; }
+    PARAMETRIZE { move = MOVE_INCINERATE; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY, ITEM_PECHA_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->items[1], ITEM_NONE);
+    }
+}
+#endif
+
+// Note, there's a catch in GetSlot that forces tests to Item Order 0 to keep tests from breaking.
+// Disable that catch to use this test.
+#if B_MULTI_ITEM_ORDER == 1
+WILD_BATTLE_TEST("Multi - B_MULTI_ITEM_ORDER targets latest to earliest item slot")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+    PARAMETRIZE { move = MOVE_KNOCK_OFF; }
+    PARAMETRIZE { move = MOVE_BUG_BITE; }
+    PARAMETRIZE { move = MOVE_PLUCK; }
+    PARAMETRIZE { move = MOVE_INCINERATE; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY, ITEM_PECHA_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
+    }
+}
+#endif
+
+#endif

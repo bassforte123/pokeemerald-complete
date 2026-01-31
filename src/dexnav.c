@@ -1238,7 +1238,7 @@ static void CreateDexNavWildMon(u16 species, u8 potential, u8 level, u8 abilityN
     // Set Held Item
     if (item)
     {
-        slot = GetNextMonEmptySlot(mon, item);
+        slot = GetMonNextEmptySlot(mon, item);
         if (slot != MAX_MON_ITEMS)
                 SetMonData(mon, MON_DATA_HELD_ITEM + slot, &item);
     }
