@@ -13533,7 +13533,7 @@ static void Cmd_pickup(void)
                 if (isInPyramid)
                 {
                     giveItem = GetBattlePyramidPickupItemId();
-                    slot = GetNextMonEmptySlot(&gPlayerParty[i], giveItem);
+                    slot = GetMonNextEmptySlot(&gPlayerParty[i], giveItem);
                     if (slot != MAX_MON_ITEMS)
                     {
                         SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
@@ -13550,7 +13550,7 @@ static void Cmd_pickup(void)
                         if (rand > percentTotal)
                         {
                             storeItem = sPickupTable[j].itemId;
-                            slot = GetNextMonEmptySlot(&gPlayerParty[i], storeItem);
+                            slot = GetMonNextEmptySlot(&gPlayerParty[i], storeItem);
                             if (slot != MAX_MON_ITEMS)
                             {
                                 giveItem = storeItem; // Gives the rarest chosen item that fits slot categorization
@@ -13570,7 +13570,7 @@ static void Cmd_pickup(void)
                 if ((lvlDivBy10 + 1 ) * 5 > Random() % 100)
                 {
                     giveItem = ITEM_HONEY;
-                    slot = GetNextMonEmptySlot(&gPlayerParty[i], giveItem);
+                    slot = GetMonNextEmptySlot(&gPlayerParty[i], giveItem);
                     if (slot != MAX_MON_ITEMS)
                     {
                         SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &giveItem);
@@ -13756,7 +13756,7 @@ static void Cmd_tryrecycleitem(void)
 
     if (slot != MAX_MON_ITEMS)
     {
-        if (gCurrentMove == MOVE_NONE && BattlerHasTrait(gBattlerAttacker, ABILITY_PICKUP))
+        if (gCurrentMove == MOVE_NONE && cmd->type == RECYCLE_ITEM_PICKUP)
             usedHeldItem = &GetBattlerPartyState(gBattlerTarget)->usedHeldItems[slot];
         else
             usedHeldItem = &GetBattlerPartyState(gBattlerAttacker)->usedHeldItems[slot];

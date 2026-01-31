@@ -211,6 +211,9 @@
 #define RECYCLE_ITEM_PICKUP     2
 #define RECYCLE_ITEM_HARVEST    3
 #define LAST_ITEM_CORROSIVE     1
-#define LAST_ITEM_FLING         2  
+#define LAST_ITEM_FLING         2
+#define TRIGGER_HARVEST         1
+#define TRIGGER_BALL_FETCH      2
+#define TRIGGER_PICKUP          3
 
 #endif // GUARD_CONSTANTS_GLOBAL_H

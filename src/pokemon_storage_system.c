@@ -3789,7 +3789,7 @@ static void GiveChosenBagItem(void)
         if (sInPartyMenu)
         {
             struct Pokemon *mon = &gPlayerParty[pos];
-            slot = GetNextMonEmptySlot(mon, itemId);
+            slot = GetMonNextEmptySlot(mon, itemId);
             if (slot != MAX_MON_ITEMS)
             {
                 SetMonData(&gPlayerParty[pos], MON_DATA_HELD_ITEM + slot, &itemId);

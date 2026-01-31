@@ -4110,10 +4110,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
 
     enum Ability battlerTraits[MAX_MON_TRAITS];
     STORE_BATTLER_TRAITS(battler);
-    u8 index, slot, targetableSlots[MAX_MON_ITEMS];
-    
-    index = 0;
-    targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+    u8 slot;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return 0;
@@ -4638,27 +4635,17 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
     case ABILITYEFFECT_ENDTURN:
         if (IsBattlerAlive(battler))
         {
+            u8 itemTraitType = 0;
+            u8 itemTraitSlot = MAX_MON_ITEMS;
             gBattlerAttacker = battler;
 
-            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PICKUP)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-            {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                for (i = 0; i < MAX_MON_ITEMS; i++)
-                {
-                    if (gBattleMons[battler].items[i] == ITEM_NONE
-                    && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
-                    && PickupHasValidTarget(battler))
-                    {
-                        gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
-                        gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItems[i];
-                        PushTraitStack(battler, ABILITY_PICKUP);
-                        BattleScriptExecute(BattleScript_PickupActivates);
-                        effect++;
-                        break;
-                    }
-                }
-            }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HARVEST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+            // Item abilities have additional conitions which might conflict with following Else statements
+            // Harvest, Pickup, and Ball Fetch do their item availability checks first independantly
+            // then just their activations are included in the If Else statements of the rest of the abilities.
+            // If affecting the same slot at the same time, priority is Harvest, Pickup, Ball Fetch (Ball Fetch is last because it seeks an empty slot)
+
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HARVEST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && itemTraitType == 0)
             {
                 for (i = 0; i < MAX_MON_ITEMS; i++)
                 {
@@ -4667,46 +4654,71 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                      && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
                      && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
                     {
-                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
-                        PushTraitStack(battler, ABILITY_HARVEST);
-                        BattleScriptExecute(BattleScript_HarvestActivates);
-                        effect++;
+                        itemTraitType = TRIGGER_HARVEST;
+                        itemTraitSlot = i;
                         break;
                     }
                 }
-            }    
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BALL_FETCH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+            }   
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_PICKUP)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && itemTraitType == 0)
+            {
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (gBattleMons[battler].items[i] == ITEM_NONE
+                     && gBattleStruct->changedItems[battler][i] == ITEM_NONE   // Will not inherit an item
+                     && PickupHasValidTarget(battler))
+                    {
+                        itemTraitType = TRIGGER_PICKUP;
+                        itemTraitSlot = i;
+                        break;
+                    }
+                }
+            }
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BALL_FETCH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && itemTraitType == 0)
             {
                 slot = MAX_MON_ITEMS;
 
-                if (!(gBattleTypeFlags & BATTLE_TYPE_RAID)
-                 && B_HELD_ITEM_CATEGORIZATION
-                 && gBattleMons[battler].items[gItemsInfo[gLastUsedBall].heldSlot] == ITEM_NONE)
-                {
-                    slot = gItemsInfo[gLastUsedBall].heldSlot;
-                }
-                else
-                {
-                    for (int i = 0; i < MAX_MON_ITEMS; i++)
-                    {
-                        if (gBattleMons[battler].items[i] == ITEM_NONE)
-                        {
-                            slot = i;
-                            break;
-                        }
-                    }
-                }
-
+                if (!(gBattleTypeFlags & BATTLE_TYPE_RAID))
+                    slot = GetBattlerNextEmptySlot(battler, gLastUsedBall);
+                
                 if (gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
-                    && !gHasFetchedBall
-                    && slot != MAX_MON_ITEMS)
+                 && !gHasFetchedBall
+                 && slot != MAX_MON_ITEMS)
                 {
-                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                    itemTraitType = TRIGGER_BALL_FETCH;
+                    itemTraitSlot = slot;
+                }
+            }
+            
+            if (itemTraitType != 0)
+            {
+                if (itemTraitType == TRIGGER_HARVEST)
+                {
+                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[itemTraitSlot];
+                    PushTraitStack(battler, ABILITY_HARVEST);
+                    BattleScriptExecute(BattleScript_HarvestActivates);
+                    effect++;
+                    break;
+                }
+                else if (itemTraitType == TRIGGER_PICKUP)
+                {
+                    gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_PICKUP) - 1] = TRUE;
+                    gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
+                    gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItems[itemTraitSlot];
+                    PushTraitStack(battler, ABILITY_PICKUP);
+                    BattleScriptExecute(BattleScript_PickupActivates);
+                    effect++;
+                    break;
+                }
+                else if (itemTraitType == TRIGGER_BALL_FETCH)
+                {
+                    gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_BALL_FETCH) - 1] = TRUE;
                     gLastUsedItem = gLastUsedBall;
                     gBattleScripting.battler = battler;
-                    gBattleMons[battler].items[slot] = gLastUsedItem;
-                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + slot, 0, 2, &gLastUsedItem);
+                    gBattleMons[battler].items[itemTraitSlot] = gLastUsedItem;
+                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE + itemTraitSlot, 0, 2, &gLastUsedItem);
                     MarkBattlerForControllerExec(battler);
                     gHasFetchedBall = TRUE;
                     PushTraitStack(battler, ABILITY_BALL_FETCH);
@@ -4715,45 +4727,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                     break;
                 }
             }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-			{
-                for (slot = 0; slot < MAX_MON_ITEMS; slot++)
-                {
-                    if (gDisableStructs[battler].cudChew[slot])
-                    {
-                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                        gBattleScripting.battler = battler;
-                        gDisableStructs[battler].cudChew[slot] = FALSE;
-                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[slot];
-                        GetBattlerPartyState(battler)->usedHeldItems[slot] = ITEM_NONE;
-                        PushTraitStack(battler, ABILITY_CUD_CHEW);
-                        BattleScriptExecute(BattleScript_CudChewActivates);
-                        effect++;
-                        break;
-                    }
-                }
-
-                for (i = 0; i < MAX_MON_ITEMS; i++)
-                {
-                    if (!gDisableStructs[battler].cudChew[i] && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
-                    {
-                        if (targetableSlots[0] != MAX_MON_ITEMS)
-                            index++;
-                        targetableSlots[index] = i;
-                    }
-                }
-
-                if (targetableSlots[0] != MAX_MON_ITEMS)
-                {
-                    slot = gLastItemSlot = GetSlot(targetableSlots, index);
-                    {
-                        gDisableStructs[battler].cudChew[slot] = TRUE;
-                    }
-                }
-			}
-
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SPEED_BOOST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-                && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN) && gDisableStructs[battler].isFirstTurn != 2)
+             && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN) && gDisableStructs[battler].isFirstTurn != 2)
             {
                 gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                 SaveBattlerAttacker(gBattlerAttacker);
@@ -4803,16 +4778,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 gDisableStructs[gBattlerAttacker].truantCounter ^= 1;
                 break;
             }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SLOW_START)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SLOW_START)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+                && gDisableStructs[battler].slowStartTimer > 0 && --gDisableStructs[battler].slowStartTimer == 0)
             {
-                if (gDisableStructs[battler].slowStartTimer > 0 && --gDisableStructs[battler].slowStartTimer == 0)
-                {
                     gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                     PushTraitStack(battler, ABILITY_SLOW_START);
                     BattleScriptExecute(BattleScript_SlowStartEnds);
                     effect++;
                     break;
-                }
             }
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BAD_DREAMS)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
             {
@@ -4821,6 +4794,29 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 BattleScriptExecute(BattleScript_BadDreamsActivates);
                 effect++;
                 break;
+            }
+            // Cud Chew moved to the bottom because it has additional IF conditions so it could block the Else on abilities coming after (Multi)
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+			{
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (gDisableStructs[battler].cudChew[i])
+                    {
+                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                        gBattleScripting.battler = battler;
+                        gDisableStructs[battler].cudChew[i] = FALSE;
+                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
+                        GetBattlerPartyState(battler)->usedHeldItems[i] = ITEM_NONE;
+                        PushTraitStack(battler, ABILITY_CUD_CHEW);
+                        BattleScriptExecute(BattleScript_CudChewActivates);
+                        effect++;
+                        break;
+                    }
+                    else if (!gDisableStructs[battler].cudChew[i] && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                    {
+                        gDisableStructs[battler].cudChew[i] = TRUE;
+                    }
+                }
             }
         }
         break;
@@ -12007,7 +12003,7 @@ u8 GetHeldItemSlot(u32 battler, u32 itemId, bool32 checkNegating)
 }
 
 //Gets next valid slot to add an item to based categorization flag and item's heldSlot value
-u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
+u8 GetMonNextEmptySlot(struct Pokemon *mon, u16 item)
 {
     u8 i, slot = MAX_MON_ITEMS;
 
@@ -12050,6 +12046,33 @@ u8 GetNextMonEmptySlot(struct Pokemon *mon, u16 item)
     //         }
     //     }
     // }
+
+    return slot;
+}
+
+u8 GetBattlerNextEmptySlot(u32 battler, u16 item)
+{
+    u8 i, slot = MAX_MON_ITEMS;
+
+    //If categorization flag is enabled, items can only be sent to their assigned slots based on their heldSlot value.
+    //Otherwise, items are first sent to empty available slots and if none are found, target the first item slot
+    if (B_HELD_ITEM_CATEGORIZATION)
+    {
+        i = gItemsInfo[item].heldSlot;
+        if (gBattleMons[battler].items[i] == ITEM_NONE)
+            slot = i;
+    }
+    else
+    {
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            if (gBattleMons[battler].items[i] == ITEM_NONE)
+            {
+                slot = i;
+                break;
+            }
+        }
+    }
 
     return slot;
 }

@@ -1607,7 +1607,7 @@ void CreateEnemyEventMon(void)
         heldItem[0] = itemId;
         heldItem[1] = itemId >> 8;
 
-        slot = GetNextMonEmptySlot(&gEnemyParty[0], itemId);
+        slot = GetMonNextEmptySlot(&gEnemyParty[0], itemId);
         
         if (slot != MAX_MON_ITEMS)
             SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM + slot, heldItem);  //leaving as one item to not mess with the specialVar (Multi)
@@ -6355,7 +6355,7 @@ void SetWildMonHeldItem(void)
                     // In active Altering Cave, use special item list
                     if (rnd < chanceNotRare)
                         continue;
-                    slot = GetNextMonEmptySlot(&gEnemyParty[i], sAlteringCaveWildMonHeldItems[alteringCaveId].item);
+                    slot = GetMonNextEmptySlot(&gEnemyParty[i], sAlteringCaveWildMonHeldItems[alteringCaveId].item);
                     if (slot != MAX_MON_ITEMS)
                         SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &sAlteringCaveWildMonHeldItems[alteringCaveId].item);
                 }
@@ -6366,13 +6366,13 @@ void SetWildMonHeldItem(void)
                         continue;
                     if (rnd < chanceNotRare)
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                     }
                     else
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
                     }
@@ -6383,7 +6383,7 @@ void SetWildMonHeldItem(void)
                 if (gSpeciesInfo[species].itemCommon == gSpeciesInfo[species].itemRare && gSpeciesInfo[species].itemCommon != ITEM_NONE)
                 {
                     // Both held items are the same, 100% chance to hold item
-                    slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                    slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
                     if (slot != MAX_MON_ITEMS)
                         SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                 }
@@ -6393,13 +6393,13 @@ void SetWildMonHeldItem(void)
                         continue;
                     if (rnd < chanceNotRare)
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemCommon);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemCommon);
                     }
                     else
                     {
-                        slot = GetNextMonEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
+                        slot = GetMonNextEmptySlot(&gEnemyParty[i], gSpeciesInfo[species].itemRare);
                         if (slot != MAX_MON_ITEMS)
                             SetMonData(&gEnemyParty[i], MON_DATA_HELD_ITEM + slot, &gSpeciesInfo[species].itemRare);
                     }

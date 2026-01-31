@@ -3152,7 +3152,7 @@ static void BattleStartClearSetData(void)
 
 void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
 {
-    s32 i;
+    s32 i, j;
     enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
     struct DisableStruct disableStructCopy = gDisableStructs[battler];
 
@@ -3283,7 +3283,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gSpecialStatuses[battler].switchInAbilityDone = FALSE;
 
     // Restore struct member so replacement does not miss timing (Traits)
-    for(int j=0; j<=MAX_MON_INNATES; j++)
+    for(j=0; j<=MAX_MON_INNATES; j++)
     {
         gSpecialStatuses[battler].switchInTraitDone[j] = FALSE;
         gSpecialStatuses[battler].endTurnTraitDone[j] = FALSE;
