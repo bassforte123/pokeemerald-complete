@@ -2096,18 +2096,17 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_TRICK:
             bool32 trickcheck = FALSE;
             
-            if (aiData->abilities[battlerAtk] != ABILITY_STICKY_HOLD
-             || aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
+            for (i=0; i < MAX_MON_ITEMS; i++)
             {
-                for (i=0; i < MAX_MON_ITEMS; i++)
+                if (!((gBattleMons[battlerAtk].items[i] == ITEM_NONE && aiData->items[battlerDef][i] == ITEM_NONE)
+                || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].items[i])
+                || !CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef][i])
+                || !CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef][i])
+                || !CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerAtk].items[i])
+                || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD
+                || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)))
                 {
-                    if (!((gBattleMons[battlerAtk].items[i] == ITEM_NONE && aiData->items[battlerDef][i] == ITEM_NONE)
-                    || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].items[i])
-                    || !CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef][i])
-                    || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)))
-                    {
-                        trickcheck = TRUE;
-                    }
+                    trickcheck = TRUE;
                 }
             }
             if (!trickcheck)
@@ -2521,8 +2520,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                  || aiData->items[battlerDef][i] != ITEM_NONE
                  || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].items[i])    // AI knows its own item
                  || !CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerAtk].items[i])
-                 || aiData->abilities[battlerAtk] == ABILITY_STICKY_HOLD
-                 || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
+                    || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
                     {
                         hasValidSlot = TRUE;
                         break;
@@ -5565,9 +5563,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 tailwindScore += 1;
             if (speed <= foe2Speed && (speed * 2) > foe2Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe1Speed && (partnerSpeed * 2) > foe1Speed)
                 tailwindScore += 1;
-            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+            if (partnerSpeed <= foe2Speed && (partnerSpeed * 2) > foe2Speed)
                 tailwindScore += 1;
 
             if (tailwindScore > 0)

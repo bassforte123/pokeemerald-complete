@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form")
     }
 }
 
-SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold")
+SINGLE_BATTLE_TEST("Trick doesn't fail if the user has Sticky Hold")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_SITRUS_BERRY); }
@@ -147,10 +147,10 @@ SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
-        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
     } THEN {
-        EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->items[0] == ITEM_LUM_BERRY);
+        EXPECT(player->items[0] == ITEM_LUM_BERRY);
+        EXPECT(opponent->items[0] == ITEM_SITRUS_BERRY);
     }
 }
 
@@ -181,6 +181,18 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
     } THEN {
         EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
         EXPECT(opponent->items[0] == ITEM_LUM_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick can be used against targets with an active form change that doesn't require items")
+{
+    GIVEN {
+        PLAYER(SPECIES_XERNEAS);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TRICK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
     }
 }
 
@@ -337,7 +349,7 @@ SINGLE_BATTLE_TEST("Trick fails against Sticky Hold (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute (Multi)")
+SINGLE_BATTLE_TEST("Trick doesn't fail if the user has Sticky Hold (Multi)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); Speed(50); }
@@ -347,8 +359,20 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute (Multi)")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->items[1] == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->items[1] == ITEM_LUM_BERRY);
+        EXPECT(player->items[1] == ITEM_LUM_BERRY);
+        EXPECT(opponent->items[1] == ITEM_SITRUS_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trick can be used against targets with an active form change that doesn't require items (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_XERNEAS);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NUGGET, ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TRICK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
     }
 }
 #endif

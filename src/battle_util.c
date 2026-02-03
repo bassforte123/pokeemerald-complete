@@ -689,7 +689,7 @@ bool32 TryRunFromBattle(u32 battler)
         gProtectStructs[battler].fleeType = FLEE_ITEM;
         effect++;
     }
-    else if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    else if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
     {
         effect++;
     }
@@ -3479,12 +3479,43 @@ static void ForewarnChooseMove(u32 battler)
         }
     }
 
-    for (bestId = 0, i = 1; i < count; i++)
+    if (count == 0)
     {
-        if (data[i].power > data[bestId].power)
+        Free(data);
+        return;
+    }
+
+    u32 tieCount = 1;
+    u8 bestPower = data[0].power;
+
+    bestId = 0;
+    for (i = 1; i < count; i++)
+    {
+        if (data[i].power > bestPower)
+        {
+            bestPower = data[i].power;
             bestId = i;
-        else if (data[i].power == data[bestId].power && Random() & 1)
-            bestId = i;
+            tieCount = 1;
+        }
+        else if (data[i].power == bestPower)
+        {
+            tieCount++;
+        }
+    }
+
+    if (tieCount > 1)
+    {
+        u32 tieIndex = RandomUniform(RNG_FOREWARN, 0, tieCount - 1);
+        for (i = 0, bestId = 0; i < count; i++)
+        {
+            if (data[i].power != bestPower)
+                continue;
+            if (tieIndex-- == 0)
+            {
+                bestId = i;
+                break;
+            }
+        }
     }
 
     gEffectBattler = data[bestId].battler;
@@ -4310,7 +4341,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         {
             effect += CommonSwitchInAbilities(battler, ABILITY_FRISK, traitCheck, BattleScript_FriskActivates);
         }
-        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_FOREWARN)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1])
+        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_FOREWARN)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1] && !IsOpposingSideEmpty(battler))
         {
             ForewarnChooseMove(battler);
             effect += CommonSwitchInAbilities(battler, ABILITY_FOREWARN, traitCheck, BattleScript_ForewarnActivates);
@@ -4617,6 +4648,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
              && IsBattlerAlive(battler)
              && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
+             && (gChosenActionByBattler[partner] != B_ACTION_SWITCH || HasBattlerActedThisTurn(partner))
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
         {
                 SaveBattlerAttacker(gBattlerAttacker);
@@ -4727,6 +4759,114 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                     break;
                 }
             }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+            && IsBattlerWeatherAffected(battler, B_WEATHER_HAIL | B_WEATHER_SNOW)
+            && !IsBattlerAtMaxHp(battler)
+            && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
+            && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
+            && !gBattleMons[battler].volatiles.healBlock)
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_ICE_BODY);
+                BattleScriptExecute(BattleScript_IceBodyHeal);
+                SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                effect++;
+                break;
+            }
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_RAIN_DISH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && IsBattlerWeatherAffected(battler, B_WEATHER_RAIN)
+             && !IsBattlerAtMaxHp(battler)
+             && !gBattleMons[battler].volatiles.healBlock)
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_RAIN_DISH);
+                if (!SearchTraits(battlerTraits, ABILITY_DRY_SKIN))
+                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
+                else
+                {
+                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) * (0.187)); // Rain Dish + Dry Skin
+                    gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_DRY_SKIN) - 1] = TRUE;
+                }
+                BattleScriptExecute(BattleScript_RainDishActivates);
+                effect++;
+                break;
+            }
+             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_SOLAR_POWER);
+                if (!SearchTraits(battlerTraits, ABILITY_DRY_SKIN))
+                    SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
+                else
+                {
+                    SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4); // Solar Power + Dry Skin
+                    gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_DRY_SKIN) - 1] = TRUE;
+                }
+                BattleScriptExecute(BattleScript_SolarPowerActivates);
+                effect++;
+                break;
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_DRY_SKIN)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+            {
+                if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN) && !SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)) // Damage stacking handled in Solar Power
+                {
+                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                    PushTraitStack(battler, ABILITY_DRY_SKIN);
+                    SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
+                    BattleScriptExecute(BattleScript_SolarPowerActivates);
+                    effect++;
+                    break;
+                }
+                else if (IsBattlerWeatherAffected(battler, B_WEATHER_RAIN) && !SearchTraits(battlerTraits, ABILITY_RAIN_DISH)) // Healing stacking handled in Rain Dish
+                {
+                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                    PushTraitStack(battler, ABILITY_DRY_SKIN);
+                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
+                    BattleScriptExecute(BattleScript_RainDishActivates);
+                    effect++;
+                    break;
+                }
+            }
+            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HYDRATION)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && IsBattlerWeatherAffected(battler, B_WEATHER_RAIN)
+             && gBattleMons[battler].status1 & STATUS1_ANY)
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_HYDRATION);
+                goto ABILITY_HEAL_MON_STATUS;
+            }
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SHED_SKIN)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
+             && gBattleMons[battler].status1 & STATUS1_ANY
+             && (GetConfig(CONFIG_ABILITY_TRIGGER_CHANCE) == GEN_4 ? RandomPercentage(RNG_SHED_SKIN, 30) : RandomChance(RNG_SHED_SKIN, 1, 3)))
+            {
+                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                PushTraitStack(battler, ABILITY_SHED_SKIN);
+                ABILITY_HEAL_MON_STATUS:
+                    if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
+                        StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+                    if (gBattleMons[battler].status1 & STATUS1_SLEEP)
+                    {
+                        StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+                        TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
+                    }
+
+                    if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
+                        StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
+                    if (gBattleMons[battler].status1 & STATUS1_BURN)
+                        StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+                    if (gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
+                        StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
+
+                    gBattleMons[battler].status1 = 0;
+                    gBattleMons[battler].volatiles.nightmare = FALSE;
+                    gBattleScripting.battler = battler;
+                    BattleScriptExecute(BattleScript_ShedSkinActivates);
+                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
+                    MarkBattlerForControllerExec(battler);
+                    effect++;
+                    break;
+            }
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SPEED_BOOST)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
              && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN) && gDisableStructs[battler].isFirstTurn != 2)
             {
@@ -4795,141 +4935,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 effect++;
                 break;
             }
-            // Cud Chew moved to the bottom because it has additional IF conditions so it could block the Else on abilities coming after (Multi)
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-			{
-                for (i = 0; i < MAX_MON_ITEMS; i++)
-                {
-                    if (gDisableStructs[battler].cudChew[i])
-                    {
-                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                        gBattleScripting.battler = battler;
-                        gDisableStructs[battler].cudChew[i] = FALSE;
-                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
-                        GetBattlerPartyState(battler)->usedHeldItems[i] = ITEM_NONE;
-                        PushTraitStack(battler, ABILITY_CUD_CHEW);
-                        BattleScriptExecute(BattleScript_CudChewActivates);
-                        effect++;
-                        break;
-                    }
-                    else if (!gDisableStructs[battler].cudChew[i] && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
-                    {
-                        gDisableStructs[battler].cudChew[i] = TRUE;
-                    }
-                }
-            }
-        }
-        break;
-    case ABILITYEFFECT_ENDTURN_WEATHER:  
-        if (IsBattlerAlive(battler))
-        {
-            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_RAIN_DISH)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-             && IsBattlerWeatherAffected(battler, B_WEATHER_RAIN)
-             && !IsBattlerAtMaxHp(battler)
-             && !gBattleMons[battler].volatiles.healBlock)
-            {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                PushTraitStack(battler, ABILITY_RAIN_DISH);
-                if (!SearchTraits(battlerTraits, ABILITY_DRY_SKIN))
-                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
-                else
-                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) * (0.187)); // Rain Dish + Dry Skin
-                BattleScriptExecute(BattleScript_RainDishActivates);
-                effect++;
-                break;
-            }
-             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-             && IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
-            {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                PushTraitStack(battler, ABILITY_SOLAR_POWER);
-                if (!SearchTraits(battlerTraits, ABILITY_DRY_SKIN))
-                    SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-                else
-                    SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4); // Solar Power + Dry Skin
-                BattleScriptExecute(BattleScript_SolarPowerActivates);
-                effect++;
-                break;
-            }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_DRY_SKIN)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
-            {
-                if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN) && !SearchTraits(battlerTraits, ABILITY_SOLAR_POWER)) // Damage stacking handled in Solar Power
-                {
-                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                    PushTraitStack(battler, ABILITY_DRY_SKIN);
-                    SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-                    BattleScriptExecute(BattleScript_SolarPowerActivates);
-                    effect++;
-                    break;
-                }
-                else if (IsBattlerWeatherAffected(battler, B_WEATHER_RAIN) && !SearchTraits(battlerTraits, ABILITY_RAIN_DISH)) // Healing stacking handled in Rain Dish
-                {
-                    gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                    PushTraitStack(battler, ABILITY_DRY_SKIN);
-                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-                    BattleScriptExecute(BattleScript_RainDishActivates);
-                    effect++;
-                    break;
-                }
-            }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-             && IsBattlerWeatherAffected(battler, B_WEATHER_HAIL | B_WEATHER_SNOW)
-             && !IsBattlerAtMaxHp(battler)
-             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
-             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-             && !gBattleMons[battler].volatiles.healBlock)
-            {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                PushTraitStack(battler, ABILITY_ICE_BODY);
-                BattleScriptExecute(BattleScript_IceBodyHeal);
-                SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
-                effect++;
-                break;
-            }
-        }
-        break;
-    case ABILITYEFFECT_ENDTURN_STATUS_CURE:
-        if (IsBattlerAlive(battler))
-        {
-            if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HYDRATION)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-             && IsBattlerWeatherAffected(battler, B_WEATHER_RAIN)
-             && gBattleMons[battler].status1 & STATUS1_ANY)
-            {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                PushTraitStack(battler, ABILITY_HYDRATION);
-                goto ABILITY_HEAL_MON_STATUS;
-            }
-            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SHED_SKIN)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
-             && gBattleMons[battler].status1 & STATUS1_ANY
-             && (B_ABILITY_TRIGGER_CHANCE == GEN_4 ? RandomPercentage(RNG_SHED_SKIN, 30) : RandomChance(RNG_SHED_SKIN, 1, 3)))
-            {
-                gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
-                PushTraitStack(battler, ABILITY_SHED_SKIN);
-                ABILITY_HEAL_MON_STATUS:
-                    if (gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON))
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
-                    if (gBattleMons[battler].status1 & STATUS1_SLEEP)
-                    {
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
-                        TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
-                    }
-
-                    if (gBattleMons[battler].status1 & STATUS1_PARALYSIS)
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
-                    if (gBattleMons[battler].status1 & STATUS1_BURN)
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
-                    if (gBattleMons[battler].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE))
-                        StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
-
-                    gBattleMons[battler].status1 = 0;
-                    gBattleMons[battler].volatiles.nightmare = FALSE;
-                    gBattleScripting.battler = battler;
-                    BattleScriptExecute(BattleScript_ShedSkinActivates);
-                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
-                    MarkBattlerForControllerExec(battler);
-                    effect++;
-                    break;
-            }
             else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_HEALER)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
             {
                 gBattleScripting.battler = partner;
@@ -4944,11 +4949,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                     break;
                 }
             }
-        }
-        break;
-    case ABILITYEFFECT_ENDTURN_FORM_CHANGE:
-        if (IsBattlerAlive(battler))
-        {
             if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SCHOOLING)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1]
              && gBattleMons[battler].level >= 20
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
@@ -5002,7 +5002,29 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
                 effect++;
                 break;
 			}
-
+            // Cud Chew moved to the bottom because it has additional IF conditions so it could block the Else on abilities coming after (Multi)
+            else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_CUD_CHEW)) && !gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1])
+			{
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (gDisableStructs[battler].cudChew[i])
+                    {
+                        gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
+                        gBattleScripting.battler = battler;
+                        gDisableStructs[battler].cudChew[i] = FALSE;
+                        gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[i];
+                        GetBattlerPartyState(battler)->usedHeldItems[i] = ITEM_NONE;
+                        PushTraitStack(battler, ABILITY_CUD_CHEW);
+                        BattleScriptExecute(BattleScript_CudChewActivates);
+                        effect++;
+                        break;
+                    }
+                    else if (!gDisableStructs[battler].cudChew[i] && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItems[i]) == POCKET_BERRIES)
+                    {
+                        gDisableStructs[battler].cudChew[i] = TRUE;
+                    }
+                }
+            }
         }
         break;
     case ABILITYEFFECT_COLOR_CHANGE:
@@ -5312,7 +5334,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             {
                 u32 poison, paralysis, sleep;
 
-                if (B_ABILITY_TRIGGER_CHANCE >= GEN_5)
+                if (GetConfig(CONFIG_ABILITY_TRIGGER_CHANCE) >= GEN_5)
                 {
                     poison = 9;
                     paralysis = 19;
@@ -5326,7 +5348,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
 
                 gLastUsedAbility= ABILITY_EFFECT_SPORE;
 
-                i = RandomUniform(RNG_EFFECT_SPORE, 0, B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? 99 : 299);
+                i = RandomUniform(RNG_EFFECT_SPORE, 0, GetConfig(CONFIG_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? 99 : 299);
                 if (i < poison)
                 {
                     poisonAbility = ABILITY_EFFECT_SPORE;
@@ -5346,19 +5368,19 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
         }
 
         if (SearchTraits(battlerTraits, ABILITY_STATIC)
-        && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_STATIC, 30) : RandomChance(RNG_STATIC, 1, 3)))
+        && (GetConfig(CONFIG_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_STATIC, 30) : RandomChance(RNG_STATIC, 1, 3)))
         {
             paralysisAbility = ABILITY_STATIC;
             tryParalysis = TRUE;
         }
         if (SearchTraits(battlerTraits, ABILITY_FLAME_BODY)
-        && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
+        && (GetConfig(CONFIG_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_FLAME_BODY, 30) : RandomChance(RNG_FLAME_BODY, 1, 3)))
         {
             burnAbility = ABILITY_FLAME_BODY;
             tryBurn = TRUE;
         }
         if (SearchTraits(battlerTraits, ABILITY_POISON_POINT)
-        && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_POISON_POINT, 30) : RandomChance(RNG_POISON_POINT, 1, 3)))
+        && (GetConfig(CONFIG_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_POISON_POINT, 30) : RandomChance(RNG_POISON_POINT, 1, 3)))
         {
             poisonAbility = ABILITY_POISON_POINT;
             tryPoison = TRUE;
@@ -5433,7 +5455,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
          && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
          && IsBattlerTurnDamaged(gBattlerTarget)
          && IsBattlerAlive(gBattlerTarget)
-         && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
+         && (GetConfig(CONFIG_ABILITY_TRIGGER_CHANCE) >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
          && !(gBattleMons[gBattlerAttacker].volatiles.infatuation)
          && AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget)
          && !IsAbilityAndRecord(gBattlerAttacker, ABILITY_OBLIVIOUS)
@@ -6090,7 +6112,7 @@ u32 IsAbilityOnFieldExcept(u32 battler, enum Ability ability)
 
 u32 IsAbilityPreventingEscape(u32 battler)
 {
-    if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return 0;
 
     bool32 isBattlerGrounded = IsBattlerGrounded(battler);
@@ -6126,7 +6148,7 @@ bool32 CanBattlerEscape(u32 battler) // no ability check
 {
     if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
         return FALSE;
-    else if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+    else if (GetConfig(CONFIG_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
     else if (gBattleMons[battler].volatiles.escapePrevention)
         return FALSE;
@@ -6364,6 +6386,17 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef)
     return FALSE;
 }
 
+bool32 IsSafeguardProtected(u32 battlerAtk, u32 battlerDef)
+{
+    if (!(gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD))
+        return FALSE;
+    if (IsBattlerAlly(battlerAtk, battlerDef))
+        return TRUE;
+    if (BattlerHasTrait(battlerAtk, ABILITY_INFILTRATOR))
+        return FALSE;
+    return TRUE;
+}
+
 bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum MoveEffect effect, enum FunctionCallOption option)
 {
     const u8 *battleScript = NULL;
@@ -6560,7 +6593,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum MoveEffect e
         abilityDef = ABILITY_FLOWER_VEIL;
         battleScript = BattleScript_FlowerVeilProtects;
     }
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
+    else if (IsSafeguardProtected(battlerAtk, battlerDef, abilityAtk))
     {
         battleScript = BattleScript_SafeguardProtected;
     }
@@ -6962,6 +6995,26 @@ static inline bool32 IsSideProtected(u32 battler, enum ProtectMethod method)
         || gProtectStructs[BATTLE_PARTNER(battler)].protected == method;
 }
 
+static bool32 IsCraftyShieldProtected(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    if (!IsBattleMoveStatus(move))
+        return FALSE;
+
+    if (!IsSideProtected(battlerDef, PROTECT_CRAFTY_SHIELD))
+        return FALSE;
+
+    if (GetMoveEffect(move) == EFFECT_HOLD_HANDS)
+        return TRUE;
+
+    u32 moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
+    if (!IsBattlerAlly(battlerAtk, battlerDef)
+     && moveTarget != MOVE_TARGET_OPPONENTS_FIELD
+     && moveTarget != MOVE_TARGET_ALL_BATTLERS)
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
 {
     if (gProtectStructs[battlerDef].protected == PROTECT_NONE
@@ -6979,9 +7032,7 @@ bool32 IsBattlerProtected(u32 battlerAtk, u32 battlerDef, u32 move)
 
     bool32 isProtected = FALSE;
 
-    if (IsSideProtected(battlerDef, PROTECT_CRAFTY_SHIELD)
-     && IsBattleMoveStatus(move)
-     && GetMoveEffect(move) != EFFECT_COACHING)
+    if (IsCraftyShieldProtected(battlerAtk, battlerDef, move))
         isProtected = TRUE;
     else if (MoveIgnoresProtect(move))
         isProtected = FALSE;
@@ -7830,22 +7881,6 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     {
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.25));
     }
-    if(SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS))
-    {
-        enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
-        if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
-         && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
-         && !(gBattleMons[battlerDef].volatiles.transformed))
-            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
-    }
-     if(SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE))
-    {
-        u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
-        if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
-         && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
-         && !(gBattleMons[battlerDef].volatiles.transformed))
-            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
-    }
 
     #define HOLD_EFFECT_PARAM_ATK(holdEffect) holdEffectParamAtk = GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHeldItemWithEffect(battlerAtk, holdEffect, TRUE)); \
         if (holdEffectParamAtk > 100) holdEffectParamAtk = 100; \
@@ -8329,6 +8364,22 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     {
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     }
+        if(SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS))
+    {
+        enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
+        if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
+         && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
+         && !(gBattleMons[battlerDef].volatiles.transformed))
+            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+    }
+     if(SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE))
+    {
+        u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
+        if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
+         && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
+         && !(gBattleMons[battlerDef].volatiles.transformed))
+            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+    }
 
     // ally's abilities
     if (IsBattlerAlive(BATTLE_PARTNER(battlerDef))
@@ -8531,7 +8582,7 @@ static inline uq4_12_t GetScreensModifier(struct DamageContext *ctx)
     {
         return UQ_4_12(1.0);
     }
-    if (BattlerHasTrait(ctx->battlerAtk, ABILITY_INFILTRATOR))
+    if (BattlerHasTrait(ctx->battlerAtk, ABILITY_INFILTRATOR && !IsBattlerAlly(ctx->battlerAtk, ctx->battlerDef)))
     {
         if (ctx->updateFlags)
             RecordAbilityBattle(ctx->battlerAtk, ABILITY_INFILTRATOR);
@@ -8825,8 +8876,20 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
         dmg = gBattleMons[ctx->battlerAtk].level;
         break;
     case EFFECT_PSYWAVE:
-        randDamage = B_PSYWAVE_DMG >= GEN_5 ? (Random() % 101) : ((Random() % 11) * 10);
-        dmg = gBattleMons[ctx->battlerAtk].level * (randDamage + 50) / 100;
+        if (B_PSYWAVE_DMG >= GEN_5)
+        {
+            randDamage = Random() % 101;
+            dmg = gBattleMons[ctx->battlerAtk].level * (randDamage + 50) / 100;
+        }
+        else if (B_PSYWAVE_DMG >= GEN_3)
+        {
+            randDamage = Random() % 11;
+            dmg = gBattleMons[ctx->battlerAtk].level * ((randDamage * 10) + 50) / 100;
+        }
+        else
+        {
+            dmg = Random() % ((gBattleMons[ctx->battlerAtk].level + (gBattleMons[ctx->battlerAtk].level / 2)) + 1);
+        }
         break;
     case EFFECT_FIXED_HP_DAMAGE:
         dmg = GetMoveFixedHPDamage(ctx->move);
@@ -9331,6 +9394,9 @@ bool32 DoesSpeciesUseHoldItemToChangeForm(u16 species, u16 heldItemId)
     u32 i;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
 
+    if (heldItemId == ITEM_NONE)
+        return FALSE;
+
     for (i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
     {
         enum FormChanges method = formChanges[i].method;
@@ -9692,19 +9758,23 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
 bool32 DoBattlersShareType(u32 battler1, u32 battler2)
 {
     s32 i;
+    s32 j;
     enum Type types1[3], types2[3];
     GetBattlerTypes(battler1, FALSE, types1);
     GetBattlerTypes(battler2, FALSE, types2);
 
-    if (types1[2] == TYPE_MYSTERY)
-        types1[2] = types1[0];
-    if (types2[2] == TYPE_MYSTERY)
-        types2[2] = types2[0];
-
     for (i = 0; i < 3; i++)
     {
-        if (types1[i] == types2[0] || types1[i] == types2[1] || types1[i] == types2[2])
-            return TRUE;
+        if (types1[i] == TYPE_MYSTERY)
+            continue;
+
+        for (j = 0; j < 3; j++)
+        {
+            if (types2[j] == TYPE_MYSTERY)
+                continue;
+            if (types1[i] == types2[j])
+                return TRUE;
+        }
     }
 
     return FALSE;
@@ -10122,6 +10192,7 @@ bool32 CanFling(u32 battler)
       && !(GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && BattlerHasTrait(battler, ABILITY_KLUTZ))
       && !(gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
       && !(gBattleMons[battler].volatiles.embargo)
+      || (GetItemTMHMIndex(item) != 0 && GetItemImportance(item) == 1) // don't fling reusable TMs
       && !(GetFlingPowerFromItemId(item) == 0)
       && CanBattlerGetOrLoseItem(battler, item))
         return TRUE;

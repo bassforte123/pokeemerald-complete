@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Z-Crystal")
     }
 }
 
-SINGLE_BATTLE_TEST("Bestow fails if the user has Sticky Hold")
+SINGLE_BATTLE_TEST("Bestow doesn't fail if the user has Sticky Hold")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_SITRUS_BERRY); }
@@ -100,10 +100,10 @@ SINGLE_BATTLE_TEST("Bestow fails if the user has Sticky Hold")
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
-        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
     } THEN {
-        EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->items[0] == ITEM_NONE);
+        EXPECT(player->items[0] == ITEM_NONE);
+        EXPECT(opponent->items[0] == ITEM_SITRUS_BERRY);
     }
 }
 
@@ -223,7 +223,7 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Z-Crystal (Multi)"
     }
 }
 
-SINGLE_BATTLE_TEST("Bestow fails if the user has Sticky Hold (Multi)")
+SINGLE_BATTLE_TEST("Bestow doesn't fail if the user has Sticky Hold (Multi)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
@@ -231,10 +231,10 @@ SINGLE_BATTLE_TEST("Bestow fails if the user has Sticky Hold (Multi)")
     } WHEN {
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
-        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
     } THEN {
-        EXPECT(player->items[1] == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->items[1] == ITEM_NONE);
+        EXPECT(player->items[1] == ITEM_NONE);
+        EXPECT(opponent->items[1] == ITEM_SITRUS_BERRY);
     }
 }
 

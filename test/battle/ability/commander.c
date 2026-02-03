@@ -64,7 +64,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a f
         OPPONENT(SPECIES_TYRANITAR) { Ability(ABILITY_SAND_STREAM); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
@@ -83,7 +83,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take poison damage if while i
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
@@ -176,7 +176,7 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri is not damaged by a double target move i
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
-        PLAYER(SPECIES_DONDOZO) { HP(1); };
+        PLAYER(SPECIES_DONDOZO) { HP(1); }
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -244,7 +244,7 @@ DOUBLE_BATTLE_TEST("Commander doesn't prevent Imposter from working on a Command
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_DITTO) { Ability(ABILITY_IMPOSTER); }
     } WHEN {
-        TURN { }
+        TURN {}
         TURN { SWITCH(opponentLeft, 2); }
     } SCENE {
         ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
@@ -911,6 +911,24 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail (Tr
         NOT MESSAGE("Wobbuffet was dragged out!");
     }
 }
+DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to switch out (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            SWITCH(playerLeft, 2);
+            SWITCH(playerRight, 3);
+        }
+    } SCENE {
+        NOT ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+    }
+}
 #endif
 
 #if MAX_MON_ITEMS > 1
@@ -933,4 +951,5 @@ DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is 
         EXPECT(playerRight->species == SPECIES_DONDOZO);
     }
 }
+
 #endif
