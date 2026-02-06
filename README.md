@@ -2,10 +2,10 @@
 
 This Trait and Items branch combines the features found in Trait System an Multi Items to allow multiple abilities and held items to be used by your Pokemon.
 
-# Trait System (Release 1.14.2)
+# Trait System (Release 1.14.3)
 
 This is the full release of the Multi-Ability function I'm calling the Trait System!
-Currently updated to Pokeemerald Expansion 1.14.2
+Currently updated to Pokeemerald Expansion 1.14.3
 
 The Trait System allows you to assign more than one ability to each pokemon for more complex and more interesting setups.
 
@@ -35,9 +35,9 @@ Basic code bedrock design comes from old Emerald Redux code with permission.
 Huge thanks to the RH Hideout discord community for their help, advice, and testing, especially Alex, Surskitty, Kleem, Meister_anon, and MGriffin who helped make this possible.
 
 
-# Multi-Items (Release 1.14.2)
+# Multi-Items (Release 1.14.3)
 
-This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.14.2.
+This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.14.3.
 
 - Battle Behavior:
 	- Item activations generally happen once per opportunity and by first slot.  For example if you have a poisoned and injured pokemon switch in with a healing and a poison cure berry, the healing berry will be eaten and the poison berry has to wait until the next activation chance like after an attack.
