@@ -1281,6 +1281,14 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         if (hasContrary)
             stringId = STRINGID_STATSWONTINCREASE2;
         break;
+    case STRINGID_STATSWONTINCREASECONTRARY2:
+        if (hasContrary)
+            stringId = STRINGID_STATSWONTDECREASECONTRARY2;
+        break;
+    case STRINGID_STATSWONTDECREASECONTRARY2:
+        if (hasContrary)
+            stringId = STRINGID_STATSWONTINCREASECONTRARY2;
+        break;
     case STRINGID_PKMNCUTSATTACKWITH:
         if (GetConfig(CONFIG_UPDATED_INTIMIDATE) >= GEN_8
          && SearchTraits(battlerTraits, ABILITY_RATTLED)
@@ -1418,7 +1426,8 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
     // Generate ability popup for Contrary, only when a status change happens outside of Defiant/Competitive wich have their own popup calls
     // Contrary does not have popup in vanilla
     // if (hasContrary
-    //     && ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_STATSWONTINCREASE || stringId == STRINGID_STATSWONTDECREASE || stringId == STRINGID_STATSWONTINCREASE2 || stringId == STRINGID_STATSWONTDECREASE2)
+    //     && ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_STATSWONTINCREASE || stringId == STRINGID_STATSWONTDECREASE || stringId == STRINGID_STATSWONTINCREASE2 || stringId == STRINGID_STATSWONTDECREASE2
+    //     stringId == STRINGID_STATSWONTINCREASECONTRARY2 || stringId == STRINGID_STATSWONTDECREASECONTRARY2)
     //     || (stringId == STRINGID_DEFENDERSSTATROSE && !((gProtectStructs[gBattlerTarget].contraryCompetitive || gProtectStructs[gBattlerTarget].contraryDefiant))
     //     && (gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != BATTLE_PARTNER(gBattlerTarget) || gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != gBattlerTarget))))
     // {
@@ -6593,7 +6602,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum MoveEffect e
         abilityDef = ABILITY_FLOWER_VEIL;
         battleScript = BattleScript_FlowerVeilProtects;
     }
-    else if (IsSafeguardProtected(battlerAtk, battlerDef, abilityAtk))
+    else if (IsSafeguardProtected(battlerAtk, battlerDef))
     {
         battleScript = BattleScript_SafeguardProtected;
     }
@@ -8364,13 +8373,13 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     {
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
     }
-        if(SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS))
+    if(SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS))
     {
         enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
         if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
          && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
          && !(gBattleMons[battlerDef].volatiles.transformed))
-            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
     }
      if(SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE))
     {
@@ -8378,7 +8387,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
         if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
          && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
          && !(gBattleMons[battlerDef].volatiles.transformed))
-            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
     }
 
     // ally's abilities
@@ -10192,7 +10201,7 @@ bool32 CanFling(u32 battler)
       && !(GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && BattlerHasTrait(battler, ABILITY_KLUTZ))
       && !(gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
       && !(gBattleMons[battler].volatiles.embargo)
-      || (GetItemTMHMIndex(item) != 0 && GetItemImportance(item) == 1) // don't fling reusable TMs
+      && !(GetItemTMHMIndex(item) != 0 && GetItemImportance(item) == 1) // don't fling reusable TMs
       && !(GetFlingPowerFromItemId(item) == 0)
       && CanBattlerGetOrLoseItem(battler, item))
         return TRUE;
@@ -11931,6 +11940,7 @@ bool32 BattlerHasHeldItem(u32 battler, u32 item, bool32 checkNegating)
         return FALSE;
     }
 
+    // Using ITEM_NONE returns TRUE if the battler has no items at all
     if (item == ITEM_NONE)
     {
         for (int i = 0; i < MAX_MON_ITEMS; i++)

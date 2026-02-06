@@ -192,6 +192,7 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
         }
     }
 }
+
 SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Evolving")
 {
     GIVEN {
@@ -434,7 +435,7 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting 
 SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Evolving (Multi)")
 {
     GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { ItemItems(ITEM_ORAN_BERRY, ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_VENUSAUR) { Items(ITEM_ORAN_BERRY, ITEM_VENUSAURITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -446,7 +447,7 @@ SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Ev
 SINGLE_BATTLE_TEST("Venusaur returns its base Form upon fainting end after Mega Evolving (Multi)")
 {
     GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { HP(1); Items(ITEM_ORAN_BERRY, ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_VENUSAUR) { HP(1); Items(ITEM_GREAT_BALL, ITEM_VENUSAURITE); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -217,7 +217,7 @@ SINGLE_BATTLE_TEST("Disguise does not break from a teammate's Wish")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WISH) == EFFECT_WISH);
         PLAYER(SPECIES_JIRACHI);
-        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); HP(219); MaxHP(220); }
+        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); HP(219); MaxHP(220); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_WISH); }

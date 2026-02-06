@@ -74,11 +74,10 @@ DOUBLE_BATTLE_TEST("Mirror Herb does not trigger for Ally's Soul Heart's stat ra
     }
 }
 
-#if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability (Traits)")
+SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability")
 {
     GIVEN {
-        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_INTREPID_SWORD); }
+        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
     } WHEN {
         TURN {}
@@ -90,7 +89,7 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability (Traits)")
     }
 }
 
-
+#if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Mirror Herb does not trigger for Ally's Soul Heart's stat raise (Traits)")
 {
     GIVEN {

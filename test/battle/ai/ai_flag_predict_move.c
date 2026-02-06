@@ -43,7 +43,6 @@ AI_SINGLE_BATTLE_TEST("AI won't use Sucker Punch if it expects a move of the sam
     }
 }
 
-
 #if MAX_MON_TRAITS > 1
 AI_SINGLE_BATTLE_TEST("AI_FLAG_PREDICT_MOVE: AI will predict player's move (Traits)")
 {

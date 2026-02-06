@@ -343,7 +343,6 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect damaging Z-Move types")
     }
 }
 
-
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move (Traits)")
 {

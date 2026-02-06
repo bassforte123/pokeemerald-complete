@@ -7,7 +7,7 @@ ASSUMPTIONS
     ASSUME(GetMovePower(MOVE_SCRATCH) > 0);
 }
 
-SINGLE_BATTLE_TEST("Aeg-type move")
+SINGLE_BATTLE_TEST("Aerilate turns a Normal-type move into Flying-type move")
 {
     GIVEN {
         PLAYER(SPECIES_MEGANIUM);

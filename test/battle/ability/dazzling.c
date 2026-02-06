@@ -103,15 +103,15 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect from all mu
 
 SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean activation")
 {
-    u32 species, ability, ability2;
+    u32 species, ability;
 
-    PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; ability2 = ABILITY_STRONG_JAW; }
-    PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; ability2 = ABILITY_CUD_CHEW; }
-    PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; ability2 = ABILITY_LEAF_GUARD; }
+    PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
+    PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
+    PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; }
 
     GIVEN {
-        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_COLOR_CHANGE); Innates(ABILITY_PROTEAN); }
-        OPPONENT(species) { Ability(ability2); Innates(ability); }
+        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
+        OPPONENT(species) { Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_WATER_SHURIKEN); }
     } SCENE {
@@ -171,8 +171,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatim
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
         NOT ABILITY_POPUP(opponent, ability);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
 
@@ -442,8 +442,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatim
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
         NOT ABILITY_POPUP(opponent, ability);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(player->items[0], ITEM_NONE);
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
 
@@ -570,8 +570,8 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail do not block Teatim
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TEATIME, player);
         NOT ABILITY_POPUP(opponent, ability);
     } THEN {
-        EXPECT_EQ(player->item, ITEM_NONE);
-        EXPECT_EQ(opponent->item, ITEM_NONE);
+        EXPECT_EQ(player->items[1], ITEM_NONE);
+        EXPECT_EQ(opponent->items[1], ITEM_NONE);
     }
 }
 

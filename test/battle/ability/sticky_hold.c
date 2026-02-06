@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries")
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); }
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_CHERI_BERRY);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].items[0], ITEM_CHERI_BERRY);
     }
 }
 
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems")
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); }
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_GHOST_GEM);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].items[0], ITEM_GHOST_GEM);
     }
 }
 
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries (Tra
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); }
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_CHERI_BERRY);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].items[0], ITEM_CHERI_BERRY);
     }
 }
 
@@ -78,7 +78,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems (Traits
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); }
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_GHOST_GEM);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].items[0], ITEM_GHOST_GEM);
     }
 }
 #endif
@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries (Mul
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); }
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_CHERI_BERRY);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].items[1], ITEM_CHERI_BERRY);
     }
 }
 
@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems (Multi)
     } WHEN {
         TURN { MOVE(player, MOVE_INCINERATE); }
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_GHOST_GEM);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].items[1], ITEM_GHOST_GEM);
     }
 }
 #endif

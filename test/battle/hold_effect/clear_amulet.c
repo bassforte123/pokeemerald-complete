@@ -120,29 +120,6 @@ SINGLE_BATTLE_TEST("Clear Amulet protects from Protect's secondary effects")
     }
 }
 
-SINGLE_BATTLE_TEST("Clear Amulet prevents Intimidate")
-{
-    s16 turnOneHit;
-    s16 turnTwoHit;
-
-    GIVEN {
-        PLAYER(SPECIES_EKANS) { Ability(ABILITY_UNNERVE); Innates(ABILITY_SHED_SKIN); };
-        PLAYER(SPECIES_EKANS) { Ability(ABILITY_UNNERVE); Innates(ABILITY_INTIMIDATE); };
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); };
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_SCRATCH); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_SCRATCH); }
-    } SCENE {
-        HP_BAR(player, captureDamage: &turnOneHit);
-        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("The effects of the Clear Amulet held by the opposing Wobbuffet prevents its stats from being lowered!");
-        HP_BAR(player, captureDamage: &turnTwoHit);
-    } THEN {
-        EXPECT_EQ(turnOneHit, turnTwoHit);
-    }
-}
-
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Clear Amulet prevents Intimidate (Multi)")
 {

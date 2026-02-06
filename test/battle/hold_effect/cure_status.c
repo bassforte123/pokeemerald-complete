@@ -152,7 +152,7 @@ SINGLE_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comat
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     } THEN {
-        EXPECT_EQ(opponent->item, item);
+        EXPECT_EQ(opponent->items[0], item);
     }
 }
 

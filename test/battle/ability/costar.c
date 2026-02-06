@@ -177,7 +177,6 @@ DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers faint
     }
 }
 
-
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle (Traits)")
 {

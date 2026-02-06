@@ -319,7 +319,7 @@ SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold (Multi)")
+SINGLE_BATTLE_TEST("Trick doesn't fail if the user has Sticky Hold (Multi)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
@@ -327,10 +327,10 @@ SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold (Multi)")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
-        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
     } THEN {
-        EXPECT(player->items[1] == ITEM_SITRUS_BERRY);
-        EXPECT(opponent->items[1] == ITEM_LUM_BERRY);
+        EXPECT(player->items[1] == ITEM_LUM_BERRY);
+        EXPECT(opponent->items[1] == ITEM_SITRUS_BERRY);
     }
 }
 
@@ -349,7 +349,7 @@ SINGLE_BATTLE_TEST("Trick fails against Sticky Hold (Multi)")
     }
 }
 
-SINGLE_BATTLE_TEST("Trick doesn't fail if the user has Sticky Hold (Multi)")
+SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute (Multi)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); Speed(50); }
@@ -359,8 +359,8 @@ SINGLE_BATTLE_TEST("Trick doesn't fail if the user has Sticky Hold (Multi)")
     } SCENE {
         MESSAGE("But it failed!");
     } THEN {
-        EXPECT(player->items[1] == ITEM_LUM_BERRY);
-        EXPECT(opponent->items[1] == ITEM_SITRUS_BERRY);
+        EXPECT(player->items[1] == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->items[1] == ITEM_LUM_BERRY);
     }
 }
 

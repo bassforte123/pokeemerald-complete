@@ -332,6 +332,7 @@ DOUBLE_BATTLE_TEST("Primal Reversion and other switch-in effects trigger for all
         EXPECT_EQ(opponentRight->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
     }
 }
+
 SINGLE_BATTLE_TEST("Primal Reversion is reverted upon battle end")
 {
     u32 species, item;
@@ -723,7 +724,7 @@ SINGLE_BATTLE_TEST("Primal Reversion is NOT reverted upon fainting (Multi)")
     PARAMETRIZE { species = SPECIES_GROUDON; item = ITEM_RED_ORB;  targetSpecies = SPECIES_GROUDON_PRIMAL; }
     PARAMETRIZE { species = SPECIES_KYOGRE;  item = ITEM_BLUE_ORB; targetSpecies = SPECIES_KYOGRE_PRIMAL;  }
     GIVEN {
-        PLAYER(species) { HP(1); Items(ITEM_ORAN_BERRY, item); }
+        PLAYER(species) { HP(1); Items(ITEM_GREAT_BALL, item); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

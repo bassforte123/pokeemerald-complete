@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Wandering Spirit copied ability should not trigger on fainte
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_FANG, player);
         NOT ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
-   }
+    }
 }
 
 #if MAX_MON_TRAITS > 1

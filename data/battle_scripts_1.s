@@ -1223,10 +1223,8 @@ BattleScript_EffectPartingShotPrintWontDecrease:
 	return
 
 BattleScript_EffectPartingShotPrintWontDecreaseContrary:
-	swapattackerwithtarget
-	printstring STRINGID_STATSWONTDECREASE2
+	printstring STRINGID_STATSWONTDECREASECONTRARY2
 	waitmessage B_WAIT_TIME_LONG
-	swapattackerwithtarget
 	return
 
 BattleScript_EffectPowder::

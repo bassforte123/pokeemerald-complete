@@ -120,7 +120,6 @@ SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn")
     }
 }
 
-
 SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra Bursting")
 {
     u32 species;

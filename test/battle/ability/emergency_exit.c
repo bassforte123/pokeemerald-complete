@@ -487,6 +487,7 @@ WILD_BATTLE_TEST("Emergency Exit activates when taking residual damage and falli
     } THEN {
         EXPECT_EQ(gBattleOutcome, B_OUTCOME_PLAYER_TELEPORTED);
     }
+}
 
 SINGLE_BATTLE_TEST("Emergency Exit will trigger due to recoil damage (Traits)")
 {
@@ -557,7 +558,6 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger due to Jump Kick recoil (Traits)
     }
 }
 
-}
 #endif
 
 #if MAX_MON_ITEMS > 1

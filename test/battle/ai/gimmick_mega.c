@@ -17,7 +17,6 @@ AI_SINGLE_BATTLE_TEST("AI uses Mega Evolution")
     }
 }
 
-
 #if MAX_MON_ITEMS > 1
 AI_SINGLE_BATTLE_TEST("AI uses Mega Evolution (Multi)")
 {

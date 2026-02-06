@@ -124,7 +124,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_RAIN_DOWNPOUR:
         if (SearchTraits(battlerTraits, ABILITY_DRY_SKIN) || SearchTraits(battlerTraits, ABILITY_RAIN_DISH))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         break;
@@ -132,7 +132,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_SUN_PRIMAL:
         if (SearchTraits(battlerTraits, ABILITY_DRY_SKIN) || SearchTraits(battlerTraits, ABILITY_SOLAR_POWER))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         break;
@@ -157,7 +157,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     case BATTLE_WEATHER_SNOW:
         if (SearchTraits(battlerTraits, ABILITY_ICE_BODY))
         {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_WEATHER, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
         }
         else if (currBattleWeather == BATTLE_WEATHER_HAIL)
@@ -375,7 +375,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         if (BattlerHasTrait(battler, ABILITY_HEALER)
          || BattlerHasTrait(battler, ABILITY_HYDRATION)
          || BattlerHasTrait(battler, ABILITY_SHED_SKIN))
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_STATUS_CURE, battler, 0, MOVE_NONE))
+            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
                 effect = TRUE;
 
         if (effect == FALSE) //Loop End Turn abilities until none activate anymore (Multi)
@@ -1331,7 +1331,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
      || SearchTraits(battlerTraits, ABILITY_SHIELDS_DOWN)
      || SearchTraits(battlerTraits, ABILITY_ZEN_MODE)
      || SearchTraits(battlerTraits, ABILITY_HUNGER_SWITCH))
-        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN_FORM_CHANGE, battler, 0, MOVE_NONE))
+        if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, 0, MOVE_NONE))
             effect = TRUE;
 
     return effect;

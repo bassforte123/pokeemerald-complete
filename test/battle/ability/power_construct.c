@@ -57,8 +57,6 @@ WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catc
 }
 
 #if MAX_MON_TRAITS > 1
-TO_DO_BATTLE_TEST("TODO: Write Power Construct (Ability) test titles (Traits)")
-
 SINGLE_BATTLE_TEST("Power Construct switches Zygarde's form when HP is below half (Traits)")
 {
     u16 baseSpecies;

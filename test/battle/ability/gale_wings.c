@@ -88,7 +88,6 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
     }
 }
 
-
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Gale Wings only grants priority at full HP (Gen 7+) (Traits)")
 {

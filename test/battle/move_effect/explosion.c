@@ -146,23 +146,6 @@ DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt 
     }
 }
 
-SINGLE_BATTLE_TEST("Explosion is blocked by Ability Damp")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_SWIFT_SWIM); Innates(ABILITY_DAMP); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_EXPLOSION); }
-    } SCENE {
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
-            HP_BAR(player, hp: 0);
-        }
-        ABILITY_POPUP(opponent, ABILITY_DAMP);
-        MESSAGE("The opposing Golduck's Damp prevents Wobbuffet from using Explosion!");
-    }
-}
-
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt Absorb (Traits)")
 {
@@ -185,4 +168,22 @@ DOUBLE_BATTLE_TEST("Explosion boosted by Galvanize is correctly blocked by Volt 
         MESSAGE("Geodude fainted!");
     }
 }
+
+SINGLE_BATTLE_TEST("Explosion is blocked by Ability Damp (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_SWIFT_SWIM); Innates(ABILITY_DAMP); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_EXPLOSION); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
+            HP_BAR(player, hp: 0);
+        }
+        ABILITY_POPUP(opponent, ABILITY_DAMP);
+        MESSAGE("The opposing Golduck's Damp prevents Wobbuffet from using Explosion!");
+    }
+}
+
 #endif

@@ -51,9 +51,6 @@ enum AbilityEffect
 {
     ABILITYEFFECT_ON_SWITCHIN, // Activates all available abilities (Multi)
     ABILITYEFFECT_ENDTURN, // Loops until all available abilities have activated one by one (Multi)
-    ABILITYEFFECT_ENDTURN_WEATHER, // Only activates one ability so effects like Dry Skin and Rain Dish need to be combined (Multi)
-    ABILITYEFFECT_ENDTURN_STATUS_CURE, // Only activates one ability (Multi)
-    ABILITYEFFECT_ENDTURN_FORM_CHANGE, // Only activates one ability (Multi)
     ABILITYEFFECT_MOVE_END_ATTACKER, // Only activates one ability (Multi)
     ABILITYEFFECT_COLOR_CHANGE, // Activates all available abilities (Multi)
     ABILITYEFFECT_MOVE_END, // Activates all available abilities (Multi)
@@ -399,7 +396,7 @@ bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef);
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef);
 bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum MoveEffect secondaryMoveEffect, enum FunctionCallOption option);
 bool32 CanBeConfused(u32 battler);
-bool32 IsSafeguardProtected(u32 battlerAtk, u32 battlerDef, u32 abilityAtk);
+bool32 IsSafeguardProtected(u32 battlerAtk, u32 battlerDef);
 u32 GetBattlerAffectionHearts(u32 battler);
 void TryToRevertMimicryAndFlags(void);
 bool32 BattleArenaTurnEnd(void);

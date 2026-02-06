@@ -148,7 +148,7 @@ SINGLE_BATTLE_TEST("Ogerpon reverts to the correct form upon fainting after tera
     PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
     PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE; item = ITEM_CORNERSTONE_MASK; }
     GIVEN {
-        PLAYER(species) { HP(1); Items(ITEM_NUGGET item); }
+        PLAYER(species) { HP(1); Items(ITEM_NUGGET, item); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

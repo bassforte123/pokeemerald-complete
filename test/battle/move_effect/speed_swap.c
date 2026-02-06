@@ -58,7 +58,8 @@ SINGLE_BATTLE_TEST("Speed Swap doesn't swap user and target's speed modifiers")
     }
 }
 
-SINGLE_BATTLE_TEST("Speed Swap doesn't swap user and target's speed modifiers")
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Speed Swap doesn't swap user and target's speed modifiers (Traits)")
 {
     u32 species, move;
     enum Ability ability;
@@ -88,3 +89,4 @@ SINGLE_BATTLE_TEST("Speed Swap doesn't swap user and target's speed modifiers")
         }
     }
 }
+#endif
