@@ -2,6 +2,9 @@
 
 This Trait and Items branch combines the features found in Trait System an Multi Items to allow multiple abilities and held items to be used by your Pokemon.
 
+# New Feature (1.14.3)
+Duplicate passive item support added so holding more than one of a passive item can stack their effects.  For example, two Charcoals will further boost fire attacks.  Since this function might be overpowered, there is also an option to toggle it using the B_ALLOW_HELD_DUPES flag.  This flag is disabled by default so this feature needss to be manually enabled.
+
 # Trait System (Release 1.14.3)
 
 This is the full release of the Multi-Ability function I'm calling the Trait System!
@@ -45,7 +48,7 @@ This is the full release of a Multi-Item system which allows pokemon to hold mor
 	- As a result, Air Balloon's intro message and Rocky Helm are given low priority so they don't always overwrite the other effects in their window.  Likewise, Air Balloon popping is given higher priority to prevent it from being shielded by other items.
 	- Leftovers and Black Sludge are given a special exception where both can activate together.  The message will give Black Sludge priority but the resulting HP change is the total between the two.
 	- Shell Bell and Life Orb are given a special exception where both can activate together, the resulting message will be based on whether healing or damage is greater.
-	- Passive items that don't need explicit activations such as Charcoal are always active and can also stack effects, though two copies of the exact same item will not stack. This also includes items that share the exact same effect such as the Incense items which directly copy the effects of other items, or how King's Rock and Razor Fang share the flinching on hit effect.
+	- Passive items that don't need explicit activations such as Charcoal are always active and can also stack effects, though two copies of the exact same item will not stack by default since that can be overpowered in some cases. This also includes items that share the exact same effect such as the Incense items which directly copy the effects of other items, or how King's Rock and Razor Fang share the flinching on hit effect.  Duplicate item stacking can be enabled through the B_ALLOW_HELD_DUPES flag.
 	- Battle effects that target opponent items first read which slots are viable targets then select based on the B_MULTI_ITEM_ORDER custom setting.  By default this is set to target latest to earliest, but it can be set to earliest to latest and to random.
 	- Battle effects that move or restore items are locked to the slot. Thief can only steal if the target slot has an item AND the corresponding attacking pokemon's slot is empty.  Thief will not allocate a stolen item to a different free slot.
 	- Fling uses B_MULTI_ITEM_ORDER selection of the attacker's items but also prioritizes non berry items first.
