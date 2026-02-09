@@ -161,7 +161,7 @@ SINGLE_BATTLE_TEST("Multi - Metronome, Expert Belt, and Life Orb stack")
         PLAYER(SPECIES_GOLEM) { Items(ITEM_LIFE_ORB, ITEM_EXPERT_BELT); }
         OPPONENT(SPECIES_WOBBUFFET); { }
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME, ITEM_EXPERT_BELT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME, ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB, ITEM_METRONOME); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_BULLET_PUNCH); MOVE(player, MOVE_BESTOW);}
         TURN { MOVE(opponent, MOVE_BULLET_PUNCH); MOVE(player, MOVE_BESTOW);}
@@ -424,6 +424,810 @@ WILD_BATTLE_TEST("Multi - B_MULTI_ITEM_ORDER targets latest to earliest item slo
     }
 }
 #endif
+
+static const u16 sMoveItemTable[][18] =
+{
+    { TYPE_NORMAL,   MOVE_SCRATCH,         ITEM_SILK_SCARF },
+    { TYPE_FIGHTING, MOVE_KARATE_CHOP,     ITEM_BLACK_BELT },
+    { TYPE_FLYING,   MOVE_WING_ATTACK,     ITEM_SHARP_BEAK },
+    { TYPE_POISON,   MOVE_POISON_STING,    ITEM_POISON_BARB },
+    { TYPE_GROUND,   MOVE_MUD_SHOT,        ITEM_SOFT_SAND },
+    { TYPE_ROCK,     MOVE_ROCK_THROW,      ITEM_HARD_STONE },
+    { TYPE_BUG,      MOVE_BUG_BITE,        ITEM_SILVER_POWDER },
+    { TYPE_GHOST,    MOVE_SHADOW_PUNCH,    ITEM_SPELL_TAG },
+    { TYPE_STEEL,    MOVE_METAL_CLAW,      ITEM_METAL_COAT },
+    { TYPE_FIRE,     MOVE_EMBER,           ITEM_CHARCOAL },
+    { TYPE_WATER,    MOVE_WATER_GUN,       ITEM_MYSTIC_WATER },
+    { TYPE_GRASS,    MOVE_VINE_WHIP,       ITEM_MIRACLE_SEED },
+    { TYPE_ELECTRIC, MOVE_THUNDER_SHOCK,   ITEM_MAGNET },
+    { TYPE_PSYCHIC,  MOVE_CONFUSION,       ITEM_TWISTED_SPOON },
+    { TYPE_ICE,      MOVE_AURORA_BEAM,     ITEM_NEVER_MELT_ICE },
+    { TYPE_DRAGON,   MOVE_DRAGON_BREATH,   ITEM_DRAGON_FANG },
+    { TYPE_DARK,     MOVE_BITE,            ITEM_BLACK_GLASSES },
+    { TYPE_FAIRY,    MOVE_DISARMING_VOICE, ITEM_FAIRY_FEATHER },
+};
+
+
+SINGLE_BATTLE_TEST("Multi - Duplicate type-enhancing items can stack when enabled", s16 damage)
+{
+    u32 move = 0, item = 0, type = 0;
+    bool16 dupe = FALSE;
+
+    for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++) {
+        PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = ITEM_NONE;             dupe = FALSE; }
+        PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = sMoveItemTable[j][2];  dupe = FALSE; }
+        PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = ITEM_NONE;             dupe = TRUE; }
+        PARAMETRIZE { type = sMoveItemTable[j][0]; move = sMoveItemTable[j][1]; item = sMoveItemTable[j][2];  dupe = TRUE; }
+    }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        ASSUME(GetMovePower(move) > 0);
+        if (item != ITEM_NONE) {
+            ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_TYPE_POWER);
+            ASSUME(GetItemSecondaryId(item) == type);
+        }
+        PLAYER(SPECIES_WOBBUFFET) { Items(item, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        for (u32 j = 0; j < ARRAY_COUNT(sMoveItemTable); j++) {
+            if (I_TYPE_BOOST_POWER >= GEN_4)
+            {
+                EXPECT_MUL_EQ(results[j*4].damage, Q_4_12(1.2), results[(j*4)+1].damage);
+                EXPECT_MUL_EQ(results[(j*4)+2].damage, Q_4_12(1.44), results[(j*4)+3].damage);
+            }
+            else
+            {
+                EXPECT_MUL_EQ(results[j*4].damage, Q_4_12(1.1), results[(j*4)+1].damage);
+                EXPECT_MUL_EQ(results[(j*4)+2].damage, Q_4_12(1.21), results[(j*4)+3].damage);
+            }
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Duplicate damage boosting items can stack", s16 damage, s16 itemDamage)
+{
+    u32 species = 0, move = 0, item = 0, itemType = 0;
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_SCRATCH;     item = ITEM_MUSCLE_BAND;      itemType = HOLD_EFFECT_MUSCLE_BAND;    dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_SCRATCH;     item = ITEM_MUSCLE_BAND;      itemType = HOLD_EFFECT_MUSCLE_BAND;    dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_BUBBLE;      item = ITEM_WISE_GLASSES;     itemType = HOLD_EFFECT_WISE_GLASSES;   dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_BUBBLE;      item = ITEM_WISE_GLASSES;     itemType = HOLD_EFFECT_WISE_GLASSES;   dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_PALKIA;    move = MOVE_BUBBLE;      item = ITEM_LUSTROUS_ORB;     itemType = HOLD_EFFECT_LUSTROUS_ORB;   dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_PALKIA;    move = MOVE_BUBBLE;      item = ITEM_LUSTROUS_ORB;     itemType = HOLD_EFFECT_LUSTROUS_ORB;   dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_DIALGA;    move = MOVE_METAL_CLAW;  item = ITEM_ADAMANT_ORB;      itemType = HOLD_EFFECT_ADAMANT_ORB;    dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_DIALGA;    move = MOVE_METAL_CLAW;  item = ITEM_ADAMANT_ORB;      itemType = HOLD_EFFECT_ADAMANT_ORB;    dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_GIRATINA;  move = MOVE_SHADOW_CLAW; item = ITEM_GRISEOUS_ORB;     itemType = HOLD_EFFECT_GRISEOUS_ORB;   dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_GIRATINA;  move = MOVE_SHADOW_CLAW; item = ITEM_GRISEOUS_ORB;     itemType = HOLD_EFFECT_GRISEOUS_ORB;   dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_LATIAS;    move = MOVE_PSYSHOCK;    item = ITEM_SOUL_DEW;         itemType = HOLD_EFFECT_SOUL_DEW;       dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_LATIAS;    move = MOVE_PSYSHOCK;    item = ITEM_SOUL_DEW;         itemType = HOLD_EFFECT_SOUL_DEW;       dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_MEGA_PUNCH;  item = ITEM_PUNCHING_GLOVE;   itemType = HOLD_EFFECT_PUNCHING_GLOVE; dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_MEGA_PUNCH;  item = ITEM_PUNCHING_GLOVE;   itemType = HOLD_EFFECT_PUNCHING_GLOVE; dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_OGERPON;   move = MOVE_SCRATCH;     item = ITEM_CORNERSTONE_MASK; itemType = HOLD_EFFECT_OGERPON_MASK;   dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_OGERPON;   move = MOVE_SCRATCH;     item = ITEM_CORNERSTONE_MASK; itemType = HOLD_EFFECT_OGERPON_MASK;   dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_SHADOW_CLAW; item = ITEM_EXPERT_BELT;      itemType = HOLD_EFFECT_EXPERT_BELT;   dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_SHADOW_CLAW; item = ITEM_EXPERT_BELT;      itemType = HOLD_EFFECT_EXPERT_BELT;   dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        ASSUME(GetMovePower(move) > 0);
+        if (item != ITEM_NONE) {
+            ASSUME(GetItemHoldEffect(item) == itemType);
+        }
+        PLAYER(species) { Items(item, item); Speed(1); }
+        OPPONENT(species) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, move); MOVE(opponent, move); }
+    } SCENE {
+        HP_BAR(player, captureDamage: &results[i].damage);
+        HP_BAR(opponent, captureDamage: &results[i].itemDamage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.1), results[0].itemDamage); // Muscle Bandd
+        EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.21), results[2].itemDamage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.1), results[2].itemDamage); // Wise Glasses
+        EXPECT_MUL_EQ(results[3].damage, Q_4_12(1.21), results[3].itemDamage);
+        EXPECT_MUL_EQ(results[4].damage, Q_4_12(1.2), results[4].itemDamage); // Lustrous Orb
+        EXPECT_MUL_EQ(results[5].damage, Q_4_12(1.44), results[5].itemDamage);
+        EXPECT_MUL_EQ(results[6].damage, Q_4_12(1.2), results[6].itemDamage); // Adamant Orb
+        EXPECT_MUL_EQ(results[7].damage, Q_4_12(1.44), results[7].itemDamage);
+        EXPECT_MUL_EQ(results[8].damage, Q_4_12(1.2), results[8].itemDamage); // Griseous Orb
+        EXPECT_MUL_EQ(results[9].damage, Q_4_12(1.43), results[9].itemDamage);
+        EXPECT_MUL_EQ(results[10].damage, Q_4_12(1.2), results[10].itemDamage); // Soul Dew
+        EXPECT_MUL_EQ(results[11].damage, Q_4_12(1.44), results[11].itemDamage);
+        EXPECT_MUL_EQ(results[12].damage, Q_4_12(1.1), results[12].itemDamage); // Punching Glove
+        EXPECT_MUL_EQ(results[13].damage, Q_4_12(1.21), results[13].itemDamage);
+        EXPECT_MUL_EQ(results[14].damage, Q_4_12(1.2), results[14].itemDamage); // Ogerpon Mask
+        EXPECT_MUL_EQ(results[15].damage, Q_4_12(1.44), results[15].itemDamage);
+        EXPECT_MUL_EQ(results[16].damage, Q_4_12(1.2), results[16].itemDamage); // Expert Belt
+        EXPECT_MUL_EQ(results[17].damage, Q_4_12(1.44), results[17].itemDamage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Kings Rock effect stack when dupes enabled")
+{
+    PASSES_RANDOMLY(19, 100, RNG_HOLD_EFFECT_FLINCH);
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_KINGS_ROCK, ITEM_KINGS_ROCK); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Kings Rock effect don't stack when dupes disabled")
+{
+    PASSES_RANDOMLY(10, 100, RNG_HOLD_EFFECT_FLINCH);
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, FALSE);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_KINGS_ROCK, ITEM_KINGS_ROCK); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Rocky Helmet effect stack only when dupes enabled")
+{
+    bool16 dupe = FALSE;
+    s16 damage;
+
+    PARAMETRIZE { dupe = FALSE; }
+    PARAMETRIZE { dupe = TRUE; }
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_ROCKY_HELMET, ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_WOBBUFFET){ MaxHP(60); HP(60); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(opponent, captureDamage: &damage);
+    } FINALLY {
+        if (dupe)
+            EXPECT_EQ(damage, 20);
+        else
+            EXPECT_EQ(damage, 10);
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Shell Bell can stack if dupes enabled")
+{
+    u32 dupe;
+    s16 damage;
+    PARAMETRIZE { dupe = FALSE; }
+    PARAMETRIZE { dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SHELL_BELL, ITEM_SHELL_BELL); HP(10); MaxHP(20); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_RAGE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_RAGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet restored a little HP using its Shell Bell!");
+        HP_BAR(player, captureDamage: &damage);
+    } FINALLY {
+        if (dupe)
+            EXPECT_EQ(damage, -10);
+        else
+            EXPECT_EQ(damage, -5);
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Life Orb can stack if dupes enabled", s16 damage, s16 itemDamage, s16 selfDamage)
+{
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE { dupe = FALSE; }
+    PARAMETRIZE { dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB, ITEM_LIFE_ORB); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player, captureDamage: &results[i].damage); // Basic attack
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &results[i].itemDamage);
+        HP_BAR(player, captureDamage: &results[i].selfDamage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.3), results[0].itemDamage);
+        EXPECT_MUL_EQ(results[1].damage, Q_4_12(1.69), results[1].itemDamage);
+        EXPECT_MUL_EQ(results[0].selfDamage, Q_4_12(2), results[1].selfDamage); // Self damage is doubled with 2 orbs
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Leftovers can stack if dupes enabled")
+{
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE { dupe = FALSE; }
+    PARAMETRIZE { dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LEFTOVERS, ITEM_LEFTOVERS); HP(50); MaxHP(100); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { }
+    } SCENE {
+        MESSAGE("Wobbuffet restored a little HP using its Leftovers!");
+    } FINALLY {
+        if (dupe)
+            EXPECT_EQ(player->hp, 62);
+        else
+            EXPECT_EQ(player->hp, 56);
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Black Sludge can stack if dupes enabled")
+{
+    bool16 dupe = FALSE;
+    u32 species = SPECIES_NONE;
+
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; dupe = TRUE; }
+    PARAMETRIZE { species = SPECIES_GRIMER; dupe = FALSE; }
+    PARAMETRIZE { species = SPECIES_GRIMER; dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(species) { Items(ITEM_BLACK_SLUDGE, ITEM_BLACK_SLUDGE); HP(50); MaxHP(100); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { }
+    } SCENE {
+        if (species == SPECIES_GRIMER)
+            MESSAGE("Grimer restored a little HP using its Black Sludge!");
+        else
+            MESSAGE("Wobbuffet was hurt by the Black Sludge!");
+    } FINALLY {
+        if (species == SPECIES_GRIMER)
+        {
+            if (dupe)
+                EXPECT_EQ(player->hp, 62);
+            else
+                EXPECT_EQ(player->hp, 56);
+        }
+        else
+        {
+            if (dupe)
+                EXPECT_EQ(player->hp, 26);
+            else
+                EXPECT_EQ(player->hp, 38);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Metronome can stack if dupes enabled", s16 damage1, s16 damage2, s16 damage3, s16 damage4)
+{
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE { dupe = FALSE; }
+    PARAMETRIZE { dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME, ITEM_METRONOME); Attack(180); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage1);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage2);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage3);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage4);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage1, UQ_4_12(1.2), results[0].damage2);
+        EXPECT_MUL_EQ(results[0].damage1, UQ_4_12(1.4), results[0].damage3);
+        EXPECT_MUL_EQ(results[0].damage1, UQ_4_12(1.6), results[0].damage4);
+        EXPECT_MUL_EQ(results[1].damage1, UQ_4_12(1.42), results[1].damage2); // Multiplier lower than expected due to roundings in calculations
+        EXPECT_MUL_EQ(results[1].damage1, UQ_4_12(1.79), results[1].damage3); // Multiplier lower than expected due to roundings in calculations
+        EXPECT_MUL_EQ(results[1].damage1, UQ_4_12(2.19), results[1].damage4); // Multiplier lower than expected due to roundings in calculations
+    }
+}
+
+#if B_BINDING_DAMAGE >= GEN_6
+SINGLE_BATTLE_TEST("Multi - Binding Band can stack if dupes enabled (Gen 6)", s16 damage)
+{
+    bool16 dupe = FALSE;
+    u16 item = ITEM_NONE;
+
+    PARAMETRIZE {item = ITEM_NONE; dupe = FALSE; }
+    PARAMETRIZE {item = ITEM_BINDING_BAND; dupe = FALSE; }
+    PARAMETRIZE {item = ITEM_BINDING_BAND; dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Items(item, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_WRAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WRAP, player);
+        MESSAGE("The opposing Wobbuffet is hurt by Wrap!");
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, UQ_4_12(1.32), results[1].damage); // Normal Binding Band multiplier
+        EXPECT_MUL_EQ(results[0].damage, UQ_4_12(1.64), results[2].damage); // Newer Bind damage math has more starting damage and less Binding Band damage
+    }
+}
+#endif
+
+#if B_BINDING_DAMAGE < GEN_6
+SINGLE_BATTLE_TEST("Multi - Binding Band can stack if dupes enabled (Gen 5)", s16 damage)
+{
+    bool16 dupe = FALSE;
+    u16 item = ITEM_NONE, gen = 0;
+
+    PARAMETRIZE {item = ITEM_NONE; dupe = FALSE; }
+    PARAMETRIZE {item = ITEM_BINDING_BAND; dupe = FALSE; }
+    PARAMETRIZE {item = ITEM_BINDING_BAND; dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        WITH_CONFIG(CONFIG_BINDING_DAMAGE, gen);
+        PLAYER(SPECIES_WOBBUFFET) { Items(item, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_WRAP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WRAP, player);
+        MESSAGE("The opposing Wobbuffet is hurt by Wrap!");
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, UQ_4_12(2), results[1].damage); // Normal Binding Band multiplier
+        EXPECT_MUL_EQ(results[0].damage, UQ_4_12(3), results[2].damage); // +1/16 hp damage per Binding Band
+    }
+}
+#endif
+
+SINGLE_BATTLE_TEST("Multi - Speed affecting items can stack if dupes enabled")
+{
+    bool16 dupe = FALSE;
+    u16 item = ITEM_NONE,  item2 = ITEM_NONE, speed1 = 0, speed2 = 0; 
+
+    PARAMETRIZE {item = ITEM_NONE; item2 = ITEM_NONE; dupe = FALSE; speed1 = 99; speed2 = 100; }
+    PARAMETRIZE {item = ITEM_NONE; item2 = ITEM_MACHO_BRACE; dupe = FALSE; speed1 = 99; speed2 = 200; }
+    PARAMETRIZE {item = ITEM_NONE; item2 = ITEM_MACHO_BRACE; dupe = TRUE; speed1 = 51; speed2 = 200; }
+    PARAMETRIZE {item = ITEM_NONE; item2 = ITEM_POWER_ANKLET; dupe = FALSE; speed1 = 99; speed2 = 200; }
+    PARAMETRIZE {item = ITEM_NONE; item2 = ITEM_POWER_ANKLET; dupe = TRUE; speed1 = 51; speed2 = 200; }
+    PARAMETRIZE {item = ITEM_NONE; item2 = ITEM_IRON_BALL; dupe = FALSE; speed1 = 99; speed2 = 200; }
+    PARAMETRIZE {item = ITEM_NONE; item2 = ITEM_IRON_BALL; dupe = TRUE; speed1 = 51; speed2 = 200; }
+    PARAMETRIZE {item = ITEM_CHOICE_SCARF; item2 = ITEM_NONE; dupe = FALSE; speed1 = 100; speed2 = 151; }
+    PARAMETRIZE {item = ITEM_CHOICE_SCARF; item2 = ITEM_NONE; dupe = TRUE; speed1 = 100; speed2 = 224; }
+    PARAMETRIZE {item = ITEM_QUICK_POWDER; item2 = ITEM_NONE; dupe = FALSE; speed1 = 100; speed2 = 201; }
+    PARAMETRIZE {item = ITEM_QUICK_POWDER; item2 = ITEM_NONE; dupe = TRUE; speed1 = 100; speed2 = 399; }
+
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        if (item == ITEM_QUICK_POWDER )
+            PLAYER(SPECIES_DITTO) { Items(item, item); Speed(speed1); }
+        else
+            PLAYER(SPECIES_WOBBUFFET) { Items(item, item); Speed(speed1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(item2, item2); Speed(speed2); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        if (dupe)
+        {
+            if (item == ITEM_QUICK_POWDER)
+                MESSAGE("Ditto used Scratch!");
+            else
+                MESSAGE("Wobbuffet used Scratch!");
+            MESSAGE("The opposing Wobbuffet used Scratch!");
+        }
+        else
+        {
+            MESSAGE("The opposing Wobbuffet used Scratch!");
+            if (item == ITEM_QUICK_POWDER)
+                MESSAGE("Ditto used Scratch!");
+            else
+                MESSAGE("Wobbuffet used Scratch!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Quick Claw effect stacks when dupes enabled")
+{
+    PASSES_RANDOMLY(36, 100, RNG_QUICK_CLAW);
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Items(ITEM_QUICK_CLAW, ITEM_QUICK_CLAW); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Quick Claw effect don't stack when dupes disabled")
+{
+    PASSES_RANDOMLY(20, 100, RNG_QUICK_CLAW);
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, FALSE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Items(ITEM_QUICK_CLAW, ITEM_QUICK_CLAW); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Scope Lens effect stacks when dupes enabled")
+{
+    u32 genConfig = 0, passes, trials;
+    PARAMETRIZE { genConfig = GEN_1; passes = 2; trials = 4; } // 50% with Wobbuffet's base speed
+    for (u32 j = GEN_2; j <= GEN_5; j++)
+        PARAMETRIZE { genConfig = j; passes = 2; trials = 8; } // 25%
+    for (u32 j = GEN_6; j <= GEN_9; j++)
+        PARAMETRIZE { genConfig = j; passes = 4; trials = 8; } // 50%
+    PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
+    GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
+        ASSUME(gItemsInfo[ITEM_SCOPE_LENS].holdEffect == HOLD_EFFECT_SCOPE_LENS);
+        ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SCOPE_LENS, ITEM_SCOPE_LENS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("A critical hit!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Scope Lens effect doesn't stack when dupes disabled")
+{
+    u32 genConfig = 0, passes, trials;
+    PARAMETRIZE { genConfig = GEN_1; passes = 1; trials = 4; } // 50% with Wobbuffet's base speed
+    for (u32 j = GEN_2; j <= GEN_9; j++)
+        PARAMETRIZE { genConfig = j; passes = 1; trials = 8; } // 25%
+
+    PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
+    GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, FALSE);
+        ASSUME(gItemsInfo[ITEM_SCOPE_LENS].holdEffect == HOLD_EFFECT_SCOPE_LENS);
+        ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SCOPE_LENS, ITEM_SCOPE_LENS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("A critical hit!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Lucky Punch effect stacks when dupes enabled")
+{
+    u32 genConfig = 0, passes, trials;
+    PARAMETRIZE { genConfig = GEN_1; passes = 4; trials = 4; } // 50% with Wobbuffet's base speed
+    for (u32 j = GEN_2; j <= GEN_5; j++)
+        PARAMETRIZE { genConfig = j; passes = 4; trials = 8; } // 50%
+    for (u32 j = GEN_6; j <= GEN_9; j++)
+        PARAMETRIZE { genConfig = j; passes = 8; trials = 8; } // 100%
+    PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
+    GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
+        ASSUME(gItemsInfo[ITEM_LUCKY_PUNCH].holdEffect == HOLD_EFFECT_LUCKY_PUNCH);
+        PLAYER(SPECIES_CHANSEY) { Items(ITEM_LUCKY_PUNCH, ITEM_LUCKY_PUNCH); Speed(30);}
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("A critical hit!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Lucky Punch effect doesn't stack when dupes disabled")
+{
+    u32 genConfig = 0, passes, trials;
+    PARAMETRIZE { genConfig = GEN_1; passes = 25; trials = 32; } // ~78.1% with Chansey's base speed
+    for (u32 j = GEN_2; j <= GEN_5; j++)
+        PARAMETRIZE { genConfig = j; passes = 1;  trials = 4; }  //  25%
+    for (u32 j = GEN_6; j <= GEN_9; j++)
+        PARAMETRIZE { genConfig = j; passes = 1;  trials = 2; }  //  50%
+    PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
+    GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, FALSE);
+        ASSUME(gItemsInfo[ITEM_SCOPE_LENS].holdEffect == HOLD_EFFECT_SCOPE_LENS);
+        PLAYER(SPECIES_CHANSEY) { Items(ITEM_LUCKY_PUNCH, ITEM_LUCKY_PUNCH); Speed(30);}
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(30); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("A critical hit!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Scope Lens effect stacks when dupes enabled")
+{
+    u32 genConfig = 0, passes, trials;
+    PARAMETRIZE { genConfig = GEN_1; passes = 2; trials = 4; } // 50% with Wobbuffet's base speed
+    for (u32 j = GEN_2; j <= GEN_5; j++)
+        PARAMETRIZE { genConfig = j; passes = 2; trials = 8; } // 25%
+    for (u32 j = GEN_6; j <= GEN_9; j++)
+        PARAMETRIZE { genConfig = j; passes = 4; trials = 8; } // 50%
+    PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
+    GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
+        ASSUME(gItemsInfo[ITEM_SCOPE_LENS].holdEffect == HOLD_EFFECT_SCOPE_LENS);
+        ASSUME(GetSpeciesBaseSpeed(SPECIES_WOBBUFFET) == 33);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SCOPE_LENS, ITEM_SCOPE_LENS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("A critical hit!");
+    }
+}
+
+// Manual tests pass, 2 Focus Bands is 19% chance
+TO_DO_BATTLE_TEST("Multi - Focus Band effect stacks when dupes enabled")
+TO_DO_BATTLE_TEST("Multi - Focus Band effect don't stack when dupes disabled")
+// SINGLE_BATTLE_TEST("Multi - BAND")
+// {
+//     GIVEN {
+//         WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
+//         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_FOCUS_BAND, ITEM_FOCUS_BAND); MaxHP(100); HP(3); }
+//         OPPONENT(SPECIES_WOBBUFFET){ Items(ITEM_FOCUS_BAND); MaxHP(100); HP(3); }
+//     } WHEN {
+//         TURN { MOVE(player, MOVE_HYPER_BEAM); MOVE(opponent, MOVE_HYPER_BEAM); }
+//     }
+// }
+
+SINGLE_BATTLE_TEST("Multi - Light Clay effect stacks when dupes enabled")
+{
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE {dupe = FALSE; }
+    PARAMETRIZE {dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LIGHT_CLAY, ITEM_LIGHT_CLAY); }
+        OPPONENT(SPECIES_ABOMASNOW) { Ability(ABILITY_SNOW_WARNING); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_LIGHT_SCREEN); MOVE(opponent, MOVE_LIGHT_SCREEN); } // Light Screen start
+        TURN { MOVE(player, MOVE_REFLECT); MOVE(opponent, MOVE_REFLECT); }
+        TURN { MOVE(player, MOVE_AURORA_VEIL); MOVE(opponent, MOVE_AURORA_VEIL); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); } // 5 turns, opponent wear off
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); } // 8 turns
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); } // 11 turns
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("The opposing team's Light Screen wore off!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("The opposing team's Reflect wore off!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        MESSAGE("The opposing team's Aurora Veil wore off!");
+        if (!dupe)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            MESSAGE("Your team's Light Screen wore off!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            MESSAGE("Your team's Reflect wore off!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            MESSAGE("Your team's Aurora Veil wore off!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        }
+        else
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            MESSAGE("Your team's Light Screen wore off!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            MESSAGE("Your team's Reflect wore off!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            MESSAGE("Your team's Aurora Veil wore off!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - Grip Claw effect adds 2 turns when dupes enabled")
+{
+    u32 config, move;
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE { config = GEN_4; dupe = FALSE; move = MOVE_WRAP; }
+    PARAMETRIZE { config = GEN_5; dupe = FALSE; move = MOVE_WRAP; }
+    PARAMETRIZE { config = GEN_4; dupe = TRUE; move = MOVE_WRAP; }
+    PARAMETRIZE { config = GEN_5; dupe = TRUE; move = MOVE_WRAP; }
+    PARAMETRIZE { config = GEN_4; dupe = FALSE; move = MOVE_FIRE_SPIN; }
+    PARAMETRIZE { config = GEN_5; dupe = FALSE; move = MOVE_FIRE_SPIN; }
+    PARAMETRIZE { config = GEN_4; dupe = TRUE; move = MOVE_FIRE_SPIN; }
+    PARAMETRIZE { config = GEN_5; dupe = TRUE; move = MOVE_FIRE_SPIN; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        WITH_CONFIG(CONFIG_BINDING_TURNS, config);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GRIP_CLAW, ITEM_GRIP_CLAW); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, move); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN { MOVE(opponent, MOVE_RECOVER); }
+        TURN {}
+        TURN {}
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        HP_BAR(opponent); // Direct damage
+
+        HP_BAR(opponent); // Residual Damage
+        HP_BAR(opponent); // Residual Damage
+        HP_BAR(opponent); // Residual Damage
+        HP_BAR(opponent); // Residual Damage
+        HP_BAR(opponent); // Residual Damage
+        HP_BAR(opponent); // Heal to continue test
+        if (config >= GEN_5) {
+            HP_BAR(opponent); // Residual Damage
+            HP_BAR(opponent); // Residual Damage
+        }
+        if (dupe) {
+            HP_BAR(opponent); // Residual Damage
+            HP_BAR(opponent); // Residual Damage
+        }
+        NOT HP_BAR(opponent); // Residual Damage
+    }
+}
+
+WILD_BATTLE_TEST("Multi - Lucky Egg effect adds 2 turns when dupes enabled", s32 exp)
+{
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE {dupe = FALSE; }
+    PARAMETRIZE {dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Level(20); Items(ITEM_LUCKY_EGG, ITEM_LUCKY_EGG); }
+        OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The wild Caterpie fainted!");
+        EXPERIENCE_BAR(player, captureGainedExp: &results[i].exp);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].exp, Q_4_12(1.5), results[1].exp);
+    }
+}
+
+WILD_BATTLE_TEST("Multi - Macho Brace effect does not stack when dupes disabled")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, FALSE);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_MACHO_BRACE, ITEM_MACHO_BRACE); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        ASSUME(gSpeciesInfo[SPECIES_CATERPIE].evYield_HP == 1);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The wild Caterpie fainted!");
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 2);
+    }
+}
+
+WILD_BATTLE_TEST("Multi - Macho Brace effect stacks when dupes enabled")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_MACHO_BRACE, ITEM_MACHO_BRACE); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        ASSUME(gSpeciesInfo[SPECIES_CATERPIE].evYield_HP == 1);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The wild Caterpie fainted!");
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 3);
+    }
+}
+
+WILD_BATTLE_TEST("Multi - Power Weight effect stacks regardless of dupe setting")
+{
+    bool16 dupe = FALSE;
+
+    PARAMETRIZE {dupe = FALSE; }
+    PARAMETRIZE {dupe = TRUE; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_ALLOW_HELD_DUPES, dupe);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POWER_WEIGHT, ITEM_POWER_WEIGHT); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        ASSUME(gSpeciesInfo[SPECIES_CATERPIE].evYield_HP == 1);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The wild Caterpie fainted!");
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 17); // 1 + 8 + 8 
+    }
+}
+
+WILD_BATTLE_TEST("Multi - Power Weight effect stacks with Macho Brace")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POWER_WEIGHT, ITEM_MACHO_BRACE); }
+        OPPONENT(SPECIES_CATERPIE) { HP(1); }
+        ASSUME(gSpeciesInfo[SPECIES_CATERPIE].evYield_HP == 1);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Scratch!");
+        MESSAGE("The wild Caterpie fainted!");
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 18); // (1 + 8) * 2
+    }
+}
 
 #endif
 

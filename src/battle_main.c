@@ -4850,14 +4850,41 @@ u32 GetBattlerTotalSpeedStat(u32 battler)
     }
 
     // item effects
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_MACHO_BRACE) || SearchItemSlots(battlerItems, HOLD_EFFECT_POWER_ITEM))
-        speed /= 2;
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_IRON_BALL))
-        speed /= 2;
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_CHOICE_SCARF) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX)
-        speed = (speed * 150) / 100;
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_QUICK_POWDER) && gBattleMons[battler].species == SPECIES_DITTO && !(gBattleMons[battler].volatiles.transformed))
-        speed *= 2;
+
+    u32 i, itemEffect;
+    bool32 firstMach = TRUE, firstPower = TRUE, firstIron = TRUE, firstChoice = TRUE, firstQuick = TRUE;
+
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        itemEffect = GetSlotHeldItemEffect(battler, i, TRUE);
+
+        if ((itemEffect == HOLD_EFFECT_MACHO_BRACE) && (firstMach || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            {
+                firstMach = FALSE;
+                speed /= 2;
+            }
+        if ((itemEffect == HOLD_EFFECT_POWER_ITEM) && (firstPower || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            {
+                firstPower = FALSE;
+                speed /= 2;
+            }
+        if ((itemEffect == HOLD_EFFECT_IRON_BALL) && (firstIron || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            {
+                firstIron = FALSE;
+                speed /= 2;
+            }
+        if ((itemEffect == HOLD_EFFECT_CHOICE_SCARF) && GetActiveGimmick(battler) != GIMMICK_DYNAMAX && (firstChoice || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            {
+                firstChoice = FALSE;
+                speed = (speed * 150) / 100;
+            }
+        if ((itemEffect == HOLD_EFFECT_QUICK_POWDER) && gBattleMons[battler].species == SPECIES_DITTO
+         && !(gBattleMons[battler].volatiles.transformed) && (firstQuick || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            {
+                firstQuick = FALSE;
+                speed *= 2;
+            }
+    }
 
     // various effects
     if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND)
@@ -5060,7 +5087,8 @@ s32 GetWhichBattlerFaster(struct BattleContext *ctx, bool32 ignoreChosenMoves)
 static void SetActionsAndBattlersTurnOrder(void)
 {
     s32 turnOrderId = 0;
-    s32 i, j, battler;
+    s32 i, j, battler, quickChance = 0;
+    u32 item;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
     {
@@ -5135,9 +5163,17 @@ static void SetActionsAndBattlersTurnOrder(void)
                   && gChosenActionByBattler[battler] != B_ACTION_SWITCH
                   && gChosenActionByBattler[battler] != B_ACTION_THROW_BALL)
                 {
+                    for (i = 0; i < MAX_MON_ITEMS; i++)
+                    {
+                        item = GetSlotHeldItem(battler, i, TRUE);
+
+                        if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_QUICK_CLAW && (quickChance == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+                            quickChance += (100 - quickChance) * GetItemHoldEffectParam(item) / 100;
+                    }
+
                     gActionsByTurnOrder[turnOrderId] = gChosenActionByBattler[battler];
                     gBattlerByTurnOrder[turnOrderId] = battler;
-                    quickClawRandom[battler] = RandomPercentage(RNG_QUICK_CLAW, GetBattlerItemHoldEffectParam(battler, GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_QUICK_CLAW , TRUE)));
+                    quickClawRandom[battler] = RandomPercentage(RNG_QUICK_CLAW, quickChance);
                     quickDrawRandom[battler] = RandomPercentage(RNG_QUICK_DRAW, 30);
                     turnOrderId++;
                 }

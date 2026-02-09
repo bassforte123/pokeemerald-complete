@@ -5271,6 +5271,16 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     u8 stat;
     u8 bonus;
     u32 currentEVCap = GetCurrentEVCap();
+    u16 braceCount = 0;
+
+    for (j = 0; j < MAX_MON_ITEMS; j++)
+    {
+        if (GetItemHoldEffect(GetMonData(mon, MON_DATA_HELD_ITEM + j)) == HOLD_EFFECT_MACHO_BRACE
+        && (braceCount == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        {
+            braceCount++;
+        }
+    }
 
     for (j = 0; j < MAX_MON_ITEMS; j++)
     {
@@ -5353,9 +5363,9 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
             if (CheckPartyHasHadPokerus(mon, 0))
                 multiplier *= 2;
 
-            if (MonHasItemHoldEffect(mon, HOLD_EFFECT_MACHO_BRACE)) // Macho Brace always active so it doesn't use the item slot loop
-                 multiplier *= 2;
-
+            if (braceCount > 0)
+                multiplier *= braceCount + 1;
+             
             evIncrease *= multiplier; // Multiplier split out so that multi item additions happen first and then the multiplier is only applied once
 
             if (totalEVs + (s16)evIncrease > currentEVCap)

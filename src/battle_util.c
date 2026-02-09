@@ -7890,78 +7890,105 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     {
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.25));
     }
+    
+    u16 battlerItems[MAX_MON_ITEMS];
+    STORE_BATTLER_ITEMS(battlerAtk);
+
+    #define ITEM_EFFECT_PARAM_ATK(item) holdEffectParamAtk = GetBattlerItemHoldEffectParam(battlerAtk, item); \
+        if (holdEffectParamAtk > 100) holdEffectParamAtk = 100; \
+        holdEffectModifier = uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12(holdEffectParamAtk));
 
     #define HOLD_EFFECT_PARAM_ATK(holdEffect) holdEffectParamAtk = GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHeldItemWithEffect(battlerAtk, holdEffect, TRUE)); \
         if (holdEffectParamAtk > 100) holdEffectParamAtk = 100; \
         holdEffectModifier = uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12(holdEffectParamAtk));
+    
 
-    u16 battlerItems[MAX_MON_ITEMS];
-    STORE_BATTLER_ITEMS(battlerAtk);
-
-    // attacker's hold effect
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_MUSCLE_BAND))
+    for (u32 i = 0; i < MAX_MON_ITEMS; i++)
     {
-        HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_MUSCLE_BAND);
-        if (IsBattleMovePhysical(move))
-            modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12_Floored(holdEffectParamAtk)));
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_WISE_GLASSES))
-    {
-        HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_WISE_GLASSES);
-        if (IsBattleMoveStatus(move))
-            modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12_Floored(holdEffectParamAtk)));
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_LUSTROUS_ORB))
-    {
-        HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_LUSTROUS_ORB);
-        if (GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_PALKIA && (moveType == TYPE_WATER || moveType == TYPE_DRAGON))
-            modifier = uq4_12_multiply(modifier, holdEffectModifier);
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_ADAMANT_ORB))
-    {
-        HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_ADAMANT_ORB);
-        if (GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_DIALGA && (moveType == TYPE_STEEL || moveType == TYPE_DRAGON))
-            modifier = uq4_12_multiply(modifier, holdEffectModifier);
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_GRISEOUS_ORB))
-    {
-        HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_GRISEOUS_ORB);
-        if (GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_GIRATINA && (moveType == TYPE_GHOST || moveType == TYPE_DRAGON))
-            modifier = uq4_12_multiply(modifier, holdEffectModifier);
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_SOUL_DEW))
-    {
-        HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_SOUL_DEW);
-        if ((gBattleMons[battlerAtk].species == SPECIES_LATIAS || gBattleMons[battlerAtk].species == SPECIES_LATIOS)
-            && ((B_SOUL_DEW_BOOST >= GEN_7 && (moveType == TYPE_PSYCHIC || moveType == TYPE_DRAGON))
+        if (battlerItems[i] != ITEM_NONE)
+        {
+            // attacker's hold effect
+            if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_MUSCLE_BAND
+             && IsBattleMovePhysical(move))
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12_Floored(holdEffectParamAtk)));
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_WISE_GLASSES
+             && IsBattleMoveSpecial(move))
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12_Floored(holdEffectParamAtk)));
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_LUSTROUS_ORB
+             && GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_PALKIA && (moveType == TYPE_WATER || moveType == TYPE_DRAGON))
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, holdEffectModifier);
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_ADAMANT_ORB
+             && GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_DIALGA && (moveType == TYPE_STEEL || moveType == TYPE_DRAGON))
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, holdEffectModifier);
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_GRISEOUS_ORB
+             && GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_GIRATINA && (moveType == TYPE_GHOST || moveType == TYPE_DRAGON))
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, holdEffectModifier);
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_SOUL_DEW
+             && (gBattleMons[battlerAtk].species == SPECIES_LATIAS || gBattleMons[battlerAtk].species == SPECIES_LATIOS)
+             && ((B_SOUL_DEW_BOOST >= GEN_7 && (moveType == TYPE_PSYCHIC || moveType == TYPE_DRAGON))
              || (B_SOUL_DEW_BOOST < GEN_7 && !(gBattleTypeFlags & BATTLE_TYPE_FRONTIER) && IsBattleMoveSpecial(move))))
-            modifier = uq4_12_multiply(modifier, holdEffectModifier);
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_TYPE_POWER))
-    {
-        if (moveType == GetItemSecondaryId(SearchItemSlots(battlerItems, HOLD_EFFECT_TYPE_POWER)))
-        {   
-            HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_TYPE_POWER);
-            modifier = uq4_12_multiply(modifier, holdEffectModifier);
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, holdEffectModifier);
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_TYPE_POWER
+             && moveType == GetItemSecondaryId(battlerItems[i]))
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, holdEffectModifier);
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_PLATE
+             && moveType == GetItemSecondaryId(battlerItems[i]))
+            {
+                ITEM_EFFECT_PARAM_ATK(battlerItems[i]);
+                modifier = uq4_12_multiply(modifier, holdEffectModifier);
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_PUNCHING_GLOVE
+             && IsPunchingMove(move))
+            {
+                modifier = uq4_12_multiply(modifier, UQ_4_12(1.1));
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
+            else if (GetBattlerItemHoldEffect(battlerAtk, battlerItems[i]) == HOLD_EFFECT_OGERPON_MASK
+             && GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_OGERPON)
+            {
+                modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
+                if (!GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                    i = MAX_MON_ITEMS;
+            }
         }
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_PLATE))
-    {
-        if (moveType == GetItemSecondaryId(SearchItemSlots(battlerItems, HOLD_EFFECT_PLATE)))
-        {   
-            HOLD_EFFECT_PARAM_ATK(HOLD_EFFECT_PLATE);
-            modifier = uq4_12_multiply(modifier, holdEffectModifier);
-        }
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_PUNCHING_GLOVE))
-    {
-        if (IsPunchingMove(move))
-            modifier = uq4_12_multiply(modifier, UQ_4_12(1.1));
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_OGERPON_MASK))
-    {
-        if (GET_BASE_SPECIES_ID(gBattleMons[battlerAtk].species) == SPECIES_OGERPON)
-           modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
     }
 
     // Terastallization boosts weak, non-priority, non-multi hit moves after modifiers to 60 BP.
@@ -8705,29 +8732,46 @@ static inline uq4_12_t GetDefenderPartnerAbilitiesModifier(u32 battlerPartnerDef
 
 static inline uq4_12_t GetAttackerItemsModifier(u32 battlerAtk, uq4_12_t typeEffectivenessModifier)
 {
+    u32 i, item;
     uq4_12_t percentBoost = UQ_4_12(1.0);
     u32 metronomeTurns;
+    bool32 firstMetronome = TRUE, firstBelt = TRUE, firstOrb = TRUE;
     uq4_12_t metronomeBoostBase;
-    u16 battlerItems[MAX_MON_ITEMS];
-    STORE_BATTLER_ITEMS(battlerAtk);
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_METRONOME))
+
+    // Metronome separated out to accomodate addition logic below which needs to happen first regardless of item order
+    for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        metronomeBoostBase = PercentToUQ4_12(GetBattlerItemHoldEffectParam(battlerAtk, SearchItemSlots(battlerItems, HOLD_EFFECT_METRONOME)));
-        metronomeTurns = min(gBattleStruct->metronomeItemCounter[battlerAtk], 5);
-        // according to bulbapedia this is the "correct" way to calculate the metronome boost
-        // due to the limited domain of damage numbers it will never really matter whether this is off by one
-        percentBoost = uq4_12_add(UQ_4_12(1.0), metronomeBoostBase * metronomeTurns);
-    }
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_EXPERT_BELT))
-    {
-        if (typeEffectivenessModifier >= UQ_4_12(2.0))
-            percentBoost = uq4_12_multiply_half_down(percentBoost, UQ_4_12(1.2));
+        item = GetSlotHeldItem(battlerAtk, i, TRUE);
+
+        if (GetItemHoldEffect(item) == HOLD_EFFECT_METRONOME && (firstMetronome || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        {
+            firstMetronome = FALSE;
+            metronomeBoostBase = PercentToUQ4_12(GetBattlerItemHoldEffectParam(battlerAtk, item));
+            metronomeTurns = min(gBattleStruct->metronomeItemCounter[battlerAtk], 5);
+            // according to bulbapedia this is the "correct" way to calculate the metronome boost
+            // due to the limited domain of damage numbers it will never really matter whether this is off by one
+            percentBoost = uq4_12_add(percentBoost, metronomeBoostBase * metronomeTurns);
+        }
     }
 
-    if (SearchItemSlots(battlerItems, HOLD_EFFECT_LIFE_ORB))
+    for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        percentBoost = uq4_12_multiply_half_down(percentBoost, UQ_4_12(1.3));
+        item = GetSlotHeldItem(battlerAtk, i, TRUE);
+
+        if (GetItemHoldEffect(item) == HOLD_EFFECT_EXPERT_BELT && (firstBelt || GetConfig(CONFIG_ALLOW_HELD_DUPES))
+         && typeEffectivenessModifier >= UQ_4_12(2.0))
+        {
+            firstBelt = FALSE;
+            percentBoost = uq4_12_multiply_half_down(percentBoost, UQ_4_12(1.2));
+        }
+
+        if (GetItemHoldEffect(item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+        {
+            firstOrb = FALSE;
+            percentBoost = uq4_12_multiply_half_down(percentBoost, UQ_4_12(1.3));
+        }
     }
+
     return percentBoost;
 }
 
@@ -12049,6 +12093,28 @@ u16 GetSlotHeldItem(u32 battler, u16 slot, bool32 checkNegating)
     }
 
     return gBattleMons[battler].items[slot];
+}
+
+//Returns item effect in the given slot
+u16 GetSlotHeldItemEffect(u32 battler, u16 slot, bool32 checkNegating)
+{
+    if (checkNegating)
+    {
+        if (gBattleMons[battler].volatiles.embargo)
+            return ITEM_NONE;
+        if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
+            return ITEM_NONE;
+        if (BattlerHasKlutz(battler))
+            return ITEM_NONE;
+    }
+
+    if(battler >= MAX_BATTLERS_COUNT)
+    {
+        DebugPrintf("Invalid Battler: %d", battler);
+        return ITEM_NONE;
+    }
+
+    return GetItemHoldEffect(gBattleMons[battler].items[slot]);
 }
 
 //Returns slot of the given item
