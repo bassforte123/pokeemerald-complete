@@ -101,6 +101,7 @@ struct DisableStruct
     u8 octolock:1;
     u8 cudChew[MAX_MON_ITEMS];
     u8 weatherAbilityDone:1;
+    u8 transformWeatherAbilityDone:1;
     u8 terrainAbilityDone:1;
     u8 syrupBombIsShiny:1;
     u8 usedProteanLibero:1;

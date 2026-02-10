@@ -1396,4 +1396,22 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_COLOR_CHANGE abilities do not conflict
 // Both blocks only activate one ability but might be possible to adjust them to activate multiple.
 TO_DO_BATTLE_TEST("Multi - ABILITYEFFECT_ON_WEATHER abilities do not conflict")
 TO_DO_BATTLE_TEST("Multi - ABILITYEFFECT_ON_TERRAIN abilities do not conflict")
+
+// Per the above, exception made for Protosynthesis since the rest of the weather abilities are transformations.
+SINGLE_BATTLE_TEST("Multi - Protosynthesis doe not conflict with other weather abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); Innates(ABILITY_PROTOSYNTHESIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        ABILITY_POPUP(player, ABILITY_FLOWER_GIFT);
+        MESSAGE("The harsh sunlight activated CHERRIM's Protosynthesis!");
+        MESSAGE("Walking Wake's Sp. Atk was heightened!");
+    }
+}
+
 #endif

@@ -5835,17 +5835,17 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
             }
 
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
+            if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 gLastUsedAbility = ABILITY_FORECAST;
                 gBattleScripting.battler = battler;
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
                 PushTraitStack(battler, ABILITY_FORECAST);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeWithStringEnd3);
                 effect++;
@@ -5856,18 +5856,19 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
+                DebugPrintf("Flower Gift prevents reversion when Eiscue Noice gets broken");
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
             }
 
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
+            if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 gLastUsedAbility = ABILITY_FLOWER_GIFT;
                 gBattleScripting.battler = battler;
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
                 PushTraitStack(battler, ABILITY_FLOWER_GIFT);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeWithStringEnd3);
                 effect++;
@@ -5879,17 +5880,17 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, u32 special, u3
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
             }
 
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
+            if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 gLastUsedAbility = ABILITY_ICE_FACE;
                 gBattleScripting.battler = battler;
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
                 PushTraitStack(battler, ABILITY_ICE_FACE);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeWithStringEnd3);
                 effect++;
