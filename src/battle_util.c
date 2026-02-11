@@ -5818,13 +5818,13 @@ else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpeci
         if (!IsBattlerAlive(battler))
             return effect;
 
+        bool32 transformReturnCheck = FALSE;
         if (SearchTraits(battlerTraits, ABILITY_FORECAST))
         {
             u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
-                // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+                transformReturnCheck = TRUE;
             }
 
             if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
@@ -5845,8 +5845,7 @@ else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpeci
             u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
-                // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+                transformReturnCheck = TRUE;
             }
 
             if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
@@ -5867,8 +5866,7 @@ else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpeci
             u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
-                // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+                transformReturnCheck = TRUE;
             }
 
             if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
@@ -5884,6 +5882,13 @@ else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpeci
                 effect++;
             }
         }
+        // Disables weather return transformation at the end of the transform block to reduce conflicts
+        if (transformReturnCheck)
+        {
+            // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
+            gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
+        }
+        
        if (SearchTraits(battlerTraits, ABILITY_PROTOSYNTHESIS)
         && !gDisableStructs[battler].weatherAbilityDone
         && (gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()
