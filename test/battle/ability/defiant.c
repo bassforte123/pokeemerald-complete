@@ -758,3 +758,44 @@ SINGLE_BATTLE_TEST("Defiant doesn't display ability popup when already at Maximu
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Defiant activates before White Herb (Multi)")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_LEER; }
+    PARAMETRIZE { move = MOVE_GROWL; }
+
+    GIVEN {
+        PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); Items(ITEM_PECHA_BERRY, ITEM_WHITE_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+
+        ABILITY_POPUP(player, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Mankey's Attack sharply rose!");
+
+        if (move == MOVE_LEER) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            MESSAGE("Mankey returned its stats to normal using its White Herb!");
+        } else {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+                MESSAGE("Mankey returned its stats to normal using its White Herb!");
+            }
+        }
+    } THEN {
+        if (move == MOVE_LEER) {
+            EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        } else {
+            EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        }
+    }
+}
+#endif

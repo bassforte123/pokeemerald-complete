@@ -45,7 +45,6 @@ SINGLE_BATTLE_TEST("Defeatist halves Special Attack when HP <= 50%", s16 damage)
     }
 }
 
-
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Defeatist halves Attack when HP <= 50% (Traits)", s16 damage)
 {

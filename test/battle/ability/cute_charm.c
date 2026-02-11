@@ -70,7 +70,6 @@ SINGLE_BATTLE_TEST("Cute Charm triggers 1/3 times (Gen3) or 30% (Gen 4+) of the 
     }
 }
 
-
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Cute Charm inflicts infatuation on contact (Traits)")
 {

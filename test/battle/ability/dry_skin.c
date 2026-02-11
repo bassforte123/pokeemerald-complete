@@ -296,3 +296,27 @@ SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activat
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Dry Skin prevents Absorb Bulb and Luminous Moss from activating (Multi)")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_ABSORB_BULB; }
+    PARAMETRIZE { item = ITEM_LUMINOUS_MOSS; }
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_BUBBLE) == TYPE_WATER);
+        PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BUBBLE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DRY_SKIN);
+        HP_BAR(player, damage: -50);
+        MESSAGE("Parasect restored HP using its Dry Skin!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        }
+    }
+}
+#endif

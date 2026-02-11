@@ -78,6 +78,7 @@ SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the attacker is genderless",
     }
 }
 
+
 SINGLE_BATTLE_TEST("Rivalry doesn't modify power if the target is genderless", s16 damage)
 {
     u16 species;

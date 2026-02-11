@@ -47,13 +47,12 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when already at maximum Attack 
 
 TO_DO_BATTLE_TEST("Anger Point triggers when a substitute takes the hit (Gen4)");
 
-#if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit (Gen5+) (Traits)")
+SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit (Gen5+)")
 {
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_FROST_BREATH));
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
-        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_VITAL_SPIRIT); Innates(ABILITY_ANGER_POINT); Speed(2); }
+        PLAYER(SPECIES_PRIMEAPE) { Ability(ABILITY_ANGER_POINT); Speed(2); }
         OPPONENT(SPECIES_SNORUNT) { Speed(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SUBSTITUTE); MOVE(opponent, MOVE_FROST_BREATH); }
@@ -72,6 +71,7 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit
     }
 }
 
+#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Anger Point raises Attack stage to maximum after receiving a critical hit (Traits)")
 {
     GIVEN {
@@ -141,4 +141,5 @@ SINGLE_BATTLE_TEST("Anger Point does not trigger when a substitute takes the hit
         EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }
 }
+
 #endif

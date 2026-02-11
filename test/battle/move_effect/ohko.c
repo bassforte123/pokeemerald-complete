@@ -116,3 +116,19 @@ SINGLE_BATTLE_TEST("OHKO moves can can be endured by Sturdy (Traits)")
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("OHKO moves can can be endured by Focus Sash (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISSURE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+        HP_BAR(opponent, hp: 1);
+        MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
+    }
+}
+#endif

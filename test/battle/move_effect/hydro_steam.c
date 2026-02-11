@@ -49,3 +49,27 @@ SINGLE_BATTLE_TEST("Hydro Steam is affected by Utility Umbrella", s16 damage)
         EXPECT_MUL_EQ(results[2].damage, Q_4_12(0.5), results[0].damage);
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Hydro Steam is affected by Utility Umbrella (Multi)", s16 damage)
+{
+    u32 itemPlayer;
+    u32 itemOpponent;
+    PARAMETRIZE { itemPlayer = ITEM_UTILITY_UMBRELLA; itemOpponent = ITEM_NONE; }
+    PARAMETRIZE { itemPlayer = ITEM_NONE;             itemOpponent = ITEM_UTILITY_UMBRELLA; }
+    PARAMETRIZE { itemPlayer = ITEM_UTILITY_UMBRELLA; itemOpponent = ITEM_UTILITY_UMBRELLA; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, itemPlayer); };
+        OPPONENT(SPECIES_WOBBUFFET) {Items(ITEM_PECHA_BERRY, itemOpponent); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+        TURN { MOVE(player, MOVE_HYDRO_STEAM); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYDRO_STEAM, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[2].damage, Q_4_12(0.5), results[0].damage);
+    }
+}
+#endif

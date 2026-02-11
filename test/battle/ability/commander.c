@@ -443,7 +443,7 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         PLAYER(SPECIES_DONDOZO);
-        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -456,7 +456,25 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail")
     }
 }
 
-<<<<<<< HEAD
+DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to switch out")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            SWITCH(playerLeft, 2);
+            SWITCH(playerRight, 3);
+        }
+    } SCENE {
+        NOT ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Commander will activate once Dondozo switches in (Traits)")
 {
@@ -566,14 +584,10 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri still avoids moves even when the attacke
 }
 
 DOUBLE_BATTLE_TEST("Commander cannot affect a Dondozo that was previously affected by Commander until it faints and revived (Traits)")
-=======
-DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to switch out")
->>>>>>> expansion/1.14.3
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_DONDOZO);
-<<<<<<< HEAD
         PLAYER(SPECIES_TATSUGIRI) { HP(1); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); Status1(STATUS1_POISON); }
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -596,14 +610,10 @@ DOUBLE_BATTLE_TEST("Commander prevents Whirlwind from working against Dondozo or
     GIVEN {
         PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
         PLAYER(SPECIES_DONDOZO);
-=======
-        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
->>>>>>> expansion/1.14.3
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-<<<<<<< HEAD
         TURN { MOVE(opponentLeft, MOVE_WHIRLWIND, target: playerLeft); }
         TURN { MOVE(opponentRight, MOVE_WHIRLWIND, target: playerRight); }
     } SCENE {
@@ -920,8 +930,16 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail (Tr
         NOT MESSAGE("Wobbuffet was dragged out!");
     }
 }
-#endif
-=======
+DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to switch out (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
         TURN {
             SWITCH(playerLeft, 2);
             SWITCH(playerRight, 3);
@@ -930,4 +948,47 @@ DOUBLE_BATTLE_TEST("Commander prevent Dondozo from switch out by Dragon Tail (Tr
         NOT ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
     }
 }
->>>>>>> expansion/1.14.3
+
+DOUBLE_BATTLE_TEST("Commander will not activate if partner Dondozo is about to switch out (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            SWITCH(playerLeft, 2);
+            SWITCH(playerRight, 3);
+        }
+    } SCENE {
+        NOT ABILITY_POPUP(playerRight, ABILITY_COMMANDER);
+    }
+}
+
+#endif
+
+#if MAX_MON_ITEMS > 1
+DOUBLE_BATTLE_TEST("Commander prevents Red Card from working while Commander is active (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_TATSUGIRI) { Ability(ABILITY_COMMANDER); }
+        PLAYER(SPECIES_DONDOZO);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
+        MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+    } THEN {
+        EXPECT(opponentLeft->item == ITEM_NONE);
+        EXPECT(playerRight->species == SPECIES_DONDOZO);
+    }
+}
+
+#endif

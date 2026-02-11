@@ -850,3 +850,147 @@ SINGLE_BATTLE_TEST("Pursuit doesn't cause mon with Emergency Exit to switch twic
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and takes Life Orb damage (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WYNAUT) { Items(ITEM_PECHA_BERRY, ITEM_LIFE_ORB); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        HP_BAR(opponent);
+        SEND_IN_MESSAGE("Zigzagoon");
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuit user mega evolves before attacking a switching foe and hits twice if user has Parental Bond (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_KANGASKHAN) { Items(ITEM_PECHA_BERRY, ITEM_KANGASKHANITE); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        HP_BAR(player);
+        HP_BAR(player);
+        SEND_IN_MESSAGE("Zigzagoon");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Pursuit user mega evolves before attacking a switching foe and others mega evolve after switch (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_CHARIZARD) { Items(ITEM_PECHA_BERRY, ITEM_CHARIZARDITE_X); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KANGASKHAN) { Items(ITEM_PECHA_BERRY, ITEM_KANGASKHANITE); }
+    } WHEN {
+        TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_PURSUIT, gimmick: GIMMICK_MEGA, target: playerRight); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentRight);
+        HP_BAR(playerRight);
+        HP_BAR(playerRight);
+        SEND_IN_MESSAGE("Zigzagoon");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerLeft);
+    }
+}
+
+// Checked so that Pursuit has only 1 PP and it forces the player to use Struggle.
+SINGLE_BATTLE_TEST("Pursuit becomes a locked move after being used on switch-out while holding a Choice Item (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CHOICE_BAND); MovesWithPP({MOVE_PURSUIT, 1}, {MOVE_CELEBRATE, 10}, {MOVE_WATER_GUN, 10}, {MOVE_SCRATCH, 10}); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(opponent, 1); MOVE(player, MOVE_PURSUIT); }
+        TURN { FORCED_MOVE(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, player);
+        HP_BAR(opponent);
+        MESSAGE("2 sent out Wobbuffet!");
+
+        MESSAGE("Wobbuffet used Struggle!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuit user gets forced out by Red Card and target still switches out (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        PLAYER(SPECIES_VOLTORB);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_VOLTORB);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("The opposing Voltorb was dragged out!");
+        SEND_IN_MESSAGE("Voltorb");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_VOLTORB);
+        EXPECT_EQ(opponent->species, SPECIES_VOLTORB);
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuit user faints to Life Orb and target still switches out (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_VOLTORB);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_LIFE_ORB); HP(1); }
+        OPPONENT(SPECIES_VOLTORB);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(opponent, 1); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Wobbuffet fainted!");
+        SEND_IN_MESSAGE("Voltorb");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_VOLTORB);
+        EXPECT_EQ(opponent->species, SPECIES_VOLTORB);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's switch is cancelled if switching to same Pokémon (Multi)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_RED_CARD) == HOLD_EFFECT_RED_CARD);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_ARCEUS);
+        OPPONENT(SPECIES_WYNAUT) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ARCEUS);
+    } WHEN {
+        TURN { SWITCH(opponentLeft, 2); SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_PURSUIT, target: opponentLeft); }
+    } THEN {
+        // playerLeft switches to Arceus
+        EXPECT_EQ(playerLeft->species, SPECIES_ARCEUS);
+        // playerRight has their switch cancelled
+        EXPECT_EQ(playerRight->species, SPECIES_WYNAUT);
+    }
+}
+#endif

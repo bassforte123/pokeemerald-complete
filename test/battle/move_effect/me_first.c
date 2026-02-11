@@ -100,3 +100,17 @@ SINGLE_BATTLE_TEST("Me First deducts power points from itself, not the copied mo
 }
 
 // TO_DO_BATTLE_TEST: Not everything has been tested
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Me First can be selected if users holds Assault Vest (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Items(ITEM_PECHA_BERRY, ITEM_ASSAULT_VEST); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ME_FIRST); MOVE(opponent, MOVE_TACKLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ME_FIRST, player);
+    }
+}
+#endif

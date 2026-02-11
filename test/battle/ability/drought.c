@@ -164,3 +164,33 @@ SINGLE_BATTLE_TEST("Drought sets up permanent sun (Gen3-5) (Traits)")
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Drought sets up sun for 8 turns with Heat Rock (Gen6+) (Multi)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
+        PLAYER(SPECIES_NINETALES) { Moves(MOVE_CELEBRATE); Ability(ABILITY_DROUGHT); Items(ITEM_PECHA_BERRY, ITEM_HEAT_ROCK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DROUGHT);
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight is strong.");
+        MESSAGE("The sunlight faded.");
+    }
+}
+#endif

@@ -141,3 +141,29 @@ SINGLE_BATTLE_TEST("Glaive Rush status last until the the user's next turn")
         EXPECT_EQ(normalDmgFirstHit, normalDmgSecondHit);
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("If Glaive Rush isn't successful moves targeted at the user don't deal double damage (Multi)", s16 damage)
+{
+    bool32 missesGlaiveRush;
+
+    PARAMETRIZE { missesGlaiveRush = FALSE; }
+    PARAMETRIZE { missesGlaiveRush = TRUE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_BRIGHT_POWDER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GLAIVE_RUSH, hit: missesGlaiveRush); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        if (!missesGlaiveRush)
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_GLAIVE_RUSH, player);
+        else
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_GLAIVE_RUSH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
+    }
+}
+#endif

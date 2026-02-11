@@ -519,113 +519,6 @@ DOUBLE_BATTLE_TEST("Dancer-called damaging moves are considered for Counter/Mirr
 {
     u32 danceMove, retaliateMove;
 
-<<<<<<< HEAD
-TO_DO_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an additional Z-Power effect")
-TO_DO_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a move if it's confused")
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rampage move") // Test with Petal Dance, Thrash
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rollout")
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Choice items")
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Encore")
-TO_DO_BATTLE_TEST("Dancer tries to copy a status move but fails if it's under Taunt's effect")
-TO_DO_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest")
-TO_DO_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out")
-TO_DO_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat")
-
-#if MAX_MON_TRAITS > 1
-SINGLE_BATTLE_TEST("Dancer can copy a dance move immediately after it was used and allow the user of Dancer to still use its move (Traits)")
-{
-    GIVEN {
-        ASSUME(IsDanceMove(MOVE_QUIVER_DANCE));
-        PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_QUIVER_DANCE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUIVER_DANCE, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        ABILITY_POPUP(opponent, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUIVER_DANCE, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent); // Same turn
-    }
-}
-
-SINGLE_BATTLE_TEST("Dancer can copy Teeter Dance (Traits)")
-{
-    GIVEN {
-        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
-        PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Item(ITEM_LUM_BERRY); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_TEETER_DANCE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, player);
-        ABILITY_POPUP(opponent, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponent);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targets (Traits)")
-{
-    GIVEN {
-        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
-        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Item(ITEM_LUM_BERRY); }
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Item(ITEM_LUM_BERRY); }
-        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); Innates(ABILITY_OWN_TEMPO); }
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_TEETER_DANCE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, playerLeft);
-        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponentLeft);
-        MESSAGE("Wobbuffet became confused!");
-        MESSAGE("Wynaut became confused!");
-    }
-}
-
-DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest (Traits)")
-{
-    GIVEN {
-        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
-        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
-        PLAYER(SPECIES_WYNAUT) { Speed(50); }
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(20); }
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(3); }
-    } WHEN {
-        TURN { MOVE(playerRight, MOVE_DRAGON_DANCE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerRight);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        ABILITY_POPUP(opponentRight, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentRight);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        ABILITY_POPUP(playerLeft, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-    }
-}
-
-SINGLE_BATTLE_TEST("Dancer doesn't trigger if the original user flinches (Traits)")
-{
-    GIVEN {
-        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
-        PLAYER(SPECIES_WOBBUFFET)
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_DRAGON_DANCE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
-        MESSAGE("Wobbuffet flinched and couldn't move!");
-        NONE_OF {
-            ABILITY_POPUP(opponent, ABILITY_DANCER);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponent);
-=======
     PARAMETRIZE { danceMove = MOVE_AQUA_STEP; retaliateMove = MOVE_COUNTER; }
     PARAMETRIZE { danceMove = MOVE_FIERY_DANCE; retaliateMove = MOVE_MIRROR_COAT; }
     PARAMETRIZE { danceMove = MOVE_FIERY_DANCE; retaliateMove = MOVE_METAL_BURST; }
@@ -707,107 +600,10 @@ SINGLE_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponent);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
->>>>>>> expansion/1.14.3
         }
     }
 }
 
-<<<<<<< HEAD
-DOUBLE_BATTLE_TEST("Dancer still triggers if another dancer flinches (Traits)")
-{
-    GIVEN {
-        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
-        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
-        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
-        PLAYER(SPECIES_WYNAUT) { Speed(5); }
-        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(20); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
-    } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft); MOVE(playerRight, MOVE_DRAGON_DANCE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentLeft);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerRight);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-        ABILITY_POPUP(playerLeft, ABILITY_DANCER);
-        MESSAGE("Oricorio flinched and couldn't move!");
-        NONE_OF {
-            MESSAGE("Oricorio used Dragon Dance!");
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerLeft);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
-        }
-        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
-        MESSAGE("The opposing Oricorio used Dragon Dance!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Dancer still activates after Red Card (Traits)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) ;
-        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
-        PLAYER(SPECIES_CHANSEY);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
-        OPPONENT(SPECIES_BULBASAUR);
-        OPPONENT(SPECIES_SHUCKLE);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Fiery Dance!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
-        HP_BAR(opponentLeft);
-        // Red card trigger
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
-        MESSAGE("Chansey was dragged out!");
-        // Dancer
-        ABILITY_POPUP(playerRight, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
-        HP_BAR(opponentLeft);
-    }
-}
-
-DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suction Cups (Traits)")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Innates(ABILITY_SUCTION_CUPS); }
-        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
-        PLAYER(SPECIES_CHANSEY);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
-        OPPONENT(SPECIES_BULBASAUR);
-        OPPONENT(SPECIES_SHUCKLE);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
-    } SCENE {
-        MESSAGE("Wobbuffet used Fiery Dance!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
-        HP_BAR(opponentLeft);
-        // red card trigger
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
-        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
-        MESSAGE("Wobbuffet anchors itself with Suction Cups!");
-        NOT MESSAGE("Chansey was dragged out!");
-        // Dancer
-        ABILITY_POPUP(playerRight, ABILITY_DANCER);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
-        HP_BAR(opponentLeft);
-    }
-}
-
-TO_DO_BATTLE_TEST("Dancer-called damaging moves are considered for Counter/Mirror Coat/Metal Burst (Traits)")
-TO_DO_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an additional Z-Power effect (Traits)")
-TO_DO_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a move if it's confused (Traits)")
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rampage move (Traits)") // Test with Petal Dance, Thrash
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Rollout (Traits)")
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Choice items (Traits)")
-TO_DO_BATTLE_TEST("Dancer tries to copy a move but fails if it's being forced into a different move - Encore (Traits)")
-TO_DO_BATTLE_TEST("Dancer tries to copy a status move but fails if it's under Taunt's effect (Traits)")
-TO_DO_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest (Traits)")
-TO_DO_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out (Traits)")
-TO_DO_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat (Traits)")
-#endif
-=======
 SINGLE_BATTLE_TEST("Dancer can still copy a move even if it's being forced into a different move - Rampage move")
 {
     GIVEN {
@@ -1008,4 +804,630 @@ DOUBLE_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by
         EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
     }
 }
->>>>>>> expansion/1.14.3
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Dancer can copy a dance move immediately after it was used and allow the user of Dancer to still use its move (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_QUIVER_DANCE));
+        PLAYER(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_QUIVER_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUIVER_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_QUIVER_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent); // Same turn
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can copy Teeter Dance (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
+        PLAYER(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TEETER_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targets (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Item(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OBLIVIOUS); Innates(ABILITY_OWN_TEMPO); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TEETER_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponentLeft);
+        MESSAGE("Wobbuffet became confused!");
+        MESSAGE("Wynaut became confused!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
+        PLAYER(SPECIES_WYNAUT) { Speed(50); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(20); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(3); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_DRAGON_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        ABILITY_POPUP(opponentRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer doesn't trigger if the original user flinches (Traits)")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
+        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
+        PLAYER(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FAKE_OUT); MOVE(player, MOVE_DRAGON_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
+        MESSAGE("Wobbuffet flinched and couldn't move!");
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponent);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer still triggers if another dancer flinches (Traits)")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH, 100));
+        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
+        PLAYER(SPECIES_WYNAUT) { Speed(5); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft); MOVE(playerRight, MOVE_DRAGON_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        ABILITY_POPUP(playerLeft, ABILITY_DANCER);
+        MESSAGE("Oricorio flinched and couldn't move!");
+        NONE_OF {
+            MESSAGE("Oricorio used Dragon Dance!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        }
+        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+        MESSAGE("The opposing Oricorio used Dragon Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer still activates after Red Card (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) ;
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
+        PLAYER(SPECIES_CHANSEY);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_BULBASAUR);
+        OPPONENT(SPECIES_SHUCKLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Fiery Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentLeft);
+        // Red card trigger
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("Chansey was dragged out!");
+        // Dancer
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suction Cups (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Innates(ABILITY_SUCTION_CUPS); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
+        PLAYER(SPECIES_CHANSEY);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_BULBASAUR);
+        OPPONENT(SPECIES_SHUCKLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Fiery Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentLeft);
+        // red card trigger
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("Wobbuffet anchors itself with Suction Cups!");
+        NOT MESSAGE("Chansey was dragged out!");
+        // Dancer
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer-called damaging moves are considered for Counter/Mirror Coat/Metal Burst (Traits)")
+{
+    u32 danceMove, retaliateMove;
+
+    PARAMETRIZE { danceMove = MOVE_AQUA_STEP; retaliateMove = MOVE_COUNTER; }
+    PARAMETRIZE { danceMove = MOVE_FIERY_DANCE; retaliateMove = MOVE_MIRROR_COAT; }
+    PARAMETRIZE { danceMove = MOVE_FIERY_DANCE; retaliateMove = MOVE_METAL_BURST; }
+
+    GIVEN {
+        ASSUME(IsDanceMove(danceMove));
+        if (retaliateMove == MOVE_COUNTER)
+            ASSUME(GetMoveCategory(danceMove) == DAMAGE_CATEGORY_PHYSICAL);
+        else if (retaliateMove == MOVE_MIRROR_COAT)
+            ASSUME(GetMoveCategory(danceMove) == DAMAGE_CATEGORY_SPECIAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(playerLeft, danceMove, target: opponentLeft); MOVE(opponentLeft, retaliateMove); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, danceMove, playerLeft);
+        HP_BAR(opponentLeft);
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, danceMove, playerRight);
+        HP_BAR(opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, retaliateMove, opponentLeft);
+        HP_BAR(playerRight);
+        NOT HP_BAR(playerLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer copies a status Z-Move's base move without gaining an additional Z-Power effect (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME(GetMoveZEffect(MOVE_SWORDS_DANCE) == Z_EFFECT_RESET_STATS);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCREECH); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer user may hit itself in confusion instead of copying a move if it's confused (Traits)")
+{
+    u32 genConfig, pctChance;
+
+    PARAMETRIZE { genConfig = GEN_6; pctChance = 50; }
+    PARAMETRIZE { genConfig = GEN_7; pctChance = 33; }
+    PASSES_RANDOMLY(pctChance, 100, RNG_CONFUSION);
+    GIVEN {
+        WITH_CONFIG(CONFIG_CONFUSION_SELF_DMG_CHANCE, genConfig);
+        ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CONFUSE_RAY); }
+        TURN { MOVE(player, MOVE_DRAGON_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
+        MESSAGE("The opposing Oricorio became confused!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        MESSAGE("The opposing Oricorio is confused!");
+        MESSAGE("It hurt itself in its confusion!");
+        HP_BAR(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DANCE, opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can still copy a move even if it's being forced into a different move - Rampage move (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(IsDanceMove(MOVE_PETAL_DANCE));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_PETAL_DANCE, MOVE_EFFECT_THRASH));
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_PETAL_DANCE); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); FORCED_MOVE(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PETAL_DANCE, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can still copy a move even if it's being forced into a different move - Rollout (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetMoveEffect(MOVE_ROLLOUT) == EFFECT_ROLLOUT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ROLLOUT); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); FORCED_MOVE(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROLLOUT, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can still copy a move even if it's being forced into a different move - Choice items (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetItemHoldEffect(ITEM_CHOICE_BAND) == HOLD_EFFECT_CHOICE_BAND);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); Item(ITEM_CHOICE_BAND); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can still copy a move even if it's being forced into a different move - Encore (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_ENCORE, target: opponent); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, player);
+        MESSAGE("The opposing Oricorio must do an encore!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer tries to copy a status move but fails if it's under Taunt's effect (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TAUNT); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        }
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest (Traits)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetItemHoldEffect(ITEM_ASSAULT_VEST) == HOLD_EFFECT_ASSAULT_VEST);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); Item(ITEM_ASSAULT_VEST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer copies Lunar Dance after the original user faints, but before the replacement is sent out (Traits)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_HEALING_WISH_SWITCH, GEN_7);
+        ASSUME(GetMoveEffect(MOVE_LUNAR_DANCE) == EFFECT_LUNAR_DANCE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(20); }
+        PLAYER(SPECIES_WYNAUT) { Speed(5); }
+        PLAYER(SPECIES_CHANSEY) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_LUNAR_DANCE); SEND_OUT(playerLeft, 2); SEND_OUT(playerRight, 3); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, playerLeft);
+        HP_BAR(playerLeft, hp: 0);
+        MESSAGE("Wobbuffet fainted!");
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LUNAR_DANCE, playerRight);
+        HP_BAR(playerRight, hp: 0);
+        MESSAGE("Oricorio fainted!");
+        SEND_IN_MESSAGE("Wynaut");
+        SEND_IN_MESSAGE("Chansey");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer doesn't activate Feather Dance if it was reflected by Magic Bounce/Coat (Traits)")
+{
+    bool32 useMagicCoat;
+
+    PARAMETRIZE { useMagicCoat = FALSE; }
+    PARAMETRIZE { useMagicCoat = TRUE; }
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_FEATHER_DANCE));
+        ASSUME(GetMoveEffect(MOVE_MAGIC_COAT) == EFFECT_MAGIC_COAT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        if (useMagicCoat)
+            OPPONENT(SPECIES_WOBBUFFET) { Speed(30); }
+        else
+            OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_MAGIC_BOUNCE); Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(5); }
+    } WHEN {
+        if (useMagicCoat)
+            TURN { MOVE(opponentLeft, MOVE_MAGIC_COAT); MOVE(playerLeft, MOVE_FEATHER_DANCE, target: opponentLeft); }
+        else
+            TURN { MOVE(playerLeft, MOVE_FEATHER_DANCE, target: opponentLeft); }
+    } SCENE {
+        if (useMagicCoat)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, opponentLeft);
+        else
+            ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
+        NONE_OF {
+            ABILITY_POPUP(opponentRight, ABILITY_DANCER);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FEATHER_DANCE, opponentRight);
+        }
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+    }
+}
+
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Dancer can copy Teeter Dance (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
+        PLAYER(SPECIES_WOBBUFFET)
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Items(ITEM_PECHA_BERRY, ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TEETER_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer can copy Teeter Dance and confuse both opposing targets (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_TEETER_DANCE));
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { Items(ITEM_PECHA_BERRY, ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Items(ITEM_PECHA_BERRY, ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_SLOWPOKE) { Ability(ABILITY_OWN_TEMPO); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TEETER_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TEETER_DANCE, opponentLeft);
+        MESSAGE("Wobbuffet became confused!");
+        MESSAGE("Wynaut became confused!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer-called attacks do not trigger Life Orb if target is immune (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_REVELATION_DANCE));
+        ASSUME(GetMoveEffect(MOVE_REVELATION_DANCE) == EFFECT_REVELATION_DANCE);
+        ASSUME(GetMoveEffect(MOVE_ROOST) == EFFECT_ROOST);
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
+        ASSUME(GetSpeciesType(SPECIES_ORICORIO_POM_POM, 0) == TYPE_ELECTRIC || GetSpeciesType(SPECIES_ORICORIO_POM_POM, 1) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_ORICORIO_POM_POM) { Ability(ABILITY_DANCER); Items(ITEM_PECHA_BERRY, ITEM_LIFE_ORB); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ROOST); MOVE(player, MOVE_REVELATION_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, opponent);
+        ABILITY_POPUP(player, ABILITY_LIGHTNING_ROD);
+        NOT HP_BAR(opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer still activates after Red Card (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) ;
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
+        PLAYER(SPECIES_CHANSEY);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_BULBASAUR);
+        OPPONENT(SPECIES_SHUCKLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Fiery Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentLeft);
+        // Red card trigger
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("Chansey was dragged out!");
+        // Dancer
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        HP_BAR(opponentLeft);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dancer still activate after Red Card even if blocked by Suction Cups (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SUCTION_CUPS); }
+        PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); }
+        PLAYER(SPECIES_CHANSEY);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_RED_CARD); }
+        OPPONENT(SPECIES_BULBASAUR);
+        OPPONENT(SPECIES_SHUCKLE);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_FIERY_DANCE, target: opponentLeft); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Fiery Dance!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerLeft);
+        HP_BAR(opponentLeft);
+        // red card trigger
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        MESSAGE("The opposing Wobbuffet held up its Red Card against Wobbuffet!");
+        MESSAGE("Wobbuffet anchors itself with Suction Cups!");
+        NOT MESSAGE("Chansey was dragged out!");
+        // Dancer
+        ABILITY_POPUP(playerRight, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FIERY_DANCE, playerRight);
+        HP_BAR(opponentLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can still copy a move even if it's being forced into a different move - Choice items (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetItemHoldEffect(ITEM_CHOICE_BAND) == HOLD_EFFECT_CHOICE_BAND);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(10); Items(ITEM_NUGGET, ITEM_CHOICE_BAND); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dancer can still copy status moves if the user is holding an Assault Vest (Multi)")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_SWORDS_DANCE));
+        ASSUME(GetItemHoldEffect(ITEM_ASSAULT_VEST) == HOLD_EFFECT_ASSAULT_VEST);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
+        OPPONENT(SPECIES_ORICORIO) { Ability(ABILITY_DANCER); Speed(10); Items(ITEM_NUGGET, ITEM_ASSAULT_VEST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWORDS_DANCE); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+    }
+}
+
+#endif

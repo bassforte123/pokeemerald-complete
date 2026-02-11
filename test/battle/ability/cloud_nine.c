@@ -41,7 +41,6 @@ TO_DO_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but withou
 
 // Moves and abilities that are affected by weather should have new tests that check for Clould Nine/Air Lock, like Mold-Breaker Abilities
 
-
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Cloud Nine/Air Lock prevent basic weather effects, but without them disappearing - Sandstorm (Traits)")
 {

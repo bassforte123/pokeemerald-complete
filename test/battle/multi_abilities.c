@@ -1078,79 +1078,6 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN abilities do not conflict")
     }
 }
 
-
-SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN item Harvest and Pickup takes priority over Pickup if both activate on the same item slot")
-{
-    // Ball Fetch and Cud Chew here to make sure they don't conflict
-    GIVEN {
-        PLAYER(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Innates(ABILITY_PICKUP, ABILITY_BALL_FETCH, ABILITY_CUD_CHEW); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_NINETALES){ Ability(ABILITY_DROUGHT); Item(ITEM_PECHA_BERRY); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_POISON_STING); MOVE(opponent, MOVE_SCRATCH);}
-    } SCENE {
-        MESSAGE("The opposing Ninetales's Drought intensified the sun's rays!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_STING, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The opposing Ninetales's Pecha Berry cured its poison!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Exeggutor restored its health using its Sitrus Berry!");
-        HP_BAR(player);
-        ABILITY_POPUP(player, ABILITY_HARVEST);
-        MESSAGE("Exeggutor harvested its Sitrus Berry!");
-        NONE_OF {
-            ABILITY_POPUP(player, ABILITY_PICKUP);
-            MESSAGE("Exeggutor found one Pecha Berry!");
-        }
-    } THEN {
-        EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
-    }
-}
-
-WILD_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN Harvest and Pickup take priority over Ball Fetch")
-{
-    // Ball Fetch and Cud Chew here to make sure they don't conflict
-    u32 ability;
-
-    PARAMETRIZE { ability = ABILITY_HARVEST; }
-    PARAMETRIZE { ability = ABILITY_PICKUP; }
-
-    GIVEN {
-        PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); Innates(ability, ABILITY_CUD_CHEW); MaxHP(500); HP(251); Item(ITEM_SITRUS_BERRY); }
-        OPPONENT(SPECIES_NINETALES){ Ability(ABILITY_DROUGHT); Item(ITEM_NORMAL_GEM); }
-    } WHEN {
-        TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16) ); MOVE(opponent, MOVE_SCRATCH);}
-    } SCENE {
-        MESSAGE("The wild Ninetales's Drought intensified the sun's rays!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-        MESSAGE("The Normal Gem strengthened the wild Ninetales's power!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Yamper restored its health using its Sitrus Berry!");
-        HP_BAR(player);
-        if (ability == ABILITY_HARVEST)
-        {
-            ABILITY_POPUP(player, ABILITY_HARVEST);
-            MESSAGE("Yamper harvested its Sitrus Berry!");
-        }
-        else
-        {
-            ABILITY_POPUP(player, ABILITY_PICKUP);
-            MESSAGE("Yamper found one Normal Gem!");
-        }
-        NONE_OF {
-            ABILITY_POPUP(player, ABILITY_BALL_FETCH);
-            MESSAGE("Yamper found a Great Ball!");
-        }
-
-    } THEN {
-        if (ability == ABILITY_HARVEST)
-            EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
-        else
-            EXPECT_EQ(player->item, ITEM_NORMAL_GEM);
-    }
-}
-
 DOUBLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN_STATUS_CURE abilities do not conflict (only one activates at a time)")
 {
     u32 ability;
@@ -1323,4 +1250,171 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_COLOR_CHANGE abilities do not conflict
 TO_DO_BATTLE_TEST("Multi - ABILITYEFFECT_ON_WEATHER abilities do not conflict")
 TO_DO_BATTLE_TEST("Multi - ABILITYEFFECT_ON_TERRAIN abilities do not conflict")
 
+// Per the above, exception made for Protosynthesis since the rest of the weather abilities are transformations.
+SINGLE_BATTLE_TEST("Multi - Protosynthesis doe not conflict with other weather abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); Innates(ABILITY_PROTOSYNTHESIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        MESSAGE("The harsh sunlight activated Cherrim's Protosynthesis!");
+        MESSAGE("Cherrim's Sp. Atk was heightened!");
+        ABILITY_POPUP(player, ABILITY_FLOWER_GIFT);
+        MESSAGE("Cherrim transformed!");
+    }
+}
+
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN item Harvest and Pickup can work on the same turn")
+{
+    // Ball Fetch and Cud Chew here to make sure they don't conflict
+    GIVEN {
+        PLAYER(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Innates(ABILITY_PICKUP, ABILITY_BALL_FETCH, ABILITY_CUD_CHEW); MaxHP(500); HP(251); Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_NINETALES){ Ability(ABILITY_DROUGHT); Items(ITEM_PECHA_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POISON_STING); MOVE(opponent, MOVE_SCRATCH);}
+        TURN { MOVE(opponent, MOVE_POISON_STING); }
+        TURN { }
+    } SCENE {
+        MESSAGE("The opposing Ninetales's Drought intensified the sun's rays!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_STING, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Ninetales's Pecha Berry cured its poison!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Exeggutor restored its health using its Sitrus Berry!");
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_HARVEST);
+        MESSAGE("Exeggutor harvested its Sitrus Berry!");
+        ABILITY_POPUP(player, ABILITY_PICKUP);
+        MESSAGE("Exeggutor found one Pecha Berry!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_STING, opponent);
+        MESSAGE("Exeggutor's Pecha Berry cured its poison!");
+        ABILITY_POPUP(player, ABILITY_HARVEST);
+        MESSAGE("Exeggutor harvested its Pecha Berry!");
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_PECHA_BERRY);
+        EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
+    }
+}
+
+WILD_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN Ball Fetch does not conflict with Harvest or Pickup")
+{
+    // Ball Fetch and Cud Chew here to make sure they don't conflict
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_HARVEST; }
+    PARAMETRIZE { ability = ABILITY_PICKUP; }
+
+    GIVEN {
+        PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); Innates(ability, ABILITY_CUD_CHEW); MaxHP(500); HP(251); Items(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_NINETALES){ Ability(ABILITY_DROUGHT); Items(ITEM_NORMAL_GEM); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16) ); MOVE(opponent, MOVE_SCRATCH);}
+    } SCENE {
+        MESSAGE("The wild Ninetales's Drought intensified the sun's rays!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The Normal Gem strengthened the wild Ninetales's power!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Yamper restored its health using its Sitrus Berry!");
+        HP_BAR(player);
+        if (ability == ABILITY_HARVEST)
+        {
+            ABILITY_POPUP(player, ABILITY_HARVEST);
+            MESSAGE("Yamper harvested its Sitrus Berry!");
+        }
+        else
+        {
+            ABILITY_POPUP(player, ABILITY_PICKUP);
+            MESSAGE("Yamper found one Normal Gem!");
+        }
+        ABILITY_POPUP(player, ABILITY_BALL_FETCH);
+        MESSAGE("Yamper found a Great Ball!");
+    } THEN {
+        if (ability == ABILITY_HARVEST)
+            EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
+        else
+            EXPECT_EQ(player->item, ITEM_NORMAL_GEM);
+        EXPECT_EQ(player->item, ITEM_GREAT_BALL);
+    }
+}
+
+WILD_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN Harvest and Pickup take priority over Ball Fetch")
+{
+    // Ball Fetch and Cud Chew here to make sure they don't conflict
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_HARVEST; }
+    PARAMETRIZE { ability = ABILITY_PICKUP; }
+
+    GIVEN {
+        PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); Innates(ability, ABILITY_CUD_CHEW); MaxHP(500); HP(251); Items(ITEM_NUGGET, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_NINETALES){ Ability(ABILITY_DROUGHT); Items(ITEM_NUGGET, ITEM_NORMAL_GEM); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16) ); MOVE(opponent, MOVE_SCRATCH);}
+    } SCENE {
+        MESSAGE("The wild Ninetales's Drought intensified the sun's rays!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The Normal Gem strengthened the wild Ninetales's power!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Yamper restored its health using its Sitrus Berry!");
+        HP_BAR(player);
+        if (ability == ABILITY_HARVEST)
+        {
+            ABILITY_POPUP(player, ABILITY_HARVEST);
+            MESSAGE("Yamper harvested its Sitrus Berry!");
+        }
+        else
+        {
+            ABILITY_POPUP(player, ABILITY_PICKUP);
+            MESSAGE("Yamper found one Normal Gem!");
+        }
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_BALL_FETCH);
+            MESSAGE("Yamper found a Great Ball!");
+        }
+
+    } THEN {
+        if (ability == ABILITY_HARVEST)
+            EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
+        else
+            EXPECT_EQ(player->item, ITEM_NORMAL_GEM);
+    }
+}
+
+SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN item Harvest and Pickup takes priority over Pickup if both activate on the same item slot")
+{
+    // Ball Fetch and Cud Chew here to make sure they don't conflict
+    GIVEN {
+        PLAYER(SPECIES_EXEGGUTOR) { Ability(ABILITY_HARVEST); Innates(ABILITY_PICKUP, ABILITY_BALL_FETCH, ABILITY_CUD_CHEW); MaxHP(500); HP(251); Items(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_NINETALES){ Ability(ABILITY_DROUGHT); Items(ITEM_PECHA_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POISON_STING); MOVE(opponent, MOVE_SCRATCH);}
+    } SCENE {
+        MESSAGE("The opposing Ninetales's Drought intensified the sun's rays!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_STING, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Ninetales's Pecha Berry cured its poison!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Exeggutor restored its health using its Sitrus Berry!");
+        HP_BAR(player);
+        ABILITY_POPUP(player, ABILITY_HARVEST);
+        MESSAGE("Exeggutor harvested its Sitrus Berry!");
+        NONE_OF {
+            ABILITY_POPUP(player, ABILITY_PICKUP);
+            MESSAGE("Exeggutor found one Pecha Berry!");
+        }
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_SITRUS_BERRY);
+    }
+}
 #endif

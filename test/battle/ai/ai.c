@@ -1526,3 +1526,225 @@ AI_SINGLE_BATTLE_TEST("AI won't setup if it can KO through Sturdy effect (Traits
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking into account accuracy and move effect (Multi)")
+{
+    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
+    u16 expectedMove, expectedMove2 = MOVE_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
+    u32 holdItemAtk = ITEM_NONE;
+
+    // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
+    PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
+    // Same as above, but ai mon has rock head ability, so it can use Double Edge without taking recoil damage. Psychic can also lower Special Defense,
+    // but because it faints the target it doesn't matter.
+    PARAMETRIZE { abilityAtk = ABILITY_ROCK_HEAD; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE;
+                  expectedMove = MOVE_PSYCHIC; expectedMove2 = MOVE_DOUBLE_EDGE; }
+    // This time it's Solarbeam + Psychic, because the weather is sunny.
+    PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE;
+                  expectedMove = MOVE_PSYCHIC; expectedMove2 = MOVE_SOLAR_BEAM; }
+    // Psychic and Solar Beam are chosen because user is holding Power Herb
+    PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE;
+                  expectedMove = MOVE_PSYCHIC; expectedMove2 = MOVE_SOLAR_BEAM; }
+    // Skull Bash is chosen because it's the most accurate and is holding Power Herb
+    PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_SLAM; move4 = MOVE_DOUBLE_EDGE;
+                  expectedMove = MOVE_SKULL_BASH; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Items(ITEM_PECHA_BERRY, holdItemAtk); }
+    } WHEN {
+        TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
+                else {EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1);}
+             }
+    }
+    SCENE {
+        MESSAGE("Wobbuffet fainted!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking into account accuracy and move effect failing (Multi)")
+{
+    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
+    u16 expectedMove, expectedMove2 = MOVE_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
+    u32 holdItemAtk = ITEM_NONE;
+
+    // Fiery Dance and Skull Bash are chosen because user is holding Power Herb
+    PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_FIERY_DANCE; move4 = MOVE_DOUBLE_EDGE;
+                  expectedMove = MOVE_FIERY_DANCE; expectedMove2 = MOVE_SKULL_BASH; }
+    // Crabhammer is chosen even if Skull Bash is more accurate, the user has no Power Herb
+    PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_SLAM; move4 = MOVE_CRABHAMMER;
+                  expectedMove = MOVE_CRABHAMMER; }
+
+    KNOWN_FAILING;
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(5); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GEODUDE) { Moves(move1, move2, move3, move4); Ability(abilityAtk); Items(ITEM_PECHA_BERRY, holdItemAtk); }
+    } WHEN {
+        TURN {  if (expectedMove2 == MOVE_NONE) { EXPECT_MOVE(opponent, expectedMove); SEND_OUT(player, 1); }
+                else {EXPECT_MOVES(opponent, expectedMove, expectedMove2); SCORE_EQ(opponent, expectedMove, expectedMove2); SEND_OUT(player, 1);}
+             }
+    }
+    SCENE {
+        MESSAGE("Wobbuffet fainted!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb (Multi)")
+{
+    enum Ability abilityAtk = ABILITY_NONE;
+    u16 holdItemAtk = ITEM_NONE;
+
+    PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
+    PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
+    PARAMETRIZE { }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SOLAR_BEAM) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMoveCategory(MOVE_GRASS_PLEDGE) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMovePower(MOVE_GRASS_PLEDGE) == 80); // Gen 5's 50 power causes the test to fail
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(211); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_TYPHLOSION) { Moves(MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); Ability(abilityAtk); Items(ITEM_PECHA_BERRY, holdItemAtk); }
+    } WHEN {
+        if (abilityAtk == ABILITY_DROUGHT) {
+            TURN { EXPECT_MOVES(opponent, MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); }
+            TURN { EXPECT_MOVES(opponent, MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); SEND_OUT(player, 1); }
+        } else if (holdItemAtk == ITEM_POWER_HERB) {
+            TURN { EXPECT_MOVES(opponent, MOVE_SOLAR_BEAM, MOVE_GRASS_PLEDGE); MOVE(player, MOVE_KNOCK_OFF); }
+            TURN { EXPECT_MOVE(opponent, MOVE_GRASS_PLEDGE); SEND_OUT(player, 1); }
+        } else {
+            TURN { EXPECT_MOVE(opponent, MOVE_GRASS_PLEDGE); }
+            TURN { EXPECT_MOVE(opponent, MOVE_GRASS_PLEDGE); SEND_OUT(player, 1); }
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet fainted!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI avoids contact moves against rocky helmet (Multi)")
+{
+    u32 item;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_ROCKY_HELMET; }
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_BRANCH_POKE));
+        ASSUME(!MoveMakesContact(MOVE_LEAFAGE));
+        ASSUME(GetMovePower(MOVE_BRANCH_POKE) == GetMovePower(MOVE_LEAFAGE));
+        ASSUME(GetMoveType(MOVE_BRANCH_POKE) == GetMoveType(MOVE_LEAFAGE));
+        ASSUME(GetMoveCategory(MOVE_BRANCH_POKE) == GetMoveCategory(MOVE_LEAFAGE));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_BRANCH_POKE, MOVE_LEAFAGE); }
+    } WHEN {
+        if (item == ITEM_ROCKY_HELMET)
+            TURN { EXPECT_MOVE(opponent, MOVE_LEAFAGE); }
+        else
+            TURN { EXPECT_MOVES(opponent, MOVE_LEAFAGE, MOVE_BRANCH_POKE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player's ability disabling them (Multi)")
+{
+    u32 playerMon, aiMove;
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_DAZZLING;          playerMon = SPECIES_BRUXISH;       aiMove = MOVE_QUICK_ATTACK; }
+    PARAMETRIZE { ability = ABILITY_QUEENLY_MAJESTY;   playerMon = SPECIES_TSAREENA;      aiMove = MOVE_QUICK_ATTACK; }
+    PARAMETRIZE { ability = ABILITY_ARMOR_TAIL;        playerMon = SPECIES_FARIGIRAF;     aiMove = MOVE_QUICK_ATTACK; }
+    PARAMETRIZE { ability = ABILITY_SOUNDPROOF;        playerMon = SPECIES_EXPLOUD;       aiMove = MOVE_BOOMBURST; }
+    PARAMETRIZE { ability = ABILITY_BULLETPROOF;       playerMon = SPECIES_CHESNAUGHT;    aiMove = MOVE_BULLET_SEED; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
+        ASSUME(IsSoundMove(MOVE_BOOMBURST));
+        ASSUME(IsBallisticMove(MOVE_BULLET_SEED));
+        ASSUME(GetMoveCategory(MOVE_TAIL_WHIP) == DAMAGE_CATEGORY_STATUS);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(playerMon) { Ability(ability); }
+        OPPONENT(SPECIES_SMEARGLE) { Items(ITEM_PECHA_BERRY, ITEM_CHOICE_BAND); Moves(aiMove, MOVE_SCRATCH); }
+    } WHEN {
+        TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, aiMove); }
+        TURN { EXPECT_MOVE(opponent, aiMove); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI score for Mean Look will be decreased if target can escape (Multi)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_BULBASAUR) { Items(ITEM_PECHA_BERRY, ITEM_SHED_SHELL); }
+        OPPONENT(SPECIES_BULBASAUR) { Moves(MOVE_TACKLE, MOVE_MEAN_LOOK); }
+    } WHEN {
+        TURN { SCORE_EQ_VAL(opponent, MOVE_MEAN_LOOK, 90); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI considers Focus Sash when determining if it should switch out (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_BEAUTIFLY) { Speed(10); Moves(MOVE_AIR_SLASH); }
+        OPPONENT(SPECIES_CACNEA) { Speed(1); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_COMBUSKEN) { Speed(1); Moves(MOVE_FLAMETHROWER); Items(ITEM_PECHA_BERRY, ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_CROBAT) { Speed(11); Moves(MOVE_SLUDGE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_AIR_SLASH); EXPECT_MOVE(opponent, MOVE_SCRATCH); EXPECT_SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_AIR_SLASH); EXPECT_MOVE(opponent, MOVE_FLAMETHROWER); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon (Multi)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_TORCHIC) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH, MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon after Air Balloon mon switches out and back in (Multi)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_TORCHIC) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
+        PLAYER(SPECIES_TORCHIC) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_GEODUDE) { Moves(MOVE_SCRATCH, MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
+        TURN { SWITCH(player, 0); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); SEND_OUT(player, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees that Primal weather can block a move by type (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_HYDRO_PUMP) == TYPE_WATER);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GROUDON) { Items(ITEM_PECHA_BERRY, ITEM_RED_ORB); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_BLASTOISE) { Moves(MOVE_HYDRO_PUMP, MOVE_POUND); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_POUND); }
+    }
+}
+#endif

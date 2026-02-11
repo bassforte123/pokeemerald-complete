@@ -152,3 +152,30 @@ SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits (Traits)")
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Poison Touch applies between multi-hit move hits (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ARM_THRUST) == EFFECT_MULTI_HIT);
+        ASSUME(MoveMakesContact(MOVE_ARM_THRUST));
+        ASSUME(gItemsInfo[ITEM_PECHA_BERRY].holdEffect == HOLD_EFFECT_CURE_PSN);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_PECHA_BERRY); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_ARM_THRUST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ARM_THRUST, player);
+        ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
+        STATUS_ICON(opponent, poison: TRUE);
+        MESSAGE("The opposing Wobbuffet's Pecha Berry cured its poison!");
+        STATUS_ICON(opponent, poison: FALSE);
+        ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        MESSAGE("The opposing Wobbuffet was poisoned by Grimer's Poison Touch!");
+        STATUS_ICON(opponent, poison: TRUE);
+    }
+}
+#endif

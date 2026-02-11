@@ -87,10 +87,49 @@ SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution")
     }
 }
 
-<<<<<<< HEAD
-TO_DO_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move")
-TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move") // Rotom Powers can restore Z-Moves
-TO_DO_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
+SINGLE_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move")
+{
+    PASSES_RANDOMLY(3, 10, RNG_CURSED_BODY);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
+        ASSUME(GetMoveType(MOVE_SHADOW_BALL) == TYPE_GHOST);
+        ASSUME(IsMoveSleepTalkBanned(MOVE_FLY));
+        ASSUME(IsMoveSleepTalkBanned(MOVE_DIG));
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SHADOW_BALL, MOVE_FLY, MOVE_DIG); }
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SLEEP_TALK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
+        ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+        MESSAGE("Wobbuffet's Sleep Talk was disabled by the opposing Frillish's Cursed Body!");
+    } THEN {
+        EXPECT_EQ(gDisableStructs[B_POSITION_PLAYER_LEFT].disabledMove, MOVE_SLEEP_TALK);
+    }
+}
+
+SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_NATURE_POWER) == EFFECT_NATURE_POWER);
+        ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_NATURE_POWER, gimmick: GIMMICK_Z_MOVE, WITH_RNG(RNG_CURSED_BODY, 1)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+        MESSAGE("Wobbuffet's Nature Power was disabled by the opposing Frillish's Cursed Body!");
+    } THEN {
+        EXPECT_EQ(gDisableStructs[B_POSITION_PLAYER_LEFT].disabledMove, MOVE_NATURE_POWER);
+    }
+}
+
+TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move")
 
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Cursed Body triggers 30% of the time (Traits)")
@@ -179,12 +218,7 @@ SINGLE_BATTLE_TEST("Cursed Body does not stop a multistrike move mid-execution (
     }
 }
 
-TO_DO_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move (Traits)")
-TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move (Traits)") // Rotom Powers can restore Z-Moves
-TO_DO_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move (Traits)")
-#endif
-=======
-SINGLE_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move")
+SINGLE_BATTLE_TEST("Cursed Body disables the move that called another move instead of the called move (Traits)")
 {
     PASSES_RANDOMLY(3, 10, RNG_CURSED_BODY);
     GIVEN {
@@ -193,7 +227,7 @@ SINGLE_BATTLE_TEST("Cursed Body disables the move that called another move inste
         ASSUME(IsMoveSleepTalkBanned(MOVE_FLY));
         ASSUME(IsMoveSleepTalkBanned(MOVE_DIG));
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SHADOW_BALL, MOVE_FLY, MOVE_DIG); }
-        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_DAMP); Innates(ABILITY_CURSED_BODY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SLEEP_TALK); }
     } SCENE {
@@ -205,13 +239,13 @@ SINGLE_BATTLE_TEST("Cursed Body disables the move that called another move inste
     }
 }
 
-SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
+SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURE_POWER) == EFFECT_NATURE_POWER);
         ASSUME(GetMoveEffect(MOVE_ELECTRIC_TERRAIN) == EFFECT_ELECTRIC_TERRAIN);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_DAMP); Innates(ABILITY_CURSED_BODY); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_NATURE_POWER, gimmick: GIMMICK_Z_MOVE, WITH_RNG(RNG_CURSED_BODY, 1)); }
@@ -226,5 +260,27 @@ SINGLE_BATTLE_TEST("Cursed Body disables the base move of a status Z-Move")
     }
 }
 
-TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move")
->>>>>>> expansion/1.14.3
+TO_DO_BATTLE_TEST("Cursed Body disables damaging Z-Moves, but not the base move (Traits)")
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Cursed Body cannot disable Struggle (Multi)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_CHOICE_SCARF) == HOLD_EFFECT_CHOICE_SCARF);
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        ASSUME(GetMoveCategory(MOVE_CELEBRATE) == DAMAGE_CATEGORY_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CHOICE_SCARF); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_FRILLISH) { Ability(ABILITY_CURSED_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TAUNT); }
+        TURN { FORCED_MOVE(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STRUGGLE, player);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_CURSED_BODY);
+            MESSAGE("Wobbuffet's Struggle was disabled by the opposing Frillish's Cursed Body!");
+        }
+    }
+}
+#endif

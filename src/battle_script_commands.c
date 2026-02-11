@@ -3123,7 +3123,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_PARALYSIS:
     case MOVE_EFFECT_TOXIC:
     case MOVE_EFFECT_FROSTBITE:
-        if (IsSafeguardProtected(gBattlerAttacker, gEffectBattler, GetBattlerAbility(gBattlerAttacker)) && !primary)
+        if (IsSafeguardProtected(gBattlerAttacker, gEffectBattler) && !primary)
             gBattlescriptCurrInstr = battleScript;
         else if (CanSetNonVolatileStatus(
                     gBattlerAttacker,
@@ -3135,7 +3135,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_CONFUSION:
         if (!CanBeConfused(gEffectBattler)
          || gBattleMons[gEffectBattler].volatiles.confusionTurns
-         || (IsSafeguardProtected(gBattlerAttacker, gEffectBattler, GetBattlerAbility(gBattlerAttacker)) && !primary))
+         || (IsSafeguardProtected(gBattlerAttacker, gEffectBattler) && !primary))
         {
             gBattlescriptCurrInstr = battleScript;
         }
@@ -3527,7 +3527,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_INCINERATE:
         if (((gBattleMons[gEffectBattler].item >= FIRST_BERRY_INDEX && gBattleMons[gEffectBattler].item <= LAST_BERRY_INDEX)
           || (B_INCINERATE_GEMS >= GEN_6 && GetBattlerHoldEffect(gEffectBattler) == HOLD_EFFECT_GEMS))
-         && battlerAbility != ABILITY_STICKY_HOLD)
+         && !BattlerHasTrait(gEffectBattler, ABILITY_STICKY_HOLD))
         {
             gLastUsedItem = gBattleMons[gEffectBattler].item;
             gBattleMons[gEffectBattler].item = 0;
@@ -7104,7 +7104,7 @@ static void Cmd_moveend(void)
                     if (battler != gBattlerAttacker                                                     // Cannot pickpocket yourself
                       && BattlerHasTrait(battler, ABILITY_PICKPOCKET)                                   // Target must have pickpocket ability
                       && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
-                      && IsMoveMakingContact(gBattlerAttacker, battler, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
+                      && IsMoveMakingContact(gBattlerAttacker, battler, GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
                       && !(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)             // Move needs to have affected this battler
                       && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
                       && IsBattlerAlive(battler)                                                        // Battler must be alive to pickpocket
@@ -10410,7 +10410,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
     {
         if (gSideTimers[GetBattlerSide(battler)].mistTimer
             && !flags.certain && gCurrentMove != MOVE_CURSE
-            && !(battler == gBattlerTarget && BattlerHasTrait(gBattlerAttacker, ABILITY_INFILTRATOR && !IsBattlerAlly(gBattlerAttacker, battler))))
+            && !(battler == gBattlerTarget && BattlerHasTrait(gBattlerAttacker, ABILITY_INFILTRATOR) && !IsBattlerAlly(gBattlerAttacker, battler)))
         {
             if (flags.allowPtr)
             {
@@ -10488,7 +10488,6 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
                     gBattlerAbility = index - 1;
                     gBattlescriptCurrInstr = BattleScript_FlowerVeilProtectsRet;
                     gLastUsedAbility = ABILITY_FLOWER_VEIL;
-                    PushTraitStack(battler, ABILITY_FLOWER_VEIL);
                     gSpecialStatuses[battler].statLowered = TRUE;
                 }
             }

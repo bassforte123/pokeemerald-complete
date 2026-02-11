@@ -259,6 +259,7 @@ bool32 EndOrContinueWeather(void)
         for (u32 battler = 0; battler < gBattlersCount; battler++)
         {
             gDisableStructs[battler].weatherAbilityDone = FALSE;
+            gDisableStructs[battler].transformWeatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(battler);
         }
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
@@ -1290,6 +1291,14 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         if (hasContrary)
             stringId = STRINGID_STATSWONTINCREASE2;
         break;
+    case STRINGID_STATSWONTINCREASECONTRARY2:
+        if (hasContrary)
+            stringId = STRINGID_STATSWONTDECREASECONTRARY2;
+        break;
+    case STRINGID_STATSWONTDECREASECONTRARY2:
+        if (hasContrary)
+            stringId = STRINGID_STATSWONTINCREASECONTRARY2;
+        break;
     case STRINGID_PKMNCUTSATTACKWITH:
         if (GetConfig(CONFIG_UPDATED_INTIMIDATE) >= GEN_8
          && SearchTraits(battlerTraits, ABILITY_RATTLED)
@@ -1427,7 +1436,8 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
     // Generate ability popup for Contrary, only when a status change happens outside of Defiant/Competitive wich have their own popup calls
     // Contrary does not have popup in vanilla
     // if (hasContrary
-    //     && ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_STATSWONTINCREASE || stringId == STRINGID_STATSWONTDECREASE || stringId == STRINGID_STATSWONTINCREASE2 || stringId == STRINGID_STATSWONTDECREASE2)
+    //     && ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_STATSWONTINCREASE || stringId == STRINGID_STATSWONTDECREASE || stringId == STRINGID_STATSWONTINCREASE2 || stringId == STRINGID_STATSWONTDECREASE2
+    //     stringId == STRINGID_STATSWONTINCREASECONTRARY2 || stringId == STRINGID_STATSWONTDECREASECONTRARY2)
     //     || (stringId == STRINGID_DEFENDERSSTATROSE && !((gProtectStructs[gBattlerTarget].contraryCompetitive || gProtectStructs[gBattlerTarget].contraryDefiant))
     //     && (gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != BATTLE_PARTNER(gBattlerTarget) || gSpecialStatuses[gBattlerTarget].changedStatsBattlerId != gBattlerTarget))))
     // {
@@ -3388,6 +3398,7 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbilit
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].weatherAbilityDone = FALSE;
+            gDisableStructs[i].transformWeatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
         return TRUE;
@@ -3405,6 +3416,7 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbilit
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].weatherAbilityDone = FALSE;
+            gDisableStructs[i].transformWeatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
         return TRUE;
@@ -5812,17 +5824,17 @@ else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpeci
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
             }
 
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
+            if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 gLastUsedAbility = ABILITY_FORECAST;
                 gBattleScripting.battler = battler;
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
                 PushTraitStack(battler, ABILITY_FORECAST);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeWithStringEnd3);
                 effect++;
@@ -5834,17 +5846,17 @@ else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpeci
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
             }
 
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
+            if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 gLastUsedAbility = ABILITY_FLOWER_GIFT;
                 gBattleScripting.battler = battler;
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
                 PushTraitStack(battler, ABILITY_FLOWER_GIFT);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeWithStringEnd3);
                 effect++;
@@ -5856,17 +5868,17 @@ else if ((traitCheck = SearchTraits(battlerTraits, ABILITY_ICE_BODY)) && !gSpeci
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
             }
 
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
+            if (((!gDisableStructs[battler].transformWeatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 gLastUsedAbility = ABILITY_ICE_FACE;
                 gBattleScripting.battler = battler;
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gDisableStructs[battler].transformWeatherAbilityDone = TRUE;
                 PushTraitStack(battler, ABILITY_ICE_FACE);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeWithStringEnd3);
                 effect++;
@@ -6359,13 +6371,13 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef)
     return FALSE;
 }
 
-bool32 IsSafeguardProtected(u32 battlerAtk, u32 battlerDef, u32 abilityAtk)
+bool32 IsSafeguardProtected(u32 battlerAtk, u32 battlerDef)
 {
     if (!(gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD))
         return FALSE;
     if (IsBattlerAlly(battlerAtk, battlerDef))
         return TRUE;
-    if (abilityAtk == ABILITY_INFILTRATOR)
+    if (BattlerHasTrait(battlerAtk, ABILITY_INFILTRATOR))
         return FALSE;
     return TRUE;
 }
@@ -6566,7 +6578,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum MoveEffect e
         abilityDef = ABILITY_FLOWER_VEIL;
         battleScript = BattleScript_FlowerVeilProtects;
     }
-    else if (IsSafeguardProtected(battlerAtk, battlerDef, abilityAtk))
+    else if (IsSafeguardProtected(battlerAtk, battlerDef))
     {
         battleScript = BattleScript_SafeguardProtected;
     }
@@ -8287,7 +8299,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
         if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
          && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
          && !(gBattleMons[battlerDef].volatiles.transformed))
-            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
     }
      if(SearchTraits(battlerTraits, ABILITY_QUARK_DRIVE))
     {
@@ -8295,7 +8307,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
         if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
          && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
          && !(gBattleMons[battlerDef].volatiles.transformed))
-            modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
+            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
     }
     // ally's abilities
     if (IsBattlerAlive(BATTLE_PARTNER(battlerDef))

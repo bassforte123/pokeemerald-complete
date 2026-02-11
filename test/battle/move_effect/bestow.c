@@ -145,3 +145,135 @@ SINGLE_BATTLE_TEST("Bestow fails if the user's held item changes its form")
         EXPECT(opponent->item == ITEM_NONE);
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Bestow transfers its held item to the target (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } THEN {
+        EXPECT(player->item == ITEM_NONE);
+        EXPECT(opponent->item == ITEM_SITRUS_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Bestow fails if the target already has a held item (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_SITRUS_BERRY);
+        EXPECT(opponent->item == ITEM_LUM_BERRY);
+    }
+}
+
+#include "mail.h"
+SINGLE_BATTLE_TEST("Bestow fails if the user is holding Mail (Multi)")
+{
+    GIVEN {
+        ASSUME(ItemIsMail(ITEM_ORANGE_MAIL));
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_ORANGE_MAIL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_ORANGE_MAIL);
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Mega Stone (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_BLAZIKEN) { Items(ITEM_NONE, ITEM_BLAZIKENITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_BLAZIKENITE);
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Bestow fails if the user's held item is a Z-Crystal (Multi)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_FIGHTINIUM_Z) == HOLD_EFFECT_Z_CRYSTAL);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_FIGHTINIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_FIGHTINIUM_Z);
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Bestow doesn't fail if the user has Sticky Hold (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_NONE, ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BESTOW, player);
+    } THEN {
+        EXPECT(player->item == ITEM_NONE);
+        EXPECT(opponent->item == ITEM_SITRUS_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Bestow fails if the target is behind a Substitute (Gen 6+) (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_SITRUS_BERRY); Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        if (B_UPDATED_MOVE_FLAGS >= GEN_6) {
+            NOT MESSAGE("But it failed!");
+        } else {
+            MESSAGE("But it failed!");
+        }
+    } THEN {
+        if (B_UPDATED_MOVE_FLAGS >= GEN_6) {
+            EXPECT(player->item == ITEM_NONE);
+            EXPECT(opponent->item == ITEM_SITRUS_BERRY);
+        } else {
+            EXPECT(player->item == ITEM_SITRUS_BERRY);
+            EXPECT(opponent->item == ITEM_NONE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Bestow fails if the user's held item changes its form (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_GIRATINA_ORIGIN) { Items(ITEM_NONE, ITEM_GRISEOUS_CORE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BESTOW); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_GRISEOUS_CORE);
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
+#endif

@@ -396,3 +396,23 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected and absorbed by Lightning
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+DOUBLE_BATTLE_TEST("Instruct-called status moves don't fail if holding Assault Vest (Multi)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_ASSAULT_VEST].holdEffect == HOLD_EFFECT_ASSAULT_VEST);
+        ASSUME(GetMoveEffect(MOVE_TRICK) == EFFECT_TRICK);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_POUND, MOVE_SCRATCH, MOVE_TRICK); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_ASSAULT_VEST); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_TRICK, target: opponentLeft); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, playerRight);
+    }
+}
+#endif

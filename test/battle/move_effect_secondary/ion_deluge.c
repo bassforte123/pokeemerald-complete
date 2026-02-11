@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Plasma Fists type-changing effect does not override Pixilate
     }
 }
 
-SINGLE_BATTLE_TEST("Plasma Fists type-changing effect is applied after Normalize")
+SINGLE_BATTLE_TEST("Plasma Fists type-changing effect is applied after Normalize (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_KRABBY);

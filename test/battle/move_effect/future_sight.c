@@ -187,3 +187,81 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
         MESSAGE("The opposing Pidgey fainted!");
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Future Sight uses Sp. Atk stat of the original user without modifiers (Multi)")
+{
+    u32 item;
+    s16 seedFlareDmg;
+    s16 futureSightDmg;
+
+    PARAMETRIZE { item = ITEM_TWISTED_SPOON; }
+    PARAMETRIZE { item = ITEM_PSYCHIC_GEM; }
+
+    GIVEN {
+        PLAYER(SPECIES_PIKACHU) { Items(ITEM_PECHA_BERRY, item); }
+        PLAYER(SPECIES_RAICHU) { Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_REGICE);
+    } WHEN {
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN { }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
+        HP_BAR(opponent, captureDamage: &seedFlareDmg);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        MESSAGE("The opposing Regice took the Future Sight attack!");
+        HP_BAR(opponent, captureDamage: &futureSightDmg);
+    } THEN {
+        EXPECT_EQ(seedFlareDmg, futureSightDmg);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if not on the field (Multi)")
+{
+    s16 seedFlareDmg;
+    s16 futureSightDmg;
+
+    GIVEN {
+        PLAYER(SPECIES_PIKACHU);
+        PLAYER(SPECIES_RAICHU) { Items(ITEM_PECHA_BERRY, ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_REGICE);
+    } WHEN {
+        TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { SWITCH(player, 1); }
+        TURN { }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, FUTURE_SIGHT_EQUIVALENT, player);
+        HP_BAR(opponent, captureDamage: &seedFlareDmg);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        MESSAGE("The opposing Regice took the Future Sight attack!");
+        HP_BAR(opponent, captureDamage: &futureSightDmg);
+        NOT HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(seedFlareDmg, futureSightDmg);
+    }
+}
+
+SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder endure another move (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_PSYCHIC) > 0);
+        ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY) { Level(1); Items(ITEM_PECHA_BERRY, ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN { }
+        TURN { }
+        TURN { MOVE(player, MOVE_PSYCHIC); }
+    } SCENE {
+        MESSAGE("The opposing Pidgey hung on using its Focus Sash!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC, player);
+        MESSAGE("The opposing Pidgey fainted!");
+    }
+}
+#endif

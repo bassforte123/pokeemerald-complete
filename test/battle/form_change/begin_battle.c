@@ -74,3 +74,67 @@ SINGLE_BATTLE_TEST("Zamazenta's Iron Head becomes Behemoth Bash upon form change
         EXPECT_EQ(player->moves[0], MOVE_BEHEMOTH_BASH);
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Zacian changes into its Crowned Form when holding the Rusted Sword upon battle start (Multi)")
+{
+    u16 item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_RUSTED_SWORD; }
+    GIVEN {
+        PLAYER(SPECIES_ZACIAN_HERO) { Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        if (item == ITEM_NONE)
+            EXPECT_EQ(player->species, SPECIES_ZACIAN_HERO);
+        else
+            EXPECT_EQ(player->species, SPECIES_ZACIAN_CROWNED);
+    }
+}
+
+SINGLE_BATTLE_TEST("Zacian's Iron Head becomes Behemoth Blade upon form change (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZACIAN_HERO) { Items(ITEM_PECHA_BERRY, ITEM_RUSTED_SWORD); Moves(MOVE_IRON_HEAD, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        ASSUME(player->species == SPECIES_ZACIAN_CROWNED); // Assumes form change worked.
+        EXPECT_EQ(player->moves[0], MOVE_BEHEMOTH_BLADE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Zamazenta changes into its Crowned Form when holding the Rusted Shield upon battle start (Multi)")
+{
+    u16 item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_RUSTED_SHIELD; }
+    GIVEN {
+        PLAYER(SPECIES_ZAMAZENTA_HERO) { Items(ITEM_PECHA_BERRY, item); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        if (item == ITEM_NONE)
+            EXPECT_EQ(player->species, SPECIES_ZAMAZENTA_HERO);
+        else
+            EXPECT_EQ(player->species, SPECIES_ZAMAZENTA_CROWNED);
+    }
+}
+
+SINGLE_BATTLE_TEST("Zamazenta's Iron Head becomes Behemoth Bash upon form change (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZAMAZENTA_HERO) { Items(ITEM_PECHA_BERRY, ITEM_RUSTED_SHIELD); Moves(MOVE_IRON_HEAD, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+    } THEN {
+        ASSUME(player->species == SPECIES_ZAMAZENTA_CROWNED); // Assumes form change worked.
+        EXPECT_EQ(player->moves[0], MOVE_BEHEMOTH_BASH);
+    }
+}
+#endif

@@ -380,3 +380,19 @@ TO_DO_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types (Traits)");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie (Traits)");
 TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale (Traits)");
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DRAGONITE);
+        OPPONENT(SPECIES_ALTARIA) { Items(ITEM_PECHA_BERRY, ITEM_ALTARIANITE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("It's super effective!");
+    }
+}
+#endif

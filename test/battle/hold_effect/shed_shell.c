@@ -95,3 +95,65 @@ SINGLE_BATTLE_TEST("Shed Shell allows switching out even when trapped by Arena T
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Shed Shell allows switching out even when trapped by Mean Look (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SHED_SHELL); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_MEAN_LOOK); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MEAN_LOOK, opponent);
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        SEND_IN_MESSAGE("Wynaut");
+    }
+}
+
+SINGLE_BATTLE_TEST("Shed Shell allows switching out even when trapped by Shadow Tag (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SHED_SHELL); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        SEND_IN_MESSAGE("Wynaut");
+    }
+}
+
+SINGLE_BATTLE_TEST("Shed Shell allows switching out even when trapped by Arena Trap (Multi)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DIGLETT) { Items(ITEM_PECHA_BERRY, ITEM_SHED_SHELL); } // Grounded
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_DIGLETT) { Ability(ABILITY_ARENA_TRAP); }
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Diglett");
+        SEND_IN_MESSAGE("Wynaut");
+    }
+}
+
+SINGLE_BATTLE_TEST("Shed Shell does not allow Teleport when trapped (Multi)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_SHED_SHELL); Moves(MOVE_TELEPORT, MOVE_SPLASH, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_MEAN_LOOK); }
+        TURN { MOVE(player, MOVE_TELEPORT); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MEAN_LOOK, opponent);
+        MESSAGE("Wobbuffet used Teleport!");
+        MESSAGE("But it failed!"); 
+    }
+}
+#endif

@@ -119,9 +119,63 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
 }
 
 // Copy from Ruin ability tests
-<<<<<<< HEAD
-TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player");
-TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent");
+DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
+        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_EXPLOSION);
+            SEND_OUT(playerLeft, 2);
+            SEND_OUT(opponentLeft, 2);
+            SEND_OUT(playerRight, 3);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Explosion!");
+        ABILITY_POPUP(playerLeft, ABILITY_INTREPID_SWORD);
+        MESSAGE("Zacian's Intrepid Sword raised its Attack!");
+        ABILITY_POPUP(playerRight, ABILITY_COSTAR);
+        MESSAGE("Flamigo copied Zacian's stat changes!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
+        OPPONENT(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_EXPLOSION);
+            SEND_OUT(playerLeft, 2);
+            SEND_OUT(opponentLeft, 2);
+            SEND_OUT(playerRight, 3);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet used Explosion!");
+        ABILITY_POPUP(opponentLeft, ABILITY_INTREPID_SWORD);
+        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        ABILITY_POPUP(opponentRight, ABILITY_COSTAR);
+        MESSAGE("The opposing Flamigo copied the opposing Zacian's stat changes!");
+    }
+}
 
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle (Traits)")
@@ -242,20 +296,14 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost (Tra
 }
 
 // Copy from Ruin ability tests
-TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player (Traits)");
-TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent (Traits)");
-
-TO_DO_BATTLE_TEST("Costar can copy an ally's critical hit ratio (Traits)");
-#endif
-=======
-DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player")
+DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
-        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_INTREPID_SWORD); }
+        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_SCRAPPY); Innates(ABILITY_COSTAR); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -277,7 +325,7 @@ DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers faint
     }
 }
 
-DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent")
+DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
@@ -287,8 +335,8 @@ DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers faint
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
-        OPPONENT(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_INTREPID_SWORD); }
+        OPPONENT(SPECIES_FLAMIGO) { Ability(ABILITY_SCRAPPY); Innates(ABILITY_COSTAR); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_EXPLOSION);
@@ -305,4 +353,7 @@ DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers faint
         MESSAGE("The opposing Flamigo copied the opposing Zacian's stat changes!");
     }
 }
->>>>>>> expansion/1.14.3
+
+
+TO_DO_BATTLE_TEST("Costar can copy an ally's critical hit ratio (Traits)");
+#endif

@@ -70,11 +70,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
     PARAMETRIZE { move = MOVE_AIR_CUTTER; }
 
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
-=======
         PLAYER(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); Speed(5); } // Limber, so it doesn't get paralyzed.
->>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_NUZZLE), MOVE(player, move); }

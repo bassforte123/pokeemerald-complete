@@ -182,6 +182,22 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
     }
 }
 
+// Write Trace test and move this one to that file (including every other ability that can't be copied)
+SINGLE_BATTLE_TEST("Zero to Hero cannot be copied by Trace")
+{
+    GIVEN {
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); }
+        OPPONENT(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_TRACE);
+            MESSAGE("The opposing Ralts Traced Palafin's Zero to Hero!");
+        }
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Zero to Hero transforms Palafin when it switches out (Traits)")
 {
