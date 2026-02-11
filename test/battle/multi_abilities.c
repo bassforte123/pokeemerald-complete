@@ -1408,9 +1408,10 @@ SINGLE_BATTLE_TEST("Multi - Protosynthesis doe not conflict with other weather a
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        MESSAGE("The harsh sunlight activated Cherrim's Protosynthesis!");
+        MESSAGE("Cherrim's Sp. Atk was heightened!");
         ABILITY_POPUP(player, ABILITY_FLOWER_GIFT);
-        MESSAGE("The harsh sunlight activated CHERRIM's Protosynthesis!");
-        MESSAGE("Walking Wake's Sp. Atk was heightened!");
+        MESSAGE("Cherrim transformed!");
     }
 }
 

@@ -553,7 +553,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectIn
     }
 }
 
-SINGLE_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
+SINGLE_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed (Multi)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);

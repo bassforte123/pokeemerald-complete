@@ -257,6 +257,7 @@ bool32 EndOrContinueWeather(void)
         for (u32 battler = 0; battler < gBattlersCount; battler++)
         {
             gDisableStructs[battler].weatherAbilityDone = FALSE;
+            gDisableStructs[battler].transformWeatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(battler);
         }
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
@@ -3391,6 +3392,7 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbilit
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].weatherAbilityDone = FALSE;
+            gDisableStructs[i].transformWeatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
         return TRUE;
@@ -3408,6 +3410,7 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbilit
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].weatherAbilityDone = FALSE;
+            gDisableStructs[i].transformWeatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
         return TRUE;
