@@ -79,7 +79,8 @@ SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is already infatu
     }
 }
 
-SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is attacking")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is attacking (Traits)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); Item(ITEM_DESTINY_KNOT);}
@@ -94,7 +95,6 @@ SINGLE_BATTLE_TEST("Destiny Knot infatuates back when holder is attacking")
     }
 }
 
-#if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Destiny Knot procs but fails if the target is oblivious (Traits)")
 {
     GIVEN {

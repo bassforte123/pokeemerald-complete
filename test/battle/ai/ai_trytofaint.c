@@ -74,7 +74,8 @@ AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy")
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy (Traits)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
@@ -86,6 +87,7 @@ AI_SINGLE_BATTLE_TEST("AI sees Parental Bond killing through sturdy")
         }
     }
 }
+#endif
 
 #if MAX_MON_ITEMS > 1
 AI_SINGLE_BATTLE_TEST("AI sees Loaded Dice damage increase from multi hit moves (Multi)")

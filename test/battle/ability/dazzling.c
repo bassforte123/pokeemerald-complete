@@ -591,7 +591,7 @@ DOUBLE_BATTLE_TEST("Instruct-called moves keep their priority, which is consider
         PLAYER(SPECIES_WOBBUFFET) { Speed(30); }
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NUGGET, ITEM_EJECT_BUTTON); Speed(20); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
-        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); Speed(15); }
+        OPPONENT(species) { Ability(ability); Speed(15); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_QUICK_ATTACK, target: opponentLeft); MOVE(playerLeft, MOVE_INSTRUCT, target: playerRight); SEND_OUT(opponentLeft, 2); }
     } SCENE {

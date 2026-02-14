@@ -691,8 +691,8 @@ TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from status Z-Moves are not inverted by
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Extreme Evoboost are inverted by Contrary")
 TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Clangorous Soulblaze are inverted by Contrary")
 
-
-SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are not affected by -ate abilities")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are not affected by -ate abilities (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -708,7 +708,6 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are not affected by -ate abilities")
     }
 }
 
-#if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("(Z-MOVE) Dancer does not use a Z-Move if the battler has used a Z-Move the same turn (Traits)")
 {
     GIVEN {

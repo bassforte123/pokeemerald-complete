@@ -7266,7 +7266,7 @@ static void Cmd_moveend(void)
                       && battler != gBattlerAttacker                                                    // Cannot pickpocket yourself
                       && BattlerHasTrait(battler, ABILITY_PICKPOCKET)                                   // Target must have pickpocket ability
                       && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
-                      && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, battler)                 // Pickpocket requires contact
+                      && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, gCurrentMove)            // Pickpocket requires contact
                       && !(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)             // Move needs to have affected this battler
                       && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
                       && IsBattlerAlive(battler))                                                       // Battler must be alive to pickpocket

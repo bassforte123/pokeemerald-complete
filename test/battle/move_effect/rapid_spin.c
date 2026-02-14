@@ -93,7 +93,8 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
     }
 }
 
-SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris (Traits)")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
@@ -111,3 +112,4 @@ SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris")
         MESSAGE("The opposing Wobbuffet blew away Toxic Spikes!");
     }
 }
+#endif
