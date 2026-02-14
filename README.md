@@ -1,8 +1,11 @@
 <img width="480" height="320" alt="image" src="https://github.com/user-attachments/assets/95a3e459-ede6-4aee-9952-97e8b0a2e82f" />
 
-# Multi-Items (Full Release)
+# New Feature (1.14.3)
+Duplicate passive item support added so holding more than one of a passive item can stack their effects.  For example, two Charcoals will further boost fire attacks.  Since this function might be overpowered, there is also an option to toggle it using the B_ALLOW_HELD_DUPES flag.  This flag is disabled by default so this feature needss to be manually enabled.
 
-This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.13.1.
+# Multi-Items (Release 1.14.3)
+
+This is the full release of a Multi-Item system which allows pokemon to hold more than one item at a time. By default this feature branch provides a second held item slot but it can be modified for more or less fairly easily. Currently updated to Pokeemerald Expansion 1.14.3.
 
 - Battle Behavior:
 	- Item activations generally happen once per opportunity and by first slot.  For example if you have a poisoned and injured pokemon switch in with a healing and a poison cure berry, the healing berry will be eaten and the poison berry has to wait until the next activation chance like after an attack.
@@ -10,8 +13,8 @@ This is the full release of a Multi-Item system which allows pokemon to hold mor
 	- As a result, Air Balloon's intro message and Rocky Helm are given low priority so they don't always overwrite the other effects in their window.  Likewise, Air Balloon popping is given higher priority to prevent it from being shielded by other items.
 	- Leftovers and Black Sludge are given a special exception where both can activate together.  The message will give Black Sludge priority but the resulting HP change is the total between the two.
 	- Shell Bell and Life Orb are given a special exception where both can activate together, the resulting message will be based on whether healing or damage is greater.
-	- Passive items that don't need explicit activations such as Charcoal are always active and can also stack effects, though two copies of the exact same item will not stack.
-	- Battle effects that target opponent items they first read which slots are viable targets then select based on the B_MULTI_ITEM_ORDER custom setting.  By default this is set to target latest to earliest, but it can be set to earliest to latest and to random.
+	- Passive items that don't need explicit activations such as Charcoal are always active and can also stack effects, though two copies of the exact same item will not stack by default since that can be overpowered in some cases. This also includes items that share the exact same effect such as the Incense items which directly copy the effects of other items, or how King's Rock and Razor Fang share the flinching on hit effect.  Duplicate item stacking can be enabled through the B_ALLOW_HELD_DUPES flag.
+	- Battle effects that target opponent items first read which slots are viable targets then select based on the B_MULTI_ITEM_ORDER custom setting.  By default this is set to target latest to earliest, but it can be set to earliest to latest and to random.
 	- Battle effects that move or restore items are locked to the slot. Thief can only steal if the target slot has an item AND the corresponding attacking pokemon's slot is empty.  Thief will not allocate a stolen item to a different free slot.
 	- Fling uses B_MULTI_ITEM_ORDER selection of the attacker's items but also prioritizes non berry items first.
 	- Acrobatics loses most but not all of its bonus if even one item is held, losing up to the full bonus as more items are held.
@@ -28,7 +31,7 @@ This is the full release of a Multi-Item system which allows pokemon to hold mor
 	- To use more than 2 items, you'll need to update the MAX_MON_ITEMS value in global.c and main.c along with creating additional MON_DATA_HELD_ITEM variables, allocating space for another helditem varibale in the PokemonSubstructs, and updating the summary screen to account for the new slots.
 	- The rest of the logic however will adjust for the slot numbers, so all the extra work is just in allocating the slot itself.
 	- NOTE that since the held items are stored just before the moves, if you notice a pokemon's first move dissapear or change then that is likely due to the item logic mistakenly targeting a slot beyond what should be allowed.
- 	- A sample alternate Pokemon Skills page where Berries are specified instead of general Held Items is included.  Just rename the "page_skills(berry)" file to "page_skills", replacing the existing one, to use it.
+    - A sample alternate Pokemon Skills page where Berries are specified instead of general Held Items is included.  Just rename the "page_skills(berry)" file to "page_skills", replacing the existing one, to use it.
 	- Please report any bugs or suggestions to Bassforte in the RHH discord.
 
 # About `pokeemerald-expansion`

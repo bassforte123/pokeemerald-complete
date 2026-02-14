@@ -203,9 +203,10 @@ static enum ItemEffect TryConsumeMirrorHerb(u32 battler, ActivationTiming timing
     return effect;
 }
 
-static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
+static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
+    u32 i, item = 0, holdEffectParam = 0;
 
     if (!IsBattlerAlive(battlerDef)
      || !IsBattlerTurnDamaged(battlerDef)
@@ -214,8 +215,15 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
         return effect;
 
     enum Ability ability = GetBattlerAbility(battlerAtk);
-    u32 holdEffectParam = GetItemHoldEffectParam(item);
 
+    for (i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        item = GetSlotHeldItem(battlerAtk, i, TRUE);
+        
+        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_FLINCH && (holdEffectParam == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            holdEffectParam += (100 - holdEffectParam) * GetItemHoldEffectParam(item) / 100; // Multiplicitive effect (2 Kings Rocks = 19% flinch chance)
+    }
+    
     if (B_SERENE_GRACE_BOOST >= GEN_5 && ability == ABILITY_SERENE_GRACE)
         holdEffectParam *= 2;
     if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_RAINBOW && gCurrentMove != MOVE_SECRET_POWER)
@@ -255,18 +263,32 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk, u32 item)
+static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battlerAtk);
+    u32 i, damage = 0;
+    u16 item;
 
     if (IsBattlerTurnDamaged(battlerDef)
      && IsBattlerAlive(battlerAtk)
      && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, ability, gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, ability, ABILITY_MAGIC_GUARD))
     {
-        SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 6);
-        PREPARE_ITEM_BUFFER(gBattleTextBuff1, item);
+
+        for (i = 0; i < MAX_MON_ITEMS; i++)
+        {
+            item = GetSlotHeldItem(battlerDef, i, TRUE);
+
+            if (GetBattlerItemHoldEffect(battlerDef, item) == HOLD_EFFECT_ROCKY_HELMET && (damage == 0 || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+            {
+                if (damage == 0)
+                    PREPARE_ITEM_BUFFER(gBattleTextBuff1, item); // Set item in message to first activated item
+                damage += GetNonDynamaxMaxHP(battlerAtk) / 6;
+            }
+        }
+
+        SetPassiveDamageAmount(battlerAtk, damage);
         BattleScriptCall(BattleScript_RockyHelmetActivates);
         effect = ITEM_HP_CHANGE;
     }
@@ -546,36 +568,46 @@ static enum ItemEffect TryLifeOrbShellBell(u32 battlerAtk)
 
     s32 hpValue = 0;
     s32 hpValue2 = 0;
+    bool32 firstShell = TRUE, firstOrb = TRUE;
+    u32 i, item;
 
-    if (BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_SHELL_BELL, TRUE)
-     && gBattleScripting.savedDmg > 0
-     && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-     && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
-     && !IsBattlerAtMaxHp(battlerAtk)
-     && IsBattlerAlive(battlerAtk)
-     && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
-     && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove)
-     && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))
+    for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        hpValue2 = gBattleScripting.savedDmg / GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHeldItemWithEffect(battlerAtk, HOLD_EFFECT_SHELL_BELL, TRUE));
-        if (hpValue2 == 0) //minmum of 1
-            hpValue2 = 1;
-        hpValue += hpValue2;
+        item = GetSlotHeldItem(battlerAtk, i, TRUE);
+
+        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_SHELL_BELL && (firstShell || GetConfig(CONFIG_ALLOW_HELD_DUPES))
+        && gBattleScripting.savedDmg > 0
+        && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+        && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
+        && !IsBattlerAtMaxHp(battlerAtk)
+        && IsBattlerAlive(battlerAtk)
+        && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
+        && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove)
+        && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))
+        {
+            firstShell = FALSE;
+            hpValue2 = gBattleScripting.savedDmg / GetBattlerItemHoldEffectParam(battlerAtk, item);
+            if (hpValue2 == 0) //minmum of 1
+                hpValue2 = 1;
+            hpValue += hpValue2;
+        }
+
+        if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(CONFIG_ALLOW_HELD_DUPES))
+        && IsBattlerAlive(battlerAtk)
+        && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+        && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
+        && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD)
+        && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
+        && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove))
+        {
+            firstOrb = FALSE;
+            hpValue2 = GetNonDynamaxMaxHP(battlerAtk) / 10;
+            if (hpValue2 == 0) //minmum of 1
+                hpValue2 = 1;
+            hpValue -= hpValue2;
+        }
     }
 
-    if (BattlerHasHeldItemEffect(battlerAtk, HOLD_EFFECT_LIFE_ORB, TRUE)
-     && IsBattlerAlive(battlerAtk)
-     && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-     && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
-     && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD)
-     && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
-     && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove))
-    {
-        hpValue2 = GetNonDynamaxMaxHP(battlerAtk) / 10;
-        if (hpValue2 == 0) //minmum of 1
-            hpValue2 = 1;
-        hpValue -= hpValue2;
-    }
     if (hpValue > 0) //Shell Bell if added HP is positive
     {
         gLastUsedItem = ITEM_SHELL_BELL;
@@ -669,43 +701,56 @@ static enum ItemEffect TryFlameOrb(u32 battler)
 static enum ItemEffect TryLeftoversBlackSludge(u32 battler)
 {   
     s32 hpValue = 0;
+    u32 i, itemEffect;
+    bool32 firstLeftover = TRUE, firstSludge = TRUE;
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (gBattleMons[battler].hp < gBattleMons[battler].maxHP
-     && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battler].volatiles.healBlock))
+    for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)) 
+        itemEffect = GetSlotHeldItemEffect(battler, i, TRUE);
+
+        if (gBattleMons[battler].hp < gBattleMons[battler].maxHP
+        && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battler].volatiles.healBlock))
         {
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE);
-            hpValue += GetNonDynamaxMaxHP(battler) / 16;
-            RecordItemEffectBattle(battler, HOLD_EFFECT_LEFTOVERS);
+            if (itemEffect == HOLD_EFFECT_LEFTOVERS && (firstLeftover || GetConfig(CONFIG_ALLOW_HELD_DUPES))) 
+            {
+                firstLeftover = FALSE;
+                hpValue += GetNonDynamaxMaxHP(battler) / 16;
+                RecordItemEffectBattle(battler, HOLD_EFFECT_LEFTOVERS);
+            }
+            if (itemEffect == HOLD_EFFECT_BLACK_SLUDGE && (firstSludge || GetConfig(CONFIG_ALLOW_HELD_DUPES)) //Black Sludge heal
+            && IS_BATTLER_OF_TYPE(battler, TYPE_POISON)) 
+            {
+                firstSludge = FALSE;
+                hpValue += GetNonDynamaxMaxHP(battler) / 16;
+                RecordItemEffectBattle(battler, HOLD_EFFECT_BLACK_SLUDGE);
+            }
         }
-        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE) //Black Sludge heal
-         && IS_BATTLER_OF_TYPE(battler, TYPE_POISON)) 
+
+        if (itemEffect == HOLD_EFFECT_BLACK_SLUDGE && (firstSludge || GetConfig(CONFIG_ALLOW_HELD_DUPES)) //Black Sludge damage
+        && !IS_BATTLER_OF_TYPE(battler, TYPE_POISON)
+        && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
         {
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE); //Black Sludge gets priority message prompt
-            hpValue += GetNonDynamaxMaxHP(battler) / 16;
+            firstSludge = FALSE;
+            hpValue -= GetNonDynamaxMaxHP(battler) / 8;
             RecordItemEffectBattle(battler, HOLD_EFFECT_BLACK_SLUDGE);
         }
     }
 
-    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE) //Black Sludge damage
-     && !IS_BATTLER_OF_TYPE(battler, TYPE_POISON)
-     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
-    {
-        gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE);
-        hpValue -= GetNonDynamaxMaxHP(battler) / 8;
-        RecordItemEffectBattle(battler, HOLD_EFFECT_BLACK_SLUDGE);
-    }
-
     if (hpValue > 0) //If aded hp is positive
     {
+        if (!firstSludge && IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
+            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE); //Black Sludge gets priority message prompt if available
+        else if (!firstLeftover)
+            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE);
         SetHealAmount(battler, hpValue);
         BattleScriptExecute(BattleScript_ItemHealHP_End2);
         effect = ITEM_HP_CHANGE;
     }
     else if (hpValue < 0) //If added HP is negative
     {
+        if (!firstSludge)
+            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE);
         SetPassiveDamageAmount(battler, -hpValue);
         BattleScriptExecute(BattleScript_ItemHurtEnd2);
         effect = ITEM_HP_CHANGE;
@@ -1170,7 +1215,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, Activat
             effect = TryConsumeMirrorHerb(itemBattler, timing);
             break;
         case HOLD_EFFECT_FLINCH: // Kings Rock
-            effect = TryKingsRock(itemBattler, secondaryBattler, item);
+            effect = TryKingsRock(itemBattler, secondaryBattler);
             break;
         case HOLD_EFFECT_AIR_BALLOON:
             hasAirBalloon = TRUE;
@@ -1334,7 +1379,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 secondaryBattler, Activat
     {
         if (hasRockyHelmet && IsBattlerAlive(itemBattler)) //Rocky Helmet has low priority to prevent it from overwriting every other on hit effect
         {
-            effect = TryRockyHelmet(itemBattler, secondaryBattler, GetBattlerHeldItemWithEffect(itemBattler, HOLD_EFFECT_ROCKY_HELMET, TRUE));
+            effect = TryRockyHelmet(itemBattler, secondaryBattler);
             if (effect != ITEM_NO_EFFECT)
                 gLastUsedItem = item = GetBattlerHeldItemWithEffect(itemBattler, HOLD_EFFECT_ROCKY_HELMET, TRUE);
         }

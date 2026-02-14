@@ -630,10 +630,20 @@ static bool32 HandleEndTurnWrap(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (BattlerHasHeldItemEffect(gBattleMons[battler].volatiles.wrappedBy, HOLD_EFFECT_BINDING_BAND, TRUE))
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
-            else
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+            u32 i;
+            for (i = 0; i < MAX_MON_ITEMS; i++)
+            {
+                if (GetSlotHeldItemEffect(gBattleMons[battler].volatiles.wrappedBy, i, TRUE) == HOLD_EFFECT_BINDING_BAND)
+                {
+                    if (bindDamage == 0)
+                        bindDamage += GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+                    else if (GetConfig(CONFIG_ALLOW_HELD_DUPES))
+                        bindDamage += GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 24 : 16);
+                }
+            }
+            if (bindDamage == 0) // Normal bind damage if no Binding Band
+                bindDamage += GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+
             SetPassiveDamageAmount(battler, bindDamage);
         }
         else  // broke free
