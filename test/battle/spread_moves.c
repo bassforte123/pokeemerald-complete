@@ -4,10 +4,17 @@
 DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LUM_BERRY); }
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_COVERT_CLOAK); }
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); };
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_EJECT_BUTTON); }
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU);
     } WHEN {

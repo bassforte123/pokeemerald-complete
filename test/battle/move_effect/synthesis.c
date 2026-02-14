@@ -56,7 +56,12 @@ SINGLE_BATTLE_TEST("Synthesis recovers regular amount in sandstorm if holding ut
     PARAMETRIZE { item = ITEM_LIFE_ORB; }
     PARAMETRIZE { item = ITEM_UTILITY_UMBRELLA; }
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); Items(item); }
+=======
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); MaxHP(400); Item(item); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SANDSTORM); MOVE(player, MOVE_SYNTHESIS); }

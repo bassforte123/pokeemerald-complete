@@ -10,7 +10,11 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_GROUDON) {Items(ITEM_RED_ORB);}
+=======
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
@@ -35,10 +39,17 @@ DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints th
         ASSUME(!IsBattleMoveStatus(MOVE_SURF));
         ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
         ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+<<<<<<< HEAD
         PLAYER(SPECIES_GROUDON) {Items(ITEM_RED_ORB); {Speed(5);}}
         PLAYER(SPECIES_WOBBUFFET) {Speed(5);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(10);}
         OPPONENT(SPECIES_WOBBUFFET) {Speed(8);}
+=======
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(5); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(8); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_SURF); }
     } SCENE {
@@ -56,8 +67,13 @@ DOUBLE_BATTLE_TEST("Desolate Land blocks damaging Water-type moves and prints th
 SINGLE_BATTLE_TEST("Desolate Land does not block a move if Pokémon is asleep and uses a Water-type move") // Sleep/confusion/paralysis all happen before the check for primal weather
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_GROUDON) {Items(ITEM_RED_ORB);}
         OPPONENT(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
+=======
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_WATER_GUN); }
     } SCENE {

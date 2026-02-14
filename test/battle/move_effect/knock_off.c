@@ -92,7 +92,11 @@ SINGLE_BATTLE_TEST("Knock Off deals additional damage to opponents holding an it
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(item); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -115,7 +119,11 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LEFTOVERS); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -130,7 +138,11 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if i
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Items(ITEM_LEFTOVERS); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Item(ITEM_LEFTOVERS); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -146,7 +158,11 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Protect")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LEFTOVERS); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_PROTECT); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {
@@ -165,7 +181,11 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items if target is immune")
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
         ASSUME(GetSpeciesType(SPECIES_DONPHAN, 0) == TYPE_GROUND || GetSpeciesType(SPECIES_DONPHAN, 1) == TYPE_GROUND);
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_DONPHAN) { Items(ITEM_LEFTOVERS); };
+=======
+        OPPONENT(SPECIES_DONPHAN) { Item(ITEM_LEFTOVERS); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {

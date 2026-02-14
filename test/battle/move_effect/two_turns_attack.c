@@ -305,7 +305,11 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in a Sandstorm", s16 damage)
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BEAM); }
         TURN { SKIP_TURN(player); }
@@ -323,7 +327,11 @@ SINGLE_BATTLE_TEST("Solar Blade's power is halved in a Sandstorm", s16 damage)
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BLADE); }
         TURN { SKIP_TURN(player); }
@@ -341,7 +349,11 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in Hail", s16 damage)
     PARAMETRIZE { move = MOVE_HAIL; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BEAM); }
         TURN { SKIP_TURN(player); }
@@ -359,7 +371,11 @@ SINGLE_BATTLE_TEST("Solar Blade's power is halved in Hail", s16 damage)
     PARAMETRIZE { move = MOVE_HAIL; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BLADE); }
         TURN { SKIP_TURN(player); }

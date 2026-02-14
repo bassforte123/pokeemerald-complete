@@ -10,12 +10,16 @@ SINGLE_BATTLE_TEST("Corrosive Gas destroys the target's item or fails if the tar
 {
     u16 item;
 
-    PARAMETRIZE {item = ITEM_NONE; }
-    PARAMETRIZE {item = ITEM_POTION; }
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_POTION; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) {Items(item); }
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_CORROSIVE_GAS); }
     } SCENE {
@@ -36,7 +40,11 @@ SINGLE_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon with the
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_MUK) {Items(ITEM_POISON_BARB); Ability(ABILITY_STICKY_HOLD); }
+=======
+        OPPONENT(SPECIES_MUK) { Item(ITEM_POISON_BARB); Ability(ABILITY_STICKY_HOLD); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_CORROSIVE_GAS); }
     } SCENE {
@@ -54,8 +62,13 @@ SINGLE_BATTLE_TEST("Items lost to Corrosive Gas cannot be restored by Recycle")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) {Speed(15); }
         OPPONENT(SPECIES_WOBBUFFET) {Items(ITEM_ORAN_BERRY); Speed(10); }
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); Speed(10); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_CORROSIVE_GAS); MOVE(opponent, MOVE_RECYCLE); }
     } SCENE {
@@ -78,7 +91,7 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
     for (j = 0; j < 2; j++) {
         for (k = 0; k < 2; k++) {
              for (l = 0; l < 2; l++) {
-                PARAMETRIZE {itemOpponentLeft = (j & 1) ? ITEM_ORAN_BERRY : ITEM_NONE;
+                PARAMETRIZE { itemOpponentLeft = (j & 1) ? ITEM_ORAN_BERRY : ITEM_NONE;
                              itemOpponentRight = (k & 1) ? ITEM_CHESTO_BERRY : ITEM_NONE;
                              itemPlayerLeft = (l & 1) ? ITEM_CHERI_BERRY : ITEM_NONE; }
              }
@@ -86,10 +99,17 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
     }
 
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) {Items(itemPlayerLeft);}
         PLAYER(SPECIES_WYNAUT) {Items(ITEM_SITRUS_BERRY);}
         OPPONENT(SPECIES_ABRA) {Items(itemOpponentLeft);}
         OPPONENT(SPECIES_KADABRA) {Items(itemOpponentRight);}
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(itemPlayerLeft); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_SITRUS_BERRY); }
+        OPPONENT(SPECIES_ABRA) { Item(itemOpponentLeft); }
+        OPPONENT(SPECIES_KADABRA) { Item(itemOpponentRight); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(playerRight, MOVE_CORROSIVE_GAS); }
     } SCENE {

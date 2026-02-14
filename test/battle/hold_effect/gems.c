@@ -9,7 +9,11 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Gem is consumed when it corresponds to the type of a move")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NORMAL_GEM); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
@@ -60,7 +64,11 @@ SINGLE_BATTLE_TEST("Gem boost is only applied once")
     s16 normalHit;
 
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NORMAL_GEM); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -86,7 +94,11 @@ SINGLE_BATTLE_TEST("Gem modifier is used for all hits of Multi Hit Moves")
     s16 secondHit;
 
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NORMAL_GEM); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -105,7 +117,11 @@ SINGLE_BATTLE_TEST("Gem modifier is used for all hits of Multi Hit Moves")
 SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_DELCATTY) { Ability(ABILITY_NORMALIZE); Items(ITEM_NORMAL_GEM); };
+=======
+        PLAYER(SPECIES_DELCATTY) { Ability(ABILITY_NORMALIZE); Item(ITEM_NORMAL_GEM); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {

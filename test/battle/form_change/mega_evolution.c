@@ -75,15 +75,20 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_6);
+<<<<<<< HEAD
         PLAYER(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET) {}
+=======
+        PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         MESSAGE("Gardevoir used Celebrate!");
     } THEN {
-        ASSUME(player->speed == 205);
+        EXPECT_EQ(player->speed, 205);
     }
 }
 
@@ -91,15 +96,20 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+<<<<<<< HEAD
         PLAYER(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE);}
         OPPONENT(SPECIES_WOBBUFFET) {}
+=======
+        PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Gardevoir used Celebrate!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
-        ASSUME(player->speed == 205);
+        EXPECT_EQ(player->speed, 205);
     }
 }
 
@@ -117,7 +127,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
         MESSAGE("Sableye used Celebrate!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
-        ASSUME(player->speed == 105);
+        EXPECT_EQ(player->speed, 105);
     }
 }
 
@@ -193,6 +203,7 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
     }
 }
 
+<<<<<<< HEAD
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Venusaur can Mega Evolve holding Venusaurite (Multi)")
 {
@@ -370,3 +381,66 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting 
     }
 }
 #endif
+=======
+SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon battle end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_RAYQUAZA);
+    }
+}
+
+SINGLE_BATTLE_TEST("Venusaur returns its base Form upon fainting end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { HP(1); Item(ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_VENUSAUR);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon fainting end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { HP(1); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_RAYQUAZA);
+    }
+}
+>>>>>>> expansion/1.14.3

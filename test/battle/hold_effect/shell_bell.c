@@ -34,8 +34,13 @@ SINGLE_BATTLE_TEST("Shell Bell recovers 1/8 of HP from after the last hit from a
 SINGLE_BATTLE_TEST("Shell Bell recovers no HP if the move did no damage")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_FALSE_SWIPE); }
     } SCENE {
@@ -119,8 +124,13 @@ SINGLE_BATTLE_TEST("Shell Bell does not activate on Future Sight if the original
 SINGLE_BATTLE_TEST("Shell Bell restores 1/8 HP of damage dealt")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Level(16); Items(ITEM_SHELL_BELL); HP(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(16); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Level(16); Item(ITEM_SHELL_BELL); HP(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_SEISMIC_TOSS); }
     } SCENE {
@@ -134,12 +144,17 @@ SINGLE_BATTLE_TEST("Shell Bell doesn't restore HP for damage dealt by a foreseen
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Level(16); Items(ITEM_SHELL_BELL); HP(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(16); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Level(16); Item(ITEM_SHELL_BELL); HP(10); }
+        OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
-        TURN { }
-        TURN { }
+        TURN {}
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Wobbuffet took the Future Sight attack!");
@@ -209,10 +224,17 @@ DOUBLE_BATTLE_TEST("Shell Bell heals accumulated damage for spread moves")
     const u16 initHp = 1;
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+<<<<<<< HEAD
         PLAYER(SPECIES_ARIADOS) { MaxHP(maxHp); HP(initHp); Items(ITEM_SHELL_BELL); }
         PLAYER(SPECIES_WOBBUFFET) {}
         OPPONENT(SPECIES_GYARADOS) {}
         OPPONENT(SPECIES_CHANSEY) {}
+=======
+        PLAYER(SPECIES_ARIADOS) { MaxHP(maxHp); HP(initHp); Item(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GYARADOS);
+        OPPONENT(SPECIES_CHANSEY);
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_DISCHARGE);
@@ -274,8 +296,13 @@ SINGLE_BATTLE_TEST("Shell Bell restores 1/8 HP at move end, one strike")
 SINGLE_BATTLE_TEST("Shell Bell recovers only 1 damage if the move only did 1 damage")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); }
     } SCENE {

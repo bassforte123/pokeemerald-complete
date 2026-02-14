@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form")
     }
 }
 
-SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold")
+SINGLE_BATTLE_TEST("Trick doesn't fail if the user has Sticky Hold")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_STICKY_HOLD); Items(ITEM_SITRUS_BERRY); }
@@ -147,10 +147,15 @@ SINGLE_BATTLE_TEST("Trick fails if the user has Sticky Hold")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
-        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, player);
     } THEN {
+<<<<<<< HEAD
         EXPECT(player->items[0] == ITEM_SITRUS_BERRY);
         EXPECT(opponent->items[0] == ITEM_LUM_BERRY);
+=======
+        EXPECT(player->item == ITEM_LUM_BERRY);
+        EXPECT(opponent->item == ITEM_SITRUS_BERRY);
+>>>>>>> expansion/1.14.3
     }
 }
 
@@ -184,6 +189,7 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute")
     }
 }
 
+<<<<<<< HEAD
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Trick swaps held items (Multi)")
 {
@@ -352,3 +358,16 @@ SINGLE_BATTLE_TEST("Trick fails if the target is behind a Substitute (Multi)")
     }
 }
 #endif
+=======
+SINGLE_BATTLE_TEST("Trick can be used against targets with an active form change that doesn't require items")
+{
+    GIVEN {
+        PLAYER(SPECIES_XERNEAS);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TRICK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRICK, opponent);
+    }
+}
+>>>>>>> expansion/1.14.3

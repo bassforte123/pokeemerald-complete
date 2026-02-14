@@ -11,7 +11,11 @@ SINGLE_BATTLE_TEST("Embargo blocks the effect of an affected Pokémon's held ite
     GIVEN {
         ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_FOCUS_SASH); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
         TURN { MOVE(player, MOVE_FISSURE); }
@@ -126,7 +130,11 @@ SINGLE_BATTLE_TEST("Embargo negates a held item's Speed reduction")
 //     KNOWN_FAILING; // Pokémon are currently not obtaining Friendship for using items in battle.
 //     GIVEN {
 //         ASSUME(gItemsInfo[ITEM_X_ACCURACY].battleUsage == EFFECT_ITEM_INCREASE_STAT);
+<<<<<<< HEAD
 //         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SOOTHE_BELL); };
+=======
+//         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SOOTHE_BELL); }
+>>>>>>> expansion/1.14.3
 //         OPPONENT(SPECIES_WOBBUFFET);
 //     } WHEN {
 //         TURN { USE_ITEM(player, ITEM_X_ACCURACY); }
@@ -149,7 +157,11 @@ SINGLE_BATTLE_TEST("Embargo doesn't block a held item's form-changing effect, bu
     PARAMETRIZE { heldItem = ITEM_MEADOW_PLATE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_ARCEUS_GRASS) { Items(heldItem); };
+=======
+        OPPONENT(SPECIES_ARCEUS_GRASS) { Item(heldItem); }
+>>>>>>> expansion/1.14.3
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].holdEffect == HOLD_EFFECT_PLATE);
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].holdEffectParam == 20);
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].secondaryId == TYPE_GRASS);
@@ -169,7 +181,11 @@ SINGLE_BATTLE_TEST("Embargo makes Fling and Natural Gift fail")
     PARAMETRIZE { heldItem = ITEM_LIGHT_BALL; moveId = MOVE_FLING; }
     PARAMETRIZE { heldItem = ITEM_CHERI_BERRY; moveId = MOVE_NATURAL_GIFT; }
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Items(heldItem); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(heldItem); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); }
@@ -190,7 +206,11 @@ SINGLE_BATTLE_TEST("Embargo makes Fling and Natural Gift fail")
 SINGLE_BATTLE_TEST("Embargo doesn't stop an item flung at an affected target from activating")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LIGHT_BALL); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIGHT_BALL); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
@@ -211,7 +231,11 @@ SINGLE_BATTLE_TEST("Baton Pass passes Embargo's effect")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         PLAYER(SPECIES_WYNAUT) { Items(ITEM_LIGHT_BALL); };
+=======
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_LIGHT_BALL); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); }
@@ -236,8 +260,13 @@ SINGLE_BATTLE_TEST("Embargo doesn't block the effects of berries obtained throug
     u32 hp = 10;
 
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { HP(1); };
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY); };
+=======
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); }
         TURN { MOVE(player, MOVE_PLUCK); }
@@ -260,7 +289,11 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Plate items on the move J
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_PIXIE_PLATE; }
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_ARCEUS) { Items(heldItem); };
+=======
+        PLAYER(SPECIES_ARCEUS) { Item(heldItem); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_DRAGONITE);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_JUDGMENT); }
@@ -281,7 +314,11 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Drive items on the move T
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_SHOCK_DRIVE; }
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_GENESECT) { Items(heldItem); };
+=======
+        PLAYER(SPECIES_GENESECT) { Item(heldItem); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_GYARADOS);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_TECHNO_BLAST); }
@@ -302,7 +339,11 @@ SINGLE_BATTLE_TEST("Embargo disables the effect of the Memory items on the move 
     PARAMETRIZE { heldItem = ITEM_NONE; }
     PARAMETRIZE { heldItem = ITEM_FIRE_MEMORY; }
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_SILVALLY) { Items(heldItem); };
+=======
+        PLAYER(SPECIES_SILVALLY) { Item(heldItem); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_VENUSAUR);
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBARGO); MOVE(player, MOVE_MULTI_ATTACK); }
@@ -320,7 +361,11 @@ SINGLE_BATTLE_TEST("Embargo can be reflected by Magic Coat")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LIGHT_BALL); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIGHT_BALL); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_MAGIC_COAT); MOVE(opponent, MOVE_EMBARGO); }
         TURN { MOVE(opponent, MOVE_FLING); }
@@ -342,7 +387,11 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Mega Evolution")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_CHARIZARD) { Items(ITEM_CHARIZARDITE_Y); };
+=======
+        OPPONENT(SPECIES_CHARIZARD) { Item(ITEM_CHARIZARDITE_Y); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
@@ -367,7 +416,11 @@ SINGLE_BATTLE_TEST("Embargo doesn't prevent Primal Reversion")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
+<<<<<<< HEAD
         OPPONENT(SPECIES_GROUDON) { Items(ITEM_RED_ORB); };
+=======
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+>>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); }
         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }

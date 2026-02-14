@@ -16,6 +16,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft")
     }
 }
 
+<<<<<<< HEAD
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Sticky Hold prevents item theft (Multi)")
 {
@@ -32,3 +33,29 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft (Multi)")
     }
 }
 #endif
+=======
+SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INCINERATE); }
+        OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_CHERI_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_INCINERATE); }
+    } THEN {
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_CHERI_BERRY);
+    }
+}
+
+SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying gems")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_INCINERATE_GEMS, GEN_6);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_INCINERATE); }
+        OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_GHOST_GEM); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_INCINERATE); }
+    } THEN {
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].item, ITEM_GHOST_GEM);
+    }
+}
+>>>>>>> expansion/1.14.3

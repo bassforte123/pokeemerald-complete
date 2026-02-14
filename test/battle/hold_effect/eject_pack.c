@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if there are no Pokémon left t
         PLAYER(SPECIES_WOBBUFFET) { HP(0); }
         OPPONENT(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
     } WHEN {
-        TURN { }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         NONE_OF {
@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Eject Pack will miss timing to switch out user if Emergency 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); };
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(133); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_OVERHEAT); SEND_OUT(opponent, 1); }
@@ -124,9 +124,15 @@ SINGLE_BATTLE_TEST("Eject Pack will not activate if Parting Shot user can switch
 DOUBLE_BATTLE_TEST("Eject Pack will not trigger if the conditions are not met")
 {
     GIVEN {
+<<<<<<< HEAD
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_EJECT_PACK); }
         PLAYER(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); };
         PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Items(ITEM_EJECT_PACK); }
+=======
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_BELDUM) { Ability(ABILITY_CLEAR_BODY); }
+        PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); Item(ITEM_EJECT_PACK); }
+>>>>>>> expansion/1.14.3
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -322,8 +328,13 @@ SINGLE_BATTLE_TEST("Eject Pack does not activate if mon is switched in due to Ej
 {
     GIVEN {
         PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_ARENA_TRAP); }
+<<<<<<< HEAD
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_EJECT_PACK); };
+=======
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); }
+>>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
