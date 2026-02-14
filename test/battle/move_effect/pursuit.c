@@ -327,7 +327,7 @@ SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and takes Life Orb damage")
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_WYNAUT) { Items(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_LIFE_ORB); }
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
     } SCENE {
@@ -362,7 +362,7 @@ SINGLE_BATTLE_TEST("Pursuit user mega evolves before attacking a switching foe a
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_KANGASKHAN) { Items(ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -378,11 +378,11 @@ SINGLE_BATTLE_TEST("Pursuit user mega evolves before attacking a switching foe a
 DOUBLE_BATTLE_TEST("Pursuit user mega evolves before attacking a switching foe and others mega evolve after switch")
 {
     GIVEN {
-        PLAYER(SPECIES_CHARIZARD) { Items(ITEM_CHARIZARDITE_X); }
+        PLAYER(SPECIES_CHARIZARD) { Item(ITEM_CHARIZARDITE_X); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZIGZAGOON);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_KANGASKHAN) { Items(ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
     } WHEN {
         TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_PURSUIT, gimmick: GIMMICK_MEGA, target: playerRight); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -557,7 +557,7 @@ SINGLE_BATTLE_TEST("Pursuit becomes a locked move after being used on switch-out
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_CHOICE_BAND); MovesWithPP({MOVE_PURSUIT, 1}, {MOVE_CELEBRATE, 10}, {MOVE_WATER_GUN, 10}, {MOVE_SCRATCH, 10}); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHOICE_BAND); MovesWithPP({MOVE_PURSUIT, 1}, {MOVE_CELEBRATE, 10}, {MOVE_WATER_GUN, 10}, {MOVE_SCRATCH, 10}); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -634,7 +634,7 @@ SINGLE_BATTLE_TEST("Pursuit user gets forced out by Red Card and target still sw
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_RED_CARD].holdEffect == HOLD_EFFECT_RED_CARD);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         PLAYER(SPECIES_VOLTORB);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VOLTORB);
@@ -658,7 +658,7 @@ SINGLE_BATTLE_TEST("Pursuit user faints to Life Orb and target still switches ou
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_VOLTORB);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
         OPPONENT(SPECIES_VOLTORB);
     } WHEN {
         TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(opponent, 1); }
@@ -681,7 +681,7 @@ DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's swit
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_ARCEUS);
-        OPPONENT(SPECIES_WYNAUT) { Items(ITEM_RED_CARD); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARCEUS);
     } WHEN {
@@ -695,6 +695,161 @@ DOUBLE_BATTLE_TEST("Pursuit user switches out due to Red Card and partner's swit
 }
 
 TO_DO_BATTLE_TEST("Baton Pass doesn't cause Pursuit to increase its power or priority");
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Pursuit ignores accuracy checks when attacking a switching target (Traits)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+        PLAYER(SPECIES_GLACEON) { Ability(ABILITY_ICE_BODY); Innates(ABILITY_SNOW_CLOAK); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SAND_ATTACK); MOVE(opponent, MOVE_HAIL); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SAND_ATTACK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HAIL, opponent);
+        SWITCH_OUT_MESSAGE("Glaceon");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        SEND_IN_MESSAGE("Zigzagoon");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Pursuit affected by Electrify fails against target with Volt Absorb (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_LANTURN) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_VOLT_ABSORB); }
+        PLAYER(SPECIES_HELIOLISK);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_LINOONE);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_ELECTRIFY, target: opponentLeft); MOVE(playerLeft, MOVE_VOLT_SWITCH, target: opponentLeft); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); SEND_OUT(playerLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIFY, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_VOLT_SWITCH, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_VOLT_ABSORB);
+        SEND_IN_MESSAGE("Zigzagoon");
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and activated ability Tangling Hair (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_SAND_VEIL); Innates(ABILITY_TANGLING_HAIR); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Dugtrio");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Wynaut's Speed fell!");
+        SEND_IN_MESSAGE("Wobbuffet");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and activated ability Tangling Hair - Doubles (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_SAND_VEIL); Innates(ABILITY_TANGLING_HAIR); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerLeft); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Dugtrio");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_TANGLING_HAIR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Wynaut's Speed fell!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_TANGLING_HAIR);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        SEND_IN_MESSAGE("Wobbuffet");
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and activated ability Tangling Hair - Mirror Armor (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DUGTRIO_ALOLA) { Ability(ABILITY_SAND_VEIL); Innates(ABILITY_TANGLING_HAIR); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CORVIKNIGHT) { Ability(ABILITY_PRESSURE); Innates(ABILITY_MIRROR_ARMOR); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Dugtrio");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
+        ABILITY_POPUP(opponent, ABILITY_MIRROR_ARMOR);
+        SEND_IN_MESSAGE("Wobbuffet");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and activated ability Cotton Down (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_ELDEGOSS) { Ability(ABILITY_REGENERATOR); Innates(ABILITY_COTTON_DOWN); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(playerLeft, 2); MOVE(opponentLeft, MOVE_PURSUIT, target: playerLeft); MOVE(opponentRight, MOVE_PURSUIT, target: playerLeft); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Eldegoss");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_COTTON_DOWN);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Wynaut's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_COTTON_DOWN);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        MESSAGE("The opposing Wynaut's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        MESSAGE("The opposing Wobbuffet's Speed fell!");
+        SEND_IN_MESSAGE("Wobbuffet");
+    }
+}
+
+SINGLE_BATTLE_TEST("Pursuit doesn't cause mon with Emergency Exit to switch twice (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_GOLISOPOD) { HP(101); MaxHP(200); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_VOLTORB);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 2); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Golisopod");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
+        ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
+        SEND_IN_MESSAGE("Voltorb");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_VOLTORB);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Pursuit attacks a switching foe and takes Life Orb damage (Multi)")

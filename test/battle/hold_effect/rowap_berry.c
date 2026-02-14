@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Rowap Berry causes the attacker to lose 1/8 of its max HP if
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ROWAP_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROWAP_BERRY); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Rowap Berry is not triggered by a physical move")
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ROWAP_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROWAP_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Rowap Berry is triggered even if berry user dies")
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_ROWAP_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_ROWAP_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_SWIFT); }
     } SCENE {

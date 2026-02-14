@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves", s16 damage
     PARAMETRIZE { item = ITEM_BIG_ROOT; }
 
     GIVEN {
-        PLAYER(SPECIES_XURKITREE) { HP(200); Items(item); }
+        PLAYER(SPECIES_XURKITREE) { HP(200); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Big Root increases the damage restored from Leech Seed, Ingr
     PARAMETRIZE { item = ITEM_BIG_ROOT; move = MOVE_AQUA_RING;  }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(200); Items(item); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(200); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, move); }
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Big Root increases damage from absorbing Liquid Ooze", s16 d
     PARAMETRIZE { item = ITEM_BIG_ROOT; }
 
     GIVEN {
-        PLAYER(SPECIES_XURKITREE) { HP(200); Items(item); }
+        PLAYER(SPECIES_XURKITREE) { HP(200); Item(item); }
         OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_LIQUID_OOZE); }
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }
@@ -76,6 +76,28 @@ SINGLE_BATTLE_TEST("Big Root increases damage from absorbing Liquid Ooze", s16 d
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.3), results[1].damage);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Big Root increases damage from absorbing Liquid Ooze (Traits)", s16 damage)
+{
+    u32 item;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_BIG_ROOT; }
+
+    GIVEN {
+        PLAYER(SPECIES_XURKITREE) { HP(200); Item(item); }
+        OPPONENT(SPECIES_TENTACOOL) { Ability(ABILITY_RAIN_DISH); Innates(ABILITY_LIQUID_OOZE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ABSORB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ABSORB, player);
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.3), results[1].damage);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Big Root increases healing from absorbing moves (Multi)", s16 damage, s16 heal)

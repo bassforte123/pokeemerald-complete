@@ -94,7 +94,7 @@ SINGLE_BATTLE_TEST("Raging Bull doesn't remove Light Screen, Reflect and Aurora 
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_BRIGHT_POWDER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); }
     } WHEN {
         TURN { MOVE(player, MOVE_SNOWSCAPE); MOVE(opponent, move); }
         TURN { MOVE(player, MOVE_RAGING_BULL, hit: FALSE); }

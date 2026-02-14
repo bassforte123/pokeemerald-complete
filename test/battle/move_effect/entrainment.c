@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Entrainment causes primal weather to revert")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
-        OPPONENT(SPECIES_GROUDON) { Items(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(player, MOVE_ENTRAINMENT); }
     } SCENE {

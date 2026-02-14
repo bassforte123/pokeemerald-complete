@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during at
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_ICE_SPINNER); }
     } SCENE {
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Ice Spinner fails to remove terrain if user faints during at
 SINGLE_BATTLE_TEST("Ice Spinner will not be remove Terrain if user is switched out due to Red Card")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {

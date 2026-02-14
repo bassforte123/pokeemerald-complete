@@ -197,3 +197,148 @@ SINGLE_BATTLE_TEST("Zero to Hero cannot be copied by Trace")
         }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Zero to Hero transforms Palafin when it switches out (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
+    } SCENE {
+        SWITCH_OUT_MESSAGE("Palafin");
+        SEND_IN_MESSAGE("Wobbuffet");
+        SWITCH_OUT_MESSAGE("Wobbuffet");
+        SEND_IN_MESSAGE("Palafin");
+        ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
+        MESSAGE("Palafin underwent a heroic transformation!");
+    } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
+}
+
+SINGLE_BATTLE_TEST("Zero to Hero transforms both player and opponent (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
+        TURN { SWITCH(player, 0); SWITCH(opponent, 0); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
+        MESSAGE("Palafin underwent a heroic transformation!");
+        ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
+        MESSAGE("The opposing Palafin underwent a heroic transformation!");
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO);
+        EXPECT_EQ(opponent->species, SPECIES_PALAFIN_HERO);
+        }
+}
+
+SINGLE_BATTLE_TEST("Zero to Hero will activate if a switch move is used (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLIP_TURN) == EFFECT_HIT_ESCAPE);
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLIP_TURN); SEND_OUT(player, 1); }
+        TURN { SWITCH(player, 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLIP_TURN, player);
+        ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
+        MESSAGE("Palafin underwent a heroic transformation!");
+    } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
+}
+
+SINGLE_BATTLE_TEST("Transform doesn't apply the heroic transformation message when copying Palafin (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); MOVE(opponent, MOVE_TRANSFORM); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
+        MESSAGE("Palafin underwent a heroic transformation!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
+        MESSAGE("The opposing Wobbuffet transformed into Palafin!");
+        NOT ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
+    } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
+}
+
+SINGLE_BATTLE_TEST("Imposter doesn't apply the heroic transformation message when copying Palafin (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_DITTO) { Ability(ABILITY_IMPOSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
+        TURN { SWITCH(player, 0); SWITCH(opponent, 0); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
+        MESSAGE("Palafin underwent a heroic transformation!");
+        ABILITY_POPUP(opponent, ABILITY_IMPOSTER);
+        MESSAGE("The opposing Ditto transformed into Palafin using Imposter!");
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
+            MESSAGE("The opposing Ditto underwent a heroic transformation!");
+        }
+    } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
+}
+
+SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers fainted - Player (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLIP_TURN); SEND_OUT(player, 1); }
+        TURN { MOVE(opponent, MOVE_EXPLOSION); SEND_OUT(player, 0); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        HP_BAR(opponent, hp: 0);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
+        // Everyone faints.
+        SEND_IN_MESSAGE("Palafin");
+        MESSAGE("2 sent out Wobbuffet!");
+        ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
+        MESSAGE("Palafin underwent a heroic transformation!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers fainted - Opponent (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ZERO_TO_HERO); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLIP_TURN); SEND_OUT(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 0); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        HP_BAR(player, hp: 0);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
+        // Everyone faints.
+        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("2 sent out Palafin!");
+        ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
+        MESSAGE("The opposing Palafin underwent a heroic transformation!");
+    }
+}
+#endif

@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen6+ (Muscle Band, crit)")
     GIVEN {
         WITH_CONFIG(CONFIG_CRIT_MULTIPLIER, GEN_6);
         ASSUME(GetMoveCategory(MOVE_ICE_FANG) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_GLACEON) { Level(75); Attack(123); Items(ITEM_MUSCLE_BAND); }
+        PLAYER(SPECIES_GLACEON) { Level(75); Attack(123); Item(ITEM_MUSCLE_BAND); }
         OPPONENT(SPECIES_GARCHOMP) { Defense(163); }
     } WHEN {
         TURN {
@@ -276,8 +276,8 @@ SINGLE_BATTLE_TEST("Punching Glove vs Muscle Band Damage calculation")
     PARAMETRIZE { expectedDamagePlayer = 174, expectedDamageOpponent = 172; }
     PARAMETRIZE { expectedDamagePlayer = 172, expectedDamageOpponent = 169; }
     GIVEN {
-        PLAYER(SPECIES_MAKUHITA) { Items(ITEM_PUNCHING_GLOVE); }
-        OPPONENT(SPECIES_MAKUHITA) { Items(ITEM_MUSCLE_BAND); }
+        PLAYER(SPECIES_MAKUHITA) { Item(ITEM_PUNCHING_GLOVE); }
+        OPPONENT(SPECIES_MAKUHITA) { Item(ITEM_MUSCLE_BAND); }
     } WHEN {
         TURN {
             MOVE(player, MOVE_DRAIN_PUNCH, WITH_RNG(RNG_DAMAGE_MODIFIER, i));
@@ -337,7 +337,7 @@ SINGLE_BATTLE_TEST("Gem boosted Damage calculation")
     PARAMETRIZE { expectedDamage = 231; }
 #endif
     GIVEN {
-        PLAYER(SPECIES_MAKUHITA) { Items(ITEM_FIGHTING_GEM); }
+        PLAYER(SPECIES_MAKUHITA) { Item(ITEM_FIGHTING_GEM); }
         OPPONENT(SPECIES_MAKUHITA);
     } WHEN {
         TURN {
@@ -418,6 +418,65 @@ DOUBLE_BATTLE_TEST("Transistor Damage calculation", s16 damage)
         EXPECT_EQ(damagePlayerRight, expectedDamageTransistorPhys);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Transistor Damage calculation (Traits)", s16 damage)
+{
+    s16 expectedDamageTransistorSpec = 0, expectedDamageRegularPhys = 0, expectedDamageRegularSpec = 0, expectedDamageTransistorPhys = 0;
+    s16 damagePlayerLeft, damagePlayerRight, damageOpponentLeft, damageOpponentRight;
+    u32 gen = 0;
+    for (u32 spread = 0; spread < 16; ++spread) {
+        PARAMETRIZE { gen = GEN_9,
+                      expectedDamageTransistorSpec = sThunderShockTransistorSpreadGen9[spread],
+                      expectedDamageRegularSpec = sThunderShockRegularSpread[spread];
+                      expectedDamageTransistorPhys = sWildChargeTransistorSpreadGen9[spread],
+                      expectedDamageRegularPhys = sWildChargeRegularSpread[spread];
+                    }
+    }
+    for (u32 spread = 0; spread < 16; ++spread) {
+        PARAMETRIZE { gen = GEN_8,
+                      expectedDamageTransistorSpec = sThunderShockTransistorSpreadGen8[spread],
+                      expectedDamageRegularSpec = sThunderShockRegularSpread[spread],
+                      expectedDamageTransistorPhys = sWildChargeTransistorSpreadGen8[spread],
+                      expectedDamageRegularPhys = sWildChargeRegularSpread[spread];
+                    }
+    }
+    GIVEN {
+        WITH_CONFIG(CONFIG_TRANSISTOR_BOOST, gen);
+        ASSUME(GetMoveType(MOVE_WILD_CHARGE) == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
+        ASSUME(GetMoveCategory(MOVE_WILD_CHARGE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_THUNDER_SHOCK) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(NUM_DAMAGE_SPREADS == 16);
+
+        PLAYER(SPECIES_REGIELEKI) { Ability(ABILITY_KLUTZ); }
+        PLAYER(SPECIES_REGIELEKI) { Ability(ABILITY_KLUTZ); Innates(ABILITY_TRANSISTOR); }
+        OPPONENT(SPECIES_REGIELEKI) { Ability(ABILITY_KLUTZ); }
+        OPPONENT(SPECIES_REGIELEKI) { Ability(ABILITY_KLUTZ); Innates(ABILITY_TRANSISTOR); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_THUNDER_SHOCK, target: opponentLeft, WITH_RNG(RNG_DAMAGE_MODIFIER, 15 - (i % 16)));
+            MOVE(playerRight, MOVE_THUNDER_SHOCK, target: opponentRight, WITH_RNG(RNG_DAMAGE_MODIFIER, 15 - (i % 16)));
+            MOVE(opponentLeft, MOVE_WILD_CHARGE, target: playerLeft, WITH_RNG(RNG_DAMAGE_MODIFIER, 15 - (i % 16)));
+            MOVE(opponentRight, MOVE_WILD_CHARGE, target: playerRight, WITH_RNG(RNG_DAMAGE_MODIFIER, 15 - (i % 16)));
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damageOpponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, playerRight);
+        HP_BAR(opponentRight, captureDamage: &damageOpponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WILD_CHARGE, opponentLeft);
+        HP_BAR(playerLeft, captureDamage: &damagePlayerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WILD_CHARGE, opponentRight);
+        HP_BAR(playerRight, captureDamage: &damagePlayerRight);
+    } THEN {
+        EXPECT_EQ(damageOpponentLeft, expectedDamageRegularSpec);
+        EXPECT_EQ(damageOpponentRight, expectedDamageTransistorSpec);
+        EXPECT_EQ(damagePlayerLeft, expectedDamageRegularPhys);
+        EXPECT_EQ(damagePlayerRight, expectedDamageTransistorPhys);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Damage calculation matches Gen6+ (Muscle Band, crit) (Multi)")

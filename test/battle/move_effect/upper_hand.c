@@ -173,3 +173,97 @@ SINGLE_BATTLE_TEST("Upper Hand failing will prevent Protean activation")
         }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Upper Hand fails if the target is not using a priority move (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DRAINING_KISS) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMovePriority(MOVE_DRAINING_KISS) == 0);
+        PLAYER(SPECIES_MIENSHAO);
+        OPPONENT(SPECIES_COMFEY) { Ability(ABILITY_NATURAL_CURE); Innates(ABILITY_FLOWER_VEIL); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
+        MESSAGE("Mienshao used Upper Hand!");
+        MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
+        HP_BAR(player);
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Upper Hand succeeds if the target's move is boosted in priority by an Ability (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DRAINING_KISS) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMovePriority(MOVE_DRAINING_KISS) == 0);
+        ASSUME(IsHealingMove(MOVE_DRAINING_KISS)); // Doesn't have the Healing Move flag in Gen 5
+        PLAYER(SPECIES_MIENSHAO) { Speed(10); }
+        OPPONENT(SPECIES_COMFEY) { Speed(5); Ability(ABILITY_NATURAL_CURE); Innates(ABILITY_TRIAGE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Comfey flinched and couldn't move!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Upper Hand fails if the target moves first (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DRAINING_KISS) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMovePriority(MOVE_DRAINING_KISS) == 0);
+        ASSUME(IsHealingMove(MOVE_DRAINING_KISS)); // Doesn't have the Healing Move flag in Gen 5
+        PLAYER(SPECIES_MIENSHAO) { Speed(5); }
+        OPPONENT(SPECIES_COMFEY) { Speed(10); Ability(ABILITY_NATURAL_CURE); Innates(ABILITY_TRIAGE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
+        HP_BAR(player);
+        HP_BAR(opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
+        MESSAGE("Mienshao used Upper Hand!");
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Upper Hand is boosted by Sheer Force (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_EXTREME_SPEED) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMovePriority(MOVE_EXTREME_SPEED) == 2);
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_UPPER_HAND) == TRUE);
+        PLAYER(SPECIES_HARIYAMA) { Ability(ABILITY_VITAL_SPIRIT); Innates(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EXTREME_SPEED); MOVE(player, MOVE_UPPER_HAND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
+        HP_BAR(opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXTREME_SPEED, opponent);
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Upper Hand failing will prevent Protean activation (Traits)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_PROTEAN_LIBERO, GEN_6);
+        PLAYER(SPECIES_REGIROCK);
+        OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTEAN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_UPPER_HAND); }
+    } SCENE {
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_PROTEAN);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
+        }
+    }
+}
+#endif

@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas")
     PARAMETRIZE { item = ITEM_NONE; }
 
     GIVEN {
-        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Items(item); }
+        PLAYER(SPECIES_TORKOAL) { Ability(ABILITY_DROUGHT); Item(item); }
         OPPONENT(SPECIES_KOFFING) { Ability(ABILITY_NEUTRALIZING_GAS); }
     } WHEN {
         TURN {}
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Mold Breaker (no message)")
 
     GIVEN {
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
-        PLAYER(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); Items(item); }
+        PLAYER(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); Item(item); }
         OPPONENT(SPECIES_EXCADRILL) { Ability(ABILITY_MOLD_BREAKER); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Mycelium Might (no message)"
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
-        PLAYER(SPECIES_VIGOROTH) { Ability(ABILITY_VITAL_SPIRIT); Items(item); }
+        PLAYER(SPECIES_VIGOROTH) { Ability(ABILITY_VITAL_SPIRIT); Item(item); }
         OPPONENT(SPECIES_TOEDSCOOL) { Ability(ABILITY_MYCELIUM_MIGHT); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SPORE); }
@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Sunsteel Strike (no message)
 
     GIVEN {
         ASSUME(MoveIgnoresTargetAbility(MOVE_SUNSTEEL_STRIKE));
-        PLAYER(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); Items(item); }
+        PLAYER(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNSTEEL_STRIKE); }
@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects the user's ability from being suppre
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
-        PLAYER(SPECIES_BLAZIKEN) { Ability(ABILITY_SPEED_BOOST); Items(item); }
+        PLAYER(SPECIES_BLAZIKEN) { Ability(ABILITY_SPEED_BOOST); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_GASTRO_ACID); }
@@ -155,7 +155,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Items(item); }
+        PLAYER(SPECIES_GYARADOS) { Ability(ABILITY_INTIMIDATE); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
@@ -183,7 +183,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has 
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_LOPUNNY) { Ability(ABILITY_KLUTZ); Items(item); }
+        PLAYER(SPECIES_LOPUNNY) { Ability(ABILITY_KLUTZ); Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
@@ -203,6 +203,67 @@ TO_DO_BATTLE_TEST("Ability Shield prevents the user's Trace from changing its ab
 TO_DO_BATTLE_TEST("Ability Shield prevents the user's Receiver from changing its ability");
 TO_DO_BATTLE_TEST("Ability Shield protects against Wandering Spirit");
 TO_DO_BATTLE_TEST("Ability Shield protects against Mummy/Lingering Aroma");
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Ability Shield protects against Mold Breaker (no message) (Traits)")
+{
+    u32 item;
+
+    PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
+    PARAMETRIZE { item = ITEM_NONE; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
+        PLAYER(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); Item(item); }
+        OPPONENT(SPECIES_EXCADRILL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_MOLD_BREAKER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EARTHQUAKE); }
+    } SCENE {
+        if (item == ITEM_ABILITY_SHIELD) {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+                MESSAGE("Flygon's Ability is protected by the effects of its Ability Shield!");
+                HP_BAR(player);
+            }
+            ABILITY_POPUP(player, ABILITY_LEVITATE);
+        } else {
+            HP_BAR(player);
+            NOT ABILITY_POPUP(player, ABILITY_LEVITATE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Ability Shield protects against Mycelium Might (no message) (Traits)")
+{
+    u32 item;
+
+    PARAMETRIZE { item = ITEM_ABILITY_SHIELD; }
+    PARAMETRIZE { item = ITEM_NONE; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
+        PLAYER(SPECIES_VIGOROTH) { Ability(ABILITY_VITAL_SPIRIT); Item(item); }
+        OPPONENT(SPECIES_TOEDSCOOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_MYCELIUM_MIGHT); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SPORE); }
+    } SCENE {
+
+        if (item == ITEM_ABILITY_SHIELD) {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
+                STATUS_ICON(player, sleep: TRUE);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+                MESSAGE("Vigoroth's Ability is protected by the effects of its Ability Shield!");
+            }
+            ABILITY_POPUP(player, ABILITY_VITAL_SPIRIT);
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
+            STATUS_ICON(player, sleep: TRUE);
+        }
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Ability Shield protects against Neutralizing Gas (Multi)")

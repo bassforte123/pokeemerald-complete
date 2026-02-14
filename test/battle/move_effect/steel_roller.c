@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during atta
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_STEEL_ROLLER); }
     } SCENE {
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Steel Roller removes Terrain even if user faints during atta
 SINGLE_BATTLE_TEST("Steel Roller removes Terrain if user is switched out due to Red Card")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_RED_CARD); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {

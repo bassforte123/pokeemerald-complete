@@ -9,8 +9,8 @@ DOUBLE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (d
     GIVEN {
         PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
         PLAYER(SPECIES_EKANS) { HP(100); Ability(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
-        OPPONENT(SPECIES_WYNAUT) { HP(100); Items(ITEM_LEFTOVERS); Speed(3); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(100); Items(ITEM_BLACK_SLUDGE); Speed(4); }
+        OPPONENT(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
     } SCENE {
@@ -62,8 +62,8 @@ MULTI_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (mu
     GIVEN {
         MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
         MULTI_PARTNER(SPECIES_EKANS) { HP(100); Ability(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
-        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Items(ITEM_LEFTOVERS); Speed(3); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(100); Items(ITEM_BLACK_SLUDGE); Speed(4); }
+        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
     } SCENE {
@@ -91,8 +91,8 @@ TWO_VS_ONE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
     GIVEN {
         MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
         MULTI_PARTNER(SPECIES_EKANS) { HP(100); Ability(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
-        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Items(ITEM_LEFTOVERS); Speed(3); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(100); Items(ITEM_BLACK_SLUDGE); Speed(4); }
+        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
     } SCENE {
@@ -120,8 +120,8 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
     GIVEN {
         MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
         MULTI_PLAYER(SPECIES_EKANS) { HP(100); Ability(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
-        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Items(ITEM_LEFTOVERS); Speed(3); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(100); Items(ITEM_BLACK_SLUDGE); Speed(4); }
+        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
     } SCENE {
@@ -139,6 +139,146 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
         EXPECT_GT(damage, 0);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (double battle) (Traits)")
+{
+    s16 healed;
+    s16 damage;
+
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
+        PLAYER(SPECIES_EKANS) { HP(100); Ability(ABILITY_INTIMIDATE); Innates(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        HP_BAR(opponentRight, captureDamage: &healed);
+        HP_BAR(opponentRight, captureDamage: &damage);
+        MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
+        MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
+        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        MESSAGE("Ekans is healed by the grassy terrain!");
+        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Wynaut is healed by the grassy terrain!");
+    } THEN {
+        EXPECT_GT(0, healed);
+        EXPECT_GT(damage, 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("End Turn Effects: Effects are applied by Speed Order (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT)      { MaxHP(200); HP(100); Speed(3); }
+        PLAYER(SPECIES_RILLABOOM)   { MaxHP(200); HP(100); Speed(1); Ability(ABILITY_OVERGROW); Innates(ABILITY_GRASSY_SURGE); }
+        OPPONENT(SPECIES_MEWTWO)    { MaxHP(200); HP(100); Speed(2); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(200); HP(100); Speed(4); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_FAKE_OUT, target: playerLeft);
+            MOVE(playerRight, MOVE_FAKE_OUT, target: opponentRight);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponentLeft);
+        HP_BAR(playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, playerRight);
+        HP_BAR(opponentRight);
+
+        HP_BAR(opponentRight);
+        HP_BAR(playerLeft);
+        HP_BAR(opponentLeft);
+        HP_BAR(playerRight);
+    }
+}
+
+MULTI_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (multibattle) (Traits)")
+{
+    s16 healed;
+    s16 damage;
+
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1); }
+        MULTI_PARTNER(SPECIES_EKANS) { HP(100); Ability(ABILITY_INTIMIDATE); Innates(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
+        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        HP_BAR(opponentRight, captureDamage: &healed);
+        HP_BAR(opponentRight, captureDamage: &damage);
+        MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
+        MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
+        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        MESSAGE("Ekans is healed by the grassy terrain!");
+        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Wynaut is healed by the grassy terrain!");
+    } THEN {
+        EXPECT_GT(0, healed);
+        EXPECT_GT(damage, 0);
+    }
+}
+
+
+TWO_VS_ONE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (2v1) (Traits)")
+{
+    s16 healed;
+    s16 damage;
+
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1);}
+        MULTI_PARTNER(SPECIES_EKANS) { HP(100); Ability(ABILITY_INTIMIDATE); Innates(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
+        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        HP_BAR(opponentRight, captureDamage: &healed);
+        HP_BAR(opponentRight, captureDamage: &damage);
+        MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
+        MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
+        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        MESSAGE("Ekans is healed by the grassy terrain!");
+        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Wynaut is healed by the grassy terrain!");
+    } THEN {
+        EXPECT_GT(0, healed);
+        EXPECT_GT(damage, 0);
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (1v2) (Traits)")
+{
+    s16 healed;
+    s16 damage;
+
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WYNAUT) { HP(100); Speed(1);}
+        MULTI_PLAYER(SPECIES_EKANS) { HP(100); Ability(ABILITY_INTIMIDATE); Innates(ABILITY_SHED_SKIN); Status1(STATUS1_BURN); Speed(2); }
+        MULTI_OPPONENT_A(SPECIES_WYNAUT) { HP(100); Item(ITEM_LEFTOVERS); Speed(3); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { HP(100); Item(ITEM_BLACK_SLUDGE); Speed(4); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_GRASSY_TERRAIN); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet is healed by the grassy terrain!");
+        HP_BAR(opponentRight, captureDamage: &healed);
+        HP_BAR(opponentRight, captureDamage: &damage);
+        MESSAGE("The opposing Wobbuffet was hurt by the Black Sludge!");
+        MESSAGE("The opposing Wynaut is healed by the grassy terrain!");
+        MESSAGE("The opposing Wynaut restored a little HP using its Leftovers!");
+        MESSAGE("Ekans is healed by the grassy terrain!");
+        MESSAGE("Ekans's Shed Skin cured its burn problem!");
+        MESSAGE("Wynaut is healed by the grassy terrain!");
+    } THEN {
+        EXPECT_GT(0, healed);
+        EXPECT_GT(damage, 0);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("End Turn Effects: First Event Block is executed correctly (double battle) (Multi)")

@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Dusk Mane Necrozma can Ultra Burst holding Ultranecrozium Z")
 {
     GIVEN {
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Items(ITEM_ULTRANECROZIUM_Z); }
+        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
@@ -20,9 +20,9 @@ SINGLE_BATTLE_TEST("Dusk Mane Necrozma can Ultra Burst holding Ultranecrozium Z"
 DOUBLE_BATTLE_TEST("Ultra Burst's order is determined by Speed - opponent faster")
 {
     GIVEN {
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Items(ITEM_ULTRANECROZIUM_Z); Speed(1); }
+        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_NECROZMA_DAWN_WINGS) { Items(ITEM_ULTRANECROZIUM_Z); Speed(3); }
+        OPPONENT(SPECIES_NECROZMA_DAWN_WINGS) { Item(ITEM_ULTRANECROZIUM_Z); Speed(3); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
@@ -39,9 +39,9 @@ DOUBLE_BATTLE_TEST("Ultra Burst's order is determined by Speed - opponent faster
 DOUBLE_BATTLE_TEST("Ultra Burst's order is determined by Speed - player faster")
 {
     GIVEN {
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Items(ITEM_ULTRANECROZIUM_Z); Speed(5); }
+        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_NECROZMA_DAWN_WINGS) { Items(ITEM_ULTRANECROZIUM_Z); Speed(2); }
+        OPPONENT(SPECIES_NECROZMA_DAWN_WINGS) { Item(ITEM_ULTRANECROZIUM_Z); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
@@ -59,13 +59,8 @@ SINGLE_BATTLE_TEST("Ultra Burst affects turn order")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
-<<<<<<< HEAD
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Items(ITEM_ULTRANECROZIUM_Z);}
-        OPPONENT(SPECIES_WOBBUFFET) {}
-=======
         PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
     } SCENE {
@@ -81,7 +76,7 @@ DOUBLE_BATTLE_TEST("Ultra Burst happens after switching, but before Focus Punch-
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Items(ITEM_ULTRANECROZIUM_Z); }
+        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -107,8 +102,8 @@ DOUBLE_BATTLE_TEST("Ultra Burst happens after switching, but before Focus Punch-
 SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn")
 {
     GIVEN {
-        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Items(ITEM_ULTRANECROZIUM_Z); Speed(3); }
-        OPPONENT(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE); Speed(2); }
+        PLAYER(SPECIES_NECROZMA_DUSK_MANE) { Item(ITEM_ULTRANECROZIUM_Z); Speed(3); }
+        OPPONENT(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); Speed(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -125,7 +120,44 @@ SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn")
     }
 }
 
-<<<<<<< HEAD
+SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra Bursting")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
+    PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
+    GIVEN {
+        PLAYER(species) { Item(ITEM_ULTRANECROZIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_NECROZMA_ULTRA);
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), species);
+    }
+}
+
+SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon fainting after Ultra Bursting")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
+    PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
+    GIVEN {
+        PLAYER(species) { HP(1); Item(ITEM_ULTRANECROZIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, species);
+    }
+}
+
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Dusk Mane Necrozma can Ultra Burst holding Ultranecrozium Z (Multi)")
 {
@@ -245,15 +277,15 @@ SINGLE_BATTLE_TEST("Ultra Burst and Mega Evolution can happen on the same turn (
         EXPECT_EQ(opponent->species, SPECIES_GARDEVOIR_MEGA);
     }
 }
-#endif
-=======
-SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra Bursting")
+
+
+SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra Bursting (Multi)")
 {
     u32 species;
     PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
     PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
     GIVEN {
-        PLAYER(species) { Item(ITEM_ULTRANECROZIUM_Z); }
+        PLAYER(species) { Items(ITEM_NUGGET, ITEM_ULTRANECROZIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
@@ -263,13 +295,13 @@ SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon battle end after Ultra
     }
 }
 
-SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon fainting after Ultra Bursting")
+SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon fainting after Ultra Bursting (Multi)")
 {
     u32 species;
     PARAMETRIZE { species = SPECIES_NECROZMA_DUSK_MANE; }
     PARAMETRIZE { species = SPECIES_NECROZMA_DAWN_WINGS; }
     GIVEN {
-        PLAYER(species) { HP(1); Item(ITEM_ULTRANECROZIUM_Z); }
+        PLAYER(species) { HP(1); Items(ITEM_NUGGET, ITEM_ULTRANECROZIUM_Z); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -284,4 +316,5 @@ SINGLE_BATTLE_TEST("Necrozma returns its proper Form upon fainting after Ultra B
         EXPECT_EQ(player->species, species);
     }
 }
->>>>>>> expansion/1.14.3
+
+#endif

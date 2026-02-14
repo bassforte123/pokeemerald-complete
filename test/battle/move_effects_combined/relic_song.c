@@ -67,3 +67,37 @@ SINGLE_BATTLE_TEST("Relic Song is blocked by Throat Chop")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
     }
 }
+
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Relic Song is prevented by Soundproof (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_VOLTORB) { Ability(ABILITY_STATIC); Innates(ABILITY_SOUNDPROOF); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_RELIC_SONG); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SOUNDPROOF);
+        MESSAGE("The opposing Voltorb's Soundproof blocks Relic Song!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, player);
+            HP_BAR(opponent);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Relic Song will become a Water-type move when used by a Pokémon with the Ability Liquid Voice (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_VULPIX);
+        OPPONENT(SPECIES_POPPLIO) { Ability(ABILITY_TORRENT); Innates(ABILITY_LIQUID_VOICE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_RELIC_SONG); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RELIC_SONG, opponent);
+        HP_BAR(player);
+        MESSAGE("It's super effective!");
+    }
+}
+#endif

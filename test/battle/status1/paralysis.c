@@ -105,3 +105,25 @@ SINGLE_BATTLE_TEST("Thunder Wave doesn't print an effectiveness message")
         NOT MESSAGE("It's super effective!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target (Traits)")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_HITMONLEE; ability = ABILITY_LIMBER; }
+    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
+    PARAMETRIZE { species = SPECIES_NACLI; ability = ABILITY_PURIFYING_SALT; }
+    PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC; }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, GEN_6);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_THUNDER_WAVE); }
+    } WHEN {
+        TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_THUNDER_WAVE); } // Both get -10
+    }
+}
+#endif

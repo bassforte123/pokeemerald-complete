@@ -91,3 +91,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE: AI pr
             TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, aiRiskyFlag ? MOVE_THUNDER : MOVE_THUNDERBOLT); }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+TO_DO_BATTLE_TEST("AI_FLAG_RISKY: Mid-battle switches prioritize offensive options (Traits)")
+#endif

@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Bug Bite eats the target's berry and immediately gains its e
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(399); MaxHP(400); Status1(status1); Moves(MOVE_SLEEP_TALK, MOVE_BUG_BITE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
         // Chesto Berry can only be applied if the Pokémon is asleep and uses Sleep Talk.
         if (item == ITEM_CHESTO_BERRY) {
@@ -120,11 +120,7 @@ SINGLE_BATTLE_TEST("Tanga Berry activates before Bug Bite")
         ASSUME(gItemsInfo[ITEM_TANGA_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(gItemsInfo[ITEM_TANGA_BERRY].holdEffectParam == TYPE_BUG);
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) {Items(ITEM_TANGA_BERRY); }
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_TANGA_BERRY); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_BUG_BITE); }
     } SCENE {
@@ -142,7 +138,7 @@ SINGLE_BATTLE_TEST("Bug Bite ignores Unnerve")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_TYRANITAR) { Ability(ABILITY_UNNERVE); Items(ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_TYRANITAR) { Ability(ABILITY_UNNERVE); Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_BUG_BITE); }
     } SCENE {
@@ -152,6 +148,23 @@ SINGLE_BATTLE_TEST("Bug Bite ignores Unnerve")
         EXPECT_EQ(opponent->items[0], ITEM_NONE);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Bug Bite ignores Unnerve (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_TYRANITAR) { Ability(ABILITY_SAND_STREAM); Innates(ABILITY_UNNERVE); Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_BUG_BITE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BITE, player);
+        HP_BAR(player);
+    } THEN {
+        EXPECT_EQ(opponent->items[0], ITEM_NONE);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 // Pretty much copy/paste of the Berry Fling Test.

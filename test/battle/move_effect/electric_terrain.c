@@ -70,3 +70,23 @@ SINGLE_BATTLE_TEST("Electric Terrain lasts for 5 turns")
         MESSAGE("The electricity disappeared from the battlefield.");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Electric Terrain protects grounded battlers from falling asleep (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CLAYDOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_SPORE); }
+        TURN { MOVE(player, MOVE_SPORE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Electric Terrain!");
+        MESSAGE("The opposing Claydol used Spore!");
+        MESSAGE("Wobbuffet surrounds itself with electrified terrain!");
+        MESSAGE("Wobbuffet used Spore!");
+        MESSAGE("The opposing Claydol fell asleep!");
+        STATUS_ICON(opponent, sleep: TRUE);
+    }
+}
+#endif

@@ -95,3 +95,39 @@ DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof")
         EXPECT_EQ(damage[0], damage[1]);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Howl does not work on partner if it has Soundproof (Traits)")
+{
+    s16 damage[2];
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
+        ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(SPECIES_VOLTORB) { Speed(10); Ability(ABILITY_STATIC); Innates(ABILITY_SOUNDPROOF); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+        TURN { MOVE(playerLeft, MOVE_HOWL); MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HOWL, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        MESSAGE("Wobbuffet's Attack rose!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+            MESSAGE("Wynaut's Attack rose!");
+        }
+        ABILITY_POPUP(playerRight, ABILITY_SOUNDPROOF);
+        MESSAGE("Voltorb's Soundproof blocks Howl!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
+        HP_BAR(opponentLeft, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+#endif

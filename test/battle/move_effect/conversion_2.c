@@ -242,3 +242,35 @@ SINGLE_BATTLE_TEST("Conversion 2 fails if last hit by a Stellar-type move (Gen 1
         MESSAGE("But it failed!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Conversion 2's type change considers move types changed by Normalize and Electrify (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Innates(ABILITY_NORMALIZE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIFY); MOVE(opponent, MOVE_POUND); }
+        TURN { MOVE(player, MOVE_CONVERSION_2); }
+        TURN { MOVE(player, MOVE_WATER_GUN); MOVE(opponent, MOVE_CONVERSION_2); }
+    } SCENE {
+        // turn 1
+        MESSAGE("Wobbuffet used Electrify!");
+        MESSAGE("The opposing Wobbuffet used Pound!");
+        // turn 2
+        ONE_OF {
+         MESSAGE("Wobbuffet transformed into the Ground type!");
+         MESSAGE("Wobbuffet transformed into the Dragon type!");
+         MESSAGE("Wobbuffet transformed into the Grass type!");
+         MESSAGE("Wobbuffet transformed into the Electric type!");
+        }
+        // turn 3
+        MESSAGE("Wobbuffet used Water Gun!");
+        ONE_OF {
+         MESSAGE("The opposing Wobbuffet transformed into the Steel type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Rock type!");
+         MESSAGE("The opposing Wobbuffet transformed into the Ghost type!");
+        }
+    }
+}
+#endif

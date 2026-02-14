@@ -133,3 +133,34 @@ DOUBLE_BATTLE_TEST("Revival Blessing correctly updates battler absent flags")
         MESSAGE("It doesn't affect the opposing Starly…");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Revival Blessing correctly updates battler absent flags (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SALAMENCE) { Level(40); }
+        PLAYER(SPECIES_PIDGEOT) { Level(40); }
+        OPPONENT(SPECIES_GEODUDE) { Level(5); Ability(ABILITY_SAND_VEIL); Innates(ABILITY_ROCK_HEAD); }
+        OPPONENT(SPECIES_STARLY) { Level(5); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE);
+               MOVE(opponentRight, MOVE_REVIVAL_BLESSING, partyIndex: 0); }
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+    } SCENE {
+        // Turn 1
+        MESSAGE("Salamence used Earthquake!");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
+        MESSAGE("It doesn't affect Pidgeot…");
+        MESSAGE("It doesn't affect the opposing Starly…");
+        MESSAGE("The opposing Starly used Revival Blessing!");
+        MESSAGE("Geodude was revived and is ready to fight again!"); // Should have prefix but it doesn't currently.
+        // Turn 2
+        MESSAGE("Salamence used Earthquake!");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
+        MESSAGE("It doesn't affect Pidgeot…");
+        MESSAGE("It doesn't affect the opposing Starly…");
+    }
+}
+#endif

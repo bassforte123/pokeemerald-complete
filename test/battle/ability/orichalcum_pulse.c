@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse sets up sun for 5 turns")
 SINGLE_BATTLE_TEST("Orichalcum Pulse sets up sun for 8 turns with Heat Rock")
 {
     GIVEN {
-        PLAYER(SPECIES_KORAIDON) { Moves(MOVE_CELEBRATE); Ability(ABILITY_ORICHALCUM_PULSE); Items(ITEM_HEAT_ROCK); }
+        PLAYER(SPECIES_KORAIDON) { Moves(MOVE_CELEBRATE); Ability(ABILITY_ORICHALCUM_PULSE); Item(ITEM_HEAT_ROCK); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE); }
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse boost applies even if the target holds Util
         ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_KORAIDON) { Ability(ABILITY_ORICHALCUM_PULSE); Moves(MOVE_SCRATCH); Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(10); Items(targetItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(10); Item(targetItem); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
@@ -99,7 +99,7 @@ SINGLE_BATTLE_TEST("Orichalcum Pulse does not boost physical moves if holder has
     GIVEN {
         ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
         ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-        PLAYER(SPECIES_KORAIDON) { Ability(ABILITY_ORICHALCUM_PULSE); Moves(MOVE_SCRATCH); Speed(5); Items(holdItem); }
+        PLAYER(SPECIES_KORAIDON) { Ability(ABILITY_ORICHALCUM_PULSE); Moves(MOVE_SCRATCH); Speed(5); Item(holdItem); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_SCRATCH); }

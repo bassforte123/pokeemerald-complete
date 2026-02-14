@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged in
 
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LIFE_ORB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ASSURANCE); }
@@ -59,6 +59,7 @@ TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in 
 TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Crash");
 TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Confusion");
 TO_DO_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Rocky Helmet");
+
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Assurance doubles in power if the target has been damaged in the same turn - Life Orb (Multi)")

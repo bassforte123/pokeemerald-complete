@@ -100,3 +100,23 @@ SINGLE_BATTLE_TEST("Misty Terrain will fail if there is one already on the field
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MISTY_TERRAIN, opponent);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Misty Terrain protects grounded battlers from non-volatile status conditions (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CLAYDOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_MISTY_TERRAIN); MOVE(opponent, MOVE_TOXIC); }
+        TURN { MOVE(player, MOVE_TOXIC); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Misty Terrain!");
+        MESSAGE("The opposing Claydol used Toxic!");
+        MESSAGE("Wobbuffet surrounds itself with a protective mist!");
+        NOT { STATUS_ICON(opponent, badPoison: TRUE); }
+        MESSAGE("Wobbuffet used Toxic!");
+        STATUS_ICON(opponent, badPoison: TRUE);
+    }
+}
+#endif

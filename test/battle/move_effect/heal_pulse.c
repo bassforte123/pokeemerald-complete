@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Heal Pulse ignores accurace checks")
 {
     GIVEN {
         PASSES_RANDOMLY(100, 100, RNG_ACCURACY);
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Items(ITEM_BRIGHT_POWDER); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(1); Item(ITEM_BRIGHT_POWDER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_PULSE); }

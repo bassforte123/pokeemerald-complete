@@ -39,11 +39,7 @@ SINGLE_BATTLE_TEST("Confusion self hit does not consume Gems")
     PASSES_RANDOMLY(pctChance, 100, RNG_CONFUSION);
     GIVEN {
         WITH_CONFIG(CONFIG_CONFUSION_SELF_DMG_CHANCE, genConfig);
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NORMAL_GEM); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
->>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_SCRATCH); }

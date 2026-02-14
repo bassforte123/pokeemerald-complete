@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
         } else {
             PLAYER(SPECIES_DUNSPARCE);
         }
-        OPPONENT(foeSpecies) { Items(foeItem); }
+        OPPONENT(foeSpecies) { Item(foeItem); }
     } WHEN {
         TURN { MOVE(player, MOVE_HIDDEN_POWER); }
     } SCENE {

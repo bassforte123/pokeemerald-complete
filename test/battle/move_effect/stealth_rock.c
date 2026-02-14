@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Stealth Rock damage on switch in based on typing")
 SINGLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button is triggered")
 {
     GIVEN {
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_METAPOD) { Item(ITEM_EJECT_BUTTON); }
         PLAYER(SPECIES_METAPOD);
         OPPONENT(SPECIES_JOLTEON);
     } WHEN {
@@ -56,8 +56,8 @@ SINGLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button 
 DOUBLE_BATTLE_TEST("Stealth Rock damages the correct Pokémon when Eject Button is triggered in double battle")
 {
     GIVEN {
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_EJECT_BUTTON); }
-        PLAYER(SPECIES_METAPOD) { Items(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_METAPOD) { Item(ITEM_EJECT_BUTTON); }
+        PLAYER(SPECIES_METAPOD) { Item(ITEM_EJECT_BUTTON); }
         PLAYER(SPECIES_METAPOD);
         OPPONENT(SPECIES_JOLTEON);
         OPPONENT(SPECIES_WOBBUFFET);

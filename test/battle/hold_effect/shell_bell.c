@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Shell Bell recovers 1/8 of HP from after the last hit from a
     s16 shellBellRecovery = 0;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BULLET_SEED); }
@@ -34,13 +34,8 @@ SINGLE_BATTLE_TEST("Shell Bell recovers 1/8 of HP from after the last hit from a
 SINGLE_BATTLE_TEST("Shell Bell recovers no HP if the move did no damage")
 {
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_FALSE_SWIPE); }
     } SCENE {
@@ -56,7 +51,7 @@ SINGLE_BATTLE_TEST("Shell Bell recovers no HP if the move did no damage")
 SINGLE_BATTLE_TEST("Shell Bell activates if it hits a Substitute")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_SCRATCH); }
@@ -72,7 +67,7 @@ SINGLE_BATTLE_TEST("Shell Bell activates if it hits a Substitute")
 SINGLE_BATTLE_TEST("Shell Bell activates after Absorb")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ABSORB); }
@@ -88,7 +83,7 @@ SINGLE_BATTLE_TEST("Shell Bell activates after Absorb")
 SINGLE_BATTLE_TEST("Shell Bell activates after Rough Skin")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_GIBLE) { Ability(ABILITY_ROUGH_SKIN); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -104,7 +99,7 @@ SINGLE_BATTLE_TEST("Shell Bell activates after Rough Skin")
 SINGLE_BATTLE_TEST("Shell Bell does not activate on Future Sight if the original user is on the field")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
@@ -124,13 +119,8 @@ SINGLE_BATTLE_TEST("Shell Bell does not activate on Future Sight if the original
 SINGLE_BATTLE_TEST("Shell Bell restores 1/8 HP of damage dealt")
 {
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Level(16); Items(ITEM_SHELL_BELL); HP(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Level(16); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { Level(16); Item(ITEM_SHELL_BELL); HP(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_SEISMIC_TOSS); }
     } SCENE {
@@ -144,13 +134,8 @@ SINGLE_BATTLE_TEST("Shell Bell doesn't restore HP for damage dealt by a foreseen
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FUTURE_SIGHT) == EFFECT_FUTURE_SIGHT);
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Level(16); Items(ITEM_SHELL_BELL); HP(10); }
-        OPPONENT(SPECIES_WOBBUFFET) { Level(16); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { Level(16); Item(ITEM_SHELL_BELL); HP(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Level(16); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN {}
@@ -169,7 +154,7 @@ SINGLE_BATTLE_TEST("Shell Bell does not activate on Future Sight if the original
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
@@ -193,7 +178,7 @@ SINGLE_BATTLE_TEST("Shell Bell does not activate on Future Sight if the original
     s16 healed = 0;
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
@@ -224,17 +209,10 @@ DOUBLE_BATTLE_TEST("Shell Bell heals accumulated damage for spread moves")
     const u16 initHp = 1;
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
-<<<<<<< HEAD
-        PLAYER(SPECIES_ARIADOS) { MaxHP(maxHp); HP(initHp); Items(ITEM_SHELL_BELL); }
-        PLAYER(SPECIES_WOBBUFFET) {}
-        OPPONENT(SPECIES_GYARADOS) {}
-        OPPONENT(SPECIES_CHANSEY) {}
-=======
         PLAYER(SPECIES_ARIADOS) { MaxHP(maxHp); HP(initHp); Item(ITEM_SHELL_BELL); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GYARADOS);
         OPPONENT(SPECIES_CHANSEY);
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_DISCHARGE);
@@ -276,7 +254,7 @@ SINGLE_BATTLE_TEST("Shell Bell restores 1/8 HP at move end, one strike")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(maxHp); HP(hp); Items(ITEM_SHELL_BELL); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(maxHp); HP(hp); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(maxHp); HP(opponentHp); }
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); }
@@ -296,13 +274,8 @@ SINGLE_BATTLE_TEST("Shell Bell restores 1/8 HP at move end, one strike")
 SINGLE_BATTLE_TEST("Shell Bell recovers only 1 damage if the move only did 1 damage")
 {
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_SHELL_BELL); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_SHELL_BELL); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_DRAGON_RAGE); }
     } SCENE {
@@ -318,6 +291,27 @@ SINGLE_BATTLE_TEST("Shell Bell recovers only 1 damage if the move only did 1 dam
 
 TO_DO_BATTLE_TEST("If a Pokémon steals a Shell Bell with Thief or Covet, it will recover HP for the use of that move that stole the Shell Bell")
 TO_DO_BATTLE_TEST("If a Pokémon steals a Shell Bell with Magician, it will recover HP for the use of that move that stole the Shell Bell")
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Shell Bell activates after Rough Skin (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SHELL_BELL); }
+        OPPONENT(SPECIES_GIBLE) { Ability(ABILITY_SAND_VEIL); Innates(ABILITY_ROUGH_SKIN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        HP_BAR(opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        HP_BAR(player);
+    }
+}
+
+TO_DO_BATTLE_TEST("If a Pokémon steals a Shell Bell with Thief or Covet, it will recover HP for the use of that move that stole the Shell Bell (Traits)")
+TO_DO_BATTLE_TEST("If a Pokémon steals a Shell Bell with Magician, it will recover HP for the use of that move that stole the Shell Bell (Traits)")
+#endif
 
 #if MAX_MON_ITEMS > 1
 #define HITS 5

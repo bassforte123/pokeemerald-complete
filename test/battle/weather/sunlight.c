@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Sunny Day fails if Primordial Sea is active")
     PARAMETRIZE { item = ITEM_BLUE_ORB; }
 
     GIVEN {
-        PLAYER(SPECIES_KYOGRE) { Items(item); }
+        PLAYER(SPECIES_KYOGRE) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUNNY_DAY); }

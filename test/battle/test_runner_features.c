@@ -53,13 +53,8 @@ SINGLE_BATTLE_TEST("Setting level doesn't overwrite set stats")
 SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (not HP)")
 {
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_DIANCIE) {Attack(10); Defense(10); Speed(10); SpAttack(10); SpDefense(10); Items(ITEM_DIANCITE);}
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(1);}
-=======
         PLAYER(SPECIES_DIANCIE) { Attack(10); Defense(10); Speed(10); SpAttack(10); SpDefense(10); Item(ITEM_DIANCITE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -99,6 +94,25 @@ MULTI_BATTLE_TEST("Multi Battle Tests register partner's status1")
         STATUS_ICON(playerRight, STATUS1_BURN);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Forced abilities activate on switch-in (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_ALAKAZAM);
+        PLAYER(SPECIES_KADABRA) { Ability(ABILITY_INNER_FOCUS); Innates(ABILITY_QUARK_DRIVE); SpAttack(400);}
+        OPPONENT(SPECIES_ARON);
+        OPPONENT(SPECIES_ALAKAZAM) { Ability(ABILITY_INNER_FOCUS); Innates(ABILITY_ELECTRIC_SURGE); };
+    } WHEN {
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1);}
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+        MESSAGE("The Electric Terrain activated Kadabra's Quark Drive!");
+        MESSAGE("Kadabra's Sp. Atk was heightened!");
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (not HP) (Multi)")

@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Ivy Cudgel changes the move type depending on the form of Og
     PARAMETRIZE { species = SPECIES_VENUSAUR;  ogerpon = SPECIES_OGERPON_HEARTHFLAME; item = ITEM_HEARTHFLAME_MASK; }
 
     GIVEN {
-        PLAYER(ogerpon) { Items(item); }
+        PLAYER(ogerpon) { Item(item); }
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_IVY_CUDGEL); }
@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("Ivy Cudgel does not change the move type if used by Pokémon
     PARAMETRIZE { item = ITEM_HEARTHFLAME_MASK; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(item); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_BLASTOISE);
     } WHEN {
         TURN { MOVE(player, MOVE_IVY_CUDGEL); }

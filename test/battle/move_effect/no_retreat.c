@@ -59,3 +59,24 @@ SINGLE_BATTLE_TEST("No Retreat won't activate Protean if it fails due to already
         }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("No Retreat won't activate Protean if it fails due to already being used by the user (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PROTEAN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_NO_RETREAT); MOVE(opponent, MOVE_SKILL_SWAP); }
+        TURN { MOVE(player, MOVE_NO_RETREAT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NO_RETREAT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_NO_RETREAT, player);
+            ABILITY_POPUP(player, ABILITY_PROTEAN);
+        }
+    }
+}
+#endif

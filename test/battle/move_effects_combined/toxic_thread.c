@@ -163,3 +163,38 @@ SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered and target is a
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_THREAD, player);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't be lowered (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_REGICE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_CLEAR_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_THREAD); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_THREAD, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered due to Clear Body and status can't be inflicted (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_REGICE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_CLEAR_BODY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POISON_POWDER); }
+        TURN { MOVE(player, MOVE_TOXIC_THREAD); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_POWDER, player);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_THREAD, player);
+    }
+}
+#endif

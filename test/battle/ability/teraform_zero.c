@@ -100,3 +100,21 @@ DOUBLE_BATTLE_TEST("Teraform Zero shouldn't cause Neutralizing Gas to show it's 
         MESSAGE("Terapagos used Celebrate!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Teraform Zero clears weather and terrain upon activation (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL) {Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_TERAFORM_ZERO); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KYOGRE) {Ability(ABILITY_DRIZZLE); }
+        OPPONENT(SPECIES_TAPU_KOKO) {Ability(ABILITY_ELECTRIC_SURGE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_TERAFORM_ZERO);
+        MESSAGE("The rain stopped.");
+        MESSAGE("The electricity disappeared from the battlefield.");
+    }
+}
+#endif

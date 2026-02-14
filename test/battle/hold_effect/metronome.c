@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Metronome Item gradually boosts power of consecutively used 
     s16 damage[METRONOME_TURNS];
     u32 j;
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_METRONOME); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         for (j = 0; j < METRONOME_TURNS; ++j) {
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Metronome Item's boost is reset if the attacker uses a diffe
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_METRONOME); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Metronome Item's boost is reset if the move fails")
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_METRONOME); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Metronome Item counts called moves instead of the calling mo
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_METRONOME); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_METRONOME, WITH_RNG(RNG_METRONOME, MOVE_SCRATCH)); }
@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Metronome Item counts charging turn of moves for its attacki
     PARAMETRIZE { item = ITEM_METRONOME; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SOLAR_BEAM) == EFFECT_SOLAR_BEAM);
-        PLAYER(SPECIES_WOBBUFFET) { Items(item); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SOLAR_BEAM); }
@@ -135,7 +135,7 @@ SINGLE_BATTLE_TEST("Metronome Item doesn't increase damage per hit of multi-hit 
     s16 damage[3];
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FURY_ATTACK) == EFFECT_MULTI_HIT);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_METRONOME); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_METRONOME); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_FURY_ATTACK); }

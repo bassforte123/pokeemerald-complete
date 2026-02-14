@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Weakness Policy does not activate if Disguise blocks the dam
     GIVEN {
         ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Items(ITEM_WEAKNESS_POLICY); Ability(ABILITY_DISGUISE); }
+        OPPONENT(species) { Item(ITEM_WEAKNESS_POLICY); Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_METAL_CLAW); }
     } SCENE {

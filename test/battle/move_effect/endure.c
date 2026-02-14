@@ -37,7 +37,7 @@ DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due t
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { HP(1); Items(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WYNAUT) { HP(1); Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_SQUIRTLE) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

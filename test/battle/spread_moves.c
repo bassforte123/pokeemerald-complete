@@ -4,17 +4,10 @@
 DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move")
 {
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_LUM_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_COVERT_CLOAK); }
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); };
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_EJECT_BUTTON); }
-=======
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
         OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
->>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU);
     } WHEN {
@@ -66,8 +59,8 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
     GIVEN {
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RALTS);
-        OPPONENT(SPECIES_RAICHU) { Items(ITEM_CHILAN_BERRY); }
-        OPPONENT(SPECIES_SANDSLASH) { Items(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_RAICHU) { Item(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_SANDSLASH) { Item(ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
@@ -99,7 +92,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RALTS);
         OPPONENT(SPECIES_RAICHU)
-        OPPONENT(SPECIES_SANDSLASH) { Items(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_SANDSLASH) { Item(ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
@@ -239,10 +232,10 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Items(ITEM_NORMAL_GEM); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Item(ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Items(ITEM_CHILAN_BERRY); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); Items(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); Item(ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
@@ -259,10 +252,10 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Items(ITEM_NORMAL_GEM); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Item(ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_MISDREAVUS) { Speed(30); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Items(ITEM_CHILAN_BERRY); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); Items(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); Item(ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
@@ -283,7 +276,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject
         ASSUME(GetMoveCategory(MOVE_RAZOR_LEAF) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
-        OPPONENT(SPECIES_MIMIKYU) { Speed(20); Items(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_MIMIKYU) { Speed(20); Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_EISCUE) { Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
@@ -447,9 +440,9 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { HP(2); MaxHP(2); Items(ITEM_FOCUS_SASH); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(2); MaxHP(2); Items(ITEM_FOCUS_SASH); }
-        OPPONENT(SPECIES_WYNAUT) { HP(2); MaxHP(2); Items(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { HP(2); MaxHP(2); Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(2); MaxHP(2); Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { HP(2); MaxHP(2); Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_HYPER_VOICE); MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
@@ -462,6 +455,168 @@ DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
         MESSAGE("The opposing Wynaut fainted!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); };
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_PIKACHU);
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_HEAT_WAVE);
+            MOVE(playerLeft, MOVE_HYPER_VOICE);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("2 sent out Pikachu!");
+        NONE_OF {
+            ABILITY_POPUP(opponentLeft, ABILITY_EMERGENCY_EXIT);
+            MESSAGE("2 sent out Wynaut!");
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by strong winds on both targets (Traits)")
+{
+    s16 opponentLeftDmg[2];
+    s16 opponentRightDmg[2];
+
+    GIVEN {
+        PLAYER(SPECIES_GARDEVOIR);
+        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_AIR_LOCK); }
+        PLAYER(SPECIES_RALTS);
+        OPPONENT(SPECIES_ZAPDOS)
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
+        HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
+        HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
+    } THEN {
+        EXPECT_MUL_EQ(opponentLeftDmg[0], Q_4_12(0.5), opponentLeftDmg[1]);
+        EXPECT_MUL_EQ(opponentRightDmg[0], Q_4_12(0.5), opponentRightDmg[1]);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by strong winds on one of the targets (Traits)")
+{
+    s16 opponentLeftDmg[2];
+    s16 opponentRightDmg[2];
+
+    GIVEN {
+        PLAYER(SPECIES_GARDEVOIR);
+        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_AIR_LOCK); }
+        PLAYER(SPECIES_RALTS);
+        OPPONENT(SPECIES_DONPHAN)
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
+        HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
+        HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
+    } THEN {
+        EXPECT_EQ(opponentLeftDmg[1], opponentLeftDmg[0]);
+        EXPECT_MUL_EQ(opponentRightDmg[0], Q_4_12(0.5), opponentRightDmg[1]);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and Lightning Rod (left) (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_MIMIKYU);
+        OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_STATIC); Innates(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_VOLT_ABSORB); HP(1); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_LIGHTNING_ROD);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
+        ABILITY_POPUP(playerRight, ABILITY_DISGUISE);
+        ABILITY_POPUP(opponentRight, ABILITY_VOLT_ABSORB);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and Lightning Rod (right) (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_MIMIKYU);
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_VOLT_ABSORB); HP(1); }
+        OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_STATIC); Innates(ABILITY_LIGHTNING_ROD); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
+        ABILITY_POPUP(opponentLeft, ABILITY_VOLT_ABSORB);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DISCHARGE, playerLeft);
+        ABILITY_POPUP(playerRight, ABILITY_DISGUISE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Eiscue and Mimikyu (Based on vanilla games) (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_EISCUE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ICE_FACE); }
+        OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_EISCUE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ICE_FACE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_DISGUISE);
+        ABILITY_POPUP(playerRight, ABILITY_ICE_FACE);
+        ABILITY_POPUP(opponentRight, ABILITY_ICE_FACE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject Button (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_RAZOR_LEAF) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveCategory(MOVE_RAZOR_LEAF) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(40); }
+        PLAYER(SPECIES_WYNAUT) { Speed(30); }
+        OPPONENT(SPECIES_MIMIKYU) { Speed(20); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_EISCUE) { Speed(10); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ICE_FACE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_RAZOR_LEAF); SEND_OUT(opponentLeft, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAZOR_LEAF, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_DISGUISE);
+        ABILITY_POPUP(opponentRight, ABILITY_ICE_FACE);
+        MESSAGE("The opposing Mimikyu is switched out with the Eject Button!");
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move (Multi)")

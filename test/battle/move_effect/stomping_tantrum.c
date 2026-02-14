@@ -41,13 +41,8 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will deal double damage if user failed to a
     s16 damage[3];
     PASSES_RANDOMLY(25, 100, RNG_PARALYSIS);
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Items(ITEM_POTION); };
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Items(ITEM_LUM_BERRY); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_POTION); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_LUM_BERRY); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); MOVE(opponent, MOVE_THUNDER_WAVE); }
         TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TRICK); }
@@ -125,11 +120,7 @@ SINGLE_BATTLE_TEST("Stomping Tantrum will not deal double if it missed")
     s16 damage[2];
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_BRIGHTPOWDER); };
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHTPOWDER); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM); }
         TURN { MOVE(player, MOVE_STOMPING_TANTRUM, hit: FALSE); }

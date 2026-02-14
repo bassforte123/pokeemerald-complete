@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Weakness berries decrease the base power of moves by half", 
             ASSUME(GetItemHoldEffectParam(item) == type);
         }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(defender) { Items(item); }
+        OPPONENT(defender) { Item(item); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
         ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_RESIST_BERRY);
         ASSUME(GetItemHoldEffectParam(item) == type);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(defender) { Items(item); }
+        OPPONENT(defender) { Item(item); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16
             ASSUME(GetItemHoldEffectParam(item) == TYPE_NORMAL);
         }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
     } SCENE {
@@ -132,7 +132,7 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the dama
         ASSUME(GetItemHoldEffectParam(ITEM_BABIRI_BERRY) == TYPE_STEEL);
         ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_MIMIKYU) { Items(ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_MIMIKYU) { Item(ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
     } WHEN {
         TURN { MOVE(player, MOVE_METAL_CLAW); }
     } SCENE {

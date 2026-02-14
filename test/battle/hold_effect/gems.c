@@ -9,11 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Gem is consumed when it corresponds to the type of a move")
 {
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NORMAL_GEM); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
->>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBER); }
@@ -42,7 +38,7 @@ SINGLE_BATTLE_TEST("Gem is not consumed when using Struggle", s16 damage)
             ASSUME(GetItemHoldEffect(item) == HOLD_EFFECT_GEMS);
             ASSUME(GetItemSecondaryId(item) == GetMoveType(MOVE_STRUGGLE));
         }
-        PLAYER(SPECIES_WOBBUFFET) { Items(item); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STRUGGLE); }
@@ -64,11 +60,7 @@ SINGLE_BATTLE_TEST("Gem boost is only applied once")
     s16 normalHit;
 
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NORMAL_GEM); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
->>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -94,11 +86,7 @@ SINGLE_BATTLE_TEST("Gem modifier is used for all hits of Multi Hit Moves")
     s16 secondHit;
 
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_NORMAL_GEM); };
-=======
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); }
->>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -117,11 +105,7 @@ SINGLE_BATTLE_TEST("Gem modifier is used for all hits of Multi Hit Moves")
 SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed")
 {
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_DELCATTY) { Ability(ABILITY_NORMALIZE); Items(ITEM_NORMAL_GEM); };
-=======
         PLAYER(SPECIES_DELCATTY) { Ability(ABILITY_NORMALIZE); Item(ITEM_NORMAL_GEM); }
->>>>>>> expansion/1.14.3
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN {
@@ -133,6 +117,24 @@ SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT_ATTACK, player);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Gem is consumed if the move type is changed (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DELCATTY) { Ability(ABILITY_CUTE_CHARM); Innates(ABILITY_NORMALIZE); Item(ITEM_NORMAL_GEM); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_FEINT_ATTACK);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("The Normal Gem strengthened Delcatty's power!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT_ATTACK, player);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Gem is consumed when it corresponds to the type of a move (Multi)")

@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Safety Goggles block powder and spore moves")
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_ABRA) { Items(ITEM_SAFETY_GOGGLES); }
+        OPPONENT(SPECIES_ABRA) { Item(ITEM_SAFETY_GOGGLES); }
     } WHEN {
         TURN { MOVE(player, MOVE_STUN_SPORE); }
     } SCENE {
@@ -24,11 +24,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Hail")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_HAIL); }
     } SCENE {
@@ -40,11 +36,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks damage from Sandstorm")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); }
     } SCENE {
@@ -59,7 +51,7 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect")
     GIVEN {
         WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -83,6 +75,40 @@ SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect")
         }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Safety Goggles blocks Effect Spore's effect (Traits)")
+{
+    KNOWN_FAILING;
+    PASSES_RANDOMLY(100, 100, RNG_EFFECT_SPORE);
+    GIVEN {
+        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_5); // Setting it to Gen 6 causes it to pass
+        ASSUME(MoveMakesContact(MOVE_SCRATCH));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
+        OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_TECHNICIAN); Innates(ABILITY_EFFECT_SPORE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
+
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+            MESSAGE("Wobbuffet was poisoned by the opposing Breloom's Effect Spore!");
+            STATUS_ICON(player, poison: TRUE);
+
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
+            MESSAGE("The opposing Breloom's Effect Spore paralyzed Wobbuffet, so it may be unable to move!");
+            STATUS_ICON(player, paralysis: TRUE);
+
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
+            MESSAGE("The opposing Breloom's Effect Spore made Wobbuffet sleep!");
+            STATUS_ICON(player, sleep: TRUE);
+        }
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Safety Goggles block powder and spore moves (Multi)")

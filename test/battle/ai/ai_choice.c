@@ -32,7 +32,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon switch out after using a status move onc
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_RHYDON)
-        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Items(heldItem); Ability(ability); }
+        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Item(heldItem); Ability(ability); }
         OPPONENT(SPECIES_SWAMPERT) { Moves(MOVE_WATERFALL); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_YAWN); }
@@ -51,7 +51,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon only consider their own status moves whe
     {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_RISKY | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_ZIGZAGOON) { Speed(4); Moves(MOVE_TAIL_WHIP, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_ZIGZAGOON) { Speed(5); Moves(MOVE_SCRATCH); Items(ITEM_CHOICE_BAND); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(5); Moves(MOVE_SCRATCH); Item(ITEM_CHOICE_BAND); }
         OPPONENT(SPECIES_ZIGZAGOON) { Speed(5); Moves(MOVE_SCRATCH); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_TAIL_WHIP); }
@@ -81,7 +81,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use stat boosting moves")
         ASSUME(GetMoveTarget(MOVE_SWORDS_DANCE) == MOVE_TARGET_USER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_RHYDON)
-        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_SWORDS_DANCE, MOVE_SCRATCH); Items(heldItem); Ability(ability); }
+        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_SWORDS_DANCE, MOVE_SCRATCH); Item(heldItem); Ability(ability); }
         OPPONENT(SPECIES_SWAMPERT) { Moves(MOVE_WATERFALL); }
     } WHEN {
         if (ability == ABILITY_KLUTZ) { // Klutz ignores item
@@ -116,7 +116,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they are the on
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_RHYDON)
-        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Items(heldItem); Ability(ability); }
+        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Item(heldItem); Ability(ability); }
         OPPONENT(SPECIES_SWAMPERT) { HP(isAlive); Moves(MOVE_WATERFALL); }
     } WHEN {
         if (isAlive == 1 || ability == ABILITY_KLUTZ) {
@@ -151,7 +151,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they don't have
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_RHYDON)
-        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Items(heldItem); Ability(ability); }
+        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Item(heldItem); Ability(ability); }
         OPPONENT(species) { Moves(move); }
     } WHEN {
         if (species == SPECIES_SWAMPERT || ability == ABILITY_KLUTZ) {
@@ -186,7 +186,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon won't use status move if they are trappe
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(species) { Ability(playerAbility); }
-        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Items(heldItem); Ability(aiAbility); }
+        OPPONENT(SPECIES_LOPUNNY) { Moves(MOVE_YAWN, MOVE_SCRATCH); Item(heldItem); Ability(aiAbility); }
         OPPONENT(SPECIES_SWAMPERT) { Moves(MOVE_WATERFALL); }
     } WHEN {
         if (playerAbility != ABILITY_ARENA_TRAP || aiAbility == ABILITY_KLUTZ) {
@@ -207,8 +207,8 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will switch if locked into a move the pl
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_GASTLY) { Level(1); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); Moves(MOVE_SURF); }
-        OPPONENT(SPECIES_ZIGZAGOON) { Items(ITEM_CHOICE_BAND); Moves(MOVE_SURF, MOVE_BODY_SLAM); }
-        OPPONENT(SPECIES_ZIGZAGOON) { Items(ITEM_CHOICE_BAND); Moves(MOVE_SURF, MOVE_BODY_SLAM); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Item(ITEM_CHOICE_BAND); Moves(MOVE_SURF, MOVE_BODY_SLAM); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Item(ITEM_CHOICE_BAND); Moves(MOVE_SURF, MOVE_BODY_SLAM); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_SURF); SEND_OUT(player, 1); }
         TURN { MOVE(player, MOVE_SURF); EXPECT_SWITCH(opponent, 1); }
@@ -224,8 +224,8 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
         ASSUME(GetMoveType(MOVE_BODY_SLAM) == TYPE_NORMAL);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_GASTLY) { Level(1); Moves(MOVE_CELEBRATE); }
-        PLAYER(SPECIES_ZIGZAGOON) { Items(ITEM_CHOICE_BAND); Moves(MOVE_CLOSE_COMBAT); }
-        OPPONENT(SPECIES_ZIGZAGOON) { Items(ITEM_CHOICE_BAND); Moves(MOVE_SURF, MOVE_CLOSE_COMBAT); }
+        PLAYER(SPECIES_ZIGZAGOON) { Item(ITEM_CHOICE_BAND); Moves(MOVE_CLOSE_COMBAT); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Item(ITEM_CHOICE_BAND); Moves(MOVE_SURF, MOVE_CLOSE_COMBAT); }
         OPPONENT(SPECIES_BRONZONG) { Moves(MOVE_CLOSE_COMBAT); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_SURF); SEND_OUT(player, 1); }
@@ -244,7 +244,7 @@ AI_SINGLE_BATTLE_TEST("Choiced Pokémon will only see choiced moves when conside
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_WOOPER) { Ability(ABILITY_WATER_ABSORB); Moves(MOVE_CELEBRATE); }
         PLAYER(SPECIES_DWEBBLE) { Moves(MOVE_WATER_GUN); }
-        OPPONENT(SPECIES_MUDKIP) { Items(ITEM_CHOICE_SCARF); Moves(MOVE_SCRATCH, MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_MUDKIP) { Item(ITEM_CHOICE_SCARF); Moves(MOVE_SCRATCH, MOVE_WATER_GUN); }
         OPPONENT(SPECIES_WOOPER) { Ability(ABILITY_WATER_ABSORB); Moves(MOVE_SCRATCH); }
     } WHEN {
         TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_SCRATCH); }

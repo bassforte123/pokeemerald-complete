@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_HYPER_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Thief and Covet steal player's held item if opponent is a tr
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         ASSUME(B_TRAINERS_KNOCK_OFF_ITEMS == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_HYPER_POTION); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -55,7 +55,7 @@ WILD_BATTLE_TEST("Thief and Covet don't steal player's held item if opponent is 
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
         ASSUME(B_TRAINERS_KNOCK_OFF_ITEMS == TRUE);
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_HYPER_POTION); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, move); }
@@ -75,8 +75,8 @@ SINGLE_BATTLE_TEST("Thief and Covet don't steal target's held item if user is ho
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POTION); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_HYPER_POTION); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -115,7 +115,7 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
     GIVEN {
         WITH_CONFIG(CONFIG_STEAL_WILD_ITEMS, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_HYPER_POTION); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -134,13 +134,8 @@ SINGLE_BATTLE_TEST("Thief and Covet can't steal target's held item if user faint
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); };
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ROCKY_HELMET); }
-=======
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -161,7 +156,7 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on HP thresholds are 
 
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(200); HP(101); Items(ITEM_ORAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(200); HP(101); Item(ITEM_ORAN_BERRY); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -180,7 +175,7 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on a Status activate 
 
     GIVEN {
         PLAYER(SPECIES_TOXICROAK) { Ability(ABILITY_POISON_TOUCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LUM_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -190,6 +185,27 @@ SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on a Status activate 
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Thief and Covet: Berries that activate on a Status activate before the item can be stolen (Traits)")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THIEF; }
+    PARAMETRIZE { move = MOVE_COVET; }
+
+    GIVEN {
+        PLAYER(SPECIES_TOXICROAK) { Ability(ABILITY_ANTICIPATION); Innates(ABILITY_POISON_TOUCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ABILITY_POPUP(player, ABILITY_POISON_TOUCH);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_STEAL, opponent);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Thief and Covet steal target's held item (Multi)")

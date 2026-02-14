@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Zacian changes into its Crowned Form when holding the Rusted
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_RUSTED_SWORD; }
     GIVEN {
-        PLAYER(SPECIES_ZACIAN_HERO) { Items(item); }
+        PLAYER(SPECIES_ZACIAN_HERO) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Zacian changes into its Crowned Form when holding the Rusted
 SINGLE_BATTLE_TEST("Zacian's Iron Head becomes Behemoth Blade upon form change")
 {
     GIVEN {
-        PLAYER(SPECIES_ZACIAN_HERO) { Items(ITEM_RUSTED_SWORD); Moves(MOVE_IRON_HEAD, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_ZACIAN_HERO) { Item(ITEM_RUSTED_SWORD); Moves(MOVE_IRON_HEAD, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Zamazenta changes into its Crowned Form when holding the Rus
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_RUSTED_SHIELD; }
     GIVEN {
-        PLAYER(SPECIES_ZAMAZENTA_HERO) { Items(item); }
+        PLAYER(SPECIES_ZAMAZENTA_HERO) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Zamazenta changes into its Crowned Form when holding the Rus
 SINGLE_BATTLE_TEST("Zamazenta's Iron Head becomes Behemoth Bash upon form change")
 {
     GIVEN {
-        PLAYER(SPECIES_ZAMAZENTA_HERO) { Items(ITEM_RUSTED_SHIELD); Moves(MOVE_IRON_HEAD, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_ZAMAZENTA_HERO) { Item(ITEM_RUSTED_SHIELD); Moves(MOVE_IRON_HEAD, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); }

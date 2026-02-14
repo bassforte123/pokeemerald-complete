@@ -15,7 +15,7 @@ SINGLE_BATTLE_TEST("Lucky Punch increases critical hit ratio by 2 stages for Cha
         ASSUME(gItemsInfo[ITEM_LUCKY_PUNCH].holdEffect == HOLD_EFFECT_LUCKY_PUNCH);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_CHANSEY) == 50);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_CHANSEY) { Items(ITEM_LUCKY_PUNCH); }
+        OPPONENT(SPECIES_CHANSEY) { Item(ITEM_LUCKY_PUNCH); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {

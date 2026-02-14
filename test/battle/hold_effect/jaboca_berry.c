@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Jaboca Berry causes the attacker to lose 1/8 of its max HP i
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_JABOCA_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_JABOCA_BERRY); }
     } WHEN {
         TURN { MOVE(player, move); }
     } SCENE {
@@ -45,7 +45,7 @@ SINGLE_BATTLE_TEST("Jaboca Berry triggers before Bug Bite can steal it")
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_BUG_BITE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_JABOCA_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_JABOCA_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_BUG_BITE); }
     } SCENE {
@@ -63,7 +63,7 @@ SINGLE_BATTLE_TEST("Jaboca Berry is triggered even if berry user dies")
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SWIFT) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Items(ITEM_JABOCA_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); Item(ITEM_JABOCA_BERRY); }
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE); }
     } SCENE {

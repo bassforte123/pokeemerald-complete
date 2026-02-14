@@ -37,7 +37,7 @@ SINGLE_BATTLE_TEST("OHKO moves can can be endured by Focus Sash")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_FISSURE); }
     } SCENE {
@@ -86,6 +86,36 @@ SINGLE_BATTLE_TEST("OHKO moves fail if target protects")
 TO_DO_BATTLE_TEST("OHKO moves faints the target, skipping regular damage calculations")
 TO_DO_BATTLE_TEST("OHKO moves's accuracy increases by 1% for every level the user has over the target")
 TO_DO_BATTLE_TEST("OHKO moves's ignores non-stage accuracy modifiers") // Gravity, Wide Lens, Compound Eyes
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("OHKO moves can hit semi-invulnerable mons when the user has No-Guard (Traits)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLY); }
+        TURN { MOVE(player, MOVE_FISSURE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+        HP_BAR(opponent, hp: 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("OHKO moves can can be endured by Sturdy (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GEODUDE) { Ability(ABILITY_ROCK_HEAD); Innates(ABILITY_STURDY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISSURE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+        ABILITY_POPUP(opponent, ABILITY_STURDY);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("OHKO moves can can be endured by Focus Sash (Multi)")

@@ -15,11 +15,7 @@ SINGLE_BATTLE_TEST("Corrosive Gas destroys the target's item or fails if the tar
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) {Items(item); }
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(item); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_CORROSIVE_GAS); }
     } SCENE {
@@ -40,11 +36,7 @@ SINGLE_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon with the
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_MUK) {Items(ITEM_POISON_BARB); Ability(ABILITY_STICKY_HOLD); }
-=======
         OPPONENT(SPECIES_MUK) { Item(ITEM_POISON_BARB); Ability(ABILITY_STICKY_HOLD); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_CORROSIVE_GAS); }
     } SCENE {
@@ -62,13 +54,8 @@ SINGLE_BATTLE_TEST("Items lost to Corrosive Gas cannot be restored by Recycle")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) {Speed(15); }
-        OPPONENT(SPECIES_WOBBUFFET) {Items(ITEM_ORAN_BERRY); Speed(10); }
-=======
         PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); Speed(10); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(player, MOVE_CORROSIVE_GAS); MOVE(opponent, MOVE_RECYCLE); }
     } SCENE {
@@ -99,17 +86,10 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
     }
 
     GIVEN {
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) {Items(itemPlayerLeft);}
-        PLAYER(SPECIES_WYNAUT) {Items(ITEM_SITRUS_BERRY);}
-        OPPONENT(SPECIES_ABRA) {Items(itemOpponentLeft);}
-        OPPONENT(SPECIES_KADABRA) {Items(itemOpponentRight);}
-=======
         PLAYER(SPECIES_WOBBUFFET) { Item(itemPlayerLeft); }
         PLAYER(SPECIES_WYNAUT) { Item(ITEM_SITRUS_BERRY); }
         OPPONENT(SPECIES_ABRA) { Item(itemOpponentLeft); }
         OPPONENT(SPECIES_KADABRA) { Item(itemOpponentRight); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(playerRight, MOVE_CORROSIVE_GAS); }
     } SCENE {
@@ -140,6 +120,26 @@ DOUBLE_BATTLE_TEST("Corrosive Gas destroys foes and ally's items if they have on
 
 TO_DO_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon behind a Substitute");
 TO_DO_BATTLE_TEST("Corrosive Gas doesn't destroy items if they change the Pokémon's form"); // Giratina, Genesect, Silvally, Zacian, Zamazenta. Bulbapedia hasn't confirmed Arceus or Ogerpon, but it's a safe assumption that they will also fail.
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Corrosive Gas doesn't destroy the item of a Pokemon with the Sticky Hold ability (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MUK) {Item(ITEM_POISON_BARB); Ability(ABILITY_LIQUID_OOZE); Innates(ABILITY_STICKY_HOLD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CORROSIVE_GAS); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Corrosive Gas!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CORROSIVE_GAS, player);
+        NOT MESSAGE("Wobbuffet corroded the opposing Wobbuffet's Potion!");
+        ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
+        MESSAGE("The opposing Muk's Sticky Hold made Corrosive Gas ineffective!");
+    } THEN {
+        EXPECT_EQ(opponent->items[0], ITEM_POISON_BARB);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Corrosive Gas destroys the target's item or fails if the target has no item (Multi)")

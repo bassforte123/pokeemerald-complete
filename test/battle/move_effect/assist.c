@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Assisted move triggers correct weakness berry")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ASSIST, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SURF, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
-        OPPONENT(SPECIES_ARON) { Items(item); }
+        OPPONENT(SPECIES_ARON) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_ASSIST); }
     } SCENE {

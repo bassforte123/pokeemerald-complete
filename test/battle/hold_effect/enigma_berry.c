@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Enigma Berry recovers 25% of HP if hit by super effective move")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { MaxHP(100); HP(2); Items(ITEM_ENIGMA_BERRY); }
+        PLAYER(SPECIES_WYNAUT) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ENDURE); MOVE(opponent, MOVE_BITE); }
@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Enigma Berry recovers 25% of HP if hit by super effective mo
 SINGLE_BATTLE_TEST("Enigma Berry does nothing if not hit by super effective move")
 {
     GIVEN {
-        PLAYER(SPECIES_MIGHTYENA) { MaxHP(100); HP(2); Items(ITEM_ENIGMA_BERRY); }
+        PLAYER(SPECIES_MIGHTYENA) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ENDURE); MOVE(opponent, MOVE_BITE); }
@@ -43,7 +43,7 @@ SINGLE_BATTLE_TEST("Enigma Berry does nothing if not hit by super effective move
 SINGLE_BATTLE_TEST("Enigma Berry does nothing if Heal Block applies")
 {
     GIVEN {
-        PLAYER(SPECIES_WYNAUT) { MaxHP(100); HP(2); Items(ITEM_ENIGMA_BERRY); }
+        PLAYER(SPECIES_WYNAUT) { MaxHP(100); HP(2); Item(ITEM_ENIGMA_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_HEAL_BLOCK); }
@@ -65,7 +65,7 @@ DOUBLE_BATTLE_TEST("Enigma Berry doesn't trigger if partner was hit")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { Items(ITEM_ENIGMA_BERRY); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_ENIGMA_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
     } SCENE {

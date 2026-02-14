@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Venusaur can Mega Evolve holding Venusaurite")
 {
     GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { Items(ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -20,9 +20,9 @@ SINGLE_BATTLE_TEST("Venusaur can Mega Evolve holding Venusaurite")
 DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - opponent faster")
 {
     GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { Items(ITEM_VENUSAURITE); Speed(1); }
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE); Speed(3); }
+        OPPONENT(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); Speed(3); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -39,9 +39,9 @@ DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - opponent fas
 DOUBLE_BATTLE_TEST("Mega Evolution's order is determined by Speed - player faster")
 {
     GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { Items(ITEM_VENUSAURITE); Speed(5); }
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); Speed(5); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
-        OPPONENT(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE); Speed(2); }
+        OPPONENT(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -75,13 +75,8 @@ SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_6);
-<<<<<<< HEAD
-        PLAYER(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE); }
-        OPPONENT(SPECIES_WOBBUFFET) {}
-=======
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET);
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -96,13 +91,8 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
 {
     GIVEN {
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
-<<<<<<< HEAD
-        PLAYER(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE);}
-        OPPONENT(SPECIES_WOBBUFFET) {}
-=======
         PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
         OPPONENT(SPECIES_WOBBUFFET);
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -119,7 +109,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
         WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
         ASSUME(GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 0) != ABILITY_STALL
             && GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 1) != ABILITY_STALL);
-        PLAYER(SPECIES_SABLEYE) { Items(ITEM_SABLENITE); Ability(ABILITY_STALL); Speed(105); }
+        PLAYER(SPECIES_SABLEYE) { Item(ITEM_SABLENITE); Ability(ABILITY_STALL); Speed(105); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(44); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -136,7 +126,7 @@ DOUBLE_BATTLE_TEST("Mega Evolution happens after switching, but before Focus Pun
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_VENUSAUR) { Items(ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -163,7 +153,7 @@ SINGLE_BATTLE_TEST("Regular Mega Evolution and Fervent Wish Mega Evolution can h
 {
     GIVEN {
         PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); Speed(3); }
-        OPPONENT(SPECIES_GARDEVOIR) { Items(ITEM_GARDEVOIRITE); Speed(2); }
+        OPPONENT(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); Speed(2); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -188,7 +178,7 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
         ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 1) != ABILITY_ROUGH_SKIN);
         ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 2) != ABILITY_ROUGH_SKIN);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); Items(ITEM_GARCHOMPITE); HP(1); }
+        OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); Item(ITEM_GARCHOMPITE); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_CRUNCH); MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -203,7 +193,68 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
     }
 }
 
-<<<<<<< HEAD
+SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_VENUSAUR);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon battle end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } THEN {
+        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_RAYQUAZA);
+    }
+}
+
+SINGLE_BATTLE_TEST("Venusaur returns its base Form upon fainting end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { HP(1); Item(ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_VENUSAUR);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon fainting end after Mega Evolving")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { HP(1); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
+            MOVE(opponent, MOVE_SCRATCH);
+            SEND_OUT(player, 1);
+        }
+        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
+        TURN { SWITCH(player, 0); }
+    } THEN {
+        EXPECT_EQ(player->species, SPECIES_RAYQUAZA);
+    }
+}
+
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Venusaur can Mega Evolve holding Venusaurite (Multi)")
 {
@@ -380,12 +431,11 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting 
         }
     }
 }
-#endif
-=======
-SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Evolving")
+
+SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Evolving (Multi)")
 {
     GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_VENUSAUR) { Items(ITEM_ORAN_BERRY, ITEM_VENUSAURITE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
@@ -394,22 +444,10 @@ SINGLE_BATTLE_TEST("Venusaur returns its base Form upon battle end after Mega Ev
     }
 }
 
-SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon battle end after Mega Evolving")
+SINGLE_BATTLE_TEST("Venusaur returns its base Form upon fainting end after Mega Evolving (Multi)")
 {
     GIVEN {
-        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
-    } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_RAYQUAZA);
-    }
-}
-
-SINGLE_BATTLE_TEST("Venusaur returns its base Form upon fainting end after Mega Evolving")
-{
-    GIVEN {
-        PLAYER(SPECIES_VENUSAUR) { HP(1); Item(ITEM_VENUSAURITE); }
+        PLAYER(SPECIES_VENUSAUR) { HP(1); Items(ITEM_GREAT_BALL, ITEM_VENUSAURITE); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -425,22 +463,4 @@ SINGLE_BATTLE_TEST("Venusaur returns its base Form upon fainting end after Mega 
     }
 }
 
-SINGLE_BATTLE_TEST("Rayquaza returns its base Form upon fainting end after Mega Evolving")
-{
-    GIVEN {
-        PLAYER(SPECIES_RAYQUAZA) { HP(1); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN {
-            MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
-            MOVE(opponent, MOVE_SCRATCH);
-            SEND_OUT(player, 1);
-        }
-        TURN { USE_ITEM(player, ITEM_REVIVE, 0); }
-        TURN { SWITCH(player, 0); }
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_RAYQUAZA);
-    }
-}
->>>>>>> expansion/1.14.3
+#endif

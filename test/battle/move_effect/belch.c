@@ -16,7 +16,7 @@ AI_SINGLE_BATTLE_TEST("AI: Belch has nonzero score after eating a berry")
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_BAYLEEF) { Level(18); Moves(MOVE_MUD_SHOT, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_PIKACHU) { Level(15); Items(ITEM_SHUCA_BERRY); Moves(MOVE_BELCH, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_PIKACHU) { Level(15); Item(ITEM_SHUCA_BERRY); Moves(MOVE_BELCH, MOVE_SCRATCH); }
     } WHEN {
         TURN { MOVE(player, MOVE_MUD_SHOT); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_BELCH); }
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Belch cannot be used if the user has not eaten a berry")
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_ORAN_BERRY; }
     GIVEN {
-        PLAYER(SPECIES_SKWOVET) { Items(item); }
+        PLAYER(SPECIES_SKWOVET) { Item(item); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         if (item == ITEM_NONE)
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("Belch can still be used after switching out")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
-        PLAYER(SPECIES_GREEDENT) { Items(ITEM_ORAN_BERRY); }
+        PLAYER(SPECIES_GREEDENT) { Item(ITEM_ORAN_BERRY); }
         PLAYER(SPECIES_SKWOVET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Belch can still be used after fainting")
         ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
         ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
         ASSUME(GetMoveEffect(MOVE_REVIVAL_BLESSING) == EFFECT_REVIVAL_BLESSING);
-        PLAYER(SPECIES_GREEDENT) { Items(ITEM_ORAN_BERRY); }
+        PLAYER(SPECIES_GREEDENT) { Item(ITEM_ORAN_BERRY); }
         PLAYER(SPECIES_SKWOVET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -101,7 +101,7 @@ SINGLE_BATTLE_TEST("Belch can still be used after restoring the consumed berry")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
         ASSUME(GetMoveEffect(MOVE_RECYCLE) == EFFECT_RECYCLE);
-        PLAYER(SPECIES_GREEDENT) { Items(ITEM_ORAN_BERRY); }
+        PLAYER(SPECIES_GREEDENT) { Item(ITEM_ORAN_BERRY); }
         PLAYER(SPECIES_SKWOVET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -156,3 +156,50 @@ SINGLE_BATTLE_TEST("Chloroblast is not affected by Reckless", s16 damage)
         EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Chloroblast hp loss is prevented by Magic Guard (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_CLEFAIRY) { Ability(ABILITY_FRIEND_GUARD); Innates(ABILITY_MAGIC_GUARD); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CHLOROBLAST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Chloroblast does not cause recoil damage if the user has Rock Head (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_AERODACTYL) { Ability(ABILITY_PRESSURE); Innates(ABILITY_ROCK_HEAD); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(400); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CHLOROBLAST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
+        HP_BAR(opponent);
+        NOT HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Chloroblast does not cause the user to lose HP even if it is absorbed by Sap Sipper (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_CHLOROBLAST) == TYPE_GRASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOGOAT) { Ability(ABILITY_GRASS_PELT); Innates(ABILITY_SAP_SIPPER); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CHLOROBLAST); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_SAP_SIPPER);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CHLOROBLAST, player);
+            HP_BAR(player);
+        }
+    }
+}
+#endif

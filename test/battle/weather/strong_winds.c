@@ -103,7 +103,7 @@ SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flyi
         ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL);
         ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_THUNDER_SHOCK); }
-        OPPONENT(SPECIES_PIDGEY) { Items(ITEM_WEAKNESS_POLICY); }
+        OPPONENT(SPECIES_PIDGEY) { Item(ITEM_WEAKNESS_POLICY); }
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDER_SHOCK); }
     } SCENE {
@@ -221,7 +221,7 @@ SINGLE_BATTLE_TEST("Strong winds can be replaced by Desolate Land")
     GIVEN {
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_GROUDON) { Items(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Strong winds can be replaced by Primordial Sea")
     GIVEN {
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_KYOGRE) { Items(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
     } WHEN {
         TURN { SWITCH(opponent, 1); }
     } SCENE {

@@ -103,3 +103,36 @@ DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil")
 }
 
 TO_DO_BATTLE_TEST("TODO: Write Rest (Move Effect) test titles")
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rest fails if the user is protected by Shields Down (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_MINIOR_METEOR) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_SHIELDS_DOWN); HP(299); MaxHP(300); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_REST); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
+    } THEN {
+        EXPECT(!(player->status1 & STATUS1_SLEEP));
+    }
+}
+
+DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil (Traits)")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_CHIKORITA, 1) == TYPE_GRASS);
+        PLAYER(SPECIES_CHIKORITA) { HP(1); }
+        PLAYER(SPECIES_FLORGES) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_FLOWER_VEIL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_REST); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, playerLeft);
+    } THEN {
+        EXPECT(playerLeft->status1 & STATUS1_SLEEP);
+    }
+}
+#endif

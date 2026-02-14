@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Ceaseless Edge fails to set up hazards if user faints")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
     } WHEN {
         TURN { MOVE(player, MOVE_CEASELESS_EDGE); SEND_OUT(player, 1); }
     } SCENE {

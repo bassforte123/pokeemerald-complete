@@ -51,3 +51,19 @@ SINGLE_BATTLE_TEST("Photon Geyser ignores ignorable Abilities like Battle Armor"
         MESSAGE("A critical hit!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Photon Geyser ignores ignorable Abilities like Battle Armor (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_LAPRAS) { Ability(ABILITY_WATER_ABSORB); Innates(ABILITY_SHELL_ARMOR); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PHOTON_GEYSER, criticalHit: TRUE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PHOTON_GEYSER, player, );
+        HP_BAR(opponent);
+        MESSAGE("A critical hit!");
+    }
+}
+#endif

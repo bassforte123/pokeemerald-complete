@@ -139,3 +139,21 @@ DOUBLE_BATTLE_TEST("Bad Dreams faints both sleeping Pokemon on opponent side")
         MESSAGE("The opposing Wobbuffet fainted!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Bad Dreams causes Pokémon with Comatose to lose 1/8 of HP (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DARKRAI);
+        OPPONENT(SPECIES_KOMALA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_COMATOSE); }
+    } WHEN {
+        TURN {;}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
+        MESSAGE("The opposing Komala is tormented!");
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP - opponent->maxHP / 8);
+    }
+}
+#endif

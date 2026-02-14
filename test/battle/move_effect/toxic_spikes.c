@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon")
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Items(item); }
+        OPPONENT(species) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, move1); }
         TURN { MOVE(opponent, move2); }
@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes are removed by grounded Poison-type Pokémon on
         ASSUME(GetSpeciesType(SPECIES_ZUBAT, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Items(item); }
+        OPPONENT(species) { Item(item); }
     } WHEN {
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, move); }
         TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
@@ -208,17 +208,10 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in after Primal Rever
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO); // Faints the user.
-<<<<<<< HEAD
-        PLAYER(SPECIES_WOBBUFFET) {Speed(5); }
-        PLAYER(SPECIES_GROUDON) { Items(ITEM_RED_ORB); Speed(1); }
-        PLAYER(SPECIES_WYNAUT) {Speed(5); }
-        OPPONENT(SPECIES_WOBBUFFET) {Speed(15); }
-=======
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
         PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Speed(1); }
         PLAYER(SPECIES_WYNAUT) { Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
         TURN { SWITCH(player, 1); }
@@ -298,6 +291,55 @@ SINGLE_BATTLE_TEST("Toxic Spikes: Only two layers can be set up")
         EXPECT_EQ(toxicSpikesAmount, 2);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon (Traits)")
+{
+    u32 species = SPECIES_WOBBUFFET;
+    u32 item = ITEM_NONE;
+    u32 move1 = MOVE_CELEBRATE;
+    u32 move2 = MOVE_CELEBRATE;
+    bool32 airborne;
+
+    ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
+    PARAMETRIZE { species = SPECIES_PIDGEY; airborne = TRUE; }
+    PARAMETRIZE { species = SPECIES_PIDGEY; item = ITEM_IRON_BALL; airborne = FALSE; }
+    PARAMETRIZE { species = SPECIES_PIDGEY; move1 = MOVE_GRAVITY; airborne = FALSE; }
+    PARAMETRIZE { species = SPECIES_PIDGEY; move1 = MOVE_INGRAIN; airborne = FALSE; }
+
+    ASSUME(GetSpeciesAbility(SPECIES_UNOWN, 0) == ABILITY_LEVITATE);
+    PARAMETRIZE { species = SPECIES_UNOWN; airborne = TRUE; }
+    PARAMETRIZE { species = SPECIES_UNOWN; item = ITEM_IRON_BALL; airborne = FALSE; }
+    PARAMETRIZE { species = SPECIES_UNOWN; move1 = MOVE_GRAVITY; airborne = FALSE; }
+    PARAMETRIZE { species = SPECIES_UNOWN; move1 = MOVE_INGRAIN; airborne = FALSE; }
+
+    PARAMETRIZE { move1 = MOVE_MAGNET_RISE; airborne = TRUE; }
+    PARAMETRIZE { move1 = MOVE_MAGNET_RISE; item = ITEM_IRON_BALL; airborne = FALSE; }
+    PARAMETRIZE { move1 = MOVE_MAGNET_RISE; move2 = MOVE_GRAVITY; airborne = FALSE; }
+    // Magnet Rise fails under Gravity.
+    // Magnet Rise fails under Ingrain and vice-versa.
+
+    PARAMETRIZE { item = ITEM_AIR_BALLOON; airborne = TRUE; }
+    PARAMETRIZE { item = ITEM_AIR_BALLOON; move1 = MOVE_GRAVITY; airborne = FALSE; }
+    PARAMETRIZE { item = ITEM_AIR_BALLOON; move1 = MOVE_INGRAIN; airborne = FALSE; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); Item(item); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, move1); }
+        TURN { MOVE(opponent, move2); }
+        TURN { MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
+    } SCENE {
+        if (airborne) {
+            NOT STATUS_ICON(opponent, poison: TRUE);
+        } else {
+            STATUS_ICON(opponent, poison: TRUE);
+        }
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon (Multi)")

@@ -58,3 +58,43 @@ SINGLE_BATTLE_TEST("Embody Aspect activates when it's no longer effected by Neut
         MESSAGE("The opposing Ogerpon's Embody Aspect raised its Speed!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Embody Aspect raises a stat depending on the users form by one stage (Traits)")
+{
+    u16 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_OGERPON_TEAL_TERA; ability = ABILITY_EMBODY_ASPECT_TEAL_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_HEARTHFLAME_TERA; ability = ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_WELLSPRING_TERA; ability = ABILITY_EMBODY_ASPECT_WELLSPRING_MASK; }
+    PARAMETRIZE { species = SPECIES_OGERPON_CORNERSTONE_TERA; ability = ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+    } WHEN {
+        TURN { }
+    } SCENE {
+        ABILITY_POPUP(opponent, ability);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        if (ability == ABILITY_EMBODY_ASPECT_TEAL_MASK)
+            MESSAGE("The opposing Ogerpon's Embody Aspect raised its Speed!");
+        else if (ability == ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK)
+            MESSAGE("The opposing Ogerpon's Embody Aspect raised its Attack!");
+        else if (ability == ABILITY_EMBODY_ASPECT_WELLSPRING_MASK)
+            MESSAGE("The opposing Ogerpon's Embody Aspect raised its Sp. Def!");
+        else if (ability == ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK)
+            MESSAGE("The opposing Ogerpon's Embody Aspect raised its Defense!");
+    } THEN {
+        if (ability == ABILITY_EMBODY_ASPECT_TEAL_MASK)
+            EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
+        else if (ability == ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK)
+            EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        else if (ability == ABILITY_EMBODY_ASPECT_WELLSPRING_MASK)
+            EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 1);
+        else if (ability == ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK)
+            EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
+    }
+}
+#endif

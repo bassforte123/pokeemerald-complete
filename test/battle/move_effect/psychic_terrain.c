@@ -210,3 +210,163 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); MOVE(opponent, MOVE_QUICK_ATTACK); }
+    } SCENE {
+        MESSAGE("Claydol used Psychic Terrain!");
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
+        NOT { HP_BAR(opponent); }
+        MESSAGE("The opposing Wobbuffet used Quick Attack!");
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't blocks priority moves that target the user (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_RECOVER); }
+    } SCENE {
+        MESSAGE("Sableye used Psychic Terrain!");
+        MESSAGE("Sableye used Recover!");
+        HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all battlers (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_HAZE); }
+    } SCENE {
+        MESSAGE("Sableye used Psychic Terrain!");
+        MESSAGE("Sableye used Haze!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target all opponents (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_SPIKES); }
+    } SCENE {
+        MESSAGE("Sableye used Psychic Terrain!");
+        MESSAGE("Sableye used Spikes!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target allies (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(playerLeft, MOVE_HEAL_PULSE, target: playerRight); }
+    } SCENE {
+        MESSAGE("Sableye used Psychic Terrain!");
+        MESSAGE("Sableye used Heal Pulse!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        MESSAGE("Sableye used Psychic Terrain!");
+        MESSAGE("Sableye used Sunny Day!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-invulnerable targets (Traits)")
+{
+    u32 move = 0, shouldWork = 0;
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; shouldWork = FALSE;}
+    PARAMETRIZE { move = MOVE_FLY; shouldWork = TRUE;}
+    GIVEN {
+        WITH_CONFIG(CONFIG_TOXIC_NEVER_MISS, GEN_6);
+        ASSUME(IsSpeciesOfType(SPECIES_SHROODLE, TYPE_POISON));
+        PLAYER(SPECIES_SHROODLE) { Ability(ABILITY_UNBURDEN); Innates(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); MOVE(opponent,move);}
+        TURN { MOVE(player, MOVE_TOXIC); SKIP_TURN(opponent);}
+    } SCENE {
+        if (shouldWork)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        }
+        else
+        {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+                ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            }
+        }
+    } THEN {
+        if (shouldWork)
+            EXPECT(opponent->status1 & STATUS1_TOXIC_POISON);
+        else
+            EXPECT(!(opponent->status1 & STATUS1_TOXIC_POISON));
+    }
+}
+
+DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Left (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+        PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PSYCHIC_SURGE); }
+        OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_COTTON_SPORE); }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_PSYCHIC_SURGE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Right (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PSYCHIC_SURGE); }
+        PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_COTTON_SPORE); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_PSYCHIC_SURGE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    }
+}
+#endif

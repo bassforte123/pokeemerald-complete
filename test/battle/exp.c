@@ -56,7 +56,7 @@ WILD_BATTLE_TEST("Lucky Egg boosts gained exp points by 50%", s32 exp)
     PARAMETRIZE { item = ITEM_NONE; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(20); Items(item); }
+        PLAYER(SPECIES_WOBBUFFET) { Level(20); Item(item); }
         OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -103,7 +103,7 @@ WILD_BATTLE_TEST("Large exp gains are supported", s32 exp) // #1455
     PARAMETRIZE { level = MAX_LEVEL; }
 
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Level(1); Items(ITEM_LUCKY_EGG); OTName("Test"); } // OT Name is different so it gets more exp as a traded mon
+        PLAYER(SPECIES_WOBBUFFET) { Level(1); Item(ITEM_LUCKY_EGG); OTName("Test"); } // OT Name is different so it gets more exp as a traded mon
         OPPONENT(SPECIES_BLISSEY) { Level(level); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -131,7 +131,7 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { Level(40); Items(item); }
+        PLAYER(SPECIES_WYNAUT) { Level(40); Item(item); }
         OPPONENT(SPECIES_CATERPIE) { Level(10); HP(1); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
@@ -147,7 +147,6 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
             EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_EXP), gExperienceTables[gSpeciesInfo[SPECIES_WYNAUT].growthRate][40]);
     }
 }
-
 #endif // I_EXP_SHARE_ITEM
 
 #if MAX_MON_ITEMS > 1

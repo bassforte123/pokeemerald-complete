@@ -96,3 +96,58 @@ SINGLE_BATTLE_TEST("Triple Arrows's flinching is prevented by Inner Focus")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage (Traits)")
+{
+    enum Ability ability;
+    u32 chance;
+    PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 50; }
+    PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 100; }
+    PASSES_RANDOMLY(chance, 100, RNG_SECONDARY_EFFECT);
+    GIVEN {
+        PLAYER(SPECIES_TOGEPI) { Ability(ABILITY_SUPER_LUCK); Innates(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRIPLE_ARROWS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Wobbuffet's Defense fell!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Triple Arrows makes the foe flinch 30% of the time (Traits)")
+{
+    enum Ability ability;
+    u32 chance;
+    PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 30; }
+    PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 60; }
+    PASSES_RANDOMLY(chance, 100, RNG_SECONDARY_EFFECT_2);
+    GIVEN {
+        PLAYER(SPECIES_TOGEPI) { Ability(ABILITY_SUPER_LUCK); Innates(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRIPLE_ARROWS); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Triple Arrows's flinching is prevented by Inner Focus (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RIOLU) { Ability(ABILITY_PRANKSTER); Innates(ABILITY_INNER_FOCUS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TRIPLE_ARROWS);
+               MOVE(opponent, MOVE_SCRATCH);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
+        NONE_OF { MESSAGE("The opposing Wobbuffet flinched and couldn't move!"); }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+    }
+}
+#endif

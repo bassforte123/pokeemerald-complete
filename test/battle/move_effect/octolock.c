@@ -90,7 +90,7 @@ SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Amulet")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_CLEAR_AMULET); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_CLEAR_AMULET); }
     } WHEN {
         TURN { MOVE(player, MOVE_OCTOLOCK); }
         TURN {}
@@ -179,6 +179,100 @@ SINGLE_BATTLE_TEST("Octolock ends after user that set the lock switches out")
 
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke and Full Metal Body (Traits)")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_BELDUM; ability = ABILITY_CLEAR_BODY; }
+    PARAMETRIZE { species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
+    PARAMETRIZE { species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_OCTOLOCK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        if (species == SPECIES_BELDUM)
+        {
+            MESSAGE("The opposing Beldum can no longer escape because of Octolock!");
+            ABILITY_POPUP(opponent, ABILITY_CLEAR_BODY);
+            MESSAGE("The opposing Beldum's Clear Body prevents stat loss!");
+            NONE_OF {
+                MESSAGE("The opposing Beldum's Defense fell!");
+                MESSAGE("The opposing Beldum's Sp. Def fell!");
+            }
+        }
+        else if (species == SPECIES_TORKOAL)
+        {
+            MESSAGE("The opposing Torkoal can no longer escape because of Octolock!");
+            ABILITY_POPUP(opponent, ABILITY_WHITE_SMOKE);
+            MESSAGE("The opposing Torkoal's White Smoke prevents stat loss!");
+            NONE_OF {
+                MESSAGE("The opposing Torkoal's Defense fell!");
+                MESSAGE("The opposing Torkoal's Sp. Def fell!");
+            }
+        }
+        else if (species == SPECIES_SOLGALEO)
+        {
+            MESSAGE("The opposing Solgaleo can no longer escape because of Octolock!");
+            ABILITY_POPUP(opponent, ABILITY_FULL_METAL_BODY);
+            MESSAGE("The opposing Solgaleo's Full Metal Body prevents stat loss!");
+            NONE_OF {
+                MESSAGE("The opposing Solgaleo's Defense fell!");
+                MESSAGE("The opposing Solgaleo's Sp. Def fell!");
+            }
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Octolock Defense reduction is prevented by Big Pecks (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY) { Ability(ABILITY_KEEN_EYE); Innates(ABILITY_BIG_PECKS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_OCTOLOCK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
+        MESSAGE("The opposing Pidgey can no longer escape because of Octolock!");
+        NOT MESSAGE("The opposing Pidgey's Defense fell!");
+        ABILITY_POPUP(opponent, ABILITY_BIG_PECKS);
+        MESSAGE("The opposing Pidgey's Big Pecks prevents Defense loss!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Pidgey's Sp. Def fell!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Octolock triggers Defiant for both stat reductions (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BISHARP) { Ability(ABILITY_PRESSURE); Innates(ABILITY_DEFIANT); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_OCTOLOCK); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_OCTOLOCK, player);
+        MESSAGE("The opposing Bisharp can no longer escape because of Octolock!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Bisharp's Defense fell!");
+        ABILITY_POPUP(opponent, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Bisharp's Sp. Def fell!");
+        ABILITY_POPUP(opponent, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Bisharp's Attack sharply rose!");
+    }
+}
+
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Amulet (Multi)")

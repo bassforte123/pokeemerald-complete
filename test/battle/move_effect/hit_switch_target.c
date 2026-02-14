@@ -75,7 +75,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron 
     PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Items(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_IRON_BARBS); Item(ITEM_ROCKY_HELMET); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_CHARMANDER);
     } WHEN {
@@ -164,6 +164,103 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         HP_BAR(opponent);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Traits)")
+{
+    PASSES_RANDOMLY(1, 2, RNG_FORCE_RANDOM_SWITCH);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_TOGEDEMARU) { Ability(ABILITY_STURDY); Innates(ABILITY_IRON_BARBS); Item(ITEM_ROCKY_HELMET); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CHARMANDER);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_TAIL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Iron Barbs!");
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the opposing Togedemaru's Rocky Helmet!");
+        MESSAGE("The opposing Charmander was dragged out!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Guard Dog (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_OKIDOGI) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_GUARD_DOG); }
+        OPPONENT(SPECIES_CHARMANDER);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_TAIL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        NOT MESSAGE("The opposing Charmander was dragged out!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dragon Tail effect fails against target with Suction Cups (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_OCTILLERY) { Ability(ABILITY_SNIPER); Innates(ABILITY_SUCTION_CUPS); }
+        OPPONENT(SPECIES_CHARMANDER);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_TAIL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        ABILITY_POPUP(opponent, ABILITY_SUCTION_CUPS);
+        MESSAGE("The opposing Octillery anchors itself with Suction Cups!");
+        NOT MESSAGE("The opposing Charmander was dragged out!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Immunity negated by Mold Breaker (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
+        PLAYER(SPECIES_PANCHAM) { Ability(ABILITY_IRON_FIST); Innates(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IRON_FIST); Innates(ABILITY_IMMUNITY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(player, MOVE_DRAGON_TAIL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Snorlax was dragged out!");
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        STATUS_ICON(opponent, poison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitate negated by Mold Breaker (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
+        ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
+        ASSUME(GetSpeciesType(SPECIES_WEEZING, 0) == TYPE_POISON || GetSpeciesType(SPECIES_WEEZING, 1) == TYPE_POISON);
+        PLAYER(SPECIES_PANCHAM) { Ability(ABILITY_IRON_FIST); Innates(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(player, MOVE_SPIKES); }
+        TURN { MOVE(player, MOVE_DRAGON_TAIL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Weezing was dragged out!");
+        MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
+        NOT STATUS_ICON(opponent, poison: TRUE);
+        HP_BAR(opponent);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Dragon Tail switches the target after Rocky Helmet and Iron Barbs (Multi)")

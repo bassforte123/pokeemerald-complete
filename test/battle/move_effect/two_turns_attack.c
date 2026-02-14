@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Razor Wind needs a charging turn")
 SINGLE_BATTLE_TEST("Razor Wind doesn't need to charge with Power Herb")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POWER_HERB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_RAZOR_WIND); }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Razor Wind doesn't need to charge with Power Herb")
 DOUBLE_BATTLE_TEST("Razor Wind successfully KOs both opponents")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POWER_HERB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WYNAUT) { HP(1); }
@@ -128,7 +128,7 @@ SINGLE_BATTLE_TEST("Skull Bash needs a charging turn")
 SINGLE_BATTLE_TEST("Skull Bash doesn't need to charge with Power Herb")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POWER_HERB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SKULL_BASH); }
@@ -187,7 +187,7 @@ SINGLE_BATTLE_TEST("Sky Attack needs a charging turn")
 SINGLE_BATTLE_TEST("Sky Attack doesn't need to charge with Power Herb")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POWER_HERB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_SKY_ATTACK); }
@@ -305,11 +305,7 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in a Sandstorm", s16 damage)
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BEAM); }
         TURN { SKIP_TURN(player); }
@@ -327,11 +323,7 @@ SINGLE_BATTLE_TEST("Solar Blade's power is halved in a Sandstorm", s16 damage)
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BLADE); }
         TURN { SKIP_TURN(player); }
@@ -349,11 +341,7 @@ SINGLE_BATTLE_TEST("Solar Beam's power is halved in Hail", s16 damage)
     PARAMETRIZE { move = MOVE_HAIL; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BEAM); }
         TURN { SKIP_TURN(player); }
@@ -371,11 +359,7 @@ SINGLE_BATTLE_TEST("Solar Blade's power is halved in Hail", s16 damage)
     PARAMETRIZE { move = MOVE_HAIL; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_SAFETY_GOGGLES); };
-=======
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, move); MOVE(player, MOVE_SOLAR_BLADE); }
         TURN { SKIP_TURN(player); }
@@ -467,7 +451,7 @@ SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge when it's raining")
 SINGLE_BATTLE_TEST("Electro Shot doesn't need to charge with Power Herb")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_POWER_HERB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_POWER_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRO_SHOT); }

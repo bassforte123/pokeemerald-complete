@@ -146,3 +146,97 @@ DOUBLE_BATTLE_TEST("Vessel of Ruin is active if removed by Mold Breaker Entrainm
         EXPECT_EQ(isSwordOfRuinActive, TRUE);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Vessel of Ruin reduces Sp. Atk if opposing mon's ability doesn't match (Traits)")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_VESSEL_OF_RUIN); }
+        OPPONENT(SPECIES_TING_LU) { Ability(ABILITY_LIGHT_METAL); }
+        OPPONENT(SPECIES_TING_LU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_VESSEL_OF_RUIN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WATER_GUN); MOVE(player, MOVE_ENTRAINMENT); }
+        TURN { SWITCH(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_VESSEL_OF_RUIN);
+        MESSAGE("Ting-Lu's Vessel of Ruin weakened the Sp. Atk of all surrounding Pokémon!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(1.33), damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battlers fainted - Player (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1);}
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_VESSEL_OF_RUIN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_RUINATION); }
+    } SCENE {
+        HP_BAR(opponent, hp: 0);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
+        // Everyone faints.
+        MESSAGE("Go! Ting-Lu!");
+        MESSAGE("2 sent out Wobbuffet!");
+        ABILITY_POPUP(player, ABILITY_VESSEL_OF_RUIN);
+        MESSAGE("Ting-Lu's Vessel of Ruin weakened the Sp. Atk of all surrounding Pokémon!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battlers fainted - Opponent (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1);}
+        OPPONENT(SPECIES_TING_LU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_VESSEL_OF_RUIN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_RUINATION); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        HP_BAR(player, hp: 0);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
+        // Everyone faints.
+        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("2 sent out Ting-Lu!");
+        ABILITY_POPUP(opponent, ABILITY_VESSEL_OF_RUIN);
+        MESSAGE("The opposing Ting-Lu's Vessel of Ruin weakened the Sp. Atk of all surrounding Pokémon!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Vessel of Ruin is still active if removed by Mold Breaker + Entrainment (Traits)")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_VESSEL_OF_RUIN); }
+        OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+        TURN { MOVE(opponent, MOVE_ENTRAINMENT); }
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_VESSEL_OF_RUIN);
+        MESSAGE("Ting-Lu's Vessel of Ruin weakened the Sp. Atk of all surrounding Pokémon!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENTRAINMENT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+#endif

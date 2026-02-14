@@ -13,10 +13,10 @@ DOUBLE_BATTLE_TEST("Magic Room prevents item hold effects")
         ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
         ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
 
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Items(ITEM_BERRY_JUICE); }
-        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Items(ITEM_BERRY_JUICE); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Items(ITEM_BERRY_JUICE); }
-        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Items(ITEM_BERRY_JUICE); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Item(ITEM_BERRY_JUICE); }
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Item(ITEM_BERRY_JUICE); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Item(ITEM_BERRY_JUICE); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(60); Item(ITEM_BERRY_JUICE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_MAGIC_ROOM); }
         TURN {
@@ -39,7 +39,7 @@ DOUBLE_BATTLE_TEST("Magic Room prevents item hold effects")
 SINGLE_BATTLE_TEST("Magic Room: An item that can activate will activate once Magic Room is over")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_WHITE_HERB); }
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_WHITE_HERB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_MAGIC_ROOM); MOVE(opponent, MOVE_GROWL); }

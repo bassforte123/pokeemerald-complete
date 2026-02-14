@@ -27,8 +27,8 @@ SINGLE_BATTLE_TEST("Future Sight uses Sp. Atk stat of the original user without 
     PARAMETRIZE { item = ITEM_PSYCHIC_GEM; }
 
     GIVEN {
-        PLAYER(SPECIES_PIKACHU) { Items(item); }
-        PLAYER(SPECIES_RAICHU) { Items(item); }
+        PLAYER(SPECIES_PIKACHU) { Item(item); }
+        PLAYER(SPECIES_RAICHU) { Item(item); }
         OPPONENT(SPECIES_REGICE);
     } WHEN {
         TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
@@ -54,7 +54,7 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
 
     GIVEN {
         PLAYER(SPECIES_PIKACHU);
-        PLAYER(SPECIES_RAICHU) { Items(ITEM_LIFE_ORB); }
+        PLAYER(SPECIES_RAICHU) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_REGICE);
     } WHEN {
         TURN { MOVE(player, FUTURE_SIGHT_EQUIVALENT, WITH_RNG(RNG_SECONDARY_EFFECT, FALSE)); }
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Future Sight breaks Focus Sash and doesn't make the holder e
         ASSUME(GetMovePower(MOVE_PSYCHIC) > 0);
         ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_PIDGEY) { Level(1); Items(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_PIDGEY) { Level(1); Item(ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
         TURN {}

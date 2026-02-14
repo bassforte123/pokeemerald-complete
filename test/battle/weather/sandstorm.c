@@ -114,3 +114,22 @@ SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated")
         NOT HP_BAR(player);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Sandstorm doesn't do damage when weather is negated (Traits)")
+{
+    enum Type type1 = GetSpeciesType(SPECIES_STOUTLAND, 0);
+    enum Type type2 = GetSpeciesType(SPECIES_STOUTLAND, 1);
+    GIVEN {
+        ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
+        ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
+        ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_SWIFT_SWIM); Innates(ABILITY_CLOUD_NINE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SANDSTORM); }
+    } SCENE {
+        NOT HP_BAR(player);
+    }
+}
+#endif

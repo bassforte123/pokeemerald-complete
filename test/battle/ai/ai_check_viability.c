@@ -502,3 +502,129 @@ AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts")
             TURN { EXPECT_MOVE(opponent, MOVE_SCALD); }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% chance to trigger (Traits)")
+{
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_NONE; }
+    PARAMETRIZE { ability = ABILITY_SERENE_GRACE; }
+
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_SHADOW_BALL, MOVE_EFFECT_SP_DEF_MINUS_1, 20));
+        ASSUME(MoveHasAdditionalEffectWithChance(MOVE_OCTAZOOKA, MOVE_EFFECT_ACC_MINUS_1, 50));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_REGICE);
+        OPPONENT(SPECIES_REGIROCK) { Ability(ABILITY_LIGHT_METAL); Innates(ability); Moves(MOVE_SHADOW_BALL, MOVE_OCTAZOOKA); }
+    } WHEN {
+        if (ability == ABILITY_NONE)
+            TURN { EXPECT_MOVE(opponent, MOVE_SHADOW_BALL); }
+        else
+            TURN { EXPECT_MOVES(opponent, MOVE_OCTAZOOKA); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner (Traits)")
+{
+    u32 status1_0, status1_1, partnerAbility, move;
+
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE;
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS;
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS;
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SOUNDPROOF; }
+
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
+                  move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE;
+                  move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
+
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
+        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, GEN_8);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_ROCK_SLIDE, move, MOVE_ACID); Status1(status1_0); }
+        OPPONENT(SPECIES_EXPLOUD) { Status1(status1_1); Ability(ABILITY_LIGHT_METAL); Innates(partnerAbility); }
+    } WHEN {
+        if (status1_0 != STATUS1_NONE || (status1_1 != STATUS1_NONE && partnerAbility != ABILITY_SOUNDPROOF))
+            TURN { EXPECT_MOVE(opponentLeft, move); }
+        else
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_ROCK_SLIDE); }
+    }
+}
+
+TO_DO_BATTLE_TEST("AI chooses moves that cure inactive party members (Traits)")  // TODO: Innate parameters on reserve pokemon in Tests
+
+AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects (Traits)")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_SHIELD_DUST; }
+    PARAMETRIZE { ability = ABILITY_TINTED_LENS; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_VENOMOTH) { Ability(ABILITY_LIGHT_METAL); Innates(ability); Moves(MOVE_CELEBRATE, MOVE_POUND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CHILLING_WATER, MOVE_BRINE); }
+    } WHEN {
+    if (ability == ABILITY_SHIELD_DUST)
+        TURN { EXPECT_MOVE(opponent, MOVE_BRINE); }
+    else
+        TURN { EXPECT_MOVE(opponent, MOVE_CHILLING_WATER); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type (Traits)")
+{
+    u32 species, fieldStatus, ability;
+    u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
+
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
+    PARAMETRIZE { fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
+
+    GIVEN {
+        AI_FLAGS(aiFlags);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
+        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); Moves(MOVE_HYPER_VOICE);  }
+    } WHEN {
+        if (ability != ABILITY_NONE)
+            TURN { EXPECT_MOVE(opponentLeft, fieldStatus); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponentLeft, fieldStatus); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Sparkling Aria to cure an enemy with Guts (Traits)")
+{
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_GUTS; }
+    PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_URSALUNA) { Ability(ABILITY_LIGHT_METAL); Innates(ability); Moves(MOVE_HEADLONG_RUSH, MOVE_CELEBRATE); Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_PRIMARINA) { Moves(MOVE_SPARKLING_ARIA, MOVE_SCALD); }
+    } WHEN {
+        if (ability == ABILITY_GUTS)
+            TURN { EXPECT_MOVE(opponent, MOVE_SPARKLING_ARIA); }
+        else
+            TURN { EXPECT_MOVE(opponent, MOVE_SCALD); }
+    }
+}
+#endif

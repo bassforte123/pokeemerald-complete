@@ -172,11 +172,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-<<<<<<< HEAD
-        OPPONENT(SPECIES_LOPUNNY) {Items(ITEM_LOPUNNITE); };
-=======
         OPPONENT(SPECIES_LOPUNNY) { Item(ITEM_LOPUNNITE); }
->>>>>>> expansion/1.14.3
     } WHEN {
         TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
@@ -191,7 +187,7 @@ SINGLE_BATTLE_TEST("Trainer Slide: Z Move")
     gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_Z_MOVE;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
     } SCENE {

@@ -38,9 +38,9 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Special Attack", s16 damage)
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_THUNDERSHOCK) == DAMAGE_CATEGORY_SPECIAL);
         if (species == SPECIES_PIKACHU_GMAX) {
-            PLAYER(SPECIES_PIKACHU) { Items(item); GigantamaxFactor(TRUE); }
+            PLAYER(SPECIES_PIKACHU) { Item(item); GigantamaxFactor(TRUE); }
         } else {
-            PLAYER(species) { Items(item); }
+            PLAYER(species) { Item(item); }
         }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -74,9 +74,9 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
         WITH_CONFIG(CONFIG_LIGHT_BALL_ATTACK_BOOST, config);
         ASSUME(GetMoveCategory(MOVE_SPARK) == DAMAGE_CATEGORY_PHYSICAL);
         if (species == SPECIES_PIKACHU_GMAX) {
-            PLAYER(SPECIES_PIKACHU) { Items(item); GigantamaxFactor(TRUE); }
+            PLAYER(SPECIES_PIKACHU) { Item(item); GigantamaxFactor(TRUE); }
         } else {
-            PLAYER(species) { Items(item); }
+            PLAYER(species) { Item(item); }
         }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

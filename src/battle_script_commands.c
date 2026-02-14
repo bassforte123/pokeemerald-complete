@@ -7094,21 +7094,29 @@ static void Cmd_moveend(void)
             break;
         case MOVEEND_PICKPOCKET:
         {
-            u16 attackerItem = gBattleMons[gBattlerAttacker].item;
-            bool32 hasPendingStolenItem = FALSE;
+            u16 attackerItems[MAX_MON_ITEMS];
+            bool32 attackerhasItem = FALSE;
+            bool32 hasPendingStolenItem[MAX_MON_ITEMS];
 
-            if (attackerItem == ITEM_NONE
-             && GetMoveEffect(gCurrentMove) == EFFECT_STEAL_ITEM
-             && gBattleStruct->changedItems[gBattlerAttacker] != ITEM_NONE)
+            for (i = 0; i < MAX_MON_ITEMS; i++)
             {
-                attackerItem = gBattleStruct->changedItems[gBattlerAttacker];
-                hasPendingStolenItem = TRUE;
+                attackerItems[i] = gBattleMons[gBattlerAttacker].items[i];
+                if (attackerItems[i] == ITEM_NONE
+                && GetMoveEffect(gCurrentMove) == EFFECT_STEAL_ITEM
+                && gBattleStruct->changedItems[gBattlerAttacker][i] != ITEM_NONE)
+                {
+                    attackerItems[i] = gBattleStruct->changedItems[gBattlerAttacker][i];
+                    hasPendingStolenItem[i] = TRUE;
+                }
+                else
+                    hasPendingStolenItem[i] = FALSE;
+
+                if (attackerItems[i] != ITEM_NONE)
+                    attackerhasItem = TRUE;
             }
 
             if (IsBattlerAlive(gBattlerAttacker)
-              && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker]))   // But not knocked off
-              && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
-              && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))           // Obviously attack needs to have worked
+              && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker])))   // But not knocked off
             {
                 u8 battlers[4] = {0, 1, 2, 3};
                 SortBattlersBySpeed(battlers, FALSE); // Pickpocket activates for fastest mon without item
@@ -7116,23 +7124,24 @@ static void Cmd_moveend(void)
                 {
                     u8 battler = battlers[i];
                     // Attacker is mon who made contact, battler is mon with pickpocket
-                    if (battler != gBattlerAttacker                                                     // Cannot pickpocket yourself
+                    if (attackerhasItem  
+                      && battler != gBattlerAttacker                                                    // Cannot pickpocket yourself
                       && GetBattlerAbility(battler) == ABILITY_PICKPOCKET                               // Target must have pickpocket ability
                       && IsBattlerTurnDamaged(battler)                                                  // Target needs to have been damaged
-                      && IsMoveMakingContact(gBattlerAttacker, battler, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
+                      && IsMoveMakingContact(gBattlerAttacker, battler, GetBattlerAbility(gBattlerAttacker), gCurrentMove)    // Pickpocket requires contact
                       && !(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT)             // Move needs to have affected this battler
                       && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)              // Subsitute unaffected
-                      && IsBattlerAlive(battler)                                                        // Battler must be alive to pickpocket
-                      )
+                      && IsBattlerAlive(battler))                                                       // Battler must be alive to pickpocket
                     {
                         index = 0;
                         targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
 
                         for (j = 0; j < MAX_MON_ITEMS; j++) //Gather all stealable item slots
                         {
-                            if (CanStealItem(battler, gBattlerAttacker, gBattleMons[gBattlerAttacker].items[j]) // Cannot steal plates, mega stones, etc
-                            && gBattleMons[battler].items[j] == ITEM_NONE                                   // Pickpocketer can't have an item already
-                            && gBattleMons[gBattlerAttacker].items[j] != ITEM_NONE)                         // Attacker must be holding an item
+                            if (attackerItems[j] != ITEM_NONE
+                            && CanStealItem(battler, gBattlerAttacker, attackerItems[j]) // Cannot steal plates, mega stones, etc
+                            && gBattleMons[battler].items[j] == ITEM_NONE)                                   // Pickpocketer can't have an item already
+
                             {
                                 if (targetableSlots[0] != MAX_MON_ITEMS)
                                     index++;
@@ -7143,8 +7152,12 @@ static void Cmd_moveend(void)
                         if (targetableSlots[0] != MAX_MON_ITEMS)
                         {
                             slot = gLastItemSlot = GetSlot(targetableSlots, index);
-
                             gBattlerTarget = gBattlerAbility = battler;
+                            if (hasPendingStolenItem[slot])
+                            {
+                                gBattleMons[gBattlerAttacker].items[slot] = attackerItems[slot];
+                                gBattleStruct->changedItems[gBattlerAttacker][slot] = ITEM_NONE;
+                            }
                             // Battle scripting is super brittle so we shall do the item exchange now (if possible)
                             if (GetBattlerAbility(gBattlerAttacker) != ABILITY_STICKY_HOLD)
                                 StealTargetItem(gBattlerTarget, gBattlerAttacker, slot); // Target takes attacker's item
@@ -12437,7 +12450,7 @@ static void Cmd_tryactivateitem(void)
             return;
         break;
     case ACTIVATION_ON_STATUS_CHANGE:
-        if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsOnStatusChangeActivation))
+        if (ItemBattleEffects(battler, 0, IsOnStatusChangeActivation))
             return;
         break;
     }

@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Unburden doubles speed once user uses item")
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_GRASSY_SEED) == HOLD_EFFECT_TERRAIN_SEED);
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
-        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Items(ITEM_GRASSY_SEED); Speed(5); }
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_GRASSY_SEED); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
         OPPONENT(SPECIES_RILLABOOM) { Speed(7); Ability(ABILITY_GRASSY_SURGE); }
     } WHEN {
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Unburden doubles speed once user gets their item knocked off
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
-        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Items(ITEM_POTION); Speed(5); }
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Unburden doesn't activate when item is consumed in Neutraliz
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
-        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Items(ITEM_POTION); Speed(5); }
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WEEZING) { Speed(7); Ability(ABILITY_NEUTRALIZING_GAS); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
     } WHEN {
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Unburden doubling speed effect is ignored by Neutralizing Ga
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
         ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
-        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Items(ITEM_POTION); Speed(5); }
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
         OPPONENT(SPECIES_WEEZING) { Speed(7); Ability(ABILITY_NEUTRALIZING_GAS); }
     } WHEN {
@@ -99,6 +99,49 @@ SINGLE_BATTLE_TEST("Unburden doubling speed effect is ignored by Neutralizing Ga
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Unburden doubles speed once user uses item (Traits)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_GRASSY_SEED) == HOLD_EFFECT_TERRAIN_SEED);
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_FLARE_BOOST); Innates(ABILITY_UNBURDEN); Item(ITEM_GRASSY_SEED); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
+        OPPONENT(SPECIES_RILLABOOM) { Speed(7); Ability(ABILITY_GRASSY_SURGE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_U_TURN); SEND_OUT(opponent, 1); }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, opponent);
+        ABILITY_POPUP(opponent, ABILITY_GRASSY_SURGE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        // Turn 2, doubled speed
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Unburden doubles speed once user gets their item knocked off (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
+        PLAYER(SPECIES_DRIFBLIM) { Ability(ABILITY_FLARE_BOOST); Innates(ABILITY_UNBURDEN); Item(ITEM_POTION); Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(7); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        // Turn 2, doubled speed
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    }
+}
+#endif
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Unburden doubles speed once user uses item (Multi)")

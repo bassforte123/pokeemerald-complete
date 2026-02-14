@@ -14,7 +14,7 @@ DOUBLE_BATTLE_TEST("Round allows other battlers which also selected the moves to
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LAGGING_TAIL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LAGGING_TAIL); }
     } WHEN {
         TURN {
             MOVE(playerRight, MOVE_CELEBRATE);
@@ -101,7 +101,7 @@ DOUBLE_BATTLE_TEST("Round causes opposing Pokémon to use Round immediately")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_LAGGING_TAIL); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LAGGING_TAIL); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_ROUND, target: opponentLeft); MOVE(playerLeft, MOVE_CELEBRATE, target: opponentRight); MOVE(opponentRight, MOVE_ROUND, target: playerLeft); }
     } SCENE {

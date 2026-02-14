@@ -408,3 +408,131 @@ DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
 
 // Triple Battles required to test
 //TO_DO_BATTLE_TEST("Ally Switch fails if the user is in the middle of the field in a Triple Battle");
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail (Traits)")
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_STALWART; }
+    PARAMETRIZE { ability = ABILITY_PROPELLER_TAIL; }
+    PARAMETRIZE { ability = ABILITY_TELEPATHY; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET); // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_KADABRA) { Ability(ABILITY_INNER_FOCUS); Innates(ability); }
+        OPPONENT(SPECIES_ABRA);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_SCRATCH, target:playerRight); } // Kadabra targets playerRight Wynaut.
+    } SCENE {
+        MESSAGE("Wobbuffet used Ally Switch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        MESSAGE("Wobbuffet and Wynaut switched places!");
+
+        MESSAGE("The opposing Kadabra used Scratch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        HP_BAR((ability == ABILITY_STALWART || ability == ABILITY_PROPELLER_TAIL) ? playerLeft : playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally switch swaps sky drop targets if being used by partner (Traits)")
+{
+    u8 visibility;
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
+        PLAYER(SPECIES_FEAROW) { Speed(100); }
+        PLAYER(SPECIES_XATU)   { Speed(150); }
+        OPPONENT(SPECIES_ARON) { Speed(25); Ability(ABILITY_ROCK_HEAD); Innates(ABILITY_STURDY); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(30); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SKY_DROP, target: opponentLeft); }
+        TURN { MOVE(playerRight, MOVE_ALLY_SWITCH); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_MUD_SPORT); MOVE(opponentLeft, MOVE_IRON_DEFENSE); }
+    } SCENE {
+        MESSAGE("Fearow used Sky Drop!");
+        MESSAGE("Fearow took the opposing Aron into the sky!");
+        // turn 2
+        MESSAGE("Xatu used Ally Switch!");
+        MESSAGE("Xatu and Fearow switched places!");
+        MESSAGE("Fearow used Sky Drop!");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Wynaut used Mud Sport!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MUD_SPORT, opponentRight);
+        MESSAGE("The opposing Aron used Iron Defense!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_IRON_DEFENSE, opponentLeft);
+    } THEN {
+        // all battlers should be visible
+        visibility = gBattleSpritesDataPtr->battlerData[0].invisible;
+        EXPECT_EQ(visibility, 0);
+        visibility = gBattleSpritesDataPtr->battlerData[1].invisible;
+        EXPECT_EQ(visibility, 0);
+        visibility = gBattleSpritesDataPtr->battlerData[2].invisible;
+        EXPECT_EQ(visibility, 0);
+        visibility = gBattleSpritesDataPtr->battlerData[3].invisible;
+        EXPECT_EQ(visibility, 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally switch swaps opposing sky drop targets if partner is being held in the air (Traits)")
+{
+    u8 visibility;
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SKY_DROP) == EFFECT_SKY_DROP);
+        PLAYER(SPECIES_ARON) { Speed(25); Ability(ABILITY_ROCK_HEAD); Innates(ABILITY_STURDY); }
+        PLAYER(SPECIES_WYNAUT) { Speed(30); }
+        OPPONENT(SPECIES_FEAROW) { Speed(100); }
+        OPPONENT(SPECIES_XATU)   { Speed(150); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SKY_DROP, target: playerLeft); }
+        TURN { MOVE(opponentRight, MOVE_ALLY_SWITCH); SKIP_TURN(opponentLeft); MOVE(playerRight, MOVE_MUD_SPORT); MOVE(playerLeft, MOVE_IRON_DEFENSE); }
+    } SCENE {
+        MESSAGE("The opposing Fearow used Sky Drop!");
+        MESSAGE("The opposing Fearow took Aron into the sky!");
+        // turn 2
+        MESSAGE("The opposing Xatu used Ally Switch!");
+        MESSAGE("The opposing Xatu and the opposing Fearow switched places!");
+        MESSAGE("The opposing Fearow used Sky Drop!");
+        HP_BAR(playerLeft);
+        MESSAGE("Wynaut used Mud Sport!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MUD_SPORT, playerRight);
+        MESSAGE("Aron used Iron Defense!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_IRON_DEFENSE, playerLeft);
+    } THEN {
+        // all battlers should be visible
+        visibility = gBattleSpritesDataPtr->battlerData[0].invisible;
+        EXPECT_EQ(visibility, 0);
+        visibility = gBattleSpritesDataPtr->battlerData[1].invisible;
+        EXPECT_EQ(visibility, 0);
+        visibility = gBattleSpritesDataPtr->battlerData[2].invisible;
+        EXPECT_EQ(visibility, 0);
+        visibility = gBattleSpritesDataPtr->battlerData[3].invisible;
+        EXPECT_EQ(visibility, 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch updates attract battler (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Gender(MON_MALE); }
+        PLAYER(SPECIES_SOLOSIS)   { Speed(50); }
+        OPPONENT(SPECIES_CLEFAIRY) { Speed(20); Gender(MON_FEMALE); Ability(ABILITY_FRIEND_GUARD); Innates(ABILITY_CUTE_CHARM); }
+        OPPONENT(SPECIES_RALTS)    { Speed(30); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_ALLY_SWITCH); }
+        TURN { ; }
+    } SCENE {
+        // turn 1
+        MESSAGE("Wobbuffet used Tackle!");
+        HP_BAR(opponentLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_CUTE_CHARM);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_INFATUATION, playerLeft);
+        MESSAGE("The opposing Clefairy's Cute Charm infatuated Wobbuffet!");
+        // turn 2
+        MESSAGE("The opposing Ralts used Ally Switch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);
+        MESSAGE("The opposing Ralts and the opposing Clefairy switched places!");
+        // turn 3
+        MESSAGE("Wobbuffet is in love with the opposing Clefairy!"); // tracks attract battler
+    }
+}
+#endif
