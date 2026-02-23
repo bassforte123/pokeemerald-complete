@@ -26,8 +26,6 @@
 #include "mon_markings.h"
 #include "move_relearner.h"
 #include "naming_screen.h"
-#include "move_relearner.h"
-#include "naming_screen.h"
 #include "party_menu.h"
 #include "palette.h"
 #include "pokeball.h"
