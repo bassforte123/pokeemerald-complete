@@ -496,6 +496,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Overgrow"),
         .description = COMPOUND_STRING("Ups Grass moves in a pinch."),
+        .longDescription = COMPOUND_STRING("Raises Grass move\n"
+                                           "damage by 50% when\n"
+                                           "HP is below 1/3."),
         .aiRating = 5,
     },
 
@@ -503,6 +506,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Blaze"),
         .description = COMPOUND_STRING("Ups Fire moves in a pinch."),
+        .longDescription = COMPOUND_STRING("Raises Fire move\n"
+                                           "damage by 50% when\n"
+                                           "HP is below 1/3."),
         .aiRating = 5,
     },
 

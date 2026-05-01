@@ -83,13 +83,18 @@
 #define PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER 17
 #define PSS_LABEL_WINDOW_PORTRAIT_NICKNAME 18 // The upper name
 #define PSS_LABEL_WINDOW_PORTRAIT_SPECIES 19 // The lower name
-#define PSS_LABEL_WINDOW_END 20
+// Background portrait text duplicates (Long Ability Descriptions)
+#define PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK 20
+#define PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK 21 // The upper name
+#define PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK 22 // The lower name
+#define PSS_LABEL_WINDOW_END 23
 
 // Dynamic fields for the Pokémon Info page
 #define PSS_DATA_WINDOW_INFO_ORIGINAL_TRAINER 0
 #define PSS_DATA_WINDOW_INFO_ID 1
 #define PSS_DATA_WINDOW_INFO_ABILITY 2
 #define PSS_DATA_WINDOW_INFO_MEMO 3
+#define PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION 4
 
 // Dynamic fields for the Pokémon Skills page
 #define PSS_DATA_WINDOW_SKILLS_HELD_ITEM 0
@@ -111,8 +116,9 @@ enum
     SPRITE_ARR_ID_MON,
     SPRITE_ARR_ID_BALL,
     SPRITE_ARR_ID_STATUS,
-    SPRITE_ARR_ID_TYPE, // 2 for mon types, 5 for move types(4 moves and 1 to learn), used interchangeably, because mon types and move types aren't shown on the same screen
-    SPRITE_ARR_ID_MOVE_SELECTOR1 = SPRITE_ARR_ID_TYPE + TYPE_ICON_SPRITE_COUNT, // 10 sprites that make up the selector
+    SPRITE_ARR_ID_TYPE, // 5 for move types(4 moves and 1 to learn)
+    SPRITE_ARR_ID_MON_TYPE = SPRITE_ARR_ID_TYPE + TYPE_ICON_SPRITE_COUNT, // 2 for mon types, separated out to use a different priority (Long Ability Descriptions) 
+    SPRITE_ARR_ID_MOVE_SELECTOR1 = SPRITE_ARR_ID_MON_TYPE + 2, // 10 sprites that make up the selector
     SPRITE_ARR_ID_MOVE_SELECTOR2 = SPRITE_ARR_ID_MOVE_SELECTOR1 + MOVE_SELECTOR_SPRITES_COUNT,
     SPRITE_ARR_ID_COUNT = SPRITE_ARR_ID_MOVE_SELECTOR2 + MOVE_SELECTOR_SPRITES_COUNT
 };
@@ -166,8 +172,9 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u32 OTID; // 0x48
         enum Type teraType;
         u8 mintNature;
+        u8 isLADOpen:1; // Is the Long Ability Description window open (Long Ability Descriptions)
     } summary;
-    u16 bgTilemapBuffers[PSS_PAGE_COUNT][2][0x400];
+    u16 bgTilemapBuffers[PSS_PAGE_COUNT + PSS_EFFECT_COUNT][2][0x400];
     u8 mode;
     u8 skillsPageMode;
     bool8 isBoxMon;
@@ -338,6 +345,19 @@ static void TryUpdateRelearnType(enum IncrDecrUpdateValues delta);
 static void ShowRelearnPrompt(void);
 static struct BoxPokemon *GetCurrentBoxmon(void);
 
+// Long Ablity Descriptions
+static void ShowAbilityDescription(void);
+static void Task_ShowAbilityDescription(u8);
+static void PrintMonAbilityLongDescriptionWindow(void); // Generates the window for displaying long ability descriptions
+static void PrintMonAbilityLongDescriptionText(void); // Generates the text for the long ability descriptions window
+static void CloseAbilityLongDescription(void); // clears and closes the long ability descriptions window
+// The portrait text uses duplicated text so that different priorities can be used.
+// There are limited priorities available and the other pages take up the others.
+// A lower priority is used so that the long ability descriptions window can overlap it,
+// but the higher priority is also used since it's not affected by the other pages using that priority layer when they are called.
+static void HidePortraitInfoBack(void); // Hides the foreground portrait text
+static void HidePortraitInfoFront(void); // Hides the background portrait text
+
 static const struct BgTemplate sBgTemplates[] =
 {
     {
@@ -501,22 +521,22 @@ static const struct WindowTemplate sSummaryTemplate[] =
         .baseBlock = 137,
     },
     [PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL] = {
-        .bg = 0,
+        .bg = 2,
         .tilemapLeft = 11,
         .tilemapTop = 4,
-        .width = 18,
+        .width = 11, // Fixed text, trimmed size (Long Ability Descriptions)
         .height = 2,
         .paletteNum = 6,
-        .baseBlock = 137,
+        .baseBlock = 250,
     },
     [PSS_LABEL_WINDOW_POKEMON_INFO_TYPE] = {
-        .bg = 0,
+        .bg = 2,
         .tilemapLeft = 11,
         .tilemapTop = 6,
-        .width = 18,
+        .width = 4, // Fixed text, trimmed size (Long Ability Descriptions)
         .height = 2,
         .paletteNum = 6,
-        .baseBlock = 173,
+        .baseBlock = 272,
     },
     [PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT] = {
         .bg = 0,
@@ -608,45 +628,82 @@ static const struct WindowTemplate sSummaryTemplate[] =
         .paletteNum = 6,
         .baseBlock = 431,
     },
+    // Lower priority background duplicates of the Portrait windows (Long Ability Descriptions)
+    [PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK] = {
+        .bg = 2,
+        .tilemapLeft = 1,
+        .tilemapTop = 2,
+        .width = 5,
+        .height = 2,
+        .paletteNum = 7,
+        .baseBlock = 280,
+    },
+    [PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK] = {
+        .bg = 2,
+        .tilemapLeft = 1,
+        .tilemapTop = 12,
+        .width = 9,
+        .height = 2,
+        .paletteNum = 6,
+        .baseBlock = 290,
+    },
+    [PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK] = {
+        .bg = 2,
+        .tilemapLeft = 1,
+        .tilemapTop = 14,
+        .width = 9,
+        .height = 4,
+        .paletteNum = 6,
+        .baseBlock = 308,
+    },
     [PSS_LABEL_WINDOW_END] = DUMMY_WIN_TEMPLATE
 };
 static const struct WindowTemplate sPageInfoTemplate[] =
 {
     [PSS_DATA_WINDOW_INFO_ORIGINAL_TRAINER] = {
-        .bg = 0,
+        .bg = 2,
         .tilemapLeft = 11,
         .tilemapTop = 4,
         .width = 11,
         .height = 2,
         .paletteNum = 6,
-        .baseBlock = 467,
+        .baseBlock = 344,
     },
     [PSS_DATA_WINDOW_INFO_ID] = {
-        .bg = 0,
+        .bg = 2,
         .tilemapLeft = 22,
         .tilemapTop = 4,
         .width = 7,
         .height = 2,
         .paletteNum = 6,
-        .baseBlock = 489,
+        .baseBlock = 366,
     },
     [PSS_DATA_WINDOW_INFO_ABILITY] = {
-        .bg = 0,
+        .bg = 2,
         .tilemapLeft = 11,
         .tilemapTop = 9,
         .width = 18,
         .height = 4,
         .paletteNum = 6,
-        .baseBlock = 503,
+        .baseBlock = 380,
     },
     [PSS_DATA_WINDOW_INFO_MEMO] = {
-        .bg = 0,
+        .bg = 2,
         .tilemapLeft = 11,
         .tilemapTop = 14,
         .width = 18,
         .height = 6,
         .paletteNum = 6,
-        .baseBlock = 575,
+        .baseBlock = 452,
+    },
+    [PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION] = {
+        .bg = 0,
+        .tilemapLeft = 1,
+        .tilemapTop = 4,
+        .width = 16,
+        .height = 20,
+        .paletteNum = 6,
+        .baseBlock = 560,
     },
 };
 static const struct WindowTemplate sPageSkillsTemplate[] =
@@ -853,6 +910,25 @@ static const struct OamData sOamData_MoveTypes =
     .paletteNum = 0,
     .affineParam = 0,
 };
+
+// Separated Type sprites using lower priority for the Pokemon Types window (Long Ability Descriptions)
+static const struct OamData sOamData_MonTypes =
+{
+    .y = 0,
+    .affineMode = ST_OAM_AFFINE_OFF,
+    .objMode = ST_OAM_OBJ_NORMAL,
+    .mosaic = FALSE,
+    .bpp = ST_OAM_4BPP,
+    .shape = SPRITE_SHAPE(32x16),
+    .x = 0,
+    .matrixNum = 0,
+    .size = SPRITE_SIZE(32x16),
+    .tileNum = 0,
+    .priority = 3,
+    .paletteNum = 0,
+    .affineParam = 0,
+};
+
 static const union AnimCmd sSpriteAnim_TypeNone[] = {
     ANIMCMD_FRAME(TYPE_NONE * 8, 0, FALSE, FALSE),
     ANIMCMD_END
@@ -997,6 +1073,14 @@ const struct SpriteTemplate gSpriteTemplate_MoveTypes =
     .tileTag = TAG_MOVE_TYPES,
     .paletteTag = TAG_MOVE_TYPES,
     .oam = &sOamData_MoveTypes,
+    .anims = sSpriteAnimTable_MoveTypes,
+};
+// Separated Type sprites using lower priority for the Pokemon Types window (Long Ability Descriptions)
+const struct SpriteTemplate gSpriteTemplate_MonTypes =
+{
+    .tileTag = TAG_MOVE_TYPES,
+    .paletteTag = TAG_MOVE_TYPES,
+    .oam = &sOamData_MonTypes,
     .anims = sSpriteAnimTable_MoveTypes,
 };
 
@@ -1450,43 +1534,47 @@ static bool8 DecompressGraphics(void)
         sMonSummaryScreen->switchCounter++;
         break;
     case 3:
-        DecompressDataWithHeaderWram(gSummaryPage_Skills_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_SKILLS][1]);
+        DecompressDataWithHeaderWram(gSummaryScreen_InfoEffect_Ability_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_COUNT + PSS_EFFECT_ABILITY_LONG_DESC][1]);
         sMonSummaryScreen->switchCounter++;
         break;
     case 4:
-        DecompressDataWithHeaderWram(gSummaryPage_BattleMoves_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][1]);
+        DecompressDataWithHeaderWram(gSummaryPage_Skills_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_SKILLS][1]);
         sMonSummaryScreen->switchCounter++;
         break;
     case 5:
-        DecompressDataWithHeaderWram(gSummaryPage_ContestMoves_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_CONTEST_MOVES][1]);
+        DecompressDataWithHeaderWram(gSummaryPage_BattleMoves_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][1]);
         sMonSummaryScreen->switchCounter++;
         break;
     case 6:
+        DecompressDataWithHeaderWram(gSummaryPage_ContestMoves_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_CONTEST_MOVES][1]);
+        sMonSummaryScreen->switchCounter++;
+        break;
+    case 7:
         LoadPalette(gSummaryScreen_Pal, BG_PLTT_ID(0), 8 * PLTT_SIZE_4BPP);
         LoadPalette(&gPPTextPalette, BG_PLTT_ID(8) + 1, PLTT_SIZEOF(16 - 1));
         sMonSummaryScreen->switchCounter++;
         break;
-    case 7:
+    case 8:
         LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
         sMonSummaryScreen->switchCounter++;
         break;
-    case 8:
+    case 9:
         LoadCompressedSpriteSheet(&sMoveSelectorSpriteSheet);
         sMonSummaryScreen->switchCounter++;
         break;
-    case 9:
+    case 10:
         LoadCompressedSpriteSheet(&sStatusIconsSpriteSheet);
         sMonSummaryScreen->switchCounter++;
         break;
-    case 10:
+    case 11:
         LoadSpritePalette(&sStatusIconsSpritePalette);
         sMonSummaryScreen->switchCounter++;
         break;
-    case 11:
+    case 12:
         LoadSpritePalette(&sMoveSelectorSpritePal);
         sMonSummaryScreen->switchCounter++;
         break;
-    case 12:
+    case 13:
         LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(13), 3 * PLTT_SIZE_4BPP);
         LoadCompressedSpriteSheet(&gSpriteSheet_CategoryIcons);
         LoadSpritePalette(&gSpritePal_CategoryIcons);
@@ -1566,6 +1654,7 @@ static bool8 ExtractMonDataToSummaryStruct(struct Pokemon *mon)
         sum->ribbonCount = GetMonData(mon, MON_DATA_RIBBON_COUNT);
         sum->teraType = GetMonData(mon, MON_DATA_TERA_TYPE);
         sum->isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
+        sum->isLADOpen = FALSE;
         return TRUE;
     }
     sMonSummaryScreen->switchCounter++;
@@ -1814,6 +1903,20 @@ static void Task_HandleInput(u8 taskId)
                 PlaySE(SE_SELECT);
                 ShowRelearnPrompt();
             }
+            else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO && !sMonSummaryScreen->summary.isEgg)
+            {
+                if (!sMonSummaryScreen->summary.isLADOpen)
+                {
+                    PlaySE(SE_SELECT);
+                    ShowAbilityDescription();
+                }
+                else
+                {
+                    PlaySE(SE_SELECT);
+                    CloseAbilityLongDescription();
+                    PrintMonInfo();
+                }
+            }
         }
         else if (JOY_NEW(L_BUTTON)) // L means decrease. Level <- Egg <- TM <- Tutor
         {
@@ -1825,6 +1928,92 @@ static void Task_HandleInput(u8 taskId)
             }
         }
     }
+}
+
+static void ShowAbilityDescription()
+{
+    sMonSummaryScreen->summary.isLADOpen = TRUE;
+    CreateTask(Task_ShowAbilityDescription, 1);
+}
+
+static void CloseAbilityLongDescription()
+{
+    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION);
+
+    ClearWindowTilemap(windowId);
+
+    if (P_SUMMARY_SCREEN_RENAME && sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
+        ShowUtilityPrompt(SUMMARY_MODE_NORMAL);
+
+    // Refresh BG1 to remove the Long Ability Description window
+    SetBgTilemapBuffer(1, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][0]);
+
+    ScheduleBgCopyTilemapToVram(0);
+    ScheduleBgCopyTilemapToVram(1);
+    
+    sMonSummaryScreen->summary.isLADOpen = FALSE;
+}
+
+static void HidePortraitInfoFront()
+{
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+
+    ScheduleBgCopyTilemapToVram(0);
+}
+
+static void HidePortraitInfoBack()
+{
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK);
+
+    ScheduleBgCopyTilemapToVram(2);
+    ScheduleBgCopyTilemapToVram(1);
+}
+
+static void Task_ShowAbilityDescription(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    switch (data[0])
+    {
+    case 1:   
+        PrintMonAbilityLongDescriptionWindow();
+        break;
+    case 2:
+        PrintMonAbilityLongDescriptionText();
+        break;
+    case 3:
+        DestroyTask(taskId);
+        return;
+    }
+    data[0]++;
+}
+
+static void PrintMonAbilityLongDescriptionWindow(void)
+{
+        SetBgAttribute(1, BG_ATTR_PRIORITY, 1);
+        SetBgAttribute(2, BG_ATTR_PRIORITY, 2);
+
+        // Generates the Long Ability Description window on BG1
+        SetBgTilemapBuffer(1, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_COUNT + PSS_EFFECT_ABILITY_LONG_DESC][1]);
+        ScheduleBgCopyTilemapToVram(1);
+        HidePortraitInfoFront();
+        ShowBg(1);
+        ShowBg(2);
+}
+
+static void PrintMonAbilityLongDescriptionText(void)
+{
+    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION);
+    enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
+
+    PrintTextOnWindow(windowId, gAbilitiesInfo[ability].longDescription, 0, 0, 0, 0);
+    PutWindowTilemap(windowId);
+    
+    ScheduleBgCopyTilemapToVram(0);
 }
 
 static u8 IncrementSkillsStatsMode(u8 mode)
@@ -2149,6 +2338,8 @@ static void Task_ChangeSummaryMon(u8 taskId)
         SetTypeIcons();
         break;
     case 10:
+        if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
+            CloseAbilityLongDescription();
         PrintMonInfo();
         break;
     case 11:
@@ -2239,6 +2430,7 @@ static void ChangePage(u8 taskId, s8 delta)
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
     s16 *data = gTasks[taskId].data;
     u32 currPageIndex;
+    bool32 hidingLongDecription = FALSE;
 
     if (summary->isEgg)
         return;
@@ -2247,6 +2439,11 @@ static void ChangePage(u8 taskId, s8 delta)
     else if (delta == 1 && sMonSummaryScreen->currPageIndex == sMonSummaryScreen->maxPageIndex)
         return;
 
+    if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
+    {
+        CloseAbilityLongDescription();
+        hidingLongDecription = TRUE;      
+    }    
     PlaySE(SE_SELECT);
     ClearPageWindowTilemaps(sMonSummaryScreen->currPageIndex);
     currPageIndex = sMonSummaryScreen->currPageIndex += delta;
@@ -2257,8 +2454,11 @@ static void ChangePage(u8 taskId, s8 delta)
         SetTaskFuncWithFollowupFunc(taskId, PssScrollLeft, gTasks[taskId].func);
     CreateTextPrinterTask(currPageIndex);
     HidePageSpecificSprites();
-
-    if (currPageIndex == PSS_PAGE_SKILLS
+    
+    if (hidingLongDecription)
+        PrintMonInfo(); // Refreshes the portrait window if the Long Ability Description window was closed
+    
+        if (currPageIndex == PSS_PAGE_SKILLS
         || (currPageIndex + delta) == PSS_PAGE_SKILLS)
     {
         struct Pokemon *mon = &sMonSummaryScreen->currentMon;
@@ -2374,6 +2574,13 @@ static void PssScrollLeftEnd(u8 taskId) // display left
         SetBgTilemapBuffer(data[1], sMonSummaryScreen->bgTilemapBuffers[sMonSummaryScreen->currPageIndex - 1][0]);
         ChangeBgX(data[1], 0x10000, BG_COORD_SET);
     }
+
+    if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
+    {
+        PrintInfoPageText(); // Refreshes the info window text since it is on BG2 (Long Ability Descriptions)
+        ScheduleBgCopyTilemapToVram(2);
+    }
+
     ShowBg(1);
     ShowBg(2);
     sMonSummaryScreen->bgDisplayOrder ^= 1;
@@ -3488,6 +3695,7 @@ static void ClearPageWindowTilemaps(u8 page)
             ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_RENTAL);
         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TYPE);
         ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
+        HidePortraitInfoBack();
         break;
     case PSS_PAGE_SKILLS:
         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATS_LEFT);
@@ -3496,6 +3704,7 @@ static void ClearPageWindowTilemaps(u8 page)
         if (ShouldShowIvEvPrompt())
             ClearPageWindowTilemaps(PSS_LABEL_WINDOW_PROMPT_UTILITY);
         ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
+        HidePortraitInfoBack();
         break;
     case PSS_PAGE_BATTLE_MOVES:
         if (sMonSummaryScreen->mode == SUMMARY_MODE_SELECT_MOVE)
@@ -4420,10 +4629,16 @@ static void CreateMoveTypeIcons(void)
 {
     u8 i;
 
-    for (i = SPRITE_ARR_ID_TYPE; i < SPRITE_ARR_ID_TYPE + TYPE_ICON_SPRITE_COUNT; i++)
+    for (i = SPRITE_ARR_ID_TYPE; i < SPRITE_ARR_ID_MON_TYPE + 2; i++)
     {
         if (sMonSummaryScreen->spriteIds[i] == SPRITE_NONE)
-            sMonSummaryScreen->spriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 0, 0, 2);
+        {
+            // First two arrays dedicated to mon types so they can use lower priority (Long Ability Descriptions)
+            if (i == SPRITE_ARR_ID_MON_TYPE || i == SPRITE_ARR_ID_MON_TYPE + 1)
+                sMonSummaryScreen->spriteIds[i] = CreateSprite(&gSpriteTemplate_MonTypes, 0, 0, 2);
+            else
+                sMonSummaryScreen->spriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 0, 0, 2);
+        }
 
         SetSpriteInvisibility(i, TRUE);
     }
@@ -4447,24 +4662,24 @@ static void SetMonTypeIcons(void)
     struct PokeSummary *summary = &sMonSummaryScreen->summary;
     if (summary->isEgg)
     {
-        SetTypeSpritePosAndPal(TYPE_MYSTERY, 120, 48, SPRITE_ARR_ID_TYPE);
-        SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, TRUE);
+        SetTypeSpritePosAndPal(TYPE_MYSTERY, 120, 48, SPRITE_ARR_ID_MON_TYPE);
+        SetSpriteInvisibility(SPRITE_ARR_ID_MON_TYPE + 1, TRUE);
     }
     else
     {
-        SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 0), 120, 48, SPRITE_ARR_ID_TYPE);
+        SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 0), 120, 48, SPRITE_ARR_ID_MON_TYPE);
         if (GetSpeciesType(summary->species, 0) != GetSpeciesType(summary->species, 1))
         {
-            SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 1), 160, 48, SPRITE_ARR_ID_TYPE + 1);
-            SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, FALSE);
+            SetTypeSpritePosAndPal(GetSpeciesType(summary->species, 1), 160, 48, SPRITE_ARR_ID_MON_TYPE + 1);
+            SetSpriteInvisibility(SPRITE_ARR_ID_MON_TYPE + 1, FALSE);
         }
         else
         {
-            SetSpriteInvisibility(SPRITE_ARR_ID_TYPE + 1, TRUE);
+            SetSpriteInvisibility(SPRITE_ARR_ID_MON_TYPE + 1, TRUE);
         }
         if (P_SHOW_TERA_TYPE >= GEN_9)
         {
-            SetTypeSpritePosAndPal(summary->teraType, 200, 48, SPRITE_ARR_ID_TYPE + 2);
+            SetTypeSpritePosAndPal(summary->teraType, 200, 48, SPRITE_ARR_ID_MON_TYPE + 2);
         }
     }
 }
@@ -4623,7 +4838,7 @@ static u8 CreateMonSprite(struct Pokemon *unused)
     gSprites[spriteId].data[0] = summary->species2;
     gSprites[spriteId].data[2] = 0;
     gSprites[spriteId].callback = SpriteCB_Pokemon;
-    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].oam.priority = 3;
 
     if (!IsMonSpriteNotFlipped(summary->species2))
         gSprites[spriteId].hFlip = TRUE;
@@ -4697,7 +4912,7 @@ static void CreateMonMarkingsSprite(struct Pokemon *mon)
         StartSpriteAnim(sprite, GetMonData(mon, MON_DATA_MARKINGS));
         sMonSummaryScreen->markingsSprite->x = 60;
         sMonSummaryScreen->markingsSprite->y = 26;
-        sMonSummaryScreen->markingsSprite->oam.priority = 1;
+        sMonSummaryScreen->markingsSprite->oam.priority = 3;
     }
 }
 

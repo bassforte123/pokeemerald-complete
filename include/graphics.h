@@ -2013,6 +2013,7 @@ extern const u16 gMoveTypes_Pal[];
 extern const u16 gSummaryScreen_MoveEffect_Battle_Tilemap[];
 extern const u16 gSummaryScreen_MoveEffect_Contest_Tilemap[];
 extern const u16 gSummaryScreen_MoveEffect_Cancel_Tilemap[];
+extern const u32 gSummaryScreen_InfoEffect_Ability_Tilemap[];
 
 extern const u32 gMoveTypes_Gfx[];
 extern const u32 gSummaryMoveSelect_Gfx[];

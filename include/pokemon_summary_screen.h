@@ -43,6 +43,12 @@ enum PokemonSummaryScreenPage
     PSS_PAGE_COUNT,
 };
 
+enum PokemonSummaryEffectPage
+{
+    PSS_EFFECT_ABILITY_LONG_DESC,
+    PSS_EFFECT_COUNT 
+};
+
 enum PokemonSummarySkillsMode
 {
     SUMMARY_SKILLS_MODE_STATS,

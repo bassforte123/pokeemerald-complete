@@ -534,6 +534,7 @@ struct AbilityInfo
 {
     u8 name[ABILITY_NAME_LENGTH + 1];
     const u8 *description;
+    const u8 *longDescription;
     s8 aiRating;
     u8 cantBeCopied:1; // cannot be copied by Role Play or Doodle
     u8 cantBeSwapped:1; // cannot be swapped with Skill Swap or Wandering Spirit
