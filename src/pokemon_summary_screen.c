@@ -87,7 +87,8 @@
 #define PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK 20
 #define PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK 21 // The upper name
 #define PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK 22 // The lower name
-#define PSS_LABEL_WINDOW_END 23
+#define PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS_BACK 23
+#define PSS_LABEL_WINDOW_END 24
 
 // Dynamic fields for the Pokémon Info page
 #define PSS_DATA_WINDOW_INFO_ORIGINAL_TRAINER 0
@@ -655,6 +656,15 @@ static const struct WindowTemplate sSummaryTemplate[] =
         .height = 4,
         .paletteNum = 6,
         .baseBlock = 308,
+    },
+        [PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS_BACK] = {
+        .bg = 2,
+        .tilemapLeft = 0,
+        .tilemapTop = 18,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 6,
+        .baseBlock = 320,
     },
     [PSS_LABEL_WINDOW_END] = DUMMY_WIN_TEMPLATE
 };
@@ -1959,6 +1969,8 @@ static void HidePortraitInfoFront()
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+    if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
+        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS);
 
     ScheduleBgCopyTilemapToVram(0);
 }
@@ -1968,6 +1980,8 @@ static void HidePortraitInfoBack()
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK);
+    if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
+        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS_BACK);
 
     ScheduleBgCopyTilemapToVram(2);
     ScheduleBgCopyTilemapToVram(1);
@@ -3542,6 +3556,12 @@ static void PrintNotEggInfo(void)
     PrintGenderSymbol(mon, summary->species2);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+    if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
+    {
+        // Refresh the status window (Long Ability Descriptions)
+        PrintTextOnWindow(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS, gText_Status, 2, 1, 0, 1);
+        PutWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS);
+    }
 }
 
 static void PrintEggInfo(void)
