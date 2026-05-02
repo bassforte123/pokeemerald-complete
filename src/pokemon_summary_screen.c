@@ -30,6 +30,7 @@
 #include "palette.h"
 #include "pokeball.h"
 #include "pokemon.h"
+#include "pokemon_icon.h"
 #include "pokemon_sprite_visualizer.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
@@ -96,6 +97,7 @@
 #define PSS_DATA_WINDOW_INFO_ABILITY 2
 #define PSS_DATA_WINDOW_INFO_MEMO 3
 #define PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION 4
+#define PSS_LABEL_WINDOW_PROMPT_ABILITY_INFO 5
 
 // Dynamic fields for the Pokémon Skills page
 #define PSS_DATA_WINDOW_SKILLS_HELD_ITEM 0
@@ -174,6 +176,8 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         enum Type teraType;
         u8 mintNature;
         u8 isLADOpen:1; // Is the Long Ability Description window open (Long Ability Descriptions)
+        u8 abilityIconSpriteActive:1;
+        u8 abilityIconSpriteId;
     } summary;
     u16 bgTilemapBuffers[PSS_PAGE_COUNT + PSS_EFFECT_COUNT][2][0x400];
     u8 mode;
@@ -356,8 +360,10 @@ static void CloseAbilityLongDescription(void); // clears and closes the long abi
 // There are limited priorities available and the other pages take up the others.
 // A lower priority is used so that the long ability descriptions window can overlap it,
 // but the higher priority is also used since it's not affected by the other pages using that priority layer when they are called.
-static void HidePortraitInfoBack(void); // Hides the foreground portrait text
-static void HidePortraitInfoFront(void); // Hides the background portrait text
+static void HidePortraitInfoFront(void); // Hides the foreground portrait text
+static void HidePortraitInfoBack(void); // Hides the background portrait text
+static void ShowAbilityInfoPrompt(void);
+static u8 CreateMonAbilityIcon(struct Pokemon *);
 
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -706,14 +712,23 @@ static const struct WindowTemplate sPageInfoTemplate[] =
         .paletteNum = 6,
         .baseBlock = 452,
     },
+        [PSS_LABEL_WINDOW_PROMPT_ABILITY_INFO] = {
+        .bg = 2,
+        .tilemapLeft = 24,
+        .tilemapTop = 9,
+        .width = 6,
+        .height = 2,
+        .paletteNum = 15,
+        .baseBlock = 560,
+    },
     [PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION] = {
         .bg = 0,
-        .tilemapLeft = 1,
+        .tilemapLeft = 0,
         .tilemapTop = 4,
-        .width = 16,
-        .height = 20,
+        .width = 17,
+        .height = 12,
         .paletteNum = 6,
-        .baseBlock = 560,
+        .baseBlock = 570,
     },
 };
 static const struct WindowTemplate sPageSkillsTemplate[] =
@@ -837,6 +852,7 @@ static const u8 sText_Relearn_LevelUp[] = _("{START_BUTTON} RELEARN LEVEL");
 static const u8 sText_Relearn_Egg[] = _("{START_BUTTON} RELEARN EGG");
 static const u8 sText_Relearn_TM[] = _("{START_BUTTON} RELEARN TM");
 static const u8 sText_Relearn_Tutor[] = _("{START_BUTTON} RELEARN TUTOR");
+static const u8 sText_Ability_Info[] = _("{R_BUTTON} INFO");
 
 static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
 static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // This is also affected by palettes, apparently
@@ -1689,6 +1705,7 @@ static void SetDefaultTilemaps(void)
         SetBgTilemapBuffer(2, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][0]);
         ChangeBgX(2, 0x10000, BG_COORD_ADD);
         ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+        ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK);
         ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS);
     }
 
@@ -1938,96 +1955,6 @@ static void Task_HandleInput(u8 taskId)
             }
         }
     }
-}
-
-static void ShowAbilityDescription()
-{
-    sMonSummaryScreen->summary.isLADOpen = TRUE;
-    CreateTask(Task_ShowAbilityDescription, 1);
-}
-
-static void CloseAbilityLongDescription()
-{
-    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION);
-
-    ClearWindowTilemap(windowId);
-
-    if (P_SUMMARY_SCREEN_RENAME && sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
-        ShowUtilityPrompt(SUMMARY_MODE_NORMAL);
-
-    // Refresh BG1 to remove the Long Ability Description window
-    SetBgTilemapBuffer(1, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][0]);
-
-    ScheduleBgCopyTilemapToVram(0);
-    ScheduleBgCopyTilemapToVram(1);
-    
-    sMonSummaryScreen->summary.isLADOpen = FALSE;
-}
-
-static void HidePortraitInfoFront()
-{
-    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
-    if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
-        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS);
-
-    ScheduleBgCopyTilemapToVram(0);
-}
-
-static void HidePortraitInfoBack()
-{
-    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK);
-    if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
-        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS_BACK);
-
-    ScheduleBgCopyTilemapToVram(2);
-    ScheduleBgCopyTilemapToVram(1);
-}
-
-static void Task_ShowAbilityDescription(u8 taskId)
-{
-    s16 *data = gTasks[taskId].data;
-
-    switch (data[0])
-    {
-    case 1:   
-        PrintMonAbilityLongDescriptionWindow();
-        break;
-    case 2:
-        PrintMonAbilityLongDescriptionText();
-        break;
-    case 3:
-        DestroyTask(taskId);
-        return;
-    }
-    data[0]++;
-}
-
-static void PrintMonAbilityLongDescriptionWindow(void)
-{
-        SetBgAttribute(1, BG_ATTR_PRIORITY, 1);
-        SetBgAttribute(2, BG_ATTR_PRIORITY, 2);
-
-        // Generates the Long Ability Description window on BG1
-        SetBgTilemapBuffer(1, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_COUNT + PSS_EFFECT_ABILITY_LONG_DESC][1]);
-        ScheduleBgCopyTilemapToVram(1);
-        HidePortraitInfoFront();
-        ShowBg(1);
-        ShowBg(2);
-}
-
-static void PrintMonAbilityLongDescriptionText(void)
-{
-    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION);
-    enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
-
-    PrintTextOnWindow(windowId, gAbilitiesInfo[ability].longDescription, 0, 0, 0, 0);
-    PutWindowTilemap(windowId);
-    
-    ScheduleBgCopyTilemapToVram(0);
 }
 
 static u8 IncrementSkillsStatsMode(u8 mode)
@@ -3504,8 +3431,11 @@ static void PrintTextOnWindowToFit(u8 windowId, const u8 *string, u8 x, u8 y, u8
 static void PrintMonInfo(void)
 {
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, PIXEL_FILL(0));
+    FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, PIXEL_FILL(0));
+    FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK, PIXEL_FILL(0));
     FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, PIXEL_FILL(0));
+    FillWindowPixelBuffer(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK, PIXEL_FILL(0));
     if (!sMonSummaryScreen->summary.isEgg)
         PrintNotEggInfo();
     else
@@ -3528,18 +3458,22 @@ static void PrintNotEggInfo(void)
         if (!IsMonShiny(mon))
         {
             PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, gStringVar1, 0, 1, 0, 1);
+            PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK, gStringVar1, 0, 1, 0, 1);
             SetMonPicBackgroundPalette(FALSE);
         }
         else
         {
             PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER, gStringVar1, 0, 1, 0, 7);
+            PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK, gStringVar1, 0, 1, 0, 7);
             SetMonPicBackgroundPalette(TRUE);
         }
         PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
+        PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK);
     }
     else
     {
         ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
+        ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK);
         if (!IsMonShiny(mon))
             SetMonPicBackgroundPalette(FALSE);
         else
@@ -3549,13 +3483,19 @@ static void PrintNotEggInfo(void)
     ConvertIntToDecimalStringN(gStringVar2, summary->level, STR_CONV_MODE_LEFT_ALIGN, 3);
     StringAppend(gStringVar1, gStringVar2);
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gStringVar1, 24, 17, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK, gStringVar1, 24, 17, 0, 1);
     GetMonNickname(mon, gStringVar1);
     PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, 0, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME) - 9);
+    PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK, gStringVar1, 0, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK) - 9);
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, gText_Slash, 0, 1, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK, gText_Slash, 0, 1, 0, 1);
     PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES, GetSpeciesName(summary->species2), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES) - 9);
+    PrintTextOnWindowToFitPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK, GetSpeciesName(summary->species2), 6, 1, 0, 1, WindowWidthPx(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK) - 9);
     PrintGenderSymbol(mon, summary->species2);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+    PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+    PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK);
     if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
     {
         // Refresh the status window (Long Ability Descriptions)
@@ -3568,9 +3508,13 @@ static void PrintEggInfo(void)
 {
     GetMonNickname(&sMonSummaryScreen->currentMon, gStringVar1);
     PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME, gStringVar1, 0, 1, 0, 1);
+    PrintTextOnWindow(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK, gStringVar1, 0, 1, 0, 1);
     PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+    PutWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK);
     ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK);
 }
 
 static void PrintGenderSymbol(struct Pokemon *mon, u16 species)
@@ -3797,6 +3741,7 @@ static void PrintInfoPageText(void)
 {
     if (sMonSummaryScreen->summary.isEgg)
     {
+        ShowAbilityInfoPrompt(); // Clears the info prompt if it's an egg
         PrintEggOTName();
         PrintEggOTID();
         PrintEggState();
@@ -3873,6 +3818,7 @@ static void PrintMonAbilityName(void)
 {
     enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
     PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ABILITY), gAbilitiesInfo[ability].name, 0, 1, 0, 1);
+    ShowAbilityInfoPrompt();
 }
 
 static void PrintMonAbilityDescription(void)
@@ -5221,4 +5167,139 @@ static void CB2_ReturnToSummaryScreenFromNamingScreen(void)
 static void CB2_PssChangePokemonNickname(void)
 {
     ChangePokemonNicknameWithCallback(CB2_ReturnToSummaryScreenFromNamingScreen);
+}
+
+// Long Ability Description
+static void ShowAbilityDescription()
+{
+    sMonSummaryScreen->summary.isLADOpen = TRUE;
+    CreateTask(Task_ShowAbilityDescription, 1);
+}
+
+static void Task_ShowAbilityDescription(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+
+    switch (data[0])
+    {
+    case 1:   
+        PrintMonAbilityLongDescriptionWindow();
+        break;
+    case 2:
+        PrintMonAbilityLongDescriptionText();
+        break;
+    case 3:
+        DestroyTask(taskId);
+        return;
+    }
+    data[0]++;
+}
+
+
+static void PrintMonAbilityLongDescriptionWindow(void)
+{
+    struct Pokemon *mon = &sMonSummaryScreen->currentMon;
+
+    SetBgAttribute(1, BG_ATTR_PRIORITY, 1);
+    SetBgAttribute(2, BG_ATTR_PRIORITY, 2);
+
+    // Generates the Long Ability Description window on BG1
+    SetBgTilemapBuffer(1, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_COUNT + PSS_EFFECT_ABILITY_LONG_DESC][1]);
+    ScheduleBgCopyTilemapToVram(1);
+    HidePortraitInfoFront();
+    CreateMonAbilityIcon(mon);
+    ShowBg(1);
+    ShowBg(2);
+}
+
+static void PrintMonAbilityLongDescriptionText(void)
+{
+    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION);
+    enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
+
+    PrintTextOnWindow(windowId, gAbilitiesInfo[ability].name, 5, 1, 0, 1);
+    PrintTextOnWindow(windowId, gAbilitiesInfo[ability].longDescription, 5, 17, 0, 0);
+    PutWindowTilemap(windowId);
+    
+    ScheduleBgCopyTilemapToVram(0);
+}
+
+static void CloseAbilityLongDescription()
+{
+    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_ABILITY_LONG_DESCRIPTION);
+
+    ClearWindowTilemap(windowId);
+
+    if (sMonSummaryScreen->summary.abilityIconSpriteActive)
+    {
+        FreeAndDestroyMonIconSprite(&gSprites[sMonSummaryScreen->summary.abilityIconSpriteId]);
+        sMonSummaryScreen->summary.abilityIconSpriteActive = FALSE;
+    }
+    if (P_SUMMARY_SCREEN_RENAME && sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
+        ShowUtilityPrompt(SUMMARY_MODE_NORMAL);
+
+    // Refresh BG1 to remove the Long Ability Description window
+    SetBgTilemapBuffer(1, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_BATTLE_MOVES][0]);
+
+    ScheduleBgCopyTilemapToVram(0);
+    ScheduleBgCopyTilemapToVram(1);
+    
+    sMonSummaryScreen->summary.isLADOpen = FALSE;
+}
+
+static void HidePortraitInfoFront()
+{
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES);
+    if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
+        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS);
+
+    ScheduleBgCopyTilemapToVram(0);
+}
+
+static void HidePortraitInfoBack()
+{
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_DEX_NUMBER_BACK);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_NICKNAME_BACK);
+    ClearWindowTilemap(PSS_LABEL_WINDOW_PORTRAIT_SPECIES_BACK);
+    if (sMonSummaryScreen->summary.ailment != AILMENT_NONE)
+        ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_STATUS_BACK);
+
+    ScheduleBgCopyTilemapToVram(2);
+    ScheduleBgCopyTilemapToVram(1);
+}
+
+static void ShowAbilityInfoPrompt(void)
+{
+    u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_LABEL_WINDOW_PROMPT_ABILITY_INFO);
+
+    if (sMonSummaryScreen->currPageIndex != PSS_PAGE_INFO || sMonSummaryScreen->summary.isEgg)
+    {
+        ClearWindowTilemap(windowId);
+        ScheduleBgCopyTilemapToVram(1);
+        ScheduleBgCopyTilemapToVram(2);
+        return;
+    }
+
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(0));
+    PutWindowTilemap(windowId);
+    PrintTextOnWindowWithFont(windowId, sText_Ability_Info, 4, 2, 0, 0, FONT_SMALL);
+    ScheduleBgCopyTilemapToVram(1);
+    ScheduleBgCopyTilemapToVram(2);
+}
+
+static u8 CreateMonAbilityIcon(struct Pokemon *unused)
+{
+    struct PokeSummary *summary = &sMonSummaryScreen->summary;
+
+    FreeMonIconPalettes();
+    LoadMonIconPalettePersonality(summary->species2, 0);
+    u8 spriteID = CreateMonIcon(summary->species2, SpriteCB_MonIcon, 127, 34 , 1, summary->pid);
+    gSprites[spriteID].hFlip = TRUE;
+    gSprites[spriteID].oam.priority = 0;
+    summary->abilityIconSpriteId = spriteID;
+    summary->abilityIconSpriteActive = TRUE;
+
+    return spriteID;
 }
