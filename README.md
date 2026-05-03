@@ -1,6 +1,21 @@
+# About `Long Ability Descriptions`
+
+(v1.15.1)
+This branch adds a new window to the Pokemon Summary Screen that allows more space to write ability descriptions:
+<img width="477" height="317" alt="image" src="https://github.com/user-attachments/assets/68326b68-7c5b-499b-a797-b0276e4fbd2d" />
+<img width="240" height="160" alt="LADFinished" src="https://github.com/user-attachments/assets/2b71402a-cf5a-4b8d-9f5d-cb568b5640bf" /> 
+
+The new menu is opened by pressing R on the Info screen and populated with the .longDescription value in the abilities.h file.  
+
+The Ability list is currently populated with the regular descriptions as defaults along with sample whitespace at apporiximately the width that the new window allows so that the format is easily visible:
+<img width="536" height="179" alt="image" src="https://github.com/user-attachments/assets/0e8aa0a2-2a9a-4214-9c02-0376b6d82692" />
+
+You can confirm any new text fits properly with the "Ability long descriptions fit on Long Ability Description Window" Make Test.
+
 # About `pokeemerald-expansion`
 
 ![Gif that shows debugging functionality that is unique to pokeemerald-expansion such as rerolling Trainer ID, Cheat Start, PC from Debug Menu, Debug PC Fill, Pokémon Sprite Visualizer, Debug Warp to Map, and Battle Debug Menu](https://github.com/user-attachments/assets/cf9dfbee-4c6b-4bca-8e0a-07f116ef891c) ![Gif that shows overworld functionality that is unique to pokeemerald-expansion such as indoor running, BW2 style map popups, overworld followers, DNA Splicers, Gen 1 style fishing, OW Item descriptions, Quick Run from Battle, Use Last Ball, Wild Double Battles, and Catch from EXP](https://github.com/user-attachments/assets/383af243-0904-4d41-bced-721492fbc48e) ![Gif that shows off a number of modern Pokémon battle mechanics happening in the pokeemerald-expansion engine: 2 vs 1 battles, modern Pokémon, items, moves, abilities, fully customizable opponents and partners, Trainer Slides, and generational gimmicks](https://github.com/user-attachments/assets/50c576bc-415e-4d66-a38f-ad712f3316be)
+
 
 <!-- If you want to re-record or change these gifs, here are some notes that I used: https://files.catbox.moe/05001g.md -->
 
