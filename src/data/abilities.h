@@ -16,9 +16,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Stench"),
         .description = COMPOUND_STRING("May cause a foe to flinch."),
-        .longDescription = COMPOUND_STRING("May cause a foe to\n"
-                                           "flinch.                 \n"
-                                           "                        \n"),
+        .longDescription = COMPOUND_STRING("When the Pokémon deals\n"
+                                           "damage with its moves,\n"
+                                           "there is a 10% chance\n"
+                                           "that targets will flinch.\n"
+                                           "Reduces wild encounter\n"
+                                           "rate by 50% when first\n"
+                                           "in party."),
         .aiRating = 1,
     },
 
