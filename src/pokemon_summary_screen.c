@@ -362,7 +362,7 @@ static void CloseAbilityLongDescription(void); // clears and closes the long abi
 // but the higher priority is also used since it's not affected by the other pages using that priority layer when they are called.
 static void HidePortraitInfoFront(void); // Hides the foreground portrait text
 static void HidePortraitInfoBack(void); // Hides the background portrait text
-static void ShowAbilityInfoPrompt(void);
+static void PrintMonAbilityInfoPrompt(void);
 static u8 CreateMonAbilityIcon(struct Pokemon *);
 
 static const struct BgTemplate sBgTemplates[] =
@@ -2379,7 +2379,8 @@ static void ChangePage(u8 taskId, s8 delta)
         return;
     else if (delta == 1 && sMonSummaryScreen->currPageIndex == sMonSummaryScreen->maxPageIndex)
         return;
-
+    
+    PrintMonAbilityInfoPrompt(); // Clears the ability info prompt
     if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
     {
         CloseAbilityLongDescription();
@@ -3741,7 +3742,7 @@ static void PrintInfoPageText(void)
 {
     if (sMonSummaryScreen->summary.isEgg)
     {
-        ShowAbilityInfoPrompt(); // Clears the info prompt if it's an egg
+        PrintMonAbilityInfoPrompt(); // Clears the info prompt if it's an egg
         PrintEggOTName();
         PrintEggOTID();
         PrintEggState();
@@ -3753,6 +3754,7 @@ static void PrintInfoPageText(void)
         PrintMonOTID();
         PrintMonAbilityName();
         PrintMonAbilityDescription();
+        PrintMonAbilityInfoPrompt();
         BufferMonTrainerMemo();
         PrintMonTrainerMemo();
     }
@@ -3818,7 +3820,6 @@ static void PrintMonAbilityName(void)
 {
     enum Ability ability = GetAbilityBySpecies(sMonSummaryScreen->summary.species, sMonSummaryScreen->summary.abilityNum);
     PrintTextOnWindow(AddWindowFromTemplateList(sPageInfoTemplate, PSS_DATA_WINDOW_INFO_ABILITY), gAbilitiesInfo[ability].name, 0, 1, 0, 1);
-    ShowAbilityInfoPrompt();
 }
 
 static void PrintMonAbilityDescription(void)
@@ -5270,7 +5271,7 @@ static void HidePortraitInfoBack()
     ScheduleBgCopyTilemapToVram(1);
 }
 
-static void ShowAbilityInfoPrompt(void)
+static void PrintMonAbilityInfoPrompt(void)
 {
     u8 windowId = AddWindowFromTemplateList(sPageInfoTemplate, PSS_LABEL_WINDOW_PROMPT_ABILITY_INFO);
 

@@ -533,6 +533,18 @@ TEST("Ability descriptions fit on Pokemon Summary Screen")
     EXPECT_LE(GetStringWidth(fontId, gAbilitiesInfo[ability].description, 0), widthPx);
 }
 
+TEST("Ability long descriptions fit on Long Ability Description Window")
+{
+    u32 i;
+    const u32 fontId = FONT_NORMAL, widthPx = 132;
+    enum Ability ability = ABILITY_NONE;
+    for (i = 1; i < ABILITIES_COUNT; i++)
+    {
+        PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].longDescription) { ability = i; }
+    }
+    EXPECT_LE(GetStringWidth(fontId, gAbilitiesInfo[ability].longDescription, 0), widthPx);
+}
+
 TEST("Type names fit on Battle Screen")
 {
     u32 i;
