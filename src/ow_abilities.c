@@ -81,13 +81,13 @@ static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
 static bool32 IsSynchronizeActive(void)
 {
     return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_SYNCHRONIZE));
+        && MonHasTrait(&gPlayerParty[0], ABILITY_SYNCHRONIZE)));
 }
 
 static bool32 IsCuteCharmActive(void)
 {
      return ((!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM));
+        && MonHasTrait(&gPlayerParty[0], ABILITY_CUTE_CHARM)));
 }
 
 u32 GetSynchronizedNature(enum GeneratedMonOrigin origin, u32 species)

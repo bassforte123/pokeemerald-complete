@@ -4698,7 +4698,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             break;
         case ABILITY_DISGUISE:
-            if (GetConfig(B_DISGUISE_HP_LOSS) >= GEN_8 && ability == ABILITY_DISGUISE)
+            if (GetConfig(B_DISGUISE_HP_LOSS))
                 SetPassiveDamageAmount(gBattlerTarget, GetNonDynamaxMaxHP(gBattlerTarget) / 8);
             BattleScriptCall(BattleScript_BattlerFormChangeDisguise);
             break;
@@ -11756,7 +11756,7 @@ bool32 BattlerHasHeldItemEffectInternal(enum BattlerId battler, enum HoldEffect 
             return FALSE;
         if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
             return FALSE;
-        if (checkAbility && GetBattlerAbility(battler) == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid)
+        if (checkAbility && BattlerHasTrait(battler, ABILITY_KLUTZ) && !gBattleMons[battler].volatiles.gastroAcid)
             return FALSE;
     }
     
