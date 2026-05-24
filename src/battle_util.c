@@ -5147,6 +5147,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         if (!IsBattlerAlive(battler))
             return effect;
 
+        // Activating only one transformation ability at a time
         ability = ABILITY_NONE;
         if (SearchTraits(battlerTraits, ABILITY_FORECAST))
             ability = ABILITY_FORECAST;
