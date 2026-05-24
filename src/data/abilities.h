@@ -114,7 +114,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Paralyzes on contact."),
         .longDescription = COMPOUND_STRING("When hit by a contact\n"
                                            "move, the attacker has\n"
+                                           #if B_ABILITY_TRIGGER_CHANCE < GEN_4
+                                           "a 1/3 chance of being\n"
+                                           #else
                                            "a 30% chance of being\n"
+                                           #endif
                                            "paralyzed. 50% chance to\n"
                                            "encounter electric\n"
                                            "pokemon when in the\n"
@@ -444,14 +448,17 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Illuminate"),
         .description = COMPOUND_STRING("Encounter rate increases."),
         .longDescription = COMPOUND_STRING("Wild Pokémon encounter\n"
+                                           "rate doubled when first\n"
                                            #if B_ABILITY_TRIGGER_CHANCE < GEN_9
-                                           "rate doubled."
-                                           #endif
-                                           "rate doubled. Ignore\n"
+                                           "in the party."
+                                           #else
+                                           "in the party. Ignore\n"
                                            "changes to targets'\n"
                                            "evasiveness and own\n"
                                            "accuracy cannot be\n"
-                                           "lowered."),
+                                           "lowered."
+                                           #endif
+                                           ),
         .aiRating = 0,
         .breakable = TRUE,
     },
@@ -520,7 +527,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("The Pokémon’s hot magma\n"
                                            "coating prevents it from\n"
                                            "being frozen. Doubles\n"
-                                           "egg hatch speed if in\n"
+                                           "egg hatching speed if in\n"
                                            "the party (does not\n"
                                            "stack).\n"),
         .aiRating = 1,
@@ -542,10 +549,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Magnet Pull"),
         .description = COMPOUND_STRING("Traps Steel-type Pokémon."),
-        .longDescription = COMPOUND_STRING("Traps Steel-type\n"
-                                           "Pokémon.                \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Prevents Steel-type\n"
+                                           "Pokémon from fleeing,\n"
+                                           "Ghost-types excludded.\n"
+                                           "50% chance to encounter\n"
+                                           "Steel-type Pokémon when\n"
+                                           "first in the party."),
         .aiRating = 9,
     },
 
@@ -553,10 +562,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Soundproof"),
         .description = COMPOUND_STRING("Avoids sound-based moves."),
-        .longDescription = COMPOUND_STRING("Avoids sound-based\n"
-                                           " moves.                 \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Soundproofing gives the\n"
+                                           "Pokémon full immunity to\n"
+                                           "all sound-based moves."),
         .aiRating = 4,
         .breakable = TRUE,
     },
@@ -565,10 +573,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Rain Dish"),
         .description = COMPOUND_STRING("Slight HP recovery in rain."),
-        .longDescription = COMPOUND_STRING("Slight HP recovery in\n"
-                                           "rain.                   \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon has 1/16 of\n"
+                                           "its max HP restored at\n"
+                                           "the end of every turn\n"
+                                           "in rain. "),
         .aiRating = 3,
     },
 
@@ -576,11 +584,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Sand Stream"),
         .description = COMPOUND_STRING("Summons a sandstorm."),
-        .longDescription = COMPOUND_STRING("Summons a sandstorm.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Summons a sandstorm for\n"
+                                           "5 turns when the Pokémon\n"
+                                           "enters a battle."),
         .aiRating = 9,
     },
 
@@ -588,11 +594,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Pressure"),
         .description = COMPOUND_STRING("Raises foe's PP usage."),
-        .longDescription = COMPOUND_STRING("Raises foe's PP usage.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Opponents to expend 1\n"
+                                           "more PP when using moves\n"
+                                           "against the Pokémon.\n"
+                                           "When first in the party,\n"
+                                           "50% chance for wild\n"
+                                           "Pokémon to be their\n"
+                                           "highest available level"),
         .aiRating = 5,
     },
 
@@ -600,10 +608,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Thick Fat"),
         .description = COMPOUND_STRING("Heat-and-cold protection."),
-        .longDescription = COMPOUND_STRING("Heat-and-cold\n"
-                                           " protection.            \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon is protected\n"
+                                           "by a layer of thick fat,\n"
+                                           "which halves the damage\n"
+                                           "taken from Fire- and\n"
+                                           "Ice-type moves."),
         .aiRating = 7,
         .breakable = TRUE,
     },
@@ -612,10 +621,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Early Bird"),
         .description = COMPOUND_STRING("Awakens quickly from sleep."),
-        .longDescription = COMPOUND_STRING("Awakens quickly from\n"
-                                           " sleep.                 \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon awakens\n"
+                                           "from sleep twice as fast\n"
+                                           "as other Pokémon."),
         .aiRating = 4,
     },
 
@@ -623,10 +631,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Flame Body"),
         .description = COMPOUND_STRING("Burns the foe on contact."),
-        .longDescription = COMPOUND_STRING("Burns the foe on\n"
-                                           "contact.                \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("When hit by a contact\n"
+                                           "move, the attacker has\n"
+                                           #if B_ABILITY_TRIGGER_CHANCE < GEN_4
+                                           "a 1/3 chance of being\n"
+                                           #else
+                                           "a 30% chance of being\n"
+                                           #endif
+                                           "burned. Doubles egg\n"
+                                           "hatching speed if in the\n"
+                                           "party (does not stack)."),
         .aiRating = 4,
     },
 
@@ -634,11 +648,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Run Away"),
         .description = COMPOUND_STRING("Makes escaping easier."),
-        .longDescription = COMPOUND_STRING("Makes escaping easier.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Enables a sure getaway\n"
+                                           "from wild Pokémon."),
         .aiRating = 0,
     },
 
@@ -646,10 +657,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Keen Eye"),
         .description = COMPOUND_STRING("Prevents loss of accuracy."),
-        .longDescription = COMPOUND_STRING("Prevents loss of\n"
-                                           "accuracy.               \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Ignores changes to \n"
+                                           "targets' evasiveness and\n"
+                                           "its accuracy cannot\n"
+                                           "be lowered. Reduces wild\n"
+                                           "encounters 5 levels or\n"
+                                           "lower by 50% when first\n"
+                                           "in the party."),
         .aiRating = 1,
         .breakable = TRUE,
     },
@@ -658,10 +672,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Hyper Cutter"),
         .description = COMPOUND_STRING("Prevents Attack reduction."),
-        .longDescription = COMPOUND_STRING("Prevents Attack\n"
-                                           "reduction.              \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon's prized,\n"
+                                           "mighty pincers prevent\n"
+                                           "other Pokémon from\n"
+                                           "lowering its Attack stat.\n"
+                                           "Extends Cut's grass\n"
+                                           "cutting range."),
         .aiRating = 3,
         .breakable = TRUE,
     },
@@ -670,11 +686,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Pickup"),
         .description = COMPOUND_STRING("May pick up items."),
-        .longDescription = COMPOUND_STRING("May pick up items.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon may pick up\n"
+                                           "an item another Pokémon\n"
+                                           "used during a battle. It\n"
+                                           "also has a 10% chance to\n"
+                                           "pick up items at the end\n"
+                                           "of battle based on its\n"
+                                           "level.\n"),
         .aiRating = 1,
     },
 
@@ -682,10 +700,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Truant"),
         .description = COMPOUND_STRING("Moves only every two turns."),
-        .longDescription = COMPOUND_STRING("Moves only every two\n"
-                                           "turns.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Each time the Pokémon\n"
+                                           "uses a move, it spends\n"
+                                           "the next turn loafing\n"
+                                           "around."),
         .aiRating = -2,
         .cantBeOverwritten = TRUE,
     },
@@ -694,10 +712,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Hustle"),
         .description = COMPOUND_STRING("Trades accuracy for power."),
-        .longDescription = COMPOUND_STRING("Trades accuracy for\n"
-                                           "power.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Physical move Attack\n"
+                                           "is boosted by 50% and\n"
+                                           "accuracy is lowered by\n" 
+                                           "20%. When first in the\n"
+                                           "party, 50% chance for\n"
+                                           "wild Pokémon to be their\n"
+                                           "highest available level."),
         .aiRating = 7,
     },
 
@@ -705,11 +726,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Cute Charm"),
         .description = COMPOUND_STRING("Infatuates on contact."),
-        .longDescription = COMPOUND_STRING("Infatuates on contact.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING(
+                                           #if B_ABILITY_TRIGGER_CHANCE < GEN_4
+                                           "1/3 chance opposite\n"
+                                           #else
+                                           "30% chance opposite\n"
+                                           #endif
+                                           "gender Pokémon are\n"
+                                           "infatuated when making\n"
+                                           "contact with a move.\n"
+                                           "When first in party,\n"
+                                           "2/3 chance wild pokemon\n"
+                                           "are the opposite gender."),
         .aiRating = 2,
     },
 
@@ -717,11 +745,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Plus"),
         .description = COMPOUND_STRING("Powers up with Minus."),
-        .longDescription = COMPOUND_STRING("Powers up with Minus.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the Pokémon's\n"
+                                           "Sp. Atk stat by 50% if\n"
+                                           "an ally with the Plus\n"
+                                           #if B_PLUS_MINUS_INTERACTION >= GEN_5
+                                           "or Minus Ability is also\n"
+                                           "in battle."
+                                           #else
+                                           "Ability is also in battle."
+                                           #endif
+                                           ),
         .aiRating = 0,
     },
 
@@ -729,11 +762,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Minus"),
         .description = COMPOUND_STRING("Powers up with Plus."),
-        .longDescription = COMPOUND_STRING("Powers up with Plus.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the Pokémon's\n"
+                                           "Sp. Atk stat by 50% if\n"
+                                           "an ally with the Minus\n"
+                                           #if B_PLUS_MINUS_INTERACTION >= GEN_5
+                                           "or Plus Ability is also\n"
+                                           "in battle."
+                                           #else
+                                           "Ability is also in battle."
+                                           #endif
+                                           ),
         .aiRating = 0,
     },
 
@@ -741,10 +779,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Forecast"),
         .description = COMPOUND_STRING("Changes with the weather."),
-        .longDescription = COMPOUND_STRING("Changes with the\n"
-                                           "weather.                \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon transforms\n"
+                                           "with the weather to\n"
+                                           "change its type to Water\n"
+                                           "in the Rain, Fire in the\n"
+                                           "Sun, or Ice in the Snow or\n"
+                                           "Hail."),
         .aiRating = 6,
         .cantBeCopied = TRUE,
         .cantBeTraced = TRUE,
@@ -754,11 +794,17 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Sticky Hold"),
         .description = COMPOUND_STRING("Prevents item theft."),
-        .longDescription = COMPOUND_STRING("Prevents item theft.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon's held items\n"
+                                           "cling to its sticky body\n"
+                                           "and cannot be removed by\n"
+                                           "other Pokémon. Increases\n"
+                                           "the chance of a bite\n"
+                                           #if I_FISHING_STICKY_BOOST < GEN_4
+                                           "while fishing by 1/3\n"
+                                           #else
+                                           "while fishing by 2x\n"
+                                           #endif
+                                           "when first in the party."),
         .aiRating = 3,
         .breakable = TRUE,
     },
@@ -767,10 +813,15 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Shed Skin"),
         .description = COMPOUND_STRING("Heals the body by shedding."),
-        .longDescription = COMPOUND_STRING("Heals the body by\n"
-                                           "shedding.               \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING(
+                                           #if B_ABILITY_TRIGGER_CHANCE == GEN_4
+                                           "The Pokémon has a 30%\n"
+                                           #else
+                                           "The Pokémon has a 1/3\n"
+                                           #endif
+                                           "chance of curing its own\n"
+                                           "status conditions at the\n"
+                                           "end of every turn."),
         .aiRating = 7,
     },
 
@@ -778,11 +829,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Guts"),
         .description = COMPOUND_STRING("Ups Attack if suffering."),
-        .longDescription = COMPOUND_STRING("Ups Attack if suffering.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("When the Pokémon has a\n"
+                                           "status condition, its\n"
+                                           "Attack stat is boosted\n"
+                                           "by 50%. Being burned\n"
+                                           "does not halve the\n"
+                                           "damage dealt physical\n"
+                                           "moves."),
         .aiRating = 6,
     },
 
@@ -790,10 +843,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Marvel Scale"),
         .description = COMPOUND_STRING("Ups Defense if suffering."),
-        .longDescription = COMPOUND_STRING("Ups Defense if\n"
-                                           "suffering.              \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("When the Pokémon has a\n"
+                                           "status condition, its\n"
+                                           "Defense stat is boosted\n"
+                                           "by 50%."),
         .aiRating = 5,
         .breakable = TRUE,
     },
@@ -802,11 +855,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Liquid Ooze"),
         .description = COMPOUND_STRING("Draining causes injury."),
-        .longDescription = COMPOUND_STRING("Draining causes injury.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The strong stench of the\n"
+                                           "Pokémon's oozed liquid\n"
+                                           "damages attackers that\n"
+                                           "use HP-draining moves."),
         .aiRating = 3,
     },
 
@@ -814,10 +866,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Overgrow"),
         .description = COMPOUND_STRING("Ups Grass moves in a pinch."),
-        .longDescription = COMPOUND_STRING("Ups Grass moves in a\n"
-                                           "pinch.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's Grass-type\n"
+                                           "moves by 50% when its HP\n"
+                                           "drops to 1/3 or less of\n"
+                                           "its max. "),
         .aiRating = 5,
     },
 
@@ -825,10 +878,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Blaze"),
         .description = COMPOUND_STRING("Ups Fire moves in a pinch."),
-        .longDescription = COMPOUND_STRING("Ups Fire moves in a\n"
-                                           "pinch.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's Fire-type\n"
+                                           "moves by 50% when its HP\n"
+                                           "drops to 1/3 or less of\n"
+                                           "its max. "),
         .aiRating = 5,
     },
 
@@ -836,10 +890,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Torrent"),
         .description = COMPOUND_STRING("Ups Water moves in a pinch."),
-        .longDescription = COMPOUND_STRING("Ups Water moves in a\n"
-                                           "pinch.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's Water-type\n"
+                                           "moves by 50% when its HP\n"
+                                           "drops to 1/3 or less of\n"
+                                           "its max. "),
         .aiRating = 5,
     },
 
@@ -847,10 +902,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Swarm"),
         .description = COMPOUND_STRING("Ups Bug moves in a pinch."),
-        .longDescription = COMPOUND_STRING("Ups Bug moves in a\n"
-                                           "pinch.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's Bug-type moves\n"
+                                           "by 50% when its HP drops\n"
+                                           "to 1/3 or less of its \n"
+                                           "max. "),
         .aiRating = 5,
     },
 
@@ -858,11 +914,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Rock Head"),
         .description = COMPOUND_STRING("Prevents recoil damage."),
-        .longDescription = COMPOUND_STRING("Prevents recoil damage.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon will not\n"
+                                           "lose HP due to recoil\n"
+                                           "damage from its moves."),
         .aiRating = 5,
     },
 
@@ -870,10 +924,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Drought"),
         .description = COMPOUND_STRING("Summons sunlight in battle."),
-        .longDescription = COMPOUND_STRING("Summons sunlight in\n"
-                                           "battle.                 \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Summons harsh sunlight\n"
+                                           "when the Pokémon enters\n"
+                                           #if B_ABILITY_WEATHER < GEN_6
+                                           "a battle. Lasts until\n"
+                                           "overwritten."
+                                           #else
+                                           "a battle. Lasts for 5\n"
+                                           "turns"
+                                           #endif
+                                           ),
         .aiRating = 9,
     },
 
@@ -881,11 +941,23 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Arena Trap"),
         .description = COMPOUND_STRING("Prevents fleeing."),
-        .longDescription = COMPOUND_STRING("Prevents fleeing.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Prevents opposing\n"
+                                           #if B_GHOSTS_ESCAPE < GEN_6
+                                           "grounded Pokémon from\n"
+                                           "fleeing or switching.\n"
+                                           "Does not work on flee\n"
+                                           "boosting effects. 2x \n"
+                                           "wild encounter rate\n"
+                                           "when first in the party."
+                                           #else
+                                           "grounded and non Ghost-\n"
+                                           "types from fleeing or\n"
+                                           "switching. Does not work\n"
+                                           "on flee boosting effects.\n"
+                                           "2x wild encounter rate\n"
+                                           "when first in the party."
+                                           #endif
+                                           ),
         .aiRating = 9,
     },
 
