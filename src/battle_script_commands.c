@@ -2486,10 +2486,6 @@ static bool32 DoesSubstituteBlockMoveEffectOnTarget(enum BattlerId battlerAtk, e
 
 void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
 {
-    enum Ability abilities[MAX_BATTLERS_COUNT] = {ABILITY_NONE};
-    abilities[battlerAtk] = GetBattlerAbility(battlerAtk);
-    abilities[effectBattler] = GetBattlerAbility(effectBattler);
-
     s32 i;
     bool32 primary = effectFlags & EFFECT_PRIMARY;
     bool32 certain = effectFlags & EFFECT_CERTAIN;
