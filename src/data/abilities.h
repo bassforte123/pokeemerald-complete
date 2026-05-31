@@ -6,8 +6,6 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("No special ability."),
         .longDescription = COMPOUND_STRING("No special ability.\n"
                                            "                        \n"
-                                           "                        \n"
-                                           "                        \n"
                                            "                        "),
         .aiRating = 0,
         .cantBeSwapped = TRUE,
@@ -797,14 +795,18 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("The Pokémon's held items\n"
                                            "cling to its sticky body\n"
                                            "and cannot be removed by\n"
-                                           "other Pokémon. Increases\n"
-                                           "the chance of a bite\n"
+                                           "other Pokémon. Fishing\n"
+                                           "bite chance increased\n"
                                            #if I_FISHING_STICKY_BOOST < GEN_4
-                                           "while fishing by 1/3\n"
+                                           "bite chance increased\n"
+                                           "by 35% when first in\n"
+                                           "the party."
                                            #else
-                                           "while fishing by 2x\n"
+                                           "bite chance is\n"
+                                           "doubled when first in\n"
+                                           "the party."
                                            #endif
-                                           "when first in the party."),
+                                           ),
         .aiRating = 3,
         .breakable = TRUE,
     },
@@ -903,10 +905,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Swarm"),
         .description = COMPOUND_STRING("Ups Bug moves in a pinch."),
         .longDescription = COMPOUND_STRING("Boosts the power of the\n"
-                                           "Pokémon's Bug-type moves\n"
-                                           "by 50% when its HP drops\n"
-                                           "to 1/3 or less of its \n"
-                                           "max. "),
+                                           "Pokémon's Bug-type\n"
+                                           "moves by 50% when its HP\n"
+                                           "drops to 1/3 or less of\n"
+                                           "its max. "),
         .aiRating = 5,
     },
 
@@ -945,15 +947,15 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            #if B_GHOSTS_ESCAPE < GEN_6
                                            "grounded Pokémon from\n"
                                            "fleeing or switching.\n"
-                                           "Does not work on flee\n"
+                                           "Does not stop flee\n"
                                            "boosting effects. 2x \n"
                                            "wild encounter rate\n"
                                            "when first in the party."
                                            #else
                                            "grounded and non Ghost-\n"
                                            "types from fleeing or\n"
-                                           "switching. Does not work\n"
-                                           "on flee boosting effects.\n"
+                                           "switching. Does not stop\n"
+                                           "flee boosting effects.\n"
                                            "2x wild encounter rate\n"
                                            "when first in the party."
                                            #endif
@@ -965,11 +967,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Vital Spirit"),
         .description = COMPOUND_STRING("Prevents sleep."),
-        .longDescription = COMPOUND_STRING("Prevents sleep.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon cannot\n"
+                                           "become drowsy or be put\n"
+                                           "to sleep. When first in\n"
+                                           "the party, 50% chance\n"
+                                           "for wild Pokémon to be\n"
+                                           "their highest available\n"
+                                           "level"),
         .aiRating = 4,
         .breakable = TRUE,
     },
@@ -978,10 +982,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("White Smoke"),
         .description = COMPOUND_STRING("Prevents ability reduction."),
-        .longDescription = COMPOUND_STRING("Prevents ability\n"
-                                           "reduction.              \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon's stats\n"
+                                           "cannot be lowered by\n"
+                                           "other Pokémon. Reduces\n"
+                                           "wild encounter rate by\n"
+                                           "50% when first in the\n"
+                                           "party."),
         .aiRating = 4,
         .breakable = TRUE,
     },
@@ -990,11 +996,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Pure Power"),
         .description = COMPOUND_STRING("Raises Attack."),
-        .longDescription = COMPOUND_STRING("Raises Attack.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Doubles the power of the\n"
+                                           "Pokémon's physical\n"
+                                           "moves."),
         .aiRating = 10,
     },
 
@@ -1002,11 +1006,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Shell Armor"),
         .description = COMPOUND_STRING("Blocks critical hits."),
-        .longDescription = COMPOUND_STRING("Blocks critical hits.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("A hard shell protects\n"
+                                           "the Pokémon from\n"
+                                           "critical hits."),
         .aiRating = 2,
         .breakable = TRUE,
     },
@@ -1015,10 +1017,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Air Lock"),
         .description = COMPOUND_STRING("Negates weather effects."),
-        .longDescription = COMPOUND_STRING("Negates weather\n"
-                                           "effects.                \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Eliminates the effects\n"
+                                           "of weather."),
         .aiRating = 5,
     },
 
@@ -1026,11 +1026,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Tangled Feet"),
         .description = COMPOUND_STRING("Ups evasion if confused."),
-        .longDescription = COMPOUND_STRING("Ups evasion if confused.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Doubles the Pokémon's\n"
+                                           "evasiveness if it is\n"
+                                           "confused."),
         .aiRating = 2,
         .breakable = TRUE,
     },
@@ -1039,10 +1037,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Motor Drive"),
         .description = COMPOUND_STRING("Electricity raises Speed."),
-        .longDescription = COMPOUND_STRING("Electricity raises\n"
-                                           "Speed.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Electric-type moves do\n"
+                                           "not work on the Pokémon.\n"
+                                           "Instead, they boost its\n"
+                                           "Speed stat by 1 stage."),
         .aiRating = 6,
         .breakable = TRUE,
     },
@@ -1051,10 +1049,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Rivalry"),
         .description = COMPOUND_STRING("Powers up against rivals."),
-        .longDescription = COMPOUND_STRING("Powers up against\n"
-                                           "rivals.                 \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's moves by 25%\n"
+                                           "against targets of the\n"
+                                           "same gender, and lowers\n"
+                                           "it by 25% against\n"
+                                           "targets of the opposite\n"
+                                           "gender."),
         .aiRating = 1,
     },
 
@@ -1062,11 +1063,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Steadfast"),
         .description = COMPOUND_STRING("Flinching raises Speed."),
-        .longDescription = COMPOUND_STRING("Flinching raises Speed.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("When the Pokémon\n"
+                                           "flinches, its Speed stat\n"
+                                           "is boosted by 1 stage."),
         .aiRating = 2,
     },
 
@@ -1074,10 +1073,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Snow Cloak"),
         .description = COMPOUND_STRING("Ups evasion in Hail or Snow."),
-        .longDescription = COMPOUND_STRING("Ups evasion in Hail or\n"
-                                           "Snow.                   \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the Pokémon's\n"
+                                           "evasiveness by 25% in\n"
+                                           "Hail or Snow. Reduces\n"
+                                           "wild encounter rate by\n"
+                                           "50% in Hail or Snow when\n"
+                                           "first in party."),
         .aiRating = 3,
         .breakable = TRUE,
     },
@@ -1086,11 +1087,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Gluttony"),
         .description = COMPOUND_STRING("Eats Berries early."),
-        .longDescription = COMPOUND_STRING("Eats Berries early.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Berries that are eaten\n"
+                                           "at 1/4th or less of max\n"
+                                           "HP will instead be eaten\n"
+                                           "at 1/2 HP or less."),
         .aiRating = 3,
     },
 
@@ -1098,10 +1098,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Anger Point"),
         .description = COMPOUND_STRING("Critical hits raise Attack."),
-        .longDescription = COMPOUND_STRING("Critical hits raise\n"
-                                           "Attack.                 \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the Pokémon's\n"
+                                           "Attack stat to its sixth\n"
+                                           "stage when the Pokémon\n"
+                                           "takes a critical hit."),
         .aiRating = 4,
     },
 
@@ -1109,10 +1109,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Unburden"),
         .description = COMPOUND_STRING("Using a hold item ups Speed."),
-        .longDescription = COMPOUND_STRING("Using a hold item ups\n"
-                                           "Speed.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Doubles the Pokémon's\n"
+                                           "Speed stat when its held\n"
+                                           "item is consumed or lost."),
         .aiRating = 7,
     },
 
@@ -1120,10 +1119,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Heatproof"),
         .description = COMPOUND_STRING("Heat and burn protection."),
-        .longDescription = COMPOUND_STRING("Heat and burn\n"
-                                           "protection.             \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon's heatproof\n"
+                                           "body halves the damage\n"
+                                           "taken from Fire-type\n"
+                                           "moves and burn."),
         .aiRating = 5,
         .breakable = TRUE,
     },
@@ -1132,10 +1131,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Simple"),
         .description = COMPOUND_STRING("Prone to wild stat changes."),
-        .longDescription = COMPOUND_STRING("Prone to wild stat\n"
-                                           "changes.                \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Doubles the Pokémon's\n"
+                                           "stat changes. "),
         .aiRating = 8,
         .breakable = TRUE,
     },
@@ -1144,10 +1141,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Dry Skin"),
         .description = COMPOUND_STRING("Prefers moisture to heat."),
-        .longDescription = COMPOUND_STRING("Prefers moisture to\n"
-                                           "heat.                   \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Water-type moves heal\n"
+                                           "1/4 of the Pokémon's\n"
+                                           "max HP. Takes 25% more\n"
+                                           "damage from Fire-type\n"
+                                           "moves. Rain heals 1/8\n"
+                                           "max HP each turn but\n"
+                                           "sunlight takes 1/8."),
         .aiRating = 6,
         .breakable = TRUE,
     },
@@ -1156,11 +1156,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Download"),
         .description = COMPOUND_STRING("Adjusts power favorably."),
-        .longDescription = COMPOUND_STRING("Adjusts power favorably.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Compares an opposing\n"
+                                           "Pokémon's Defense and\n"
+                                           "Sp. Def stats before\n"
+                                           "raising its own Attack\n"
+                                           "or Sp. Atk stat,\n"
+                                           "whichever will be more\n"
+                                           "effective."),
         .aiRating = 7,
     },
 
@@ -1168,11 +1170,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Iron Fist"),
         .description = COMPOUND_STRING("Boosts punching moves."),
-        .longDescription = COMPOUND_STRING("Boosts punching moves.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's punching\n"
+                                           "moves by 20%."),
         .aiRating = 6,
     },
 
@@ -1180,11 +1180,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Poison Heal"),
         .description = COMPOUND_STRING("Restores HP if poisoned."),
-        .longDescription = COMPOUND_STRING("Restores HP if poisoned.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("If poisoned or badly\n"
+                                           "poisoned, the Pokémon\n"
+                                           "has 1/8 of its max HP\n"
+                                           "restored at the end of\n"
+                                           "every turn instead of\n"
+                                           "losing HP. "),
         .aiRating = 8,
     },
 
@@ -1192,10 +1193,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Adaptability"),
         .description = COMPOUND_STRING("Boosts same type attacks."),
-        .longDescription = COMPOUND_STRING("Boosts same type\n"
-                                           " attacks.               \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of\n"
+                                           "moves of the same type\n"
+                                           "as the Pokémon by 100%\n"
+                                           "instead of 50%. When\n"
+                                           "Terastallized, only \n"
+                                           "affects moves of the\n"
+                                           "same Tera Type."),
         .aiRating = 8,
     },
 
@@ -1203,10 +1207,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Skill Link"),
         .description = COMPOUND_STRING("Multi-hit moves hit 5 times."),
-        .longDescription = COMPOUND_STRING("Multi-hit moves hit 5\n"
-                                           "times.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon's\n"
+                                           "multistrike moves always\n"
+                                           "hit the maximum number\n"
+                                           "of times."),
         .aiRating = 7,
     },
 
@@ -1214,11 +1218,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Hydration"),
         .description = COMPOUND_STRING("Cures status in rain."),
-        .longDescription = COMPOUND_STRING("Cures status in rain.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Cures the Pokémon's\n"
+                                           "status conditions\n"
+                                           "at the end of every\n"
+                                           "turn in rain."),
         .aiRating = 4,
     },
 
@@ -1226,11 +1229,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Solar Power"),
         .description = COMPOUND_STRING("Powers up in sunshine."),
-        .longDescription = COMPOUND_STRING("Powers up in sunshine.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("In harsh sunlight, the\n"
+                                           "Pokémon's Sp. Atk stat\n"
+                                           "is boosted by 50%, but\n"
+                                           "it loses 1/8 of its max\n"
+                                           "HP at the end of every\n"
+                                           "turn."),
         .aiRating = 3,
     },
 
@@ -1238,11 +1242,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Quick Feet"),
         .description = COMPOUND_STRING("Ups Speed if suffering."),
-        .longDescription = COMPOUND_STRING("Ups Speed if suffering.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boots speed by 50% if\n"
+                                           "the Pokémon has a status\n"
+                                           "condition. Paralysis\n"
+                                           "does not lower speed.\n"
+                                           "Reduces wild encounter\n"
+                                           "rate by 50% when first \n"
+                                           "in the party"),
         .aiRating = 5,
     },
 
@@ -1250,10 +1256,15 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Normalize"),
         .description = COMPOUND_STRING("Moves become Normal-type."),
-        .longDescription = COMPOUND_STRING("Moves become Normal-\n"
-                                           "type.                   \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("All the Pokémon's moves\n"
+                                           #if B_ATE_MULTIPLIER < GEN_7
+                                           "become Normal type."
+                                           #else
+                                           "become Normal type. The\n"
+                                           "power Normal moves is\n"
+                                           "boosted by 20%."
+                                           #endif
+                                           ),
         .aiRating = -1,
     },
 
@@ -1261,11 +1272,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Sniper"),
         .description = COMPOUND_STRING("Boosts critical hits."),
-        .longDescription = COMPOUND_STRING("Boosts critical hits.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's critical hits\n"
+                                           "by 50%."),
         .aiRating = 3,
     },
 
@@ -1273,11 +1282,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Magic Guard"),
         .description = COMPOUND_STRING("Only damaged by attacks."),
-        .longDescription = COMPOUND_STRING("Only damaged by attacks.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon only takes\n"
+                                           "damage from attacks,\n"
+                                           "becoming immune to\n"
+                                           "indirect damage."),
         .aiRating = 9,
     },
 
@@ -1285,10 +1293,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("No Guard"),
         .description = COMPOUND_STRING("Ensures that all moves hit."),
-        .longDescription = COMPOUND_STRING("Ensures that all moves\n"
-                                           "hit.                    \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The accuracy of moves\n"
+                                           "used both by and against\n"
+                                           "the Pokémon becomes\n"
+                                           "100%. Doubles wild\n"
+                                           "encounter rate when\n"
+                                           "first in the party."),
         .aiRating = 8,
     },
 
@@ -1296,11 +1306,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Stall"),
         .description = COMPOUND_STRING("Always moves last."),
-        .longDescription = COMPOUND_STRING("Always moves last.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon's moves go\n"
+                                           "last among moves of the\n"
+                                           "same priority. "),
         .aiRating = -1,
     },
 
@@ -1308,11 +1316,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Technician"),
         .description = COMPOUND_STRING("Boosts weaker moves."),
-        .longDescription = COMPOUND_STRING("Boosts weaker moves.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon's moves by 50%\n"
+                                           "if their power is 60 or\n"
+                                           "less."),
         .aiRating = 8,
     },
 
@@ -1320,10 +1327,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Leaf Guard"),
         .description = COMPOUND_STRING("Blocks status in sunshine."),
-        .longDescription = COMPOUND_STRING("Blocks status in\n"
-                                           "sunshine.               \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon is immune\n"
+                                           "to status conditions in\n"
+                                           "harsh sunlight."),
         .aiRating = 2,
         .breakable = TRUE,
     },
@@ -1332,11 +1338,8 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Klutz"),
         .description = COMPOUND_STRING("Can't use hold items."),
-        .longDescription = COMPOUND_STRING("Can't use hold items.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Items do not work when\n"
+                                           "held by the Pokémon."),
         .aiRating = -1,
     },
 
@@ -1344,10 +1347,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Mold Breaker"),
         .description = COMPOUND_STRING("Moves hit through abilities."),
-        .longDescription = COMPOUND_STRING("Moves hit through\n"
-                                           "abilities.              \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon's moves are\n"
+                                           "unaffected by the\n"
+                                           "Ability of the target\n"
+                                           "(with some exceptions).\n"
+                                           "Abilities that react to\n"
+                                           "moves will still take\n"
+                                           "effect."),
         .aiRating = 7,
     },
 
@@ -1355,10 +1361,17 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Super Luck"),
         .description = COMPOUND_STRING("Critical hits land often."),
-        .longDescription = COMPOUND_STRING("Critical hits land\n"
-                                           "often.                  \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Boost Critical-Hit Ratio\n"
+                                           #if OW_SUPER_LUCK < GEN_8
+                                           "by 1-stage.\n"
+                                           #else
+                                           "by 1-stage. If first in\n"
+                                           "the party, wild Pokémon\n"
+                                           "common/rare held item\n"
+                                           "chance goes from 50%/5%\n"
+                                           "to 60%/20%."
+                                           #endif
+                                           ),
         .aiRating = 3,
     },
 
@@ -1366,10 +1379,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Aftermath"),
         .description = COMPOUND_STRING("Fainting damages the foe."),
-        .longDescription = COMPOUND_STRING("Fainting damages the\n"
-                                           "foe.                    \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Attackers that knock\n"
+                                           "out the Pokémon with a\n"
+                                           "contact move take\n"
+                                           "damage equal to 1/4 of\n"
+                                           "their own max HP."),
         .aiRating = 5,
     },
 
@@ -1377,11 +1391,12 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Anticipation"),
         .description = COMPOUND_STRING("Senses dangerous moves."),
-        .longDescription = COMPOUND_STRING("Senses dangerous moves.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("When the Pokémon enters\n"
+                                           "a battle, it shudders\n"
+                                           "if the opponents knows\n"
+                                           "any one-hit KO moves or\n"
+                                           "moves that are super\n"
+                                           "effective against it."),
         .aiRating = 2,
     },
 
@@ -1389,11 +1404,13 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Forewarn"),
         .description = COMPOUND_STRING("Determines a foe's move."),
-        .longDescription = COMPOUND_STRING("Determines a foe's move.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("When it enters a battle,\n"
+                                           "the Pokémon can tell a\n"
+                                           "move of an opposing\n"
+                                           "Pokémon with the highest\n"
+                                           "power or threat (OHKO\n"
+                                           "and countering moves are\n"
+                                           "high threat)."),
         .aiRating = 2,
     },
 
@@ -1401,11 +1418,14 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Unaware"),
         .description = COMPOUND_STRING("Ignores stat changes."),
-        .longDescription = COMPOUND_STRING("Ignores stat changes.\n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("The Pokémon ignores the\n"
+                                           "target's stat changes \n"
+                                           "when attacking or being\n"
+                                           "attacked and overall\n"
+                                           "damage or accuracy are\n"
+                                           "considered. Does not\n"
+                                           "affect turn order or\n"
+                                           "stat-reading move power."),
         .aiRating = 6,
         .breakable = TRUE,
     },
@@ -1414,10 +1434,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Tinted Lens"),
         .description = COMPOUND_STRING("Ups “not very effective”."),
-        .longDescription = COMPOUND_STRING("Ups “not very\n"
-                                           "effective”.             \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Doubles the damage of\n"
+                                           "“not very effective”\n"
+                                           "moves."),
         .aiRating = 7,
     },
 
@@ -1425,10 +1444,11 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Filter"),
         .description = COMPOUND_STRING("Weakens “supereffective”."),
-        .longDescription = COMPOUND_STRING("Weakens\n"
-                                           "“supereffective”.       \n"
-                                           "                        \n"
-                                           "                        "),
+        .longDescription = COMPOUND_STRING("Reduces the damage the\n"
+                                           "Pokémon takes from\n"
+                                           "supereffective moves\n"
+                                           "by 25% (2x damage\n"
+                                           "becomes 1.5x)."),
         .aiRating = 6,
         .breakable = TRUE,
     },
@@ -1439,6 +1459,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Takes a while to get going."),
         .longDescription = COMPOUND_STRING("Takes a while to get\n"
                                            "going.                  \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = -2,
@@ -1451,6 +1474,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Hits Ghost-type\n"
                                            "Pokémon.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -1460,6 +1486,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Storm Drain"),
         .description = COMPOUND_STRING("Draws in Water moves."),
         .longDescription = COMPOUND_STRING("Draws in Water moves.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1475,6 +1504,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("HP recovery in Hail or\n"
                                            "Snow.                   \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -1485,6 +1517,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Weakens “supereffective”."),
         .longDescription = COMPOUND_STRING("Weakens\n"
                                            "“supereffective”.       \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 6,
@@ -1500,10 +1535,16 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
     #else
         .description = COMPOUND_STRING("Summons hail in battle."),
         .longDescription = COMPOUND_STRING("Summons hail in battle.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1520,6 +1561,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 0,
     },
@@ -1529,6 +1573,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Frisk"),
         .description = COMPOUND_STRING("Checks a foe's item."),
         .longDescription = COMPOUND_STRING("Checks a foe's item.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1543,6 +1590,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Boosts moves with\n"
                                            "recoil.                 \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -1553,6 +1603,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Changes type to its Plate."),
         .longDescription = COMPOUND_STRING("Changes type to its\n"
                                            "Plate.                  \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 8,
@@ -1570,6 +1623,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Allies power up in\n"
                                            "sunshine.               \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
         .cantBeCopied = TRUE,
@@ -1584,6 +1640,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Damages sleeping\n"
                                            "Pokémon.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -1594,6 +1653,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Steals the foe's held item."),
         .longDescription = COMPOUND_STRING("Steals the foe's held\n"
                                            "item.                   \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 3,
@@ -1606,6 +1668,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Trades effects for\n"
                                            "power.                  \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -1615,6 +1680,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Contrary"),
         .description = COMPOUND_STRING("Inverts stat changes."),
         .longDescription = COMPOUND_STRING("Inverts stat changes.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1631,6 +1699,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -1640,6 +1711,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Defiant"),
         .description = COMPOUND_STRING("Lowered stats up Attack."),
         .longDescription = COMPOUND_STRING("Lowered stats up Attack.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1655,6 +1729,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = -1,
     },
@@ -1666,6 +1743,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Disables moves on\n"
                                            "contact.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -1675,6 +1755,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Healer"),
         .description = COMPOUND_STRING("Heals partner Pokémon."),
         .longDescription = COMPOUND_STRING("Heals partner Pokémon.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1689,6 +1772,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Lowers damage to\n"
                                            "partner.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 0,
         .breakable = TRUE,
@@ -1701,6 +1787,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Its stats change when\n"
                                            "hit.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 2,
     },
@@ -1710,6 +1799,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Heavy Metal"),
         .description = COMPOUND_STRING("Doubles weight."),
         .longDescription = COMPOUND_STRING("Doubles weight.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1726,6 +1818,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 2,
         .breakable = TRUE,
@@ -1738,6 +1833,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Halves damage at full\n"
                                            "HP.                     \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
         .breakable = TRUE,
@@ -1748,6 +1846,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Toxic Boost"),
         .description = COMPOUND_STRING("Ups Attack if poisoned."),
         .longDescription = COMPOUND_STRING("Ups Attack if poisoned.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1763,6 +1864,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -1774,6 +1878,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("May recycle a used\n"
                                            "Berry.                  \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -1784,6 +1891,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Can't be damaged by an ally."),
         .longDescription = COMPOUND_STRING("Can't be damaged by an\n"
                                            "ally.                   \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 0,
@@ -1798,6 +1908,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 10,
     },
@@ -1808,6 +1921,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Blocks weather and powder."),
         .longDescription = COMPOUND_STRING("Blocks weather and\n"
                                            "powder.                 \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 5,
@@ -1822,6 +1938,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -1833,6 +1952,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Heals upon switching\n"
                                            "out.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -1842,6 +1964,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Big Pecks"),
         .description = COMPOUND_STRING("Prevents Defense loss."),
         .longDescription = COMPOUND_STRING("Prevents Defense loss.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1857,6 +1982,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Ups Speed in a\n"
                                            "sandstorm.              \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -1867,6 +1995,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("May avoid status problems."),
         .longDescription = COMPOUND_STRING("May avoid status\n"
                                            "problems.               \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 4,
@@ -1880,6 +2011,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Moving last boosts\n"
                                            "power.                  \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -1889,6 +2023,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Illusion"),
         .description = COMPOUND_STRING("Appears as a partner."),
         .longDescription = COMPOUND_STRING("Appears as a partner.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1906,6 +2043,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Transforms into the\n"
                                            "foe.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 9,
         .cantBeCopied = TRUE,
@@ -1917,6 +2057,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Infiltrator"),
         .description = COMPOUND_STRING("Passes through barriers."),
         .longDescription = COMPOUND_STRING("Passes through barriers.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1932,6 +2075,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -1941,6 +2087,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Moxie"),
         .description = COMPOUND_STRING("KOs raise Attack."),
         .longDescription = COMPOUND_STRING("KOs raise Attack.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1956,6 +2105,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -1967,6 +2119,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Raises Speed when\n"
                                            "scared.                 \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -1976,6 +2131,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Magic Bounce"),
         .description = COMPOUND_STRING("Reflects status moves."),
         .longDescription = COMPOUND_STRING("Reflects status moves.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -1992,6 +2150,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 7,
         .breakable = TRUE,
@@ -2002,6 +2163,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Prankster"),
         .description = COMPOUND_STRING("Status moves go first."),
         .longDescription = COMPOUND_STRING("Status moves go first.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2016,6 +2180,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Powers up in a\n"
                                            "sandstorm.              \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -2028,6 +2195,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2037,6 +2207,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Zen Mode"),
         .description = COMPOUND_STRING("Transforms at half HP."),
         .longDescription = COMPOUND_STRING("Transforms at half HP.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2056,6 +2229,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2066,6 +2242,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Moves hit through abilities."),
         .longDescription = COMPOUND_STRING("Moves hit through\n"
                                            "abilities.              \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 7,
@@ -2078,6 +2257,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Moves hit through\n"
                                            "abilities.              \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 7,
     },
@@ -2089,6 +2271,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Prevents limiting of\n"
                                            "moves.                  \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
         .breakable = TRUE,
@@ -2099,6 +2284,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Flower Veil"),
         .description = COMPOUND_STRING("Protects Grass-types."),
         .longDescription = COMPOUND_STRING("Protects Grass-types.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2114,6 +2302,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Eating Berries restores\n"
                                            "HP.                     \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -2125,6 +2316,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Changes type to used\n"
                                            "move.                   \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -2134,6 +2328,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Fur Coat"),
         .description = COMPOUND_STRING("Raises Defense."),
         .longDescription = COMPOUND_STRING("Raises Defense.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2149,6 +2346,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Steals the foe's held\n"
                                            "item.                   \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -2158,6 +2358,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Bulletproof"),
         .description = COMPOUND_STRING("Avoids some projectiles."),
         .longDescription = COMPOUND_STRING("Avoids some projectiles.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2173,6 +2376,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Lowered stats up\n"
                                            "Sp. Atk.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -2182,6 +2388,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Strong Jaw"),
         .description = COMPOUND_STRING("Boosts biting moves."),
         .longDescription = COMPOUND_STRING("Boosts biting moves.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2197,6 +2406,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -2207,6 +2419,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Prevents party from sleep."),
         .longDescription = COMPOUND_STRING("Prevents party from\n"
                                            "sleep.                  \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 4,
@@ -2219,6 +2434,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Transforms as it battles."),
         .longDescription = COMPOUND_STRING("Transforms as it.\n"
                                            "battles                 \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 10,
@@ -2237,6 +2455,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2246,6 +2467,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Mega Launcher"),
         .description = COMPOUND_STRING("Boosts pulse moves."),
         .longDescription = COMPOUND_STRING("Boosts pulse moves.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2261,6 +2485,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 2,
         .breakable = TRUE,
@@ -2273,6 +2500,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Passes its item to an\n"
                                            "ally.                   \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 0,
     },
@@ -2282,6 +2512,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Tough Claws"),
         .description = COMPOUND_STRING("Boosts contact moves."),
         .longDescription = COMPOUND_STRING("Boosts contact moves.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2296,6 +2529,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Normal moves become\n"
                                            "Fairy.                  \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -2305,6 +2541,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Gooey"),
         .description = COMPOUND_STRING("Lowers Speed on contact."),
         .longDescription = COMPOUND_STRING("Lowers Speed on contact.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2319,6 +2558,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Normal moves become\n"
                                            "Flying.                 \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -2328,6 +2570,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Parental Bond"),
         .description = COMPOUND_STRING("Moves hit twice."),
         .longDescription = COMPOUND_STRING("Moves hit twice.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2343,6 +2588,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2355,6 +2603,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2364,6 +2615,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Aura Break"),
         .description = COMPOUND_STRING("Reverse aura abilities."),
         .longDescription = COMPOUND_STRING("Reverse aura abilities.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2380,6 +2634,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 10,
     },
@@ -2391,6 +2648,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Summons intense\n"
                                            "sunlight.               \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 10,
     },
@@ -2400,6 +2660,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Delta Stream"),
         .description = COMPOUND_STRING("Summons strong winds."),
         .longDescription = COMPOUND_STRING("Summons strong winds.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2415,6 +2678,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2424,6 +2690,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Wimp Out"),
         .description = COMPOUND_STRING("Flees at half HP."),
         .longDescription = COMPOUND_STRING("Flees at half HP.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2439,6 +2708,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -2448,6 +2720,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Water Compaction"),
         .description = COMPOUND_STRING("Water boosts Defense."),
         .longDescription = COMPOUND_STRING("Water boosts Defense.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2463,6 +2738,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -2472,6 +2750,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Shields Down"),
         .description = COMPOUND_STRING("Shell breaks at half HP."),
         .longDescription = COMPOUND_STRING("Shell breaks at half HP.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2491,6 +2772,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Stronger as foes switch\n"
                                            "in.                     \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2501,6 +2785,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Guards from fire and burns."),
         .longDescription = COMPOUND_STRING("Guards from fire and\n"
                                            "burns.                  \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 8,
@@ -2515,6 +2802,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2525,6 +2815,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Boosts Sp. Atk at low HP."),
         .longDescription = COMPOUND_STRING("Boosts Sp. Atk at low\n"
                                            "HP.                     \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 5,
@@ -2537,6 +2830,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Raises Speed in\n"
                                            "Hail/Snow.              \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -2546,6 +2842,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Long Reach"),
         .description = COMPOUND_STRING("Never makes contact."),
         .longDescription = COMPOUND_STRING("Never makes contact.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2561,6 +2860,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -2570,6 +2872,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Triage"),
         .description = COMPOUND_STRING("Healing moves go first."),
         .longDescription = COMPOUND_STRING("Healing moves go first.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2584,6 +2889,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Normal moves turn\n"
                                            "Electric.               \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -2593,6 +2901,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Surge Surfer"),
         .description = COMPOUND_STRING("Faster on electricity."),
         .longDescription = COMPOUND_STRING("Faster on electricity.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2606,6 +2917,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Forms a school when strong."),
         .longDescription = COMPOUND_STRING("Forms a school when\n"
                                            "strong.                 \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 6,
@@ -2621,6 +2935,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Disguise"),
         .description = COMPOUND_STRING("Decoy protects it once."),
         .longDescription = COMPOUND_STRING("Decoy protects it once.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2643,6 +2960,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
         .cantBeCopied = TRUE,
@@ -2658,6 +2978,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Cells aid it when weakened."),
         .longDescription = COMPOUND_STRING("Cells aid it when\n"
                                            "weakened.               \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 10,
@@ -2676,6 +2999,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -2685,6 +3011,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Comatose"),
         .description = COMPOUND_STRING("Always drowsing."),
         .longDescription = COMPOUND_STRING("Always drowsing.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2705,6 +3034,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
         .breakable = TRUE,
@@ -2715,6 +3047,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Innards Out"),
         .description = COMPOUND_STRING("Hurts foe when defeated."),
         .longDescription = COMPOUND_STRING("Hurts foe when defeated.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2729,6 +3064,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Dances along with\n"
                                            "others.                 \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -2741,6 +3079,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 0,
     },
@@ -2750,6 +3091,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Fluffy"),
         .description = COMPOUND_STRING("Tougher but flammable."),
         .longDescription = COMPOUND_STRING("Tougher but flammable.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2766,6 +3110,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
         .breakable = TRUE,
@@ -2776,6 +3123,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Soul-Heart"),
         .description = COMPOUND_STRING("KOs raise Sp. Atk."),
         .longDescription = COMPOUND_STRING("KOs raise Sp. Atk.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2791,6 +3141,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -2800,6 +3153,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Receiver"),
         .description = COMPOUND_STRING("Copies ally's ability."),
         .longDescription = COMPOUND_STRING("Copies ally's ability.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2817,6 +3173,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 0,
         .cantBeCopied = TRUE,
@@ -2831,6 +3190,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 7,
     },
@@ -2841,6 +3203,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Memories change its type."),
         .longDescription = COMPOUND_STRING("Memories change its\n"
                                            "type.                   \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 8,
@@ -2859,6 +3224,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -2868,6 +3236,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Psychic Surge"),
         .description = COMPOUND_STRING("Field becomes weird."),
         .longDescription = COMPOUND_STRING("Field becomes weird.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2883,6 +3254,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -2892,6 +3266,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Grassy Surge"),
         .description = COMPOUND_STRING("Field becomes grassy."),
         .longDescription = COMPOUND_STRING("Field becomes grassy.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2907,6 +3284,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -2917,6 +3297,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Halves damage at full HP."),
         .longDescription = COMPOUND_STRING("Halves damage at full\n"
                                            "HP.                     \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 8,
@@ -2929,6 +3312,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Weakens\n"
                                            "“supereffective”.       \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -2938,6 +3324,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Neuroforce"),
         .description = COMPOUND_STRING("Ups “supereffective”."),
         .longDescription = COMPOUND_STRING("Ups “supereffective”.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2953,6 +3342,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -2962,6 +3354,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Dauntless Shield"),
         .description = COMPOUND_STRING("Ups Defense on entry."),
         .longDescription = COMPOUND_STRING("Ups Defense on entry.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -2977,6 +3372,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
     },
 
@@ -2986,6 +3384,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Fetches failed Poké Ball."),
         .longDescription = COMPOUND_STRING("Fetches failed\n"
                                            "Poké Ball.              \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 0,
@@ -2998,6 +3399,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Lower Speed of all when\n"
                                            "hit.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -3009,6 +3413,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Ignores foe's\n"
                                            "redirection.            \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 2,
     },
@@ -3018,6 +3425,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Mirror Armor"),
         .description = COMPOUND_STRING("Reflect stat decreases."),
         .longDescription = COMPOUND_STRING("Reflect stat decreases.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3032,6 +3442,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("If hit, spits prey from sea."),
         .longDescription = COMPOUND_STRING("If hit, spits prey from\n"
                                            "sea.                    \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 3,
@@ -3049,6 +3462,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Ignores foe's\n"
                                            "redirection.            \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 2,
     },
@@ -3060,6 +3476,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Fire or Water hits up\n"
                                            "Speed.                  \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -3069,6 +3488,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Punk Rock"),
         .description = COMPOUND_STRING("Ups and resists sound."),
         .longDescription = COMPOUND_STRING("Ups and resists sound.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3084,6 +3506,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Creates a sandstorm if\n"
                                            "hit.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3093,6 +3518,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Ice Scales"),
         .description = COMPOUND_STRING("Halves special damage."),
         .longDescription = COMPOUND_STRING("Halves special damage.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3108,6 +3536,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Doubles effect of\n"
                                            "Berries.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -3118,6 +3549,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Hail or Snow renew free hit."),
         .longDescription = COMPOUND_STRING("Hail or Snow renew free\n"
                                            "hit.                    \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 4,
@@ -3138,6 +3572,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 2,
     },
@@ -3147,6 +3584,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Mimicry"),
         .description = COMPOUND_STRING("Changes type on terrain."),
         .longDescription = COMPOUND_STRING("Changes type on terrain.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3162,6 +3602,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -3172,6 +3615,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Boosts ally's Steel moves."),
         .longDescription = COMPOUND_STRING("Boosts ally's Steel\n"
                                            "moves.                  \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 2,
@@ -3184,6 +3630,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Foe faints in 3 turns if\n"
                                            "hit.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = -1,
     },
@@ -3194,6 +3643,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Trade abilities on contact."),
         .longDescription = COMPOUND_STRING("Trade abilities on\n"
                                            "contact.                \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 2,
@@ -3206,6 +3658,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Ups Attack and locks\n"
                                            "move.                   \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -3216,6 +3671,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("All Abilities are nullified."),
         .longDescription = COMPOUND_STRING("All Abilities are\n"
                                            "nullified.              \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 5,
@@ -3232,6 +3690,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Protects team from\n"
                                            "poison.                 \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
         .breakable = TRUE,
@@ -3242,6 +3703,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Hunger Switch"),
         .description = COMPOUND_STRING("Changes form each turn."),
         .longDescription = COMPOUND_STRING("Changes form each turn.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3260,6 +3724,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Moves first\n"
                                            "occasionally.           \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -3270,6 +3737,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Contact evades protection."),
         .longDescription = COMPOUND_STRING("Contact evades\n"
                                            "protection.             \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 6,
@@ -3282,6 +3752,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Remove ally's stat\n"
                                            "changes.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -3291,6 +3764,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Transistor"),
         .description = COMPOUND_STRING("Ups Electric-type moves."),
         .longDescription = COMPOUND_STRING("Ups Electric-type moves.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3306,6 +3782,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -3315,6 +3794,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Chilling Neigh"),
         .description = COMPOUND_STRING("KOs boost Attack stat."),
         .longDescription = COMPOUND_STRING("KOs boost Attack stat.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3330,6 +3812,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 7,
     },
@@ -3340,6 +3825,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Unnerve and Chilling Neigh."),
         .longDescription = COMPOUND_STRING("Unnerve and\n"
                                            "Chilling Neigh          \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 10,
@@ -3355,6 +3843,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("As One"),
         .description = COMPOUND_STRING("Unnerve and Grim Neigh."),
         .longDescription = COMPOUND_STRING("Unnerve and Grim Neigh.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3375,6 +3866,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3386,6 +3880,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Affects terrain when\n"
                                            "hit.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3395,6 +3892,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Thermal Exchange"),
         .description = COMPOUND_STRING("Fire hits up Attack."),
         .longDescription = COMPOUND_STRING("Fire hits up Attack.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3411,6 +3911,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 3,
     },
@@ -3420,6 +3923,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Purifying Salt"),
         .description = COMPOUND_STRING("Protected by pure salts."),
         .longDescription = COMPOUND_STRING("Protected by pure salts.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3436,6 +3942,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
         .breakable = TRUE,
@@ -3448,6 +3957,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Ups Attack if hit by\n"
                                            "wind.                   \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
         .breakable = TRUE,
@@ -3458,6 +3970,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Guard Dog"),
         .description = COMPOUND_STRING("Cannot be intimidated."),
         .longDescription = COMPOUND_STRING("Cannot be intimidated.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3474,6 +3989,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
     },
@@ -3483,6 +4001,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Wind Power"),
         .description = COMPOUND_STRING("Gets charged by wind."),
         .longDescription = COMPOUND_STRING("Gets charged by wind.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3496,6 +4017,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Changes form on switch out."),
         .longDescription = COMPOUND_STRING("Changes form on switch\n"
                                            "out.                    \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 10,
@@ -3512,6 +4036,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Commander"),
         .description = COMPOUND_STRING("Commands from Dondozo."),
         .longDescription = COMPOUND_STRING("Commands from Dondozo.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3532,6 +4059,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3541,6 +4071,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Protosynthesis"),
         .description = COMPOUND_STRING("Sun boosts best stat."),
         .longDescription = COMPOUND_STRING("Sun boosts best stat.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3559,6 +4092,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Elec. field ups best\n"
                                            "stat.                   \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 7,
         .cantBeCopied = TRUE,
@@ -3575,6 +4111,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
         .breakable = TRUE,
@@ -3585,6 +4124,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Vessel of Ruin"),
         .description = COMPOUND_STRING("Lowers foes' sp. damage."),
         .longDescription = COMPOUND_STRING("Lowers foes' sp. damage.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3601,6 +4143,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
         .breakable = TRUE,
@@ -3611,6 +4156,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Tablets of Ruin"),
         .description = COMPOUND_STRING("Lowers foes' damage."),
         .longDescription = COMPOUND_STRING("Lowers foes' damage.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3626,6 +4174,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Lowers foes'\n"
                                            "Sp. Defense.            \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
         .breakable = TRUE,
@@ -3638,6 +4189,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Summons sunlight in\n"
                                            "battle.                 \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -3647,6 +4201,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Hadron Engine"),
         .description = COMPOUND_STRING("Field becomes Electric."),
         .longDescription = COMPOUND_STRING("Field becomes Electric.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3661,6 +4218,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Copies foe's stat\n"
                                            "change.                 \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3670,6 +4230,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Cud Chew"),
         .description = COMPOUND_STRING("Eats a used berry again."),
         .longDescription = COMPOUND_STRING("Eats a used berry again.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3684,6 +4247,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Strengthens slicing\n"
                                            "moves.                  \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 7,
     },
@@ -3694,6 +4260,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Inherits fallen's strength."),
         .longDescription = COMPOUND_STRING("Inherits fallen's\n"
                                            "strength.               \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 6,
@@ -3706,6 +4275,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Copies ally's stat\n"
                                            "changes.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3717,6 +4289,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Throws poison spikes if\n"
                                            "hit.                    \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 4,
     },
@@ -3726,6 +4301,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Armor Tail"),
         .description = COMPOUND_STRING("Protects from priority."),
         .longDescription = COMPOUND_STRING("Protects from priority.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3742,6 +4320,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 7,
         .breakable = TRUE,
@@ -3752,6 +4333,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Mycelium Might"),
         .description = COMPOUND_STRING("Status moves never fail."),
         .longDescription = COMPOUND_STRING("Status moves never fail.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3767,6 +4351,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3776,6 +4363,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Mind's Eye"),
         .description = COMPOUND_STRING("Keen Eye and Scrappy."),
         .longDescription = COMPOUND_STRING("Keen Eye and Scrappy.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3789,6 +4379,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Embody Aspect"),
         .description = COMPOUND_STRING("Raises Speed."),
         .longDescription = COMPOUND_STRING("Raises Speed.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3808,6 +4401,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
         .cantBeCopied = TRUE,
@@ -3821,6 +4417,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Embody Aspect"),
         .description = COMPOUND_STRING("Raises Sp. Def."),
         .longDescription = COMPOUND_STRING("Raises Sp. Def.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
@@ -3840,6 +4439,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 6,
         .cantBeCopied = TRUE,
@@ -3856,6 +4458,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 8,
     },
@@ -3867,6 +4472,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Lowers the foe's\n"
                                            "Evasion.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 5,
     },
@@ -3877,6 +4485,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .description = COMPOUND_STRING("Terastallizes upon entry."),
         .longDescription = COMPOUND_STRING("Terastallizes upon\n"
                                            "entry.                  \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        "),
         .aiRating = 10,
@@ -3896,6 +4507,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 10,
         .cantBeCopied = TRUE,
@@ -3911,6 +4525,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("Zeroes weather and\n"
                                            "terrain.                \n"
                                            "                        \n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        "),
         .aiRating = 10,
         .cantBeCopied = TRUE,
@@ -3923,6 +4540,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Poison Puppeteer"),
         .description = COMPOUND_STRING("Confuses poisoned foes."),
         .longDescription = COMPOUND_STRING("Confuses poisoned foes.\n"
+                                           "                        \n"
+                                           "                        \n"
+                                           "                        \n"
                                            "                        \n"
                                            "                        \n"
                                            "                        \n"
