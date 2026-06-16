@@ -2586,7 +2586,7 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Shields Down"),
         .description = COMPOUND_STRING("Shell breaks at half HP."),
         .longDescription = COMPOUND_STRING("Starts in a shell form\n"
-                                           "that has defensive stats\n"
+                                           "with defensive stats\n"
                                            "and cannot gain major\n"
                                            "status ailments. At 50%\n"
                                            "HP or lower, the shell\n"
