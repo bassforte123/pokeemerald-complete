@@ -1433,11 +1433,10 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .longDescription = COMPOUND_STRING("The Pokémon ignores the\n"
                                            "target's stat changes\n"
                                            "when attacking or being\n"
-                                           "attacked and overall\n"
-                                           "damage or accuracy are\n"
+                                           "attacked and damage\n"
+                                           "or accuracy are\n"
                                            "considered. Does not\n"
-                                           "affect turn order or\n"
-                                           "stat-reading move power."),
+                                           "affect turn order."),
         .aiRating = 6,
         .breakable = TRUE,
     },
@@ -2589,10 +2588,9 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
                                            "with defensive stats\n"
                                            "and cannot gain major\n"
                                            "status ailments. At 50%\n"
-                                           "HP or lower, the shell\n"
-                                           "breaks and the Pokémon\n"
-                                           "takes on a form with\n"
-                                           "more offensive stats."),
+                                           "HP or lower, the\n"
+                                           "Pokémon takes on an\n"
+                                           "offensive form."),
         .aiRating = 6,
         .cantBeCopied = TRUE,
         .cantBeSwapped = TRUE,
