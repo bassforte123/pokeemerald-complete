@@ -4596,37 +4596,6 @@ static enum Type SummaryScreen_GetDynamicMoveType(struct Pokemon *mon, enum Move
     return CheckDynamicMoveType(mon, move, GetCurrentBattlerFromSumIndex(sMonSummaryScreen->curMonIndex), MON_IN_BATTLE);
 }
 
-static enum BattlerId GetCurrentBattlerFromSumIndex(u32 sumIndex)
-{
-    for (u32 battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        if (!IsOnPlayerSide(battler))
-            continue;
-
-        if (gBattlerPartyIndexes[battler] == sumIndex)
-            return battler;
-    }
-
-    return B_BATTLER_0;
-}
-
-static enum Type SummaryScreen_GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum Type type)
-{
-    if (!P_SHOW_DYNAMIC_TYPES)
-        return type;
-
-    if (gBattleStruct == NULL)
-        return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
-
-    u32 partyIndex = sMonSummaryScreen->curMonIndex;
-    bool32 isDouble = IsDoubleBattle();
-
-    if ((isDouble && partyIndex > 1) || (!isDouble && partyIndex > 0))
-        return CheckDynamicMoveType(mon, move, 0, MON_OUTSIDE_BATTLE);
-
-    return CheckDynamicMoveType(mon, move, GetCurrentBattlerFromSumIndex(sMonSummaryScreen->curMonIndex), MON_IN_BATTLE);
-}
-
 static void SetMoveTypeIcons(void)
 {
     u32 i;

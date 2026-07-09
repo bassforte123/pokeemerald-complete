@@ -957,17 +957,22 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
         .name = _("Arena Trap"),
         .description = COMPOUND_STRING("Prevents fleeing."),
         .longDescription = COMPOUND_STRING("Prevents opposing\n"
+                                           //For some reason the parser gives an error if the If statement is too big
+                                           //So the text is split into two halves.
                                            #if B_GHOSTS_ESCAPE < GEN_6
                                            "grounded Pokémon from\n"
                                            "fleeing or switching.\n"
                                            "Does not stop flee\n"
-                                           "boosting effects. 2x\n"
-                                           "wild encounter rate\n"
-                                           "when first in the party."
                                            #else
                                            "grounded and non Ghost-\n"
                                            "types from fleeing or\n"
                                            "switching. Does not stop\n"
+                                           #endif
+                                           #if B_GHOSTS_ESCAPE < GEN_6
+                                           "boosting effects. 2x\n"
+                                           "wild encounter rate\n"
+                                           "when first in the party."
+                                           #else
                                            "flee boosting effects.\n"
                                            "2x wild encounter rate\n"
                                            "when first in the party."
@@ -4150,47 +4155,82 @@ const struct AbilityInfo gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Piercing Drill"),
         .description = COMPOUND_STRING("Contact evades protection."),
+        .longDescription = COMPOUND_STRING("When the Pokémon uses\n"
+                                           "contact moves, it can\n"
+                                           "hit even targets that\n"
+                                           "are protecting\n"
+                                           "themselves, dealing 1/4\n"
+                                           "of the damage."),
     },
 
     [ABILITY_DRAGONIZE] =
     {
         .name = _("Dragonize"),
         .description = COMPOUND_STRING("Normal moves turn Dragon."),
+        .longDescription = COMPOUND_STRING("The Pokémon's Normal-\n"
+                                           "type moves become\n"
+                                           "Dragon-type moves and\n"
+                                           "their power is boosted\n"
+                                           "by 20%."),
     },
 
     [ABILITY_EELEVATE] =
     {
         .name = _("Eelevate"),
-        .description = COMPOUND_STRING("Unimplemented."),
+        .description = COMPOUND_STRING("Unimplemented."), //Levitate and Beast Boost
+        .longDescription = COMPOUND_STRING("The Pokémon is immune\n"
+                                           "to Ground-type moves\n"
+                                           "and effects. When the\n"
+                                           "Pokémon knocks out a\n"
+                                           "target with an attack,\n"
+                                           "its highest stat is\n"
+                                           "boosted by 1 stage."),
     },
 
     [ABILITY_314] =
     {
         .name = _("-------"),
         .description = COMPOUND_STRING("No special ability."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        "),
     },
 
     [ABILITY_MEGA_SOL] =
     {
         .name = _("Mega Sol"),
         .description = COMPOUND_STRING("Acts like under sun."),
+        .longDescription = COMPOUND_STRING("Even when the sunlight\n"
+                                           "has not turned harsh,\n"
+                                           "the Pokémon can use its\n"
+                                           "moves as if the weather\n"
+                                           "were harsh sunlight."),
     },
 
     [ABILITY_FIRE_MANE] =
     {
         .name = _("Fire Mane"),
         .description = COMPOUND_STRING("Unimplemented."),
+        .longDescription = COMPOUND_STRING("Boosts the power of the\n"
+                                           "Pokémon’s Fire-type\n"
+                                           "moves by 50%."),
     },
 
     [ABILITY_317] =
     {
         .name = _("-------"),
         .description = COMPOUND_STRING("No special ability."),
+        .longDescription = COMPOUND_STRING("No special ability.\n"
+                                           "                        \n"
+                                           "                        "),
     },
 
     [ABILITY_SPICY_SPRAY] =
     {
         .name = _("Spicy Spray"),
         .description = COMPOUND_STRING("Burns the foe when damaged."),
+        .longDescription = COMPOUND_STRING("When the Pokémon takes\n"
+                                           "damage from a move, it\n"
+                                           "burns the attacker."),
     },
 };
