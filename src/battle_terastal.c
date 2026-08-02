@@ -116,21 +116,21 @@ enum Type GetBattlerTeraType(enum BattlerId battler)
 void ExpendTypeStellarBoost(enum BattlerId battler, enum Type type)
 {
     if (type < 32 && gBattleMons[battler].species != SPECIES_TERAPAGOS_STELLAR) // avoid OOB access
-        gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] |= 1u << type;
+        gBattleStruct->stellarBoostFlags[GetBattlerTrainer(battler)] |= 1u << type;
 }
 
 // Checks whether a type's Stellar boost has been expended.
 bool32 IsTypeStellarBoosted(enum BattlerId battler, enum Type type)
 {
     if (type < 32) // avoid OOB access
-        return !(gBattleStruct->stellarBoostFlags[GetBattlerSide(battler)] & (1u << type));
+        return !(gBattleStruct->stellarBoostFlags[GetBattlerTrainer(battler)] & (1u << type));
     else
         return FALSE;
 }
 
 // Returns the STAB power multiplier to use when Terastallized.
 // Power multipliers from Smogon Research thread.
-uq4_12_t GetTeraMultiplier(struct BattleContext *ctx)
+uq4_12_t GetTeraMultiplier(struct DamageContext *ctx)
 {
     enum Type teraType = GetBattlerTeraType(ctx->battlerAtk);
     bool32 hasAdaptability = (BattlerHasTrait(ctx->battlerAtk, ABILITY_ADAPTABILITY));

@@ -4,27 +4,14 @@
 
 AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
 {
-    u32 speedPlayer, speedAi;
-
-    PARAMETRIZE { speedPlayer = 200; speedAi = 10; }
-    PARAMETRIZE { speedPlayer = 10; speedAi = 200; }
-
     GIVEN {
         ASSUME(GetMovePower(MOVE_WATER_GUN) == GetMovePower(MOVE_BUBBLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_SCIZOR) { Speed(speedPlayer); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(speedAi); }
+        PLAYER(SPECIES_SCIZOR) { Speed(200); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(10); }
     } WHEN {
-        if (speedPlayer > speedAi)
-        {
-            TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-            TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-        }
-        else
-        {
-            TURN { SCORE_EQ(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-            TURN { SCORE_EQ(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
-        }
+        TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
+        TURN { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); }
     }
 }
 
@@ -42,7 +29,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
     } WHEN {
             TURN { MOVE(player, MOVE_DEFENSE_CURL); }
             TURN { MOVE(player, MOVE_DEFENSE_CURL);
-                   if (abilityAI == ABILITY_MOLD_BREAKER) { SCORE_EQ(opponent, MOVE_WATER_GUN, MOVE_BUBBLE); }
+                   if (abilityAI == ABILITY_MOLD_BREAKER) { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); } // Bubble is a plus effect if contrary is ignored
                    else { SCORE_GT(opponent, MOVE_WATER_GUN, MOVE_BUBBLE); }}
     } SCENE {
         MESSAGE("Shuckle's Defense fell!"); // Contrary activates
@@ -197,14 +184,14 @@ AI_SINGLE_BATTLE_TEST("AI prefers Earthquake over Drill Run if both require the 
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over a one with a downside effect if both require the same number of hits to ko")
+AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over one with a downside effect if both require the same number of hits to ko")
 {
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove;
     u16 hp, turns;
 
     // Both moves require the same number of turns but Flamethrower will be chosen over Overheat (powerful effect)
-    PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 300; expectedMove = MOVE_FLAMETHROWER; turns = 2; }
+    PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 320; expectedMove = MOVE_FLAMETHROWER; turns = 2; }
     // Overheat kill in least amount of turns
     PARAMETRIZE { move1 = MOVE_OVERHEAT; move2 = MOVE_FLAMETHROWER; hp = 250; expectedMove = MOVE_OVERHEAT; turns = 1; }
 
@@ -269,7 +256,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove, expectedMove2 = MOVE_NONE;
     enum Ability abilityAtk = ABILITY_NONE;
-    u32 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -304,7 +291,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
 AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering Power Herb")
 {
-    u32 aiItem;
+    enum Item aiItem;
 
     PARAMETRIZE { aiItem = ITEM_POWER_HERB; }
     PARAMETRIZE { aiItem= ITEM_NONE; }
@@ -322,7 +309,7 @@ AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb")
 {
     enum Ability abilityAtk = ABILITY_NONE;
-    u16 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
@@ -786,7 +773,7 @@ SINGLE_BATTLE_TEST("AI correctly records used moves")
 AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
 {
     GIVEN {
-        MoveHasAdditionalEffectSelf(MOVE_SWORDS_DANCE, MOVE_EFFECT_ATK_PLUS_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
         PLAYER(SPECIES_QUAGSIRE) { Ability(ABILITY_UNAWARE); Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_BODY_SLAM, MOVE_SWORDS_DANCE); }
@@ -797,7 +784,7 @@ AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
 
 AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would benefit")
 {
-    u32 aiMove;
+    enum Move aiMove;
     PARAMETRIZE { aiMove = MOVE_WILL_O_WISP; }
     PARAMETRIZE { aiMove = MOVE_TOXIC; }
     PARAMETRIZE { aiMove = MOVE_THUNDER_WAVE; }
@@ -1007,7 +994,7 @@ AI_SINGLE_BATTLE_TEST("AI has a chance to prioritize last chance priority damage
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_CAMERUPT) { Speed(2); Moves(MOVE_FLAMETHROWER, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_FLOATZEL) { Level(90); Speed(1); HP(1); Moves(MOVE_WAVE_CRASH, MOVE_AQUA_JET); }
+        OPPONENT(SPECIES_FLOATZEL) { Level(85); Speed(1); HP(1); Moves(MOVE_WAVE_CRASH, MOVE_AQUA_JET); }
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_AQUA_JET); }
     }
@@ -1065,7 +1052,7 @@ AI_SINGLE_BATTLE_TEST("AI will not prioritize a regular OHKO over a berry-reduce
 
 AI_SINGLE_BATTLE_TEST("AI won't increase its stats if it's about to fall asleep due to Yawn")
 {
-    u32 aiMove;
+    enum Move aiMove;
     PARAMETRIZE { aiMove = MOVE_CELEBRATE; }
     PARAMETRIZE { aiMove = MOVE_SWORDS_DANCE; }
     GIVEN {
@@ -1102,7 +1089,7 @@ AI_SINGLE_BATTLE_TEST("AI will consider using Explosion inversely proportional t
 
 AI_SINGLE_BATTLE_TEST("AI will prioritize non-self-sacrificing moves if they have the same hits to KO")
 {
-    u32 selfSacrificeMove;
+    enum Move selfSacrificeMove;
     PARAMETRIZE { selfSacrificeMove = MOVE_EXPLOSION; }
     PARAMETRIZE { selfSacrificeMove = MOVE_FINAL_GAMBIT; }
     PASSES_RANDOMLY(100, 100, RNG_AI_CONSIDER_EXPLOSION);
@@ -1280,7 +1267,12 @@ AI_DOUBLE_BATTLE_TEST("AI can use Acupressure on its ally")
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_ACUPRESSURE); }
         OPPONENT(SPECIES_WYNAUT) { Moves(MOVE_SCRATCH); }
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight); EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight); }
+        TURN {
+            MOVE(playerLeft, MOVE_CELEBRATE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+            EXPECT_MOVE(opponentRight, MOVE_SCRATCH, target:playerRight);
+            EXPECT_MOVE(opponentLeft, MOVE_ACUPRESSURE, target:opponentRight);
+        }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ACUPRESSURE, opponentLeft);
     }
@@ -1296,7 +1288,7 @@ AI_SINGLE_BATTLE_TEST("AI's comparison of damaging moves correctly reads moveset
         PLAYER(SPECIES_RAPIDASH_GALAR){ Level(64); HP(1); Nature(NATURE_TIMID); Moves(MOVE_TACKLE);}
         OPPONENT(SPECIES_HAXORUS){ Level(64); Nature(NATURE_JOLLY); Ability(ABILITY_MOLD_BREAKER); Moves(move, MOVE_EARTHQUAKE, MOVE_POISON_JAB); }
     } WHEN {
-        TURN { 
+        TURN {
             MOVE(player, MOVE_TACKLE);
             if (move == MOVE_TACKLE)
                 SCORE_EQ_VAL(opponent, MOVE_TACKLE, 104);

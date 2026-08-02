@@ -53,6 +53,7 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
     s16 futureSightDmg;
 
     GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
         PLAYER(SPECIES_PIKACHU);
         PLAYER(SPECIES_RAICHU) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_REGICE);
@@ -123,11 +124,26 @@ SINGLE_BATTLE_TEST("Future Sight is affected by type effectiveness (Gen 5+)")
 }
 
 TO_DO_BATTLE_TEST("Future Sight ignores Wonder Guard (Gen 2-4)")
-TO_DO_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
+SINGLE_BATTLE_TEST("Future Sight doesn't ignore Wonder Guard (Gen 5+)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SHEDINJA) { Ability(ABILITY_WONDER_GUARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FUTURE_SIGHT); }
+        TURN {}
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
+        ABILITY_POPUP(opponent, ABILITY_WONDER_GUARD);
+        NOT HP_BAR(opponent);
+    }
+}
 
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is about to get hit")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
@@ -150,6 +166,7 @@ SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints before it is 
 SINGLE_BATTLE_TEST("Future Sight will miss timing if target faints by residual damage")
 {
     GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_WRAP, MOVE_EFFECT_WRAP));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { HP(10); }
         OPPONENT(SPECIES_WYNAUT);

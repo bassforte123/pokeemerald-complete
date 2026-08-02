@@ -14,7 +14,7 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back status moves")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
-        MESSAGE("Wynaut's Toxic was bounced back by the opposing Espeon's Magic Bounce!");
+        MESSAGE("Wynaut's Toxic was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         STATUS_ICON(player, badPoison: TRUE);
     }
@@ -73,7 +73,7 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back powder moves")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
-        MESSAGE("Wynaut's Stun Spore was bounced back by the opposing Espeon's Magic Bounce!");
+        MESSAGE("Wynaut's Stun Spore was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, opponent);
         STATUS_ICON(player, paralysis: TRUE);
     }
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Magic Bounce cannot bounce back powder moves against Grass T
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, player);
-        MESSAGE("Oddish's Stun Spore was bounced back by the opposing Espeon's Magic Bounce!");
+        MESSAGE("Oddish's Stun Spore was bounced back!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STUN_SPORE, opponent);
         MESSAGE("It doesn't affect Oddish…");
         NOT STATUS_ICON(player, paralysis: TRUE);
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Magic Bounce cannot bounce back powder moves against Grass T
 DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foes")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
         ASSUME(GetMoveTarget(MOVE_LEER) == TARGET_BOTH);
         PLAYER(SPECIES_ABRA);
         PLAYER(SPECIES_KADABRA);
@@ -111,17 +111,47 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting both foes at two foe
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_LEER); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        MESSAGE("The opposing Wynaut's Defense fell!");
+
         ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, playerLeft);
-        MESSAGE("Abra's Leer was bounced back by the opposing Espeon's Magic Bounce!");
+        MESSAGE("Abra's Leer was bounced back!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponentLeft);
+
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         MESSAGE("Abra's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
         MESSAGE("Kadabra's Defense fell!");
-        // Also check if second original target gets hit by Leer as this was once bugged
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-        MESSAGE("The opposing Wynaut's Defense fell!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Magic Bounce activates on all opposing mons")
+{
+    GIVEN {
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
+        ASSUME(GetMoveTarget(MOVE_LEER) == TARGET_BOTH);
+        PLAYER(SPECIES_ABRA);
+        PLAYER(SPECIES_KADABRA);
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+        OPPONENT(SPECIES_NATU) { Ability(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_LEER); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_MAGIC_BOUNCE);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, playerLeft);
+        MESSAGE("Abra's Leer was bounced back!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEER, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        MESSAGE("Abra's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Kadabra's Defense fell!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        MESSAGE("Abra's Defense fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        MESSAGE("Kadabra's Defense fell!");
     }
 }
 
@@ -149,10 +179,10 @@ DOUBLE_BATTLE_TEST("Magic Bounce bounces back moves hitting foes field")
             ABILITY_POPUP(opponentRight, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, playerLeft);
         if (abilityBattlerOne == ABILITY_MAGIC_BOUNCE) {
-            MESSAGE("Abra's Stealth Rock was bounced back by the opposing Natu's Magic Bounce!");
+            MESSAGE("Abra's Stealth Rock was bounced back!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentLeft);
         } else {
-            MESSAGE("Abra's Stealth Rock was bounced back by the opposing Espeon's Magic Bounce!");
+            MESSAGE("Abra's Stealth Rock was bounced back!");
             ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentRight);
         }
     }
@@ -170,7 +200,7 @@ SINGLE_BATTLE_TEST("Magic Bounce bounced back status moves can not be bounced ba
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
-        MESSAGE("Espeon's Toxic was bounced back by the opposing Espeon's Magic Bounce!");
+        MESSAGE("Espeon's Toxic was bounced back!");
         NOT ABILITY_POPUP(player, ABILITY_MAGIC_BOUNCE);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         STATUS_ICON(player, badPoison: TRUE);

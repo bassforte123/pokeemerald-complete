@@ -7,6 +7,7 @@ DOUBLE_BATTLE_TEST("Supreme Overlord boosts Attack by an additive 10% per fainte
     PARAMETRIZE { switchMon = FALSE; }
     PARAMETRIZE { switchMon = TRUE; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
         PLAYER(SPECIES_KINGAMBIT) { Ability(ABILITY_SUPREME_OVERLORD); }
         PLAYER(SPECIES_PAWNIARD);
         PLAYER(SPECIES_PAWNIARD);
@@ -38,6 +39,7 @@ DOUBLE_BATTLE_TEST("Supreme Overlord's boost caps at a 1.5x multipler", s16 dama
     PARAMETRIZE { faintCount = 5; }
     PARAMETRIZE { faintCount = 6; }
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MEMENTO) == EFFECT_MEMENTO);
         PLAYER(SPECIES_PAWNIARD);
         PLAYER(SPECIES_PAWNIARD);
         PLAYER(SPECIES_PAWNIARD);

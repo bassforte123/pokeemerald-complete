@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if the target faints")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
+SINGLE_BATTLE_TEST("Illusion does not break if the attacker faints without taking damage")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
@@ -51,8 +51,10 @@ SINGLE_BATTLE_TEST("Illusion breaks if the attacker faints")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
         HP_BAR(player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
-        MESSAGE("Zoroark's illusion wore off!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+            MESSAGE("Zoroark's illusion wore off!");
+        }
     }
 }
 
@@ -114,7 +116,7 @@ SINGLE_BATTLE_TEST("Illusion breaks if user loses Illusion due to Worry Seed")
     }
 }
 
-SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
+SINGLE_BATTLE_TEST("Illusion breaks when hit through a substitute")
 {
     GIVEN {
         WITH_CONFIG(B_INFILTRATOR_SUBSTITUTE, GEN_6);

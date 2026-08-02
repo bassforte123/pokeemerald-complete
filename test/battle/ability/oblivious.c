@@ -76,10 +76,10 @@ SINGLE_BATTLE_TEST("Oblivious doesn't prevent Intimidate (Gen3-7)")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
-            MESSAGE("Slowpoke's Oblivious prevents stat loss!");
+            MESSAGE("Slowpoke's Attack was not lowered!");
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("The opposing Ekans's Intimidate cuts Slowpoke's Attack!");
+        MESSAGE("Slowpoke's Attack fell!");
     }
 }
 
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Oblivious prevents Intimidate (Gen8+)")
         ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         ABILITY_POPUP(player, ABILITY_OBLIVIOUS);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); }
-        MESSAGE("Slowpoke's Oblivious prevents stat loss!");
+        MESSAGE("Slowpoke's Attack was not lowered!");
     }
 }
 

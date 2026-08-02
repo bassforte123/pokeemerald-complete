@@ -484,10 +484,10 @@ static bool32 DoesFishingMinigameAllowCancel(void)
 
 static bool32 Fishing_DoesFirstMonInPartyHaveSuctionCupsOrStickyHold(void)
 {
-    if (GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
+    if (GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
 
-    return (MonHasTrait(&gPlayerParty[0], ABILITY_SUCTION_CUPS) || MonHasTrait(&gPlayerParty[0], ABILITY_STICKY_HOLD));
+    return (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_SUCTION_CUPS) || MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_STICKY_HOLD));
 }
 
 static bool32 Fishing_RollForBite(u32 rod, bool32 isStickyHold)
@@ -514,7 +514,6 @@ static u32 CalculateFishingBiteOdds(u32 rod, bool32 isStickyHold)
         odds *= 2;
 
     odds = min(100, odds);
-    DebugPrintf("Fishing odds: %d", odds);
     return odds;
 }
 
@@ -642,7 +641,6 @@ u32 CalculateChainFishingShinyRolls(void)
     if (!I_FISHING_CHAIN || !gIsFishingEncounter)
         return 0;
     u32 a = 2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX);
-    DebugPrintf("Total Shiny Rolls %d", a);
     return a;
 }
 

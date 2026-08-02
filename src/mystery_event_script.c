@@ -7,7 +7,7 @@
 #include "mystery_event_script.h"
 #include "pokedex.h"
 #include "pokemon.h"
-#include "pokemon_size_record.h"
+#include "give_gift_ribbon_to_party.h"
 #include "script.h"
 #include "strings.h"
 #include "string_util.h"
@@ -314,7 +314,7 @@ bool8 MEScrCmd_givepokemon(struct ScriptContext *ctx)
 {
     struct Mail mail;
     struct Pokemon pokemon;
-    u16 species;
+    enum Species species;
     u32 data = ScriptReadWord(ctx) - ctx->mOffset + ctx->mScriptBase;
     void *pokemonPtr = (void *)data;
     void *mailPtr = (void *)(data + sizeof(struct Pokemon));
@@ -327,14 +327,14 @@ bool8 MEScrCmd_givepokemon(struct ScriptContext *ctx)
     else
         StringCopyN(gStringVar1, gText_Pokemon, POKEMON_NAME_LENGTH + 1);
 
-    if (gPlayerPartyCount == PARTY_SIZE)
+    if (gPartiesCount[B_TRAINER_PLAYER] == PARTY_SIZE)
     {
         StringExpandPlaceholders(gStringVar4, gText_MysteryEventFullParty);
         ctx->mStatus = MEVENT_STATUS_FAILURE;
     }
     else
     {
-        memcpy(&gPlayerParty[PARTY_SIZE - 1], pokemonPtr, sizeof(struct Pokemon));
+        memcpy(&gParties[B_TRAINER_PLAYER][PARTY_SIZE - 1], pokemonPtr, sizeof(struct Pokemon));
         memcpy(&mail, mailPtr, sizeof(struct Mail));
 
         if (species != SPECIES_EGG)
@@ -344,8 +344,8 @@ bool8 MEScrCmd_givepokemon(struct ScriptContext *ctx)
             GetSetPokedexFlag(pokedexNum, FLAG_SET_CAUGHT);
         }
 
-        if (MonHasMail(&gPlayerParty[PARTY_SIZE - 1]))
-            GiveMailToMon(&gPlayerParty[PARTY_SIZE - 1], &mail);
+        if (MonHasMail(&gParties[B_TRAINER_PLAYER][PARTY_SIZE - 1]))
+            GiveMailToMon(&gParties[B_TRAINER_PLAYER][PARTY_SIZE - 1], &mail);
         CompactPartySlots();
         CalculatePlayerPartyCount();
         StringExpandPlaceholders(gStringVar4, gText_MysteryEventSentOver);

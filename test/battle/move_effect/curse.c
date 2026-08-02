@@ -26,6 +26,7 @@ SINGLE_BATTLE_TEST("Curse lowers Speed, raises Attack, and raises Defense when u
 SINGLE_BATTLE_TEST("Curse cuts the user's HP in half when used by Ghost-types")
 {
     GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
         PLAYER(SPECIES_MISDREAVUS);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -39,7 +40,8 @@ SINGLE_BATTLE_TEST("Curse cuts the user's HP in half when used by Ghost-types")
 
 SINGLE_BATTLE_TEST("Curse applies to the user if used with Protean/Libero")
 {
-    u32 ability, species;
+    enum Ability ability;
+    u32 species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
@@ -62,7 +64,7 @@ SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TRICK_OR_TREAT); MOVE(player, MOVE_CURSE, target: player); }
+        TURN { MOVE(opponent, MOVE_TRICK_OR_TREAT); MOVE(player, MOVE_CURSE); }
     } SCENE {
         s32 playerMaxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);
         s32 opponentMaxHP = GetMonData(&OPPONENT_PARTY[0], MON_DATA_MAX_HP);

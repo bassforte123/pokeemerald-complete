@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Relic Song transforms Meloetta twice if used successfully")
     }
 }
 
-SINGLE_BATTLE_TEST("Relic Song transformation is the last thing that happens after it hits")
+SINGLE_BATTLE_TEST("Relic Song transformation activates after target faints")
 {
     GIVEN {
         PLAYER(SPECIES_MELOETTA_ARIA);
