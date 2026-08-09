@@ -2452,7 +2452,7 @@ void Innates_(u32 sourceLine, enum Ability innates[MAX_MON_INNATES_INTERNAL])
     for (i = 0; i < MAX_MON_INNATES; i++)
     {
         INVALID_IF(innates[i] >= ABILITIES_COUNT, "Illegal ability id: %d", innates[i]);
-        DATA.forcedInnates[DATA.battleTrainer][DATA.currentPartyIndex][i] = innates[i];
+        DATA.forcedInnates[DATA.battlerParty][DATA.currentPartyIndex][i] = innates[i];
     }
 }
 
@@ -2604,9 +2604,9 @@ void Items_(u32 sourceLine, u32 items[MAX_MON_ITEMS_INTERNAL])
             
         SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM + i, &items[i]);
         if (GetItemHoldEffect(items[i]) == HOLD_EFFECT_MEGA_STONE)
-            SetGimmick(sourceLine, DATA.battleTrainer, DATA.currentPartyIndex, GIMMICK_MEGA);
+            SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_MEGA);
         if (GetItemHoldEffect(items[i]) == HOLD_EFFECT_Z_CRYSTAL)
-            SetGimmick(sourceLine, DATA.battleTrainer, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
+            SetGimmick(sourceLine, DATA.battlerParty, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
     }
 }
 

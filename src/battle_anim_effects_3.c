@@ -5670,7 +5670,7 @@ static void AnimRecycle_Step(struct Sprite *sprite)
 
 void AnimTask_GetWeather(u8 taskId)
 {
-    u32 weather = GetAttackerWeather(gWeatherMoveAnim);
+    u32 weather = GetAttackerWeather(gBattleAnimAttacker, gWeatherMoveAnim);
     gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_NONE;
     if (weather & B_WEATHER_SUN)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_SUN;

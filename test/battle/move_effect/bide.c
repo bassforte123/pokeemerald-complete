@@ -200,3 +200,53 @@ SINGLE_BATTLE_TEST("Bide doesn't deal damage through protect")
 
 TO_DO_BATTLE_TEST("Bide has +1 priority on following turns if called via a different move");
 
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Bide is blocked by Dazzling when it unleashes the attack (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BRUXISH) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DAZZLING); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_BIDE); MOVE(opponent, MOVE_POUND); }
+        TURN { SKIP_TURN(player); MOVE(opponent, MOVE_POUND); }
+        TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet is storing energy!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet unleashed its energy!");
+        ABILITY_POPUP(opponent, ABILITY_DAZZLING);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, player);
+            HP_BAR(opponent);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Bide is blocked by partner Dazzling (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BRUXISH) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DAZZLING); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_BIDE); MOVE(opponentLeft, MOVE_POUND, target: playerLeft); }
+        TURN { SKIP_TURN(playerLeft); MOVE(opponentLeft, MOVE_POUND, target: playerLeft); }
+        TURN { SKIP_TURN(playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponentLeft);
+        MESSAGE("Wobbuffet unleashed its energy!");
+        ABILITY_POPUP(opponentRight, ABILITY_DAZZLING);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_BIDE, playerLeft);
+            HP_BAR(opponentLeft);
+        }
+    }
+}
+#endif

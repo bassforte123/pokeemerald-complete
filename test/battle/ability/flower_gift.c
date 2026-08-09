@@ -301,7 +301,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when weather c
 SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Nine/Air Lock (Traits)")
 {
     u32 species = 0;
-    enum Ability ability = 0;
+    enum Ability ability = ABILITY_NONE;
     PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     GIVEN {
@@ -410,7 +410,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it switches out (Tr
         MESSAGE("Cherrim transformed!");
         SWITCH_OUT_MESSAGE("Cherrim");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CHERRIM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_CHERRIM);
     }
 }
 
@@ -431,7 +431,7 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it uses a move that
         MESSAGE("Cherrim transformed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CHERRIM);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SPECIES), SPECIES_CHERRIM);
     }
 }
 

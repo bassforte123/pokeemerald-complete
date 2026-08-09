@@ -212,6 +212,26 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
     }
 }
 
+SINGLE_BATTLE_TEST("Psychic Terrain prevents priority status moves before Magic Bounce can bounce them")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(IsBattleMoveStatus(MOVE_CONFUSE_RAY));
+        ASSUME(MoveCanBeBouncedBack(MOVE_CONFUSE_RAY));
+        PLAYER(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_CONFUSE_RAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_TERRAIN, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
+            ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
+        }
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves (Traits)")
 {
@@ -369,6 +389,26 @@ DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, opponentLeft);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    }
+}
+
+SINGLE_BATTLE_TEST("Psychic Terrain prevents priority status moves before Magic Bounce can bounce them (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_PSYCHIC_TERRAIN) == EFFECT_PSYCHIC_TERRAIN);
+        ASSUME(IsBattleMoveStatus(MOVE_CONFUSE_RAY));
+        ASSUME(MoveCanBeBouncedBack(MOVE_CONFUSE_RAY));
+        PLAYER(SPECIES_VOLBEAT) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_ESPEON) { Ability(ABILITY_ADAPTABILITY); Innates(ABILITY_MAGIC_BOUNCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); }
+        TURN { MOVE(player, MOVE_CONFUSE_RAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PSYCHIC_TERRAIN, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
+            ABILITY_POPUP(opponent, ABILITY_MAGIC_BOUNCE);
+        }
     }
 }
 #endif

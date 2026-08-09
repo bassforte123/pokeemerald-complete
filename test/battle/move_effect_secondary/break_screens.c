@@ -277,3 +277,31 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove screens i
         MESSAGE("The opposing team's Aurora Veil wore off!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove screens in the following order - Reflect, Light Screen, Aurora Veil (Traits)")
+{
+    enum Move move;
+
+    PARAMETRIZE { move = MOVE_BRICK_BREAK; }
+    PARAMETRIZE { move = MOVE_PSYCHIC_FANGS; }
+    PARAMETRIZE { move = MOVE_RAGING_BULL; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_NINETALES_ALOLA) Ability(ABILITY_SNOW_CLOAK); Innates(ABILITY_SNOW_WARNING);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_REFLECT); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_LIGHT_SCREEN); MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(opponent, MOVE_AURORA_VEIL); MOVE(player, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REFLECT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LIGHT_SCREEN, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AURORA_VEIL, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        MESSAGE("The opposing team's Reflect wore off!");
+        MESSAGE("The opposing team's Light Screen wore off!");
+        MESSAGE("The opposing team's Aurora Veil wore off!");
+    }
+}
+#endif

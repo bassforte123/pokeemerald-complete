@@ -48,6 +48,33 @@ SINGLE_BATTLE_TEST("Rocky Helmet does not trigger contact damage again after a l
 
 TO_DO_BATTLE_TEST("TODO: Write Rocky Helmet (Hold Effect) test titles")
 
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rocky Helmet does not trigger contact damage again after a later strike misses (Traits)")
+{
+    const u32 maxHP = 600;
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
+        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
+        ASSUME(GetItemHoldEffect(ITEM_ROCKY_HELMET) == HOLD_EFFECT_ROCKY_HELMET);
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); MaxHP(maxHP); HP(maxHP); }
+        OPPONENT(SPECIES_OINKOLOGNE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LINGERING_AROMA); Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_ACCURACY, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ABILITY_POPUP(opponent, ABILITY_LINGERING_AROMA);
+        HP_BAR(player, damage: maxHP / 6);
+        MESSAGE("Machamp was hurt by the opposing Oinkologne's Rocky Helmet!");
+        MESSAGE("The Pokémon was hit 1 time(s)!");
+        NONE_OF {
+            HP_BAR(player);
+            MESSAGE("Machamp was hurt by the opposing Oinkologne's Rocky Helmet!");
+        }
+    }
+}
+#endif
+
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Rocky Helmet damages attacker even if damage is blocked by Disguise (Items)")
 {
@@ -58,10 +85,33 @@ SINGLE_BATTLE_TEST("Rocky Helmet damages attacker even if damage is blocked by D
         TURN { MOVE(opponent, MOVE_SHADOW_SNEAK); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SHADOW_SNEAK, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         HP_BAR(opponent);
     }
 }
 
+SINGLE_BATTLE_TEST("Rocky Helmet does not trigger contact damage again after a later strike misses (Items)")
+{
+    const u32 maxHP = 600;
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
+        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
+        ASSUME(GetItemHoldEffect(ITEM_ROCKY_HELMET) == HOLD_EFFECT_ROCKY_HELMET);
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); MaxHP(maxHP); HP(maxHP); }
+        OPPONENT(SPECIES_OINKOLOGNE) { Ability(ABILITY_LINGERING_AROMA); Items(ITEM_GREAT_BALL, ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_ACCURACY, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ABILITY_POPUP(opponent, ABILITY_LINGERING_AROMA);
+        HP_BAR(player, damage: maxHP / 6);
+        MESSAGE("Machamp was hurt by the opposing Oinkologne's Rocky Helmet!");
+        MESSAGE("The Pokémon was hit 1 time(s)!");
+        NONE_OF {
+            HP_BAR(player);
+            MESSAGE("Machamp was hurt by the opposing Oinkologne's Rocky Helmet!");
+        }
+    }
+}
 TO_DO_BATTLE_TEST("TODO: Write Rocky Helmet (Hold Effect) test titles (Items)")
 #endif

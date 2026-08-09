@@ -507,10 +507,13 @@ DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); MOVE(playerRight, MOVE_CELEBRATE); MOVE(opponentLeft, MOVE_CELEBRATE); MOVE(opponentRight, MOVE_CELEBRATE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
-        HP_BAR(opponentLeft);
+        MESSAGE("Kangaskhan's Kangaskhanite is reacting to 1's Mega Ring!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, playerLeft);
+        MESSAGE("Kangaskhan has Mega Evolved into Mega Kangaskhan!");
         MESSAGE("It doesn't affect Pidgey…");
         MESSAGE("It doesn't affect the opposing Pidgey…");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        HP_BAR(opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, playerRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
@@ -666,10 +669,10 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep (Traits)")
     s16 damage[2];
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SNORE) == EFFECT_SNORE);
-        PLAYER(SPECIES_KANGASKHAN_MEGA) { Ability(ABILITY_EARLY_BIRD); Innates(ABILITY_PARENTAL_BOND); Status1(STATUS1_SLEEP); }
+        PLAYER(SPECIES_KANGASKHAN) { Ability(ABILITY_EARLY_BIRD); Innates(ABILITY_PARENTAL_BOND); Item(ITEM_KANGASKHANITE); Status1(STATUS1_SLEEP); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_SNORE); }
+        TURN { MOVE(player, MOVE_SNORE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Kangaskhan is fast asleep.");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNORE, player);
@@ -730,6 +733,41 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks (Traits)"
         TURN { MOVE(player, MOVE_RAZOR_WIND); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { SKIP_TURN(player); }
     } SCENE {
+        HP_BAR(opponent);
+        NOT HP_BAR(opponent);
+    }
+}
+
+
+SINGLE_BATTLE_TEST("Parental Bond does not trigger on OHKO moves (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_KANGASKHAN) { Ability(ABILITY_EARLY_BIRD); Innates(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FISSURE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, player);
+        HP_BAR(opponent, hp: 1);
+        MESSAGE("The opposing Machamp hung on using its Focus Sash!");
+        NOT HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->hp, 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not trigger on Uproar (Traits)")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_UPROAR, MOVE_EFFECT_UPROAR));
+        PLAYER(SPECIES_KANGASKHAN) { Ability(ABILITY_EARLY_BIRD); Innates(ABILITY_PARENTAL_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_UPROAR); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_UPROAR, player);
         HP_BAR(opponent);
         NOT HP_BAR(opponent);
     }

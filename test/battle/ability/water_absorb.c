@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Water Absorb heals 25% when hit by water type moves (Traits)
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("Poliwag had its HP restored.");
     }
 }
 
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Water Absorb does not activate if protected (Traits)")
     } WHEN {
         TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_BUBBLE); }
     } SCENE {
-        NONE_OF { ABILITY_POPUP(player, ABILITY_WATER_ABSORB); HP_BAR(player); MESSAGE("Poliwag restored HP using its Water Absorb!"); }
+        NONE_OF { ABILITY_POPUP(player, ABILITY_WATER_ABSORB); HP_BAR(player); MESSAGE("Poliwag had its HP restored."); }
     }
 }
 
@@ -125,7 +125,7 @@ SINGLE_BATTLE_TEST("Water Absorb activates on status moves (Traits)")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("Poliwag had its HP restored.");
     }
 }
 
@@ -141,7 +141,7 @@ SINGLE_BATTLE_TEST("Water Absorb is only triggered once on multi strike moves (T
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("Poliwag had its HP restored.");
     }
 }
 
@@ -159,7 +159,7 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("Poliwag had its HP restored.");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
@@ -184,7 +184,7 @@ SINGLE_BATTLE_TEST("Water Absorb prevents Absorb Bulb and Luminous Moss from act
     } SCENE {
         ABILITY_POPUP(player, ABILITY_WATER_ABSORB);
         HP_BAR(player, damage: -25);
-        MESSAGE("Poliwag restored HP using its Water Absorb!");
+        MESSAGE("Poliwag had its HP restored.");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);

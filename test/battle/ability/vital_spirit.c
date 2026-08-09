@@ -22,3 +22,25 @@ SINGLE_BATTLE_TEST("Vital Spirit prevents sleep")
         }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Vital Spirit prevents sleep (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
+        PLAYER(SPECIES_MANKEY) { Ability(ABILITY_ANGER_POINT); Innates(ABILITY_VITAL_SPIRIT); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SPORE); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_VITAL_SPIRIT);
+        MESSAGE("Mankey made it ineffective!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, opponent);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
+            STATUS_ICON(player, sleep: TRUE);
+        }
+    }
+}
+#endif

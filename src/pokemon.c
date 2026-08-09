@@ -5544,9 +5544,9 @@ static inline bool32 CanFirstMonBoostHeldItemRarity(void)
     if (GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
 
-    if (MonHasTrait(&gPlayerParty[0], ABILITY_COMPOUND_EYES))
+    if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_COMPOUND_EYES))
         return TRUE;
-    else if ((OW_SUPER_LUCK >= GEN_8) && MonHasTrait(&gPlayerParty[0], ABILITY_SUPER_LUCK))
+    else if ((OW_SUPER_LUCK >= GEN_8) && MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_SUPER_LUCK))
         return TRUE;
     return FALSE;
 }

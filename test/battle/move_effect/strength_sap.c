@@ -257,6 +257,21 @@ SINGLE_BATTLE_TEST("Strength Sap will drain users HP if target has Liquid Ooze")
     }
 }
 
+SINGLE_BATTLE_TEST("Strength Sap fails if move missed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_BRIGHT_POWDER); };
+    } WHEN {
+        TURN {  MOVE(player, MOVE_STRENGTH_SAP, hit: FALSE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+            HP_BAR(player);
+        }
+    }
+}
+
 
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Strength Sap will not drain users hp due to Liquid Ooze if user is Magic Guard protected (Traits)")
@@ -358,6 +373,21 @@ SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held (Items)", 
         MESSAGE("The opposing Wobbuffet had its energy drained!");
     } FINALLY {
         EXPECT_GT(abs(results[1].hp), abs(results[0].hp));
+    }
+}
+
+SINGLE_BATTLE_TEST("Strength Sap fails if move missed (Items)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_BRIGHT_POWDER); };
+    } WHEN {
+        TURN {  MOVE(player, MOVE_STRENGTH_SAP, hit: FALSE); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STRENGTH_SAP, player);
+            HP_BAR(player);
+        }
     }
 }
 #endif

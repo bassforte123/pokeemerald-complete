@@ -2694,7 +2694,7 @@ static void SetBattlerStatStagesForSwitchin(enum BattlerId battler, enum Battler
 {
     u32 aiAbility = gAiLogicData->abilities[battler];
     enum Item aiItem = gAiLogicData->items[battler];
-    bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battler), HAZARDS_STICKY_WEB) && IsBattlerAffectedByHazards(battler, GetItemHoldEffect(aiItem), FALSE) && IsBattlerGrounded(battler, gAiLogicData->abilities[battler], GetItemHoldEffect(aiItem)));
+    bool32 isStickyWebsAffected = (IsHazardOnSide(GetBattlerSide(battler), HAZARDS_STICKY_WEB) && IsBattlerAffectedByHazards(battler, GetItemHoldEffect(aiItem), FALSE) && IsBattlerGrounded(battler));
     bool32 opponentStatDrop = FALSE;
 
     // Ability stat changes

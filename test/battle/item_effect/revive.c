@@ -269,6 +269,7 @@ TO_DO_BATTLE_TEST("Revive won't restore a battler's HP if it hasn't fainted")
 DOUBLE_BATTLE_TEST("Revive can trigger switch-in abilities (Traits)")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_UNNERVE); Innates(ABILITY_INTIMIDATE); HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -292,6 +293,10 @@ DOUBLE_BATTLE_TEST("Revive can trigger switch-in abilities (Traits)")
 DOUBLE_BATTLE_TEST("Revive does reset abilities (Traits)")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_UNNERVE); Innates(ABILITY_INTIMIDATE); HP(1); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -314,12 +319,13 @@ DOUBLE_BATTLE_TEST("Revive does reset abilities (Traits)")
 
 DOUBLE_BATTLE_TEST("Revive force revived pokemon to replace absent battler immediately (Traits)", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_INTIMIDATE; }
     PARAMETRIZE { ability = ABILITY_SHED_SKIN; }
 
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
         PLAYER(SPECIES_WYNAUT) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET) { };
         PLAYER(SPECIES_ARBOK) { Ability(ABILITY_UNNERVE); Innates(ability); HP(0) ;} ;
@@ -338,6 +344,34 @@ DOUBLE_BATTLE_TEST("Revive force revived pokemon to replace absent battler immed
         HP_BAR(playerRight, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Revive keeps Mimikyu Busted forms and Eiscue Noice in their current forms (Traits)")
+{
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_MIMIKYU_BUSTED;       ability = ABILITY_DISGUISE; }
+    PARAMETRIZE { species = SPECIES_MIMIKYU_BUSTED_TOTEM; ability = ABILITY_DISGUISE; }
+    PARAMETRIZE { species = SPECIES_EISCUE_NOICE;         ability = ABILITY_ICE_FACE; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_REVIVE].battleUsage == EFFECT_ITEM_REVIVE);
+        ASSUME(GetMoveCategory(MOVE_CRUNCH) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(species) { HP(1); Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CRUNCH); SEND_OUT(player, 1); }
+        TURN { USE_ITEM(player, ITEM_REVIVE, partyIndex: 0); }
+        TURN { SWITCH(player, 0); MOVE(opponent, MOVE_CRUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, opponent);
+        NOT ABILITY_POPUP(player, ability);
+        HP_BAR(player);
     }
 }
 #endif

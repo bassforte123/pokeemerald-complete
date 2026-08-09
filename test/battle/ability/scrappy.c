@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Scrappy doesn't prevent Intimidate (Gen4-7) (Traits)")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_SCRAPPY);
-            MESSAGE("The opposing Kangaskhan's Scrappy prevents stat loss!");
+            MESSAGE("The opposing Kangaskhan's Attack was not lowered!");
         }
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
@@ -140,7 +140,7 @@ SINGLE_BATTLE_TEST("Scrappy prevents Intimidate (Gen8+) (Traits)")
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         NONE_OF { ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent); }
         ABILITY_POPUP(opponent, ABILITY_SCRAPPY);
-        MESSAGE("The opposing Kangaskhan's Scrappy prevents stat loss!");
+        MESSAGE("The opposing Kangaskhan's Attack was not lowered!");
         HP_BAR(player, captureDamage: &turnTwoHit);
     } THEN {
         EXPECT_EQ(turnOneHit, turnTwoHit);

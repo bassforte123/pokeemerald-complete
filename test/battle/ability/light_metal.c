@@ -27,7 +27,72 @@ SINGLE_BATTLE_TEST("Light Metal and Heavy Metal affect the power of Low Kick", s
     }
 }
 
-TO_DO_BATTLE_TEST("Light Metal and Heavy Metal don't affect Heavy Ball's multiplier")
+SINGLE_BATTLE_TEST("Autotomize applies before Light Metal and Heavy Metal when determining Heat Crash power", s16 damage)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_STALWART;    } // 40.0kg -> 0.1kg after Autotomize, ratio 1/1 => 40 BP
+    PARAMETRIZE { ability = ABILITY_LIGHT_METAL; } // 40.0kg -> 0.1kg after Autotomize, then halved (min 0.1kg), ratio 1/1 => 40 BP
+    PARAMETRIZE { ability = ABILITY_HEAVY_METAL; } // 40.0kg -> 0.1kg after Autotomize, then doubled to 0.2kg, ratio 2/1 => 60 BP
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_AUTOTOMIZE) == EFFECT_AUTOTOMIZE);
+        ASSUME(GetMoveEffect(MOVE_HEAT_CRASH) == EFFECT_HEAT_CRASH);
+        ASSUME(GetSpeciesWeight(SPECIES_DURALUDON) == 400);
+        ASSUME(GetSpeciesWeight(SPECIES_GASTLY) == 1);
+        PLAYER(SPECIES_GASTLY);
+        OPPONENT(SPECIES_DURALUDON) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_AUTOTOMIZE); }
+        TURN { MOVE(opponent, MOVE_HEAT_CRASH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AUTOTOMIZE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_CRASH, opponent);
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } THEN {
+        if (ability == ABILITY_HEAVY_METAL)
+            EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[i].damage);
+        else
+            EXPECT_EQ(results[0].damage, results[i].damage);
+    }
+}
+
+WILD_BATTLE_TEST("Light Metal doesn't affect Heavy Ball's multiplier", u32 catchingChance)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_TECHNICIAN;  }
+    PARAMETRIZE { ability = ABILITY_LIGHT_METAL; }
+
+    GIVEN {
+        ASSUME(GetSpeciesWeight(SPECIES_SCIZOR) == 1180);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SCIZOR) { Ability(ability); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_HEAVY_BALL); }
+    } SCENE {
+        CATCHING_CHANCE(&results[i].catchingChance);
+    } FINALLY {
+        EXPECT_EQ(results[0].catchingChance, results[1].catchingChance);
+    }
+}
+
+WILD_BATTLE_TEST("Heavy Metal doesn't affect Heavy Ball's multiplier", u32 catchingChance)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_HEATPROOF;   }
+    PARAMETRIZE { ability = ABILITY_HEAVY_METAL; }
+
+    GIVEN {
+        ASSUME(GetSpeciesWeight(SPECIES_BRONZONG) == 1870);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BRONZONG) { Ability(ability); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_HEAVY_BALL); }
+    } SCENE {
+        CATCHING_CHANCE(&results[i].catchingChance);
+    } FINALLY {
+        EXPECT_EQ(results[0].catchingChance, results[1].catchingChance);
+    }
+}
 
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Light Metal and Heavy Metal affect the power of Low Kick (Traits)", s16 damage)
@@ -56,5 +121,71 @@ SINGLE_BATTLE_TEST("Light Metal and Heavy Metal affect the power of Low Kick (Tr
     }
 }
 
-TO_DO_BATTLE_TEST("Light Metal and Heavy Metal don't affect Heavy Ball's multiplier (Traits)")
+SINGLE_BATTLE_TEST("Autotomize applies before Light Metal and Heavy Metal when determining Heat Crash power (Traits)", s16 damage)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_STALWART;    } // 40.0kg -> 0.1kg after Autotomize, ratio 1/1 => 40 BP
+    PARAMETRIZE { ability = ABILITY_LIGHT_METAL; } // 40.0kg -> 0.1kg after Autotomize, then halved (min 0.1kg), ratio 1/1 => 40 BP
+    PARAMETRIZE { ability = ABILITY_HEAVY_METAL; } // 40.0kg -> 0.1kg after Autotomize, then doubled to 0.2kg, ratio 2/1 => 60 BP
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_AUTOTOMIZE) == EFFECT_AUTOTOMIZE);
+        ASSUME(GetMoveEffect(MOVE_HEAT_CRASH) == EFFECT_HEAT_CRASH);
+        ASSUME(GetSpeciesWeight(SPECIES_DURALUDON) == 400);
+        ASSUME(GetSpeciesWeight(SPECIES_GASTLY) == 1);
+        PLAYER(SPECIES_GASTLY);
+        OPPONENT(SPECIES_DURALUDON) { Ability(ABILITY_STALWART); Innates(ability); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_AUTOTOMIZE); }
+        TURN { MOVE(opponent, MOVE_HEAT_CRASH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_AUTOTOMIZE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_CRASH, opponent);
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } THEN {
+        if (ability == ABILITY_HEAVY_METAL)
+            EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[i].damage);
+        else
+            EXPECT_EQ(results[0].damage, results[i].damage);
+    }
+}
+
+WILD_BATTLE_TEST("Light Metal doesn't affect Heavy Ball's multiplier (Traits)", u32 catchingChance)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_TECHNICIAN;  }
+    PARAMETRIZE { ability = ABILITY_LIGHT_METAL; }
+
+    GIVEN {
+        ASSUME(GetSpeciesWeight(SPECIES_SCIZOR) == 1180);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SCIZOR) { Ability(ABILITY_TECHNICIAN); Innates(ability); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_HEAVY_BALL); }
+    } SCENE {
+        CATCHING_CHANCE(&results[i].catchingChance);
+    } FINALLY {
+        EXPECT_EQ(results[0].catchingChance, results[1].catchingChance);
+    }
+}
+
+WILD_BATTLE_TEST("Heavy Metal doesn't affect Heavy Ball's multiplier (Traits)", u32 catchingChance)
+{
+    enum Ability ability;
+    PARAMETRIZE { ability = ABILITY_HEATPROOF;   }
+    PARAMETRIZE { ability = ABILITY_HEAVY_METAL; }
+
+    GIVEN {
+        ASSUME(GetSpeciesWeight(SPECIES_BRONZONG) == 1870);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_BRONZONG) { Ability(ABILITY_HEATPROOF); Innates(ability); }
+    } WHEN {
+        TURN { USE_ITEM(player, ITEM_HEAVY_BALL); }
+    } SCENE {
+        CATCHING_CHANCE(&results[i].catchingChance);
+    } FINALLY {
+        EXPECT_EQ(results[0].catchingChance, results[1].catchingChance);
+    }
+}
+
 #endif

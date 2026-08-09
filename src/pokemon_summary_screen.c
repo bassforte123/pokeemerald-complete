@@ -3907,7 +3907,7 @@ static void PrintEggMemo(void)
 
         if (trait == 0)
         {
-            StringCopy(gStringVar1, gText_Blank);
+            StringCopy(gStringVar1, gText_DexEmptyString);
             PrintTextOnWindow(AddWindowFromTemplateList(sPageTraitsTemplate, innateIndex), gStringVar1, x, 1, 0, 1);
             PrintTextOnWindow(AddWindowFromTemplateList(sPageTraitsTemplate, innateIndex), gStringVar1, 0, 17, 0, 0);
         }

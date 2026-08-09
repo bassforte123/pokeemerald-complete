@@ -140,3 +140,39 @@ DOUBLE_BATTLE_TEST("Thousand Arrows will ground both targets")
         MESSAGE("The opposing Flygon fell straight down!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Smack Down grounds pokemon with Levitate (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_SMACK_DOWN); }
+        TURN { MOVE(player, MOVE_EARTHQUAKE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SMACK_DOWN, player);
+        MESSAGE("The opposing Flygon fell straight down!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Smack Down hitting into an underground pokemon with No Guard does not remove the invulnerable state (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_GUTS); Innates(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DIG); MOVE(player, MOVE_SMACK_DOWN); }
+        TURN { SKIP_TURN(opponent); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SMACK_DOWN, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Flygon fell straight down!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DIG, opponent);
+        HP_BAR(player);
+    }
+}
+#endif

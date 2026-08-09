@@ -314,6 +314,26 @@ DOUBLE_BATTLE_TEST("Dragon Darts can be absorbed by both opponents and hit neith
     }
 }
 
+DOUBLE_BATTLE_TEST("Dragon Darts always prints effectiveness message after every hit")
+{
+    // The messages are possibly incorrect if they should print the target
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_CUFANT);
+        OPPONENT(SPECIES_DRATINI);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentLeft);
+        MESSAGE("It's not very effective…");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        HP_BAR(opponentRight);
+        MESSAGE("It's super effective!");
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and the other one has Volt Absorb (Traits)")
 {
@@ -337,7 +357,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -363,7 +382,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes an opponent twice if electrified and th
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -408,7 +426,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes left ally twice if one strike misses (I
         HP_BAR(finalTarget);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(finalTarget);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 
@@ -426,7 +443,6 @@ DOUBLE_BATTLE_TEST("Dragon Darts strikes right ally twice if one strike misses (
         HP_BAR(opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
         HP_BAR(opponentRight);
-        MESSAGE("The Pokémon was hit 2 time(s)!");
     }
 }
 #endif

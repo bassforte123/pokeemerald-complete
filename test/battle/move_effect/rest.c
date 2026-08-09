@@ -198,4 +198,34 @@ DOUBLE_BATTLE_TEST("Rest doesn't fail if the user is protected by Flower Veil (T
         EXPECT(playerLeft->status1 & STATUS1_SLEEP);
     }
 }
+
+SINGLE_BATTLE_TEST("Rest fails if the user is protected by Sweet Veil (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_BOUNSWEET) { Ability(ABILITY_OBLIVIOUS); Innates(ABILITY_SWEET_VEIL); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_REST); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, player);
+    } THEN {
+        EXPECT(!(player->status1 & STATUS1_SLEEP));
+    }
+}
+
+DOUBLE_BATTLE_TEST("Rest fails if the user is protected by ally's Sweet Veil (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_BOUNSWEET) { Ability(ABILITY_OBLIVIOUS); Innates(ABILITY_SWEET_VEIL); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_REST); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REST, playerLeft);
+    } THEN {
+        EXPECT(!(playerLeft->status1 & STATUS1_SLEEP));
+    }
+}
 #endif

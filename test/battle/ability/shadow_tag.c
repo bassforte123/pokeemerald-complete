@@ -17,3 +17,20 @@ WILD_BATTLE_TEST("Shadow Tag prevents wild Pokemon from fleeing with Teleport")
         MESSAGE("Wobbuffet made it ineffective!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+WILD_BATTLE_TEST("Shadow Tag prevents wild Pokemon from fleeing with Teleport (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); Innates(ABILITY_SHADOW_TAG); }
+        OPPONENT(SPECIES_ABRA);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TELEPORT); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TELEPORT, opponent);
+        ABILITY_POPUP(player, ABILITY_SHADOW_TAG);
+        MESSAGE("Wobbuffet made it ineffective!");
+    }
+}
+#endif

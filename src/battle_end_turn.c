@@ -360,7 +360,7 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         side = GetBattlerSide(battler);
         if ((gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE)
          && !IS_BATTLER_OF_TYPE(battler, TYPE_FIRE)
-         && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+         && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD))
         {
             gBattlerAttacker = battler;
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
@@ -1389,8 +1389,6 @@ static bool32 HandleEndTurnFormChange(enum BattlerId battler)
     if (!IsBattlerAlive(battler))
         return FALSE;
 
-    enum Ability ability = GetBattlerAbility(battler);
-
     if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END)
         || TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT_TURN_END))
     {
@@ -1626,12 +1624,10 @@ static bool32 (*const sEndTurnEffectHandlers[])(enum BattlerId battler) =
 static bool32 HandleEndTurnEmergencyExit(enum BattlerId battler)
 {
     bool32 effect = FALSE;
-    enum Ability ability = GetBattlerAbility(battler);
 
-    if (EmergencyExitCanBeTriggered(battler, ability))
+    if (EmergencyExitCanBeTriggered(battler))
     {
         gBattleScripting.battler = gBattlerAbility = battler;
-        gLastUsedAbility = ability;
         gSpecialStatuses[battler].queuedSwitch = QUEUED_SWITCH_OPEN_PARTY_SCREEN;
         BattleScriptCall(BattleScript_EmergencyExit);
         effect = TRUE;

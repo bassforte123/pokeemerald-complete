@@ -393,7 +393,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item not used that turn (Traits)")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_PICKUP);
             MESSAGE("Zigzagoon found one Sitrus Berry!");
@@ -699,7 +699,7 @@ SINGLE_BATTLE_TEST("Pickup doesn't grant an item not used that turn (Items)")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_PICKUP);
             MESSAGE("Zigzagoon found one Sitrus Berry!");

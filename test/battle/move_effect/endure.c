@@ -157,3 +157,21 @@ DOUBLE_BATTLE_TEST("Endure is not transferred to a mon that is switched in due t
     }
 }
 #endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Endure takes precedence over Focus Sash/Focus Band (Items)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); MaxHP(1); Items(ITEM_GREAT_BALL, ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ENDURE); MOVE(player, MOVE_POUND); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENDURE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
+        MESSAGE("The opposing Wobbuffet endured the hit!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+#endif

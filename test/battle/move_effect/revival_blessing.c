@@ -140,18 +140,46 @@ DOUBLE_BATTLE_TEST("Revival Blessing correctly updates battler absent flags (Tra
     } SCENE {
         // Turn 1
         MESSAGE("Salamence used Earthquake!");
-        HP_BAR(opponentLeft);
-        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
         MESSAGE("It doesn't affect the opposing Starly…");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("The opposing Starly used Revival Blessing!");
         MESSAGE("Geodude was revived and is ready to fight again!"); // Should have prefix but it doesn't currently.
         // Turn 2
         MESSAGE("Salamence used Earthquake!");
-        HP_BAR(opponentLeft);
-        MESSAGE("The opposing Geodude fainted!");
         MESSAGE("It doesn't affect Pidgeot…");
         MESSAGE("It doesn't affect the opposing Starly…");
+        HP_BAR(opponentLeft);
+        MESSAGE("The opposing Geodude fainted!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Revival Blessing keeps Mimikyu Busted forms and Eiscue Noice in their current forms (Traits)")
+{
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_MIMIKYU_BUSTED;       ability = ABILITY_DISGUISE; }
+    PARAMETRIZE { species = SPECIES_MIMIKYU_BUSTED_TOTEM; ability = ABILITY_DISGUISE; }
+    PARAMETRIZE { species = SPECIES_EISCUE_NOICE;         ability = ABILITY_ICE_FACE; }
+
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_CRUNCH) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(species) { HP(1); Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CRUNCH); SEND_OUT(player, 1); }
+        TURN { MOVE(player, MOVE_REVIVAL_BLESSING, partyIndex: 0); }
+        TURN { SWITCH(player, 0); MOVE(opponent, MOVE_CRUNCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVIVAL_BLESSING, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, opponent);
+        NOT ABILITY_POPUP(player, ability);
+        HP_BAR(player);
     }
 }
 #endif

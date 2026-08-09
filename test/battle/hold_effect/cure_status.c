@@ -137,7 +137,7 @@ SINGLE_BATTLE_TEST("Chesto Berry cures sleep when Yawn takes effect")
 
 SINGLE_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comatose")
 {
-    enum Item item;
+    u16 item;
 
     PARAMETRIZE { item = ITEM_CHESTO_BERRY; }
     PARAMETRIZE { item = ITEM_LUM_BERRY; }
@@ -415,7 +415,7 @@ SINGLE_BATTLE_TEST("Pecha and Lum Berries cure poison (Items)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_POWDER, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, poison: FALSE);
     }
 }
@@ -437,7 +437,7 @@ SINGLE_BATTLE_TEST("Pecha and Lum Berries cure bad poison (Items)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, badPoison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, badPoison: FALSE);
     }
 }
@@ -459,7 +459,7 @@ SINGLE_BATTLE_TEST("Rawst and Lum Berries cure burn (Items)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponent);
         STATUS_ICON(opponent, burn: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, burn: FALSE);
     }
 }
@@ -481,7 +481,7 @@ SINGLE_BATTLE_TEST("Aspear and Lum Berries cure freeze or frostbite (Items)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_PUNCH, player);
         ANIMATION(ANIM_TYPE_STATUS, (B_USE_FROSTBITE ? B_ANIM_STATUS_FRB : B_ANIM_STATUS_FRZ), opponent);
         FREEZE_OR_FROSTBURN_STATUS(opponent, TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         FREEZE_OR_FROSTBURN_STATUS(opponent, FALSE);
     }
 }
@@ -503,7 +503,7 @@ SINGLE_BATTLE_TEST("Chesto and Lum Berries cure sleep (Items)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPNOSIS, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         STATUS_ICON(opponent, sleep: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, sleep: FALSE);
     }
 }
@@ -512,7 +512,7 @@ TO_DO_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comato
 
 SINGLE_BATTLE_TEST("Cheri and Lum Berries cure paralysis (Items)")
 {
-    enum Item item;
+    u16 item;
 
     PARAMETRIZE { item = ITEM_CHERI_BERRY; }
     PARAMETRIZE { item = ITEM_LUM_BERRY; }
@@ -527,7 +527,7 @@ SINGLE_BATTLE_TEST("Cheri and Lum Berries cure paralysis (Items)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, opponent);
         STATUS_ICON(opponent, paralysis: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         STATUS_ICON(opponent, paralysis: FALSE);
     }
 }
@@ -548,7 +548,7 @@ SINGLE_BATTLE_TEST("Perism and Lum Berries cure confusion (Items)")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CONFUSE_RAY, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -575,8 +575,8 @@ SINGLE_BATTLE_TEST("Berry hold effect cures status if a Pokémon enters a battle
     } WHEN {
         TURN { }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -605,11 +605,11 @@ SINGLE_BATTLE_TEST("Opponent Pokemon can be further poisoned with Toxic spikes a
         MESSAGE("2 sent out Wynaut!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
         STATUS_ICON(opponent, poison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
         if (item == ITEM_PECHA_BERRY) {
             MESSAGE("The opposing Wynaut's Pecha Berry cured its poison!");
         } else {
-            MESSAGE("The opposing Wynaut's Lum Berry cured its poison problem!");
+            MESSAGE("The opposing Wynaut's Lum Berry cured its poison!");
         }
         STATUS_ICON(opponent, poison: FALSE);
         // 2nd switch-in
@@ -646,11 +646,11 @@ SINGLE_BATTLE_TEST("Player Pokemon can be further poisoned with Toxic spikes aft
         SEND_IN_MESSAGE("Wobbuffet");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         if (item == ITEM_PECHA_BERRY) {
             MESSAGE("Wobbuffet's Pecha Berry cured its poison!");
         } else {
-            MESSAGE("Wobbuffet's Lum Berry cured its poison problem!");
+            MESSAGE("Wobbuffet's Lum Berry cured its poison!");
         }
         STATUS_ICON(player, poison: FALSE);
         // 2nd switch-in
@@ -686,6 +686,25 @@ DOUBLE_BATTLE_TEST("Lum Berry correctly cures all battlers if multiple fainted t
     }
 }
 
+SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by only confusion (Items)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY, ITEM_LUM_BERRY); Speed(2); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, 0)); }
+        TURN { MOVE(opponent, MOVE_SWITCHEROO); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        MESSAGE("Wobbuffet's Lum Berry snapped it out of its confusion!");
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+        EXPECT(player->volatiles.confusionTurns == 0);
+    }
+}
+
+
 SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatiles status and confusion (Items)")
 {
     u32 status;
@@ -704,8 +723,29 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatil
         TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, 0));}
         TURN { MOVE(opponent, MOVE_SWITCHEROO);}
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-        MESSAGE("Wobbuffet's Lum Berry normalized its status!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        switch (status)
+        {
+            case STATUS1_BURN:
+                MESSAGE("Wobbuffet's Lum Berry cured its burn!");
+                break;
+            case STATUS1_FREEZE:
+                MESSAGE("Wobbuffet's Lum Berry defrosted it!");
+                break;
+            case STATUS1_PARALYSIS:
+                MESSAGE("Wobbuffet's Lum Berry cured its paralysis!");
+                break;
+            case STATUS1_POISON:
+                MESSAGE("Wobbuffet's Lum Berry cured its poison!");
+                break;
+            case STATUS1_TOXIC_POISON:
+                MESSAGE("Wobbuffet's Lum Berry cured its poison!");
+                break;
+            case STATUS1_SLEEP:
+                MESSAGE("Wobbuffet's Lum Berry woke it up!");
+                break;
+        }
+        MESSAGE("Wobbuffet's Lum Berry snapped it out of its confusion!");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
         EXPECT(player->volatiles.confusionTurns == 0);

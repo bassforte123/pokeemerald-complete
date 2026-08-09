@@ -85,9 +85,9 @@ SINGLE_BATTLE_TEST("Fillet Away's HP cost doesn't trigger effects that trigger o
         TURN { MOVE(player, MOVE_FILLET_AWAY); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FILLET_AWAY, player);
-        MESSAGE("Wobbuffet's Attack sharply rose!");
-        MESSAGE("Wobbuffet's Sp. Atk sharply rose!");
-        MESSAGE("Wobbuffet's Speed sharply rose!");
+        MESSAGE("Wobbuffet's Attack rose sharply!");
+        MESSAGE("Wobbuffet's Sp. Atk rose sharply!");
+        MESSAGE("Wobbuffet's Speed rose sharply!");
         NOT MESSAGE("Wobbuffet's Air Balloon popped!");
     }
 }

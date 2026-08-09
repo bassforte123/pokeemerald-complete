@@ -11,13 +11,11 @@
 
 TEST("SaveBlock1 is backwards compatible")
 {
-    KNOWN_FAILING;
     EXPECT_EQ(sizeof(struct SaveBlock1), T_SAVEBLOCK1_SIZE);
 }
 
 TEST("SaveBlock2 is backwards compatible")
 {
-    KNOWN_FAILING;
     EXPECT_EQ(sizeof(struct SaveBlock2), T_SAVEBLOCK2_SIZE);
 }
 

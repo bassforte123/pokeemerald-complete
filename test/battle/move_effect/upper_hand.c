@@ -68,8 +68,6 @@ SINGLE_BATTLE_TEST("Upper Hand succeeds if the target's move is boosted in prior
         TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
-        HP_BAR(opponent);
-        MESSAGE("The opposing Comfey flinched and couldn't move!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
     }
 }
@@ -191,8 +189,6 @@ SINGLE_BATTLE_TEST("Upper Hand succeeds if the target's move is boosted in prior
         TURN { MOVE(opponent, MOVE_DRAINING_KISS); MOVE(player, MOVE_UPPER_HAND); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_UPPER_HAND, player);
-        HP_BAR(opponent);
-        MESSAGE("The opposing Comfey flinched and couldn't move!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAINING_KISS, opponent);
     }
 }

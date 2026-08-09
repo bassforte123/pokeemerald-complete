@@ -139,7 +139,7 @@ static bool32 CanBeInfinitelyConfused(enum BattlerId battler)
 
 static enum ItemEffect TryBerserkGene(enum BattlerId battler)
 {
-    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battler)))
+    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL))
         return ITEM_NO_EFFECT;
 
     if (CanBeInfinitelyConfused(battler))

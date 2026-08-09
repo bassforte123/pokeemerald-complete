@@ -96,3 +96,45 @@ SINGLE_BATTLE_TEST("Eerie Spell does not reduce PP if the target faints")
         EXPECT_EQ(opponent->pp[0], GetMovePP(MOVE_SCRATCH) - 1); // Eerie Spell's PP reduction happens after fainting checks
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Eerie Spell's PP reduction is blocked by Shield Dust (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_COMPOUND_EYES); Innates(ABILITY_SHIELD_DUST); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_EERIE_SPELL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EERIE_SPELL, player);
+        HP_BAR(opponent);
+        NOT MESSAGE("The opposing Vivillon lost 3 PP from Scratch!");
+    } THEN {
+        EXPECT_EQ(opponent->pp[0], GetMovePP(MOVE_SCRATCH) - 1);
+    }
+}
+#endif
+
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Eerie Spell's PP reduction is blocked by Covert Cloak (Items)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_COVERT_CLOAK); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_EERIE_SPELL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        HP_BAR(player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EERIE_SPELL, player);
+        HP_BAR(opponent);
+        NOT MESSAGE("The opposing Wobbuffet lost 3 PP from Scratch!");
+    } THEN {
+        EXPECT_EQ(opponent->pp[0], GetMovePP(MOVE_SCRATCH) - 1);
+    }
+}
+#endif

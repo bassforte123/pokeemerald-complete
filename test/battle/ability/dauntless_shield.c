@@ -93,7 +93,7 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage (Traits)")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing Zamazenta's Defense rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
@@ -112,10 +112,10 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage every time it s
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing Zamazenta's Defense rose!");
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing Zamazenta's Defense rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
     }
@@ -134,11 +134,11 @@ SINGLE_BATTLE_TEST("Dauntless Shield raises Defense by one stage only once per b
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing Zamazenta's Defense rose!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Zamazenta's Dauntless Shield raised its Defense!");
+            MESSAGE("The opposing Zamazenta's Defense rose!");
         }
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE);

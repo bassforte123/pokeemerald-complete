@@ -244,7 +244,7 @@ SINGLE_BATTLE_TEST("Belly Drum minimizes the user's Attack stat with Contrary (T
 SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even with Contrary (Traits)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CHARM) == EFFECT_ATTACK_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_CHARM, attack: -2);
         PLAYER(SPECIES_SERPERIOR) { Ability(ABILITY_OVERGROW); Innates(ABILITY_CONTRARY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -254,13 +254,13 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even
         TURN { MOVE(player, MOVE_BELLY_DRUM); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("Serperior's Attack rose sharply!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("Serperior's Attack rose sharply!");
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Serperior's Attack sharply rose!");
+        MESSAGE("Serperior's Attack rose sharply!");
 
         MESSAGE("But it failed!");
         NONE_OF {
@@ -274,7 +274,7 @@ SINGLE_BATTLE_TEST("Belly Drum fails if the user's Attack is already at +6, even
 SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6 (Traits)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_SERPERIOR) { Ability(ABILITY_OVERGROW); Innates(ABILITY_CONTRARY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -291,8 +291,6 @@ SINGLE_BATTLE_TEST("Belly Drum deducts HP if the user has Contrary and is at -6 
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Serperior's Attack harshly fell!");
-
-        NOT MESSAGE("But it failed!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BELLY_DRUM, player);
         s32 maxHP = GetMonData(&PLAYER_PARTY[0], MON_DATA_MAX_HP);

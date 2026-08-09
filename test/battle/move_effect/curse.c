@@ -75,12 +75,53 @@ SINGLE_BATTLE_TEST("Curse applies to the opponent if user is afflicted by Trick-
     }
 }
 
-TO_DO_BATTLE_TEST("Baton Pass passes Cursed status");
+SINGLE_BATTLE_TEST("Curse lowering stats is not prevented by Mist")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_MIST); }
+        TURN { MOVE(player, MOVE_CURSE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MIST, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Wobbuffet's Speed fell!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Wobbuffet's Attack rose!");
+        MESSAGE("Wobbuffet's Defense rose!");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Baton Pass passes Cursed status")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST || GetSpeciesType(SPECIES_MISDREAVUS, 0) == TYPE_GHOST);
+        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_MISDREAVUS);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CURSE); MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); }
+    } SCENE {
+        s32 playerMaxHP = GetMonData(&PLAYER_PARTY[1], MON_DATA_MAX_HP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CURSE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
+        SEND_IN_MESSAGE("Wynaut");
+        HP_BAR(player, damage: playerMaxHP / 4);
+    }
+}
 
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Curse applies to the user if used with Protean/Libero (Traits)")
 {
-    u32 ability, species;
+    enum Ability ability;
+    u32 species;
     PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_KECLEON; }
     PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {

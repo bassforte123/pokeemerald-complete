@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent) (Traits)")
 DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive (Traits)")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE;}
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -233,9 +233,9 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive (Trait
         TURN {  USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); MOVE(opponentLeft, MOVE_WILL_O_WISP, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
     }
 
 }
@@ -301,7 +301,7 @@ SINGLE_BATTLE_TEST("Unnerve doesn't prevent opposing Pokémon from using Natural
 DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive (Items)")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE;}
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -316,9 +316,9 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive (Items
         TURN {  USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); MOVE(opponentLeft, MOVE_WILL_O_WISP, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, opponentRight);
-        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
     }
 }
 #endif

@@ -198,7 +198,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
 
 SINGLE_BATTLE_TEST("Protect: Spiky Shield doesn't hurt attacker when charging a two turn move")
 {
-    enum Move move;
+    u32 move;
     PARAMETRIZE { move = MOVE_BOUNCE; }
     PARAMETRIZE { move = MOVE_DIG; }
 
@@ -276,7 +276,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are al
 
 SINGLE_BATTLE_TEST("Protect: Baneful Bunker doesn't poison attacker when charging a two turn move")
 {
-    enum Move move;
+    u32 move;
     PARAMETRIZE { move = MOVE_BOUNCE; }
     PARAMETRIZE { move = MOVE_DIG; }
 
@@ -354,7 +354,7 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are alr
 
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark doesn't burn attacker when charging a two turn move")
 {
-    enum Move move;
+    u32 move;
     PARAMETRIZE { move = MOVE_BOUNCE; }
     PARAMETRIZE { move = MOVE_DIG; }
 
@@ -685,7 +685,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from opposing status mo
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on the user's side")
 {
-    enum Move move;
+    u32 move;
 
     PARAMETRIZE { move = MOVE_AROMATHERAPY; }
     PARAMETRIZE { move = MOVE_ACUPRESSURE; }
@@ -720,7 +720,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield does not protect against status moves used on 
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against entry hazard moves")
 {
-    enum Move move;
+    u32 move;
 
     PARAMETRIZE { move = MOVE_SPIKES; }
     PARAMETRIZE { move = MOVE_STEALTH_ROCK; }
@@ -798,7 +798,7 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
 
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all battlers")
 {
-    enum Move move;
+    u32 move;
 
     PARAMETRIZE { move = MOVE_FLOWER_SHIELD; }
     PARAMETRIZE { move = MOVE_PERISH_SONG; }
@@ -992,6 +992,76 @@ DOUBLE_BATTLE_TEST("Protect is not ignored after a new mon switched in because o
     }
 }
 
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 2nd time has 1/2 or 1/3 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 2 : 3);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 3rd time has 1/4 or 1/9 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 4 : 9);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect may fail if used consecutively - 4th time has 1/8 or 1/27 odds")
+{
+    u32 numRolls = (B_PROTECT_FAILURE_RATE < GEN_5 ? 8 : 27);
+    PASSES_RANDOMLY(1, numRolls, RNG_PROTECT_FAIL);
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT, WITH_RNG(RNG_PROTECT_FAIL, 1)); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect doesn't fail if used consecutively if broken by Feint")
+{
+    PASSES_RANDOMLY(1, 1, RNG_PROTECT_FAIL);
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_FEINT, MOVE_EFFECT_FEINT));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); MOVE(opponent, MOVE_FEINT); }
+        TURN { MOVE(player, MOVE_PROTECT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FEINT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
+    }
+}
 
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due to Eject Button (Traits)")

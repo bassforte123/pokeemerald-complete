@@ -1078,7 +1078,7 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN abilities do not conflict")
 
 DOUBLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN_STATUS_CURE abilities do not conflict (only one activates at a time)")
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_HYDRATION; }
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
     GIVEN {
@@ -1203,7 +1203,7 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_MOVE_END abilities do not conflict 2")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAME_WHEEL, player);
         ABILITY_POPUP(opponent, ABILITY_STEAM_ENGINE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Ditto's Speed drastically rose!");
+        MESSAGE("The opposing Ditto's Speed rose drastically!");
         MESSAGE("The opposing Zoroark's illusion wore off!");
         ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
         HP_BAR(player);
@@ -1309,7 +1309,7 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN item Harvest and Pickup can wo
 WILD_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN Ball Fetch does not conflict with Harvest or Pickup")
 {
     // Ball Fetch and Cud Chew here to make sure they don't conflict
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_HARVEST; }
     PARAMETRIZE { ability = ABILITY_PICKUP; }
@@ -1351,7 +1351,7 @@ WILD_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN Ball Fetch does not conflict wit
 WILD_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN Harvest and Pickup take priority over Ball Fetch")
 {
     // Ball Fetch and Cud Chew here to make sure they don't conflict
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_HARVEST; }
     PARAMETRIZE { ability = ABILITY_PICKUP; }

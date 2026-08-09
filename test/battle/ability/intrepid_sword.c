@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage (Traits)")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -187,10 +187,10 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage every time it swit
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
@@ -209,11 +209,11 @@ SINGLE_BATTLE_TEST("Intrepid Sword raises Attack by one stage only once per batt
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+            MESSAGE("The opposing Zacian's Attack rose!");
         }
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
@@ -226,7 +226,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZAMAZENTA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DAUNTLESS_SHIELD); }
         OPPONENT(SPECIES_WOBBUFFET);

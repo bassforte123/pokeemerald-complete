@@ -1157,12 +1157,6 @@ static void Cmd_damagecalc(void)
 
     enum Item heldGem = ITEM_NONE;
 
-    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        ctx.abilities[battler] = GetBattlerAbility(battler);
-        ctx.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
-
     if (IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove)))
     {
         for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -8749,7 +8743,7 @@ static void Cmd_recoverbasedonsunlight(void)
     {
         s32 recoverAmount = 0;
         u32 weather = GetWeather();
-        u32 attackerWeather = GetAttackerWeather(weather);
+        u32 attackerWeather = GetAttackerWeather(gBattlerAttacker, weather);
         u32 healingWeather = attackerWeather & ~B_WEATHER_STRONG_WINDS;
         if (GetMoveEffect(gCurrentMove) == EFFECT_SHORE_UP)
         {
@@ -9552,7 +9546,7 @@ static void Cmd_pickup(void)
                 if (isInPyramid)
                 {
                     heldItem = GetBattlePyramidPickupItemId();
-                    slot = GetMonNextEmptySlot(&gPlayerParty[i], heldItem);
+                    slot = GetMonNextEmptySlot(&gParties[B_TRAINER_PLAYER][i], heldItem);
                     if (slot != MAX_MON_ITEMS)
                     {
                         SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM + slot, &heldItem);
@@ -9578,18 +9572,18 @@ static void Cmd_pickup(void)
                     }
                     if (slot != MAX_MON_ITEMS)
                     {
-                        SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + slot, &heldItem);
+                        SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM + slot, &heldItem);
                     }
                 }
             }
-            else if (MonHasTrait(&gPlayerParty[i], ABILITY_HONEY_GATHER)
+            else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][i], ABILITY_HONEY_GATHER)
                 && species != 0
                 && species != SPECIES_EGG)
             {
                 if ((lvlDivBy10 + 1 ) * 5 > Random() % 100)
                 {
                     heldItem = ITEM_HONEY;
-                    slot = GetMonNextEmptySlot(&gPlayerParty[i], heldItem);
+                    slot = GetMonNextEmptySlot(&gParties[B_TRAINER_PLAYER][i], heldItem);
                     if (slot != MAX_MON_ITEMS)
                     {
                         SetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM + slot, &heldItem);
@@ -9603,7 +9597,7 @@ static void Cmd_pickup(void)
                 heldItem = ITEM_BERRY_JUICE;
                 for (k = 0; k < MAX_MON_ITEMS; k++)
                 {
-                    if (GetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM + k) == ITEM_ORAN_BERRY)
+                    if (GetMonData(&gParties[B_TRAINER_PLAYER][i], MON_DATA_HELD_ITEM + k) == ITEM_ORAN_BERRY)
                     {
                         if (gItemsInfo[heldItem].heldSlot != gItemsInfo[ITEM_ORAN_BERRY].heldSlot && B_HELD_ITEM_CATEGORIZATION)
                             DebugPrintf("WARN: Berry Juice not in same slot category as Oran Berry (Multi)");
@@ -12148,7 +12142,6 @@ void BS_TryWindRiderPower(void)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum Ability ability = GetBattlerAbility(battler);
     if (IsBattlerAlive(battler) && IsBattlerAlly(battler, gBattlerAttacker))
     {
         if (BattlerHasTrait(battler, ABILITY_WIND_RIDER))
@@ -12691,7 +12684,7 @@ void BS_TryActivateAbilityShield(void)
 {
     NATIVE_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum Ability ability = GetBattlerAbility(battler);
+    enum Ability ability = GetBattlerAbility(battler); //Main ability negation check (Multi)
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 
@@ -13326,9 +13319,8 @@ void BS_AbilityOnFormChange(void)
 {
     NATIVE_ARGS(u8 battler);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum Ability ability = GetBattlerAbility(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if (AbilityBattleEffects(ABILITYEFFECT_ON_FORM_CHANGE, battler, ability, MOVE_NONE, TRUE))
+    if (AbilityBattleEffects(ABILITYEFFECT_ON_FORM_CHANGE, battler, MOVE_NONE, TRUE))
         return;
 }
 
@@ -14149,7 +14141,7 @@ void BS_JumpIfWeatherAffected(void)
 {
     NATIVE_ARGS(u16 flags, const u8 *jumpInstr);
     u32 weather = cmd->flags;
-    if (GetAttackerWeather(GetBattlerHoldEffect(gBattlerAttacker), GetBattlerAbility(gBattlerAttacker), GetWeather()) & weather)
+    if (GetAttackerWeather(gBattlerAttacker, GetWeather()) & weather)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;

@@ -136,3 +136,26 @@ AI_DOUBLE_BATTLE_TEST("AI uses Rototiller")
         TURN { EXPECT_MOVE(opponentLeft, MOVE_ROTOTILLER); }
     }
 }
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Rototiller fails if there are no valid targets (Double Battle) (Traits)")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_GRASS);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_FLYGON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROTOTILLER); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROTOTILLER, playerLeft);
+        MESSAGE("Wobbuffet used Rototiller!");
+        MESSAGE("It doesn't affect Wobbuffet…");
+        MESSAGE("It doesn't affect Flygon…");
+        MESSAGE("It doesn't affect the opposing Wobbuffet…");
+        MESSAGE("It doesn't affect the opposing Flygon…");
+    }
+}
+#endif

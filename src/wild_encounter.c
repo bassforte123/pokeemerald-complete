@@ -593,23 +593,23 @@ static bool8 WildEncounterCheck(u32 encounterRate, bool8 ignoreAbility)
     {
         if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_STENCH) && gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
             encounterRate = encounterRate * 3 / 4;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_STENCH))
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_STENCH))
             encounterRate /= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_ILLUMINATE))
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_ILLUMINATE))
             encounterRate *= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_WHITE_SMOKE))
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_WHITE_SMOKE))
             encounterRate /= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_ARENA_TRAP))
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_ARENA_TRAP))
             encounterRate *= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_SAND_VEIL) && gSaveBlock1Ptr->weather == WEATHER_SANDSTORM)
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_SAND_VEIL) && gSaveBlock1Ptr->weather == WEATHER_SANDSTORM)
             encounterRate /= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_SNOW_CLOAK) && gSaveBlock1Ptr->weather == WEATHER_SNOW)
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_SNOW_CLOAK) && gSaveBlock1Ptr->weather == WEATHER_SNOW)
             encounterRate /= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_QUICK_FEET))
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_QUICK_FEET))
             encounterRate /= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_INFILTRATOR) && OW_INFILTRATOR >= GEN_8)
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_INFILTRATOR) && OW_INFILTRATOR >= GEN_8)
             encounterRate /= 2;
-        else if (MonHasTrait(&gPlayerParty[0], ABILITY_NO_GUARD))
+        else if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_NO_GUARD))
             encounterRate *= 2;
     }
     if (encounterRate > MAX_ENCOUNTER_RATE)
@@ -1067,7 +1067,7 @@ bool8 IsAbilityAllowingEncounter(u8 level)
     if (GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_SANITY_IS_EGG))
         return TRUE;
 
-    if (MonHasTrait(&gPlayerParty[0], ABILITY_KEEN_EYE) || MonHasTrait(&gPlayerParty[0], ABILITY_INTIMIDATE))
+    if (MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_KEEN_EYE) || MonHasTrait(&gParties[B_TRAINER_PLAYER][0], ABILITY_INTIMIDATE))
     {
         u8 playerMonLevel = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_LEVEL);
         if (playerMonLevel > 5 && level <= playerMonLevel - 5 && !(Random() % 2))
@@ -1166,7 +1166,7 @@ static void ApplyCleanseTagEncounterRateMod(u32 *encRate)
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
         enum Item heldItem = GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HELD_ITEM + i);
-    if (gItemsInfo[heldItem].holdEffect == HOLD_EFFECT_REPEL && (firstMach || GetConfig(CONFIG_ALLOW_HELD_DUPES)))
+    if (gItemsInfo[heldItem].holdEffect == HOLD_EFFECT_REPEL && (firstMatch || GetConfig(B_ALLOW_HELD_DUPES)))
             firstMatch = FALSE;
             *encRate = *encRate * 2 / 3;
     }

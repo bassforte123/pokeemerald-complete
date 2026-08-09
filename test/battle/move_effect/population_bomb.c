@@ -114,3 +114,116 @@ SINGLE_BATTLE_TEST("Population Bomb with Skill Link ignores Loaded Dice roll and
         MESSAGE("The Pokémon was hit 10 time(s)!");
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Accuracy for Population Bomb is checked independently for each hit (Traits)")
+{
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
+        PLAYER(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+        OPPONENT(SPECIES_OINKOLOGNE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LINGERING_AROMA); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_ACCURACY, FALSE)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ABILITY_POPUP(opponent, ABILITY_LINGERING_AROMA);
+        MESSAGE("The Pokémon was hit 1 time(s)!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+            MESSAGE("The Pokémon was hit 2 time(s)!");
+        }
+    } THEN {
+        EXPECT_EQ(player->ability, ABILITY_LINGERING_AROMA);
+    }
+}
+
+SINGLE_BATTLE_TEST("Accuracy for Population Bomb is only checked for the first hit with Skill Link (Traits)")
+{
+    PASSES_RANDOMLY(9, 10, RNG_ACCURACY);
+    GIVEN {
+        PLAYER(SPECIES_PIKIPEK) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_SKILL_LINK); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        MESSAGE("The Pokémon was hit 10 time(s)!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Population Bomb with Skill Link ignores Loaded Dice roll and still hits ten times (Traits)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LOADED_DICE) == HOLD_EFFECT_LOADED_DICE);
+        PLAYER(SPECIES_PIKIPEK) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_SKILL_LINK); Item(ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_LOADED_DICE, 4)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        MESSAGE("The Pokémon was hit 10 time(s)!");
+    }
+}
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Accuracy for Population Bomb is only checked for the first hit with Loaded Dice (Items)")
+{
+    PASSES_RANDOMLY(9, 10, RNG_ACCURACY);
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LOADED_DICE) == HOLD_EFFECT_LOADED_DICE);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_LOADED_DICE, 4)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        MESSAGE("The Pokémon was hit 4 time(s)!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Population Bomb with Skill Link ignores Loaded Dice roll and still hits ten times (Items)")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_LOADED_DICE) == HOLD_EFFECT_LOADED_DICE);
+        PLAYER(SPECIES_PIKIPEK) { Ability(ABILITY_SKILL_LINK); Items(ITEM_GREAT_BALL, ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_LOADED_DICE, 4)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        MESSAGE("The Pokémon was hit 10 time(s)!");
+    }
+}
+
+#endif

@@ -93,3 +93,92 @@ SINGLE_BATTLE_TEST("Poltergeist doesn't reveal the target's item if it missed")
         };
     }
 }
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Poltergeist fails if the target isn't holding an item (Items)")
+{
+    enum Item item;
+
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_POTION; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, item); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POLTERGEIST); }
+    } SCENE {
+        if (item == ITEM_NONE) {
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_POLTERGEIST, player);
+            MESSAGE("But it failed!");
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POLTERGEIST, player);
+            HP_BAR(opponent);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Poltergeist reveals the target's item before dealing damage (Items)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POLTERGEIST); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet is about to be attacked by its Potion!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POLTERGEIST, player);
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Poltergeist doesn't reveal the target's item if user fails to use the move (Items)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POLTERGEIST); }
+    } SCENE {
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet is about to be attacked by its Potion!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POLTERGEIST, player);
+            HP_BAR(opponent);
+        };
+    }
+}
+
+SINGLE_BATTLE_TEST("Poltergeist doesn't reveal the target's item if target is immune (Items)")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_POLTERGEIST) == TYPE_GHOST);
+        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL || GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIDGEY) { Items(ITEM_NONE, ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POLTERGEIST); }
+    } SCENE {
+        NONE_OF {
+            MESSAGE("The opposing Pidgey is about to be attacked by its Potion!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POLTERGEIST, player);
+            HP_BAR(opponent);
+        };
+    }
+}
+
+SINGLE_BATTLE_TEST("Poltergeist doesn't reveal the target's item if it missed (Items)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_NONE, ITEM_POTION); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POLTERGEIST, hit: FALSE); }
+    } SCENE {
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet is about to be attacked by its Potion!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_POLTERGEIST, player);
+            HP_BAR(opponent);
+        };
+    }
+}
+#endif

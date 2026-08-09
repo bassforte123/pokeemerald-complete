@@ -1824,11 +1824,16 @@ DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilitie
         PARAMETRIZE { move = MOVE_MUD_SLAP; stat = STAT_SPDEF; ability = abilityList[j]; }
     }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_STRIKE, MOVE_EFFECT_LOWER_SPEED_SIDE));
-        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_LOWER_SP_ATK_SIDE));
-        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_PHANTASM, MOVE_EFFECT_LOWER_DEFENSE_SIDE));
-        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_WYRMWIND, MOVE_EFFECT_LOWER_ATTACK_SIDE));
-        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_DARKNESS, MOVE_EFFECT_LOWER_SP_DEF_SIDE));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_WYRMWIND, attack: -1);
+        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_WYRMWIND));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_PHANTASM, defense: -1);
+        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_PHANTASM));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_FLUTTERBY, spAtk: -1);
+        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_FLUTTERBY));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_DARKNESS, spDef: -1);
+        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_DARKNESS));
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_MAX_STRIKE, speed: -1);
+        ASSUME(MoveHasAdditionalOnSideEffect(MOVE_MAX_STRIKE));
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_SHADOW_TAG); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1943,7 +1948,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
 {
     PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
         ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Items(ITEM_PECHA_BERRY, ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Items(ITEM_PECHA_BERRY, ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
@@ -1957,10 +1962,10 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); }
     } SCENE {
         // turn 1
-        MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of the opposing Wobbuffet rose!");
+        MESSAGE("The Apicot Berry boosted Snorlax's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted Munchlax's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted the opposing Wobbuffet's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted the opposing Wobbuffet's Sp. Def!");
         // turn 2
         MESSAGE("Snorlax used G-Max Replenish!");
         MESSAGE("Snorlax found one Apicot Berry!");
@@ -1988,7 +1993,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
 {
     PASSES_RANDOMLY(1, 2, RNG_G_MAX_REPLENISH);
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_G_MAX_REPLENISH, MOVE_EFFECT_RECYCLE_BERRIES));
         ASSUME(GetItemHoldEffect(ITEM_APICOT_BERRY) == HOLD_EFFECT_SP_DEFENSE_UP);
         PLAYER(SPECIES_SNORLAX) { Items(ITEM_NUGGET, ITEM_APICOT_BERRY); GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MUNCHLAX) { Items(ITEM_NUGGET, ITEM_APICOT_BERRY); Ability(ABILITY_THICK_FAT); }
@@ -2004,8 +2009,8 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Replenish recycles allies' berries 50\% of th
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft, gimmick: GIMMICK_DYNAMAX); SEND_OUT(opponentLeft, 2);}
     } SCENE {
         // turn 1
-        MESSAGE("Using Apicot Berry, the Sp. Def of Snorlax rose!");
-        MESSAGE("Using Apicot Berry, the Sp. Def of Munchlax rose!");
+        MESSAGE("The Apicot Berry boosted Snorlax's Sp. Def!");
+        MESSAGE("The Apicot Berry boosted Munchlax's Sp. Def!");
         // turn 2
         MESSAGE("Snorlax used G-Max Replenish!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_REPLENISH, playerLeft);

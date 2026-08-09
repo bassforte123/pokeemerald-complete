@@ -100,7 +100,7 @@ SINGLE_BATTLE_TEST("Purify doesn't heal HP if the target has Comatose")
 #if MAX_MON_TRAITS > 1
 AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts (Traits)")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }
@@ -119,7 +119,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Purify to heal an enemy with Guts (Traits)")
 
 AI_DOUBLE_BATTLE_TEST("AI does not use Purify to heal an ally with Guts (Traits)")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_GUTS; }
     PARAMETRIZE { ability = ABILITY_BULLETPROOF; }

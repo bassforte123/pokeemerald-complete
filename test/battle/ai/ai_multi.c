@@ -2,7 +2,7 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
-AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (Items)")
+AI_MULTI_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (multi)")
 {
     ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
     ASSUME(IsExplosionMove(MOVE_EXPLOSION));
@@ -65,7 +65,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will only explode and kill everything on the field
 }
 
 // Used to test EXPECT_MOVE only on partner
-AI_MULTI_BATTLE_TEST("AI partner makes sensible move selections in battle (Items)")
+AI_MULTI_BATTLE_TEST("AI partner makes sensible move selections in battle (multi)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -260,14 +260,83 @@ AI_MULTI_BATTLE_TEST("Pollen Puff: AI correctly scores moves with EFFECT_HIT_ENE
     }
 }
 
+AI_MULTI_BATTLE_TEST("Battler 2 has AI flags set correctly (multi)")
+{
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
+
+    u32 aiFlags;
+
+    PARAMETRIZE { aiFlags = 0; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        BATTLER_AI_FLAGS(playerRight, aiFlags);
+        PLAYER(SPECIES_VOLTORB) { Moves(MOVE_CELEBRATE); HP(1); }
+        PARTNER(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        if (aiFlags == 0)
+            TURN { EXPECT_MOVE(playerRight, MOVE_ELECTRO_BALL); }
+        else
+            TURN { EXPECT_MOVE(playerRight, MOVE_EXPLOSION); }
+    }
+}
+
+AI_TWO_VS_ONE_BATTLE_TEST("Battler 2 has AI flags set correctly (2v1)")
+{
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
+    ASSUME(IsExplosionMove(MOVE_EXPLOSION));
+
+    u32 aiFlags;
+
+    PARAMETRIZE { aiFlags = 0; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        BATTLER_AI_FLAGS(playerRight, aiFlags);
+        PLAYER(SPECIES_VOLTORB) { Moves(MOVE_CELEBRATE); HP(1); }
+        PARTNER(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        if (aiFlags == 0)
+            TURN { EXPECT_MOVE(playerRight, MOVE_ELECTRO_BALL, target: opponentLeft); }
+        else
+            TURN { EXPECT_MOVE(playerRight, MOVE_EXPLOSION, target: opponentLeft); }
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI will not switch thinking all moves are bad when one opponent has fainted (multi)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_SMART_TRAINER);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_AGGRON) { Moves(MOVE_THUNDERBOLT, MOVE_PROTECT, MOVE_BODY_PRESS); }
+        PARTNER(SPECIES_AGGRON) { Moves(MOVE_THUNDERBOLT, MOVE_PROTECT, MOVE_BODY_PRESS); }
+        OPPONENT_A(SPECIES_GASTLY) { HP(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_CAMERUPT) { Moves(MOVE_CELEBRATE); }
+        OPPONENT_B(SPECIES_CAMERUPT) { Moves(MOVE_CELEBRATE); }
+        TIE_BREAK_TARGET(TARGET_TIE_HI, 0);
+    } WHEN {
+        TURN { EXPECT_MOVE(playerRight, MOVE_THUNDERBOLT, target:opponentLeft); }
+        TURN { EXPECT_MOVE(playerRight, MOVE_BODY_PRESS, target:opponentRight); }
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi battle when forced out 2 (Traits)")
 {
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { }
+        BATTLER_AI_FLAGS(opponentLeft, AI_FLAG_ACE_POKEMON);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
         MULTI_OPPONENT_A(SPECIES_GOLISOPOD) { Moves(MOVE_CELEBRATE); HP(101); MaxHP(200); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT);}
         MULTI_OPPONENT_A(SPECIES_VENUSAUR) { Moves(MOVE_GIGA_DRAIN); }
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }
@@ -289,9 +358,9 @@ AI_MULTI_BATTLE_TEST("AI opponents do not steal their partner pokemon in multi b
     PARAMETRIZE {item = ITEM_NONE; move = MOVE_ROAR;}
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        BATTLER_AI_FLAGS(B_POSITION_OPPONENT_LEFT, AI_FLAG_ACE_POKEMON);
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { }
+        BATTLER_AI_FLAGS(opponentLeft, AI_FLAG_ACE_POKEMON);
+        PLAYER(SPECIES_WOBBUFFET);
+        PARTNER(SPECIES_WOBBUFFET);
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Items(ITEM_PECHA_BERRY, item);}
         MULTI_OPPONENT_A(SPECIES_VENUSAUR) { Moves(MOVE_GIGA_DRAIN); }
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { Moves(MOVE_CELEBRATE); }

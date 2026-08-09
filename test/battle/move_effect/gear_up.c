@@ -46,6 +46,30 @@ DOUBLE_BATTLE_TEST("Gear Up raises Attack and Sp. Attack of all Plus/Minus allie
     }
 }
 
+DOUBLE_BATTLE_TEST("Gear Up used by both battlers raises Attack and Sp. Attack of a single opponent with plus/minus twice")
+{
+    GIVEN {
+        PLAYER(SPECIES_PLUSLE) { Ability(ABILITY_PLUS); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PLUSLE) { Ability(ABILITY_PLUS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_GEAR_UP); MOVE(opponentRight, MOVE_GEAR_UP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GEAR_UP, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GEAR_UP, opponentRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 AI_DOUBLE_BATTLE_TEST("AI uses Gear Up (Traits)")
 {
@@ -57,6 +81,30 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gear Up (Traits)")
         OPPONENT(SPECIES_KLINKLANG) { Ability(ABILITY_CLEAR_BODY); Innates(ABILITY_PLUS); Moves(MOVE_GEAR_UP, MOVE_WATER_GUN, MOVE_POUND); }
     } WHEN {
         TURN {  EXPECT_MOVE(opponentLeft, MOVE_GEAR_UP); }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Gear Up used by both battlers raises Attack and Sp. Attack of a single opponent with plus/minus twice (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_PLUSLE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PLUS); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PLUSLE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_PLUS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_GEAR_UP); MOVE(opponentRight, MOVE_GEAR_UP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GEAR_UP, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GEAR_UP, opponentRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
     }
 }
 #endif

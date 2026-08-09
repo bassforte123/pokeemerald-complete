@@ -373,6 +373,7 @@ SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move (Traits)")
     }
 }
 
+#define FAILURE_MESSAGE MESSAGE("It doesn't affect Drilbur…")
 SINGLE_BATTLE_TEST("Normalize affects status moves (Traits)")
 {
     enum Ability ability;
@@ -389,15 +390,16 @@ SINGLE_BATTLE_TEST("Normalize affects status moves (Traits)")
         if (ability == ABILITY_CUTE_CHARM)
         {
             NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, opponent); }
-            MESSAGE("But it failed!");
+            FAILURE_MESSAGE;
         }
         else
         {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_WAVE, opponent);
-            NOT { MESSAGE("But it failed!"); }
+            NOT FAILURE_MESSAGE;
         }
     }
 }
+#undef FAILURE_MESSAGE
 
 SINGLE_BATTLE_TEST("Normalize still makes Freeze-Dry do super effective damage to Water-type Pokémon (Traits)", s16 damage)
 {
@@ -504,7 +506,7 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrif
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -517,7 +519,7 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Delu
     } WHEN {
         TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -557,7 +559,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Natural Gift's type (Traits)")
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_SKITTY) { Ability(ABILITY_WONDER_SKIN); Innates(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);
@@ -695,7 +697,7 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrif
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -708,7 +710,7 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Delu
     } WHEN {
         TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
     }
 }
 
@@ -719,7 +721,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Natural Gift's type (Items)")
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_SKITTY) { Ability(ability); Items(ITEM_GREAT_BALL, ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);

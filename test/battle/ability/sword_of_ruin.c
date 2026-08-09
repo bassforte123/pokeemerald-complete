@@ -293,7 +293,7 @@ DOUBLE_BATTLE_TEST("Sword of Ruin increases damage taken by special moves in Won
 
 SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Breaker attacker (Traits)")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
     PARAMETRIZE { ability = ABILITY_SAND_RUSH; }
@@ -324,7 +324,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Brea
 
 DOUBLE_BATTLE_TEST("Sword of Ruin's Defense reduction is not ignored by Mold Breaker", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
     PARAMETRIZE { ability = ABILITY_SAND_RUSH; }

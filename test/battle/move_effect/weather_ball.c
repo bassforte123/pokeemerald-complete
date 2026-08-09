@@ -97,7 +97,254 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
     }
 }
 
-TO_DO_BATTLE_TEST("Weather Ball doesn't double its power or change type if Cloud Nine/Air Lock is on the field");
+DOUBLE_BATTLE_TEST("Weather Ball doesn't double its power and stays a Normal-type move in strong winds", s16 damage)
+{
+    bool32 strongWinds;
+    enum Species species;
+    PARAMETRIZE { strongWinds = FALSE; species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { strongWinds = TRUE;  species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { strongWinds = TRUE;  species = SPECIES_GASTLY; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        if (strongWinds)
+            PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        else
+            PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_AIR_LOCK); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (strongWinds)
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(playerRight, MOVE_WEATHER_BALL, target: opponentLeft); }
+    } SCENE {
+        if (strongWinds)
+            ABILITY_POPUP(playerLeft, ABILITY_DELTA_STREAM);
+        if (species == SPECIES_GASTLY) {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, playerRight);
+                HP_BAR(opponentLeft);
+            }
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, playerRight);
+            HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+        }
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball doesn't double its power in Sunlight or Rain if Cloud Nine/Air Lock is on the field", s16 damage)
+{
+    enum Move setupMove;
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_RAIN_DANCE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[0].damage, results[2].damage);
+        EXPECT_EQ(results[3].damage, results[4].damage);
+        EXPECT_EQ(results[3].damage, results[5].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball doesn't change type in Sunlight or Rain if Cloud Nine/Air Lock is on the field")
+{
+    enum Move setupMove;
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_RAIN_DANCE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+            HP_BAR(opponent);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball does not double its power in Sunlight or Rain if user holds Utility Umbrella", s16 damage)
+{
+    enum Move setupMove;
+
+    PARAMETRIZE { setupMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_UTILITY_UMBRELLA); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[0].damage, results[2].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball doesn't change type in Sunlight or Rain if user holds Utility Umbrella")
+{
+    enum Move setupMove;
+
+    PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_UTILITY_UMBRELLA); }
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+            HP_BAR(opponent);
+        }
+    }
+}
+
+#if MAX_MON_TRAITS > 1
+DOUBLE_BATTLE_TEST("Weather Ball doesn't double its power and stays a Normal-type move in strong winds (Traits)", s16 damage)
+{
+    bool32 strongWinds;
+    enum Species species;
+    PARAMETRIZE { strongWinds = FALSE; species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { strongWinds = TRUE;  species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { strongWinds = TRUE;  species = SPECIES_GASTLY; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        if (strongWinds)
+            PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        else
+            PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_AIR_LOCK); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (strongWinds)
+            TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(playerRight, MOVE_WEATHER_BALL, target: opponentLeft); }
+    } SCENE {
+        if (strongWinds)
+            ABILITY_POPUP(playerLeft, ABILITY_DELTA_STREAM);
+        if (species == SPECIES_GASTLY) {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, playerRight);
+                HP_BAR(opponentLeft);
+            }
+        } else {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, playerRight);
+            HP_BAR(opponentLeft, captureDamage: &results[i].damage);
+        }
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball doesn't double its power in Sunlight or Rain if Cloud Nine/Air Lock is on the field (Traits)", s16 damage)
+{
+    enum Move setupMove;
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_RAIN_DANCE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        PLAYER(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[0].damage, results[2].damage);
+        EXPECT_EQ(results[3].damage, results[4].damage);
+        EXPECT_EQ(results[3].damage, results[5].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball doesn't change type in Sunlight or Rain if Cloud Nine/Air Lock is on the field (Traits)")
+{
+    enum Move setupMove;
+    enum Species species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_GOLDUCK;  ability = ABILITY_CLOUD_NINE; setupMove = MOVE_RAIN_DANCE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK;   setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        PLAYER(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+            HP_BAR(opponent);
+        }
+    }
+}
+#endif
+
 
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Rock-type move in a Sandstorm (Items)", s16 damage)
@@ -107,11 +354,13 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to a Rock-type move
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_MAGMAR) { Items(ITEM_PECHA_BERRY, ITEM_SAFETY_GOGGLES); };
+        OPPONENT(SPECIES_MAGMAR) { Items(ITEM_GREAT_BALL, ITEM_SAFETY_GOGGLES); }
     } WHEN {
         TURN { MOVE(player, move); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(4.0), results[1].damage); // double base power + type effectiveness.
@@ -126,14 +375,66 @@ SINGLE_BATTLE_TEST("Weather Ball doubles its power and turns to an Ice-type move
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_DRAGONAIR) { Items(ITEM_PECHA_BERRY, ITEM_SAFETY_GOGGLES); };
+        OPPONENT(SPECIES_DRAGONAIR) { Items(ITEM_GREAT_BALL, ITEM_SAFETY_GOGGLES); }
     } WHEN {
         TURN { MOVE(player, move); }
         TURN { MOVE(player, MOVE_WEATHER_BALL); }
     } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(4.0), results[1].damage); // double base power + type effectiveness.
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball does not double its power in Sunlight or Rain if user holds Utility Umbrella (Items)", s16 damage)
+{
+    enum Move setupMove;
+
+    PARAMETRIZE { setupMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_UTILITY_UMBRELLA); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+        EXPECT_EQ(results[0].damage, results[2].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Weather Ball doesn't change type in Sunlight or Rain if user holds Utility Umbrella (Items)")
+{
+    enum Move setupMove;
+
+    PARAMETRIZE { setupMove = MOVE_SUNNY_DAY; }
+    PARAMETRIZE { setupMove = MOVE_RAIN_DANCE; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_UTILITY_UMBRELLA].holdEffect == HOLD_EFFECT_UTILITY_UMBRELLA);
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_UTILITY_UMBRELLA); }
+        OPPONENT(SPECIES_GASTLY);
+    } WHEN {
+        TURN { MOVE(player, setupMove); }
+        TURN { MOVE(player, MOVE_WEATHER_BALL); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, setupMove, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WEATHER_BALL, player);
+            HP_BAR(opponent);
+        }
     }
 }
 #endif

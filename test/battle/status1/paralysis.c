@@ -92,24 +92,43 @@ SINGLE_BATTLE_TEST("Thunder Wave doesn't print an effectiveness message")
     }
 }
 
-#if MAX_MON_TRAITS > 1
-AI_SINGLE_BATTLE_TEST("AI avoids Thunder Wave when it can not paralyse target (Traits)")
+SINGLE_BATTLE_TEST("Thunder Wave prints an avoided attack message when it misses")
 {
-    u32 species;
-    enum Ability ability;
-
-    PARAMETRIZE { species = SPECIES_HITMONLEE; ability = ABILITY_LIMBER; }
-    PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }
-    PARAMETRIZE { species = SPECIES_NACLI; ability = ABILITY_PURIFYING_SALT; }
-    PARAMETRIZE { species = SPECIES_PIKACHU; ability = ABILITY_STATIC; }
-
     GIVEN {
-        WITH_CONFIG(B_PARALYZE_ELECTRIC, GEN_6);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_THUNDER_WAVE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { SCORE_EQ(opponent, MOVE_CELEBRATE, MOVE_THUNDER_WAVE); } // Both get -10
+        TURN { MOVE(player, MOVE_THUNDER_WAVE, hit: FALSE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        NOT MESSAGE("But it failed!");
     }
 }
-#endif
+
+SINGLE_BATTLE_TEST("Thunder Wave prints failure when the target already has a different non-volatile status")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZIGZAGOON) { Status1(STATUS1_POISON); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Thunder Wave prints already paralyzed message with the right target")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ZIGZAGOON) { Status1(STATUS1_PARALYSIS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_THUNDER_WAVE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Thunder Wave!");
+        MESSAGE("The opposing Zigzagoon is already paralyzed!");
+        NOT MESSAGE("Wobbuffet is already paralyzed!");
+    }
+}

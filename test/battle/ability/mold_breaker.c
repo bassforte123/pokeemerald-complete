@@ -49,7 +49,7 @@ TO_DO_BATTLE_TEST("TODO: Write more Mold Breaker (Ability) test titles")
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales (Traits)", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_SHADOW_TAG; }
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
     GIVEN {

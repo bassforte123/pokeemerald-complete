@@ -315,7 +315,7 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect Natural Gift's type (Traits)")
     PARAMETRIZE { ability = ABILITY_REFRIGERATE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_AMAURA) { Ability(ABILITY_SNOW_WARNING); Innates(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);
@@ -391,7 +391,7 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect Natural Gift's type (Items)")
     PARAMETRIZE { ability = ABILITY_REFRIGERATE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
+        ASSUME(gBerries[ItemIdToBerryType(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_AMAURA) { Ability(ability); Items(ITEM_GREAT_BALL, ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);

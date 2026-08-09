@@ -45,3 +45,22 @@ SINGLE_BATTLE_TEST("Swagger raises the target's Attack even when protected Own T
 TO_DO_BATTLE_TEST("Swagger doesn't confuse the target when they have their Attack maxed (Gen2)")
 TO_DO_BATTLE_TEST("Swagger confuses the target even when they have their Attack maxed (Gen3+)")
 TO_DO_BATTLE_TEST("Swagger confuses the target even when at -6 Attack and has Contrary")
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Swagger raises the target's Attack even when protected Own Tempo (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SLOWBRO) { Ability(ABILITY_REGENERATOR); Innates(ABILITY_OWN_TEMPO); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SWAGGER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWAGGER, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        ABILITY_POPUP(opponent, ABILITY_OWN_TEMPO);
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT(opponent->volatiles.confusionTurns == 0);
+    }
+}
+#endif

@@ -93,7 +93,7 @@ DOUBLE_BATTLE_TEST("Shell Side Arm chooses its category for each battler on the 
 DOUBLE_BATTLE_TEST("Shell Side Arm does not change category mid-turn (Traits)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_SCREECH, defense: -2);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_SHUCKLE) { Ability(ABILITY_STURDY); Innates(ABILITY_CONTRARY); Defense(100); SpDefense(120); }

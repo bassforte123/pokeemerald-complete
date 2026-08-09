@@ -412,7 +412,7 @@ SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status (Traits)")
 
 SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+) (Traits)", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     enum Item item;
 
     PARAMETRIZE { ability = ABILITY_THICK_FAT;   item = ITEM_NONE; }
@@ -439,7 +439,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+
 
 SINGLE_BATTLE_TEST("Beat Up ignores Huge Power (Traits)", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_THICK_FAT; }
     PARAMETRIZE { ability = ABILITY_HUGE_POWER; }
@@ -464,7 +464,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores Huge Power (Traits)", s16 damage)
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+) (Items)", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     enum Item item;
 
     PARAMETRIZE { ability = ABILITY_THICK_FAT;   item = ITEM_NONE; }

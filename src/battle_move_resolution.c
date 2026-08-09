@@ -298,10 +298,11 @@ static enum CancelerResult CancelerFlinch(struct BattleCalcValues *cv)
     if (gBattleMons[cv->battlerAtk].volatiles.flinched)
     {
         CancelMultiTurnMoves(cv->battlerAtk);
-        if (cv->abilities[cv->battlerAtk] == ABILITY_STEADFAST)
+        if (BattlerHasTrait(cv->battlerAtk, ABILITY_STEADFAST))
         {
             SetStatChange(cv->battlerAtk, STAT_SPEED, 1);
             gBattlerAbility = cv->battlerAtk;
+            PushTraitStack(cv->battlerAtk, ABILITY_STEADFAST);
             gBattlescriptCurrInstr = BattleScript_MoveUsedFlinchedAndSteadfast;
         }
         else
@@ -406,8 +407,6 @@ static enum CancelerResult CancelerConfused(struct BattleCalcValues *cv)
                 dmgCtx.updateFlags = TRUE;
                 dmgCtx.isSelfInflicted = TRUE;
                 dmgCtx.fixedBasePower = 40;
-                dmgCtx.abilities[gBattlerAttacker] = cv->abilities[gBattlerAttacker];
-                dmgCtx.holdEffects[gBattlerAttacker] = cv->holdEffects[gBattlerAttacker];
                 gBattleStruct->passiveHpUpdate[cv->battlerAtk] = CalculateMoveDamage(&dmgCtx);
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
                 return CANCELER_RESULT_FAILURE;
@@ -1164,7 +1163,7 @@ static enum CancelerResult CancelerMoveFailure(struct BattleCalcValues *cv)
     switch (cv->moveEffect)
     {
     case EFFECT_FLING:
-        if (!CanFling(cv->battlerAtk, cv->abilities[cv->battlerAtk]))
+        if (!CanFling(cv->battlerAtk))
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FAIL_IF_NOT_ARG_TYPE:
@@ -1465,7 +1464,7 @@ static enum CancelerResult CancelerMoveEffectFailureTarget(struct BattleCalcValu
             }
             break;
         case EFFECT_STAT_CHANGE_MAGNETIC:
-            if (cv->abilities[battlerDef] != ABILITY_PLUS && cv->abilities[battlerDef] != ABILITY_MINUS)
+            if (!BattlerHasTrait(battlerDef, ABILITY_PLUS) && !BattlerHasTrait(battlerDef, ABILITY_MINUS))
             {
                 battleScript = BattleScript_ButItFailed;
             }
@@ -1664,7 +1663,7 @@ static enum CancelerResult CancelerInterruptibleMoves(struct BattleCalcValues *c
 static enum CancelerResult CancelerProtean(struct BattleCalcValues *cv)
 {
     enum Type moveType = GetBattleMoveType(cv->move);
-    if (ProteanTryChangeType(cv->battlerAtk, cv->abilities[cv->battlerAtk], cv->move, moveType))
+    if (ProteanTryChangeType(cv->battlerAtk, cv->move, moveType))
     {
         if (GetConfig(B_PROTEAN_LIBERO) >= GEN_9)
             gBattleMons[cv->battlerAtk].volatiles.usedProteanLibero = TRUE;
@@ -1684,7 +1683,7 @@ static bool32 CanTwoTurnMoveFireThisTurn(struct BattleCalcValues *cv)
         return FALSE;
 
     u32 weather = GetWeather();
-    u32 attackerWeather = GetAttackerWeather(cv->holdEffects[cv->battlerAtk], cv->abilities[cv->battlerAtk], weather);
+    u32 attackerWeather = GetAttackerWeather(cv->battlerAtk, weather);
     u32 isMoveWeatherAffected = GetMoveTwoTurnAttackWeather(cv->move);
 
     return (attackerWeather & isMoveWeatherAffected) || (weather & isMoveWeatherAffected);
@@ -1969,10 +1968,6 @@ static void SetDamageContextValues(struct DamageContext *ctx, struct BattleCalcV
     ctx->moveType = GetBattleMoveType(cv->move);
     ctx->updateFlags = TRUE;
     ctx->runScript = TRUE;
-    ctx->abilities[ctx->battlerAtk] = cv->abilities[cv->battlerAtk];
-    ctx->abilities[ctx->battlerDef] = cv->abilities[cv->battlerDef];
-    ctx->holdEffects[ctx->battlerAtk] = cv->holdEffects[cv->battlerAtk];
-    ctx->holdEffects[ctx->battlerDef] = cv->holdEffects[cv->battlerDef];
 }
 
 static enum CancelerResult CancelerTargetFailure(struct BattleCalcValues *cv)
@@ -3444,7 +3439,7 @@ static enum MoveEndResult MoveEndMoveBlockRecoil(struct BattleCalcValues *cv)
 
 static enum MoveEndResult MoveEndSheerForce(struct BattleCalcValues *cv)
 {
-    if (IsSheerForceAffected(cv->move, cv->abilities[cv->battlerAtk]))
+    if (IsSheerForceAffected(cv->move, cv->battlerAtk))
         gBattleScripting.moveendState = MOVEEND_ITEMS_EFFECTS_ALL;
     else
         gBattleScripting.moveendState++;
@@ -3640,7 +3635,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
             {
                 bool32 onAir = gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_ON_AIR;
 
-                if (IsBattlerGrounded(battlerDef, cv->abilities[battlerDef], cv->holdEffects[battlerDef]) && !onAir)
+                if (IsBattlerGrounded(battlerDef) && !onAir)
                     break;
 
                 gBattleMons[battlerDef].volatiles.smackDown = TRUE;
@@ -3904,7 +3899,7 @@ static enum MoveEndResult MoveEndFormChange(struct BattleCalcValues *cv)
     enum MoveEndResult result = MOVEEND_RESULT_CONTINUE;
 
     if (!gBattleStruct->battlerState[cv->battlerAtk].redCardSwitched
-     && TryBattleFormChange(cv->battlerAtk, FORM_CHANGE_BATTLE_AFTER_MOVE, cv->abilities[cv->battlerAtk]))
+     && TryBattleFormChange(cv->battlerAtk, FORM_CHANGE_BATTLE_AFTER_MOVE))
     {
         result = MOVEEND_RESULT_RUN_SCRIPT;
         BattleScriptCall(BattleScript_AttackerFormChangeMoveEffect);
@@ -3943,7 +3938,7 @@ static enum MoveEndResult MoveEndEmergencyExit(struct BattleCalcValues *cv)
     {
         if (!IsBattleMoveStatus(cv->move)
          && !gBattleStruct->unableToUseMove
-         && EmergencyExitCanBeTriggered(i, cv->abilities[i]))
+         && EmergencyExitCanBeTriggered(i))
         {
             emergencyExitBattlers |= 1u << i;
             numEmergencyExitBattlers++;
@@ -4623,7 +4618,7 @@ static enum MoveResult StatChangeSubstitute(struct BattleCalcValues *cv)
          || cv->battlerAtk == battler)
             continue;
 
-        if (IsSubstituteProtected(cv->battlerAtk, battler, cv->abilities[cv->battlerAtk], cv->move))
+        if (IsSubstituteProtected(cv->battlerAtk, battler, cv->move))
             gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_DOESNT_AFFECT_FOE;
     }
 
@@ -4639,7 +4634,7 @@ static void TryAcupressureStatChange(struct BattleCalcValues *cv)
 
     for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
-        if (CompareStat(cv->battlerDef, stat, MAX_STAT_STAGE, CMP_LESS_THAN, cv->abilities[cv->battlerDef]))
+        if (CompareStat(cv->battlerDef, stat, MAX_STAT_STAGE, CMP_LESS_THAN))
             bits |= 1u << stat;
     }
 
@@ -5411,7 +5406,7 @@ static void UpdateStallMons(void)
 
 static bool32 TryBellyDrum(enum BattlerId battler)
 {
-    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL, ABILITY_NONE))
+    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL))
         return FALSE;
 
     u32 halfHp = GetNonDynamaxMaxHP(battler) / 2;

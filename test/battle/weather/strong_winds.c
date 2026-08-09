@@ -232,24 +232,196 @@ SINGLE_BATTLE_TEST("Strong winds can be replaced by Primordial Sea")
     }
 }
 
+SINGLE_BATTLE_TEST("Strong winds don't reduce Synthesis, Morning Sun or Moonlight recovery")
+{
+    enum Move move;
+    enum BattleMoveEffects effect;
+    PARAMETRIZE { move = MOVE_SYNTHESIS;   effect = EFFECT_SYNTHESIS; }
+    PARAMETRIZE { move = MOVE_MORNING_SUN; effect = EFFECT_MORNING_SUN; }
+    PARAMETRIZE { move = MOVE_MOONLIGHT;   effect = EFFECT_MOONLIGHT; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(move) == effect);
+        PLAYER(SPECIES_RAYQUAZA) { HP(1); MaxHP(200); Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, move); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(player, move); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        HP_BAR(player, damage: -100);
+    }
+}
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active (Traits)")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_ANTICIPATION); Innates(ABILITY_ANTICIPATION); Moves(MOVE_ROCK_THROW, MOVE_SKILL_SWAP); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+    }
+}
+
+SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active - Inverse Battle (Traits)")
+{
+    GIVEN {
+        FLAG_SET(B_FLAG_INVERSE_BATTLE);
+        ASSUME(GetMoveType(MOVE_BUG_BITE) == TYPE_BUG);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ANTICIPATION); Moves(MOVE_BUG_BITE, MOVE_SKILL_SWAP); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities (Traits)")
+{
+    enum Ability ability;
+    enum Species species;
+    PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
+    PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
+    PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
+    PARAMETRIZE { ability = ABILITY_SNOW_WARNING; species = SPECIES_ABOMASNOW; }
+
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ability);
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
+    }
+}
+
+SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active (Traits)")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ANTICIPATION); Moves(MOVE_ROCK_THROW, MOVE_SKILL_SWAP); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+    }
+}
+
+SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active - Inverse Battle (Traits)")
+{
+    GIVEN {
+        FLAG_SET(B_FLAG_INVERSE_BATTLE);
+        ASSUME(GetMoveType(MOVE_BUG_BITE) == TYPE_BUG);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
+        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ANTICIPATION); Moves(MOVE_BUG_BITE, MOVE_SKILL_SWAP); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
+        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities (Traits)")
+{
+    enum Ability ability;
+    enum Species species;
+    PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
+    PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
+    PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
+    PARAMETRIZE { ability = ABILITY_SNOW_WARNING; species = SPECIES_ABOMASNOW; }
+
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ability);
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
+    }
+}
+#endif
+
 #if MAX_MON_ITEMS > 1
 SINGLE_BATTLE_TEST("Strong winds prevent Weakness Policy from activating on Flying-type weaknesses (Items)")
 {
     GIVEN {
         ASSUME(GetItemHoldEffect(ITEM_WEAKNESS_POLICY) == HOLD_EFFECT_WEAKNESS_POLICY);
-        ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 0) == TYPE_NORMAL);
-        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
-        PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); Moves(MOVE_THUNDER_SHOCK); }
-        OPPONENT(SPECIES_PIDGEY) { Items(ITEM_PECHA_BERRY, ITEM_WEAKNESS_POLICY); }
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE, MOVE_THUNDER_SHOCK); }
+        OPPONENT(SPECIES_PIDGEY) { Items(ITEM_GREAT_BALL, ITEM_WEAKNESS_POLICY); }
     } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
         TURN { MOVE(player, MOVE_THUNDER_SHOCK); }
     } SCENE {
-        MESSAGE("Rayquaza used Thunder Shock!");
-        MESSAGE("The mysterious strong winds weakened the attack!");
+        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDER_SHOCK, player);
         HP_BAR(opponent);
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strong winds can be replaced by Desolate Land (Items)")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GROUDON) { Items(ITEM_GREAT_BALL, ITEM_RED_ORB); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DESOLATE_LAND);
+        MESSAGE("The sunlight turned extremely harsh!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_SUN_PRIMAL);
+    }
+}
+
+SINGLE_BATTLE_TEST("Strong winds can be replaced by Primordial Sea (Items)")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_KYOGRE) { Items(ITEM_GREAT_BALL, ITEM_BLUE_ORB); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_PRIMORDIAL_SEA);
+        MESSAGE("A heavy rain began to fall!");
+    } THEN {
+        EXPECT(gBattleWeather & B_WEATHER_RAIN_PRIMAL);
     }
 }
 #endif

@@ -175,7 +175,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
 
     u32 chosenTags = trainer->party[monIndex].tags;
     enum Species chosenSpecies = trainer->party[monIndex].species;
-    enum Item chosenItem = ITEM_NONE;
+    enum Item chosenItem;
     enum NationalDexOrder chosenNatDex = gSpeciesInfo[chosenSpecies].natDexNum;
     //  If tag was required, change pool rule to account for the required tag already being picked
     u32 tagsToEliminate = 0;
@@ -203,7 +203,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
         {
             u32 currentTags = trainer->party[poolIndexArray[currIndex]].tags;
             enum Species currentSpecies = trainer->party[poolIndexArray[currIndex]].species;
-            enum Item currentItem = trainer->party[poolIndexArray[currIndex]].heldItem;
+            enum Item currentItem;
             enum NationalDexOrder currentNatDex = gSpeciesInfo[currentSpecies].natDexNum;
             if (currentTags & tagsToEliminate)
             {
@@ -213,45 +213,41 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
                 poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
             if (!rules->excludeForms && chosenNatDex == currentNatDex)
                 poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
-            for (k = 0; k < MAX_MON_ITEMS; k++)
+            
+            for (j = 0; j < MAX_MON_ITEMS; j++)
             {
-                if (rules->itemClause && currentItem != ITEM_NONE)
+                for (k = 0; k < MAX_MON_ITEMS; k++)
                 {
-                    if (rules->itemClauseExclusions)
+                    chosenItem = trainer->party[monIndex].heldItem[j];
+                    currentItem = trainer->party[poolIndexArray[currIndex]].heldItem[k];
+
+                    if (rules->itemClause && currentItem != ITEM_NONE)
                     {
-                        bool32 isExcluded = FALSE;
-                        for (i = 0; i < ARRAY_COUNT(poolItemClauseExclusions); i++)
+                        if (rules->itemClauseExclusions)
                         {
-                            for (j = 0; j < MAX_MON_ITEMS; j++)
+                            bool32 isExcluded = FALSE;
+                            for (u32 i = 0; i < ARRAY_COUNT(poolItemClauseExclusions); i++)
                             {
-                                if (trainer->party[monIndex].heldItem[j] == poolItemClauseExclusions[i])
+                                if (chosenItem == poolItemClauseExclusions[i])
                                 {
                                     isExcluded = TRUE;
                                     break;
                                 }
                             }
+                            if (!isExcluded)
+                                poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
                         }
-                        if (!isExcluded)
-                            poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
-                    }
-                    else 
-                    {
-                        for (i = 0; i < MAX_MON_ITEMS; i++)
+                        else if (chosenItem == currentItem)
                         {
-                                if (trainer->party[monIndex].heldItem[i] == trainer->party[poolIndexArray[currIndex]].heldItem[k])
-                                {
-                                    currentItem = trainer->party[poolIndexArray[currIndex]].heldItem[k];
-                                    chosenItem = trainer->party[monIndex].heldItem[i];
-                                    poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
-                                }
+                            poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
                         }
                     }
+                    if (rules->megaStoneClause && gItemsInfo[currentItem].sortType == ITEM_TYPE_MEGA_STONE && gItemsInfo[chosenItem].sortType == ITEM_TYPE_MEGA_STONE)
+                        poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
+                    if (rules->zCrystalClause && gItemsInfo[currentItem].sortType == ITEM_TYPE_Z_CRYSTAL && gItemsInfo[chosenItem].sortType == ITEM_TYPE_Z_CRYSTAL)
+                        poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
                 }
             }
-            if (rules->megaStoneClause && gItemsInfo[currentItem].sortType == ITEM_TYPE_MEGA_STONE && gItemsInfo[chosenItem].sortType == ITEM_TYPE_MEGA_STONE)
-                poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
-            if (rules->zCrystalClause && gItemsInfo[currentItem].sortType == ITEM_TYPE_Z_CRYSTAL && gItemsInfo[chosenItem].sortType == ITEM_TYPE_Z_CRYSTAL)
-                poolIndexArray[currIndex] = POOL_SLOT_DISABLED;
         }
     }
     return monIndex;

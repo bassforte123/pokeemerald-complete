@@ -17,7 +17,7 @@ SINGLE_BATTLE_TEST("Multi - IsOnSwitchInFirstTurnActivation")
         HP_BAR(player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Using Berserk Gene, the Attack of the opposing Wobbuffet sharply rose!");
+        MESSAGE("Using Berserk Gene, the Attack of the opposing Wobbuffet rose sharply!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
@@ -1150,7 +1150,7 @@ WILD_BATTLE_TEST("Multi - Macho Brace effect does not stack when dupes disabled"
         MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("The wild Caterpie fainted!");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 2);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_EV), 2);
     }
 }
 
@@ -1167,7 +1167,7 @@ WILD_BATTLE_TEST("Multi - Macho Brace effect stacks when dupes enabled")
         MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("The wild Caterpie fainted!");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 3);
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_EV), 3);
     }
 }
 
@@ -1189,7 +1189,7 @@ WILD_BATTLE_TEST("Multi - Power Weight effect stacks regardless of dupe setting"
         MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("The wild Caterpie fainted!");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 17); // 1 + 8 + 8 
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_EV), 17); // 1 + 8 + 8 
     }
 }
 
@@ -1205,7 +1205,7 @@ WILD_BATTLE_TEST("Multi - Power Weight effect stacks with Macho Brace")
         MESSAGE("Wobbuffet used Scratch!");
         MESSAGE("The wild Caterpie fainted!");
     } THEN {
-        EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_HP_EV), 18); // (1 + 8) * 2
+        EXPECT_EQ(GetMonData(&gParties[B_TRAINER_PLAYER][0], MON_DATA_HP_EV), 18); // (1 + 8) * 2
     }
 }
 

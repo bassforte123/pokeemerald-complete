@@ -200,7 +200,7 @@ DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers faint
     } SCENE {
         MESSAGE("Wobbuffet used Explosion!");
         ABILITY_POPUP(opponentLeft, ABILITY_INTREPID_SWORD);
-        MESSAGE("The opposing Zacian's Attack rose!");
+        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
         ABILITY_POPUP(opponentRight, ABILITY_COSTAR);
         MESSAGE("The opposing Flamigo copied the opposing Zacian's stat changes!");
     }
@@ -257,7 +257,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost (Tra
 DOUBLE_BATTLE_TEST("Costar copies an ally's lowered stat stages (Traits)")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_GROWL].effect == EFFECT_ATTACK_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_SCRAPPY); Innates(ABILITY_COSTAR); }
@@ -377,7 +377,7 @@ DOUBLE_BATTLE_TEST("Costar's message displays correctly after all battlers faint
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Explosion!");
         ABILITY_POPUP(playerLeft, ABILITY_INTREPID_SWORD);
-        MESSAGE("Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("Zacian's Attack rose!");
         ABILITY_POPUP(playerRight, ABILITY_COSTAR);
         MESSAGE("Flamigo copied Zacian's stat changes!");
     }

@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Fur Coat has no effect on self-inflicted confusion damage", 
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Fur Coat doubles Defense (Traits)", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FUR_COAT; }
     PARAMETRIZE { ability = ABILITY_RATTLED; }
 
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Fur Coat doubles Defense (Traits)", s16 damage)
 
 SINGLE_BATTLE_TEST("Fur Coat has no effect on self-inflicted confusion damage (Traits)", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FUR_COAT; }
     PARAMETRIZE { ability = ABILITY_RATTLED; }
 

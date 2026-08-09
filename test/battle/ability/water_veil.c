@@ -30,3 +30,65 @@ SINGLE_BATTLE_TEST("Water Veil lets Rawst and Lum Berries cure Mold Breaker burn
         EXPECT_EQ(player->status1, STATUS1_NONE);
     }
 }
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Water Veil lets Rawst and Lum Berries cure Mold Breaker burns first (Traits)")
+{
+    enum Item item;
+
+    PARAMETRIZE { item = ITEM_RAWST_BERRY; }
+    PARAMETRIZE { item = ITEM_LUM_BERRY; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+        ASSUME(gItemsInfo[ITEM_RAWST_BERRY].holdEffect == HOLD_EFFECT_CURE_BRN);
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_BUIZEL) { Ability(ABILITY_SWIFT_SWIM); Innates(ABILITY_WATER_VEIL); Item(item); }
+        OPPONENT(SPECIES_VELUZA) { Ability(ABILITY_SHARPNESS); Innates(ABILITY_MOLD_BREAKER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WILL_O_WISP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, opponent);
+        STATUS_ICON(player, burn: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        STATUS_ICON(player, burn: FALSE);
+        NOT ABILITY_POPUP(player, ABILITY_WATER_VEIL);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+    }
+}
+#endif
+
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Water Veil lets Rawst and Lum Berries cure Mold Breaker burns first (Items)")
+{
+    enum Item item;
+
+    PARAMETRIZE { item = ITEM_RAWST_BERRY; }
+    PARAMETRIZE { item = ITEM_LUM_BERRY; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+        ASSUME(gItemsInfo[ITEM_RAWST_BERRY].holdEffect == HOLD_EFFECT_CURE_BRN);
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        PLAYER(SPECIES_BUIZEL) { Ability(ABILITY_WATER_VEIL); Items(ITEM_GREAT_BALL, item); }
+        OPPONENT(SPECIES_VELUZA) { Ability(ABILITY_MOLD_BREAKER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WILL_O_WISP); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, opponent);
+        STATUS_ICON(player, burn: TRUE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        STATUS_ICON(player, burn: FALSE);
+        NOT ABILITY_POPUP(player, ABILITY_WATER_VEIL);
+    } THEN {
+        EXPECT_EQ(player->item, ITEM_NONE);
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+    }
+}
+#endif
+

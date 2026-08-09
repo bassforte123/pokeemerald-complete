@@ -114,6 +114,8 @@ SINGLE_BATTLE_TEST("Stench is blocked by Covert Cloak")
 
 // TODO: Test against interaction with multi hits
 
+// TODO: Test against interaction with multi hits
+
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Stench has a 10% chance to flinch (Traits)")
 {
@@ -193,6 +195,39 @@ DOUBLE_BATTLE_TEST("Stench doesn't trigger if partner uses a move (Traits)")
     }
 }
 
+SINGLE_BATTLE_TEST("Stench is blocked by Shield Dust (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STICKY_HOLD); Innates(ABILITY_STENCH); }
+        OPPONENT(SPECIES_VIVILLON) { Ability(ABILITY_COMPOUND_EYES); Innates(ABILITY_SHIELD_DUST); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_STENCH, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NONE_OF {
+            MESSAGE("The opposing Vivillon flinched and couldn't move!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Stench is blocked by Covert Cloak (Traits)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STICKY_HOLD); Innates(ABILITY_STENCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_STENCH, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        }
+    }
+}
+
 // TODO: Test against interaction with multi hits
 #endif
 
@@ -210,6 +245,23 @@ SINGLE_BATTLE_TEST("Stench does not stack with King's Rock (Items)")
         TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Stench is blocked by Covert Cloak (Items)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
+        PLAYER(SPECIES_GRIMER) { Ability(ABILITY_STENCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_COVERT_CLOAK); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, WITH_RNG(RNG_STENCH, TRUE)); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        NONE_OF {
+            MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
+        }
     }
 }
 #endif

@@ -89,6 +89,8 @@ SINGLE_BATTLE_TEST("Fluffy does not halve damage taken from moves that make dire
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
+        ASSUME(MoveMakesContact(MOVE_THUNDER_PUNCH));
+        ASSUME(IsPunchingMove(MOVE_THUNDER_PUNCH));
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PUNCHING_GLOVE); }
         OPPONENT(SPECIES_STUFFUL) { Ability(ability); }
     } WHEN {

@@ -702,7 +702,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
 #if MAX_MON_ITEMS > 1
 AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100 (Items)")
 {
-    enum Move moveStart = 0;
+    enum Move moveStart = MOVE_NONE;
     enum Move moveCap = 100;
 
     if (moveCap > MOVES_COUNT)
@@ -718,7 +718,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -780,7 +780,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -790,12 +790,11 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200 (Items)")
         case EFFECT_REFLECT:
         case EFFECT_BIDE:
         case EFFECT_NIGHTMARE:
-        case EFFECT_SNORE:
         case EFFECT_SKETCH:
+        case EFFECT_STAT_CHANGE_HALF_HP:
         case EFFECT_BELLY_DRUM:
         case EFFECT_DESTINY_BOND:
         case EFFECT_MIRROR_MOVE:
-        case EFFECT_REST:
         case EFFECT_SUBSTITUTE:
 
         //TODO: AI TESTS
@@ -810,6 +809,8 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200 (Items)")
 
         // tests exist elsewhere
         case EFFECT_HAZE:
+        case EFFECT_REST:
+        case EFFECT_SNORE:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
@@ -856,14 +857,13 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
         {
         //TODO: AI HANDLING
-        case EFFECT_SLEEP_TALK: // logic exists but does not account for Rest correctly
-        case EFFECT_SAFEGUARD: // logic exists but does not account for Rest correctly
+        case EFFECT_SAFEGUARD:
         case EFFECT_FOLLOW_ME:
         case EFFECT_SNATCH:
         case EFFECT_GRUDGE:
@@ -889,6 +889,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300 (Items)")
 
         // tests exist elsewhere
         case EFFECT_HEAL_BELL:
+        case EFFECT_SLEEP_TALK:
         case EFFECT_WEATHER:
         case EFFECT_ROLE_PLAY:
         case EFFECT_REFRESH:
@@ -938,7 +939,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -1014,7 +1015,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -1082,7 +1083,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -1095,7 +1096,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600 (Items)")
         case EFFECT_SKY_DROP:
         case EFFECT_MAT_BLOCK:
         case EFFECT_ION_DELUGE:
-        case EFFECT_AROMATIC_MIST:
         case EFFECT_POWDER:
         case EFFECT_ELECTRIFY:
 
@@ -1107,8 +1107,8 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600 (Items)")
         case EFFECT_FAIRY_LOCK:
 
         // tests exist elsewhere
-        case EFFECT_FLOWER_SHIELD:
         case EFFECT_ROTOTILLER:
+        case EFFECT_FLOWER_SHIELD:
         case EFFECT_GRASSY_TERRAIN:
         case EFFECT_MISTY_TERRAIN:
 
@@ -1157,7 +1157,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -1181,9 +1181,8 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700 (Items)")
         case EFFECT_ELECTRIC_TERRAIN:
         case EFFECT_PSYCHIC_TERRAIN:
         case EFFECT_AURORA_VEIL:
-        case EFFECT_GEAR_UP:
-        case EFFECT_MAGNETIC_FLUX:
- 
+        case EFFECT_STAT_CHANGE_MAGNETIC:
+
         // Skipped on purpose.
         case EFFECT_PROTECT:
         case EFFECT_NON_VOLATILE_STATUS:
@@ -1229,7 +1228,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)
@@ -1237,9 +1236,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800 (Items)")
         //TODO: AI HANDLING
         case EFFECT_CLANGOROUS_SOUL:
         case EFFECT_POLTERGEIST:
-        case EFFECT_COACHING:
         case EFFECT_REVIVAL_BLESSING:
-        case EFFECT_FILLET_AWAY:
 
         //TODO: AI TESTS
         case EFFECT_RESTORE_HP:
@@ -1298,7 +1295,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900 (Items)")
         effect = GetMoveEffect(j);
 
         // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
+        if (IsStatRaisingMove(j))
             continue;
 
         switch (effect)

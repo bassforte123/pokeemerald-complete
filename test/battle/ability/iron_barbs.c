@@ -51,3 +51,89 @@ SINGLE_BATTLE_TEST("Rough Skin and Iron Barbs cause the attacker to take damage 
 }
 
 TO_DO_BATTLE_TEST("TODO: Write Iron Barbs (Ability) test titles")
+
+
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Iron Barbs: Damages attackers that make contact (Traits)")
+{
+    const u32 maxHP = 800;
+    const u32 ironBarbsDamage = maxHP / 8;
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
+        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
+        ASSUME(GetItemHoldEffect(ITEM_LOADED_DICE) == HOLD_EFFECT_LOADED_DICE);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(maxHP); HP(maxHP); Item(ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_IRON_BARBS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_LOADED_DICE, 4)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        MESSAGE("The Pokémon was hit 4 time(s)!");
+        NONE_OF {
+            HP_BAR(player);
+            MESSAGE("Wobbuffet was hurt by the opposing Ferroseed's Iron Barbs!");
+        }
+    } THEN {
+        EXPECT_EQ(player->hp, maxHP - ironBarbsDamage * 4);
+    }
+}
+
+SINGLE_BATTLE_TEST("Rough Skin and Iron Barbs cause the attacker to take damage when using a contact move (Traits)")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_GARCHOMP; ability = ABILITY_ROUGH_SKIN; }
+    PARAMETRIZE { species = SPECIES_FERROTHORN; ability = ABILITY_IRON_BARBS; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        if (ability == ABILITY_ROUGH_SKIN)
+            ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
+        else
+            ABILITY_POPUP(opponent, ABILITY_IRON_BARBS);
+        MESSAGE("Wobbuffet was hurt!");
+    }
+}
+
+TO_DO_BATTLE_TEST("TODO: Write Iron Barbs (Ability) test titles (Traits)")
+#endif
+
+#if MAX_MON_ITEMS > 1
+SINGLE_BATTLE_TEST("Iron Barbs: Damages attackers that make contact (Items)")
+{
+    const u32 maxHP = 800;
+    const u32 ironBarbsDamage = maxHP / 8;
+
+    GIVEN {
+        ASSUME(MoveMakesContact(MOVE_POPULATION_BOMB));
+        ASSUME(GetMoveEffect(MOVE_POPULATION_BOMB) == EFFECT_POPULATION_BOMB);
+        ASSUME(GetItemHoldEffect(ITEM_LOADED_DICE) == HOLD_EFFECT_LOADED_DICE);
+        PLAYER(SPECIES_WOBBUFFET) { MaxHP(maxHP); HP(maxHP); Items(ITEM_PECHA_BERRY, ITEM_LOADED_DICE); }
+        OPPONENT(SPECIES_FERROSEED) { Ability(ABILITY_IRON_BARBS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_POPULATION_BOMB, WITH_RNG(RNG_LOADED_DICE, 4)); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POPULATION_BOMB, player);
+        MESSAGE("The Pokémon was hit 4 time(s)!");
+        NONE_OF {
+            HP_BAR(player);
+            MESSAGE("Wobbuffet was hurt by the opposing Ferroseed's Iron Barbs!");
+        }
+    } THEN {
+        EXPECT_EQ(player->hp, maxHP - ironBarbsDamage * 4);
+    }
+}
+
+TO_DO_BATTLE_TEST("TODO: Write Iron Barbs (Ability) test titles (Items)")
+#endif

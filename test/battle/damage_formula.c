@@ -580,7 +580,6 @@ SINGLE_BATTLE_TEST("Gem boosted Damage calculation (Items)")
     PARAMETRIZE { expectedDamage = 205; }
     PARAMETRIZE { expectedDamage = 204; }
 #else
-    KNOWN_FAILING;
     PARAMETRIZE { expectedDamage = 273; }
     PARAMETRIZE { expectedDamage = 270; }
     PARAMETRIZE { expectedDamage = 267; }
@@ -600,7 +599,7 @@ SINGLE_BATTLE_TEST("Gem boosted Damage calculation (Items)")
 #endif
     GIVEN {
         PLAYER(SPECIES_MAKUHITA) { Items(ITEM_ORAN_BERRY, ITEM_FIGHTING_GEM); }
-        OPPONENT(SPECIES_MAKUHITA);
+        OPPONENT(SPECIES_MAKUHITA) { MaxHP(999); HP(999); }
     } WHEN {
         TURN {
             MOVE(player, MOVE_DRAIN_PUNCH, WITH_RNG(RNG_DAMAGE_MODIFIER, i));

@@ -5875,7 +5875,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     case EFFECT_WEATHER_BALL:
         if (state == MON_IN_BATTLE)
         {
-            u32 weather =  GetAttackerWeather(GetWeather());
+            u32 weather =  GetAttackerWeather(battler, GetWeather());
             if (weather & B_WEATHER_SUN)
                 return TYPE_FIRE;
             else if (weather & B_WEATHER_RAIN)

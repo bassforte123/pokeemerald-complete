@@ -162,12 +162,12 @@ AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow")
     } WHEN {
         if (turnToTrick == 1)
         {
-            TURN {  }
+            TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
         }
         else if (turnToTrick == 2)
         {
             TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
-            TURN {  }
+            TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
         }
         else
         {
@@ -1215,7 +1215,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
 {
     ASSUME(GetMoveTarget(MOVE_BULLDOZE) == TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
-    ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1));
+    ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_BULLDOZE, speed: -1);
 
     u32 species, currentHP;
     enum Ability ability;
@@ -1295,16 +1295,33 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners (Tr
 
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_ZIGZAGOON);
         PLAYER(SPECIES_ZIGZAGOON);
-        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_SLAKING) { Moves(move, MOVE_CONSTRICT); }
         OPPONENT(species) { HP(1); Ability(ABILITY_LIGHT_METAL); Innates(ability); Moves(MOVE_POUND, MOVE_EMBER, MOVE_ROUND); }
     } WHEN {
         if (ability != ABILITY_CLOUD_NINE)
             TURN { EXPECT_MOVE(opponentLeft, move); }
         else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_CONSTRICT); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees random rolls correctly")
+{
+    PASSES_RANDOMLY(3, 15, RNG_AI_DMG_ROLL_RANDOM); // Slaking KOs with 3 rolls
+    GIVEN {
+        WITH_CONFIG(AI_ROLL_ATTACKING, AI_ROLL_RANDOM);
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_SLAKING) { Moves(MOVE_DISCHARGE, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_PIKACHU) { HP(1); Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_SCRATCH); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
     }
 }
 
@@ -1551,7 +1568,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Magnetic Flux (Traits)")
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target already holds one (Items)")
 {
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
@@ -1571,7 +1588,7 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target al
 AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items (Items)")
 {
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_ORANGE_MAIL; }
@@ -1613,7 +1630,7 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute (Ite
     ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
 
     enum Move move = MOVE_NONE;
-    u32 atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, targetItem = ITEM_NONE;
 
     PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_LEFTOVERS; }
     PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_NONE; }
@@ -1630,6 +1647,46 @@ AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute (Ite
             MOVE(playerRight, MOVE_CELEBRATE);
         }
         TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI considers status orbs and abilities for Trick/Bestow (Items)")
+{
+    enum Move move = MOVE_NONE;
+    enum Item item = ITEM_NONE;
+    u16 status = STATUS1_NONE, species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
+    u8 turnToTrick = 0;
+
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_TOXIC_ORB; status = STATUS1_NONE;   species = SPECIES_WAILMER; ability = ABILITY_PRESSURE;    turnToTrick = 1; }
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_FLAME_ORB; status = STATUS1_NONE;   species = SPECIES_WAILMER; ability = ABILITY_PRESSURE;    turnToTrick = 1; }
+    PARAMETRIZE { move = MOVE_BESTOW; item = ITEM_TOXIC_ORB; status = STATUS1_NONE;   species = SPECIES_GLISCOR; ability = ABILITY_POISON_HEAL; turnToTrick = 2; }
+    PARAMETRIZE { move = MOVE_BESTOW; item = ITEM_FLAME_ORB; status = STATUS1_NONE;   species = SPECIES_RATTATA; ability = ABILITY_GUTS;        turnToTrick = 2; }
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_TOXIC_ORB; status = STATUS1_POISON; species = SPECIES_GLISCOR; ability = ABILITY_POISON_HEAL; turnToTrick = 1; }
+    PARAMETRIZE { move = MOVE_TRICK;  item = ITEM_FLAME_ORB; status = STATUS1_BURN;   species = SPECIES_RATTATA; ability = ABILITY_GUTS;        turnToTrick = 1; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); Items(ITEM_PECHA_BERRY, item); Moves(move, MOVE_SCRATCH); Status1(status); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        if (turnToTrick == 1)
+        {
+            TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
+        }
+        else if (turnToTrick == 2)
+        {
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+            TURN { EXPECT_MOVE(opponentLeft, move, target: playerLeft); }
+        }
+        else
+        {
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+        }
     }
 }
 

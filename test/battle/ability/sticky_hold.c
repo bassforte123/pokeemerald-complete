@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft (Traits)")
     } SCENE {
         MESSAGE("Ursaluna used Thief!");
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
-        MESSAGE("The opposing Gastrodon's Sticky Hold made Thief ineffective!");
+        MESSAGE("The opposing Gastrodon's item cannot be removed!");
     }
 }
 
@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft (Items)")
     } SCENE {
         MESSAGE("Ursaluna used Thief!");
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
-        MESSAGE("The opposing Gastrodon's Sticky Hold made Thief ineffective!");
+        MESSAGE("The opposing Gastrodon's item cannot be removed!");
     }
 }
 SINGLE_BATTLE_TEST("Sticky Hold prevents Incinerate from destroying berries (Items)")

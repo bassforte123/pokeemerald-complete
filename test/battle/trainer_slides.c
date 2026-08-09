@@ -942,10 +942,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Mega Evolution (Items)")
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_MEGA_EVOLUTION);
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        MULTI_PARTNER(SPECIES_AERODACTYL) { Speed(2); Items(ITEM_PECHA_BERRY, ITEM_AERODACTYLITE); }
-        MULTI_OPPONENT_A(SPECIES_LOPUNNY) { Speed(3); Items(ITEM_PECHA_BERRY, ITEM_LOPUNNITE); }
-        MULTI_OPPONENT_B(SPECIES_MEDICHAM) { Speed(1); Items(ITEM_PECHA_BERRY, ITEM_MEDICHAMITE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PARTNER(SPECIES_AERODACTYL) { Speed(2); Items(ITEM_PECHA_BERRY, ITEM_AERODACTYLITE); }
+        OPPONENT_A(SPECIES_LOPUNNY) { Speed(3); Items(ITEM_PECHA_BERRY, ITEM_LOPUNNITE); }
+        OPPONENT_B(SPECIES_MEDICHAM) { Speed(1); Items(ITEM_PECHA_BERRY, ITEM_MEDICHAMITE); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); 
             MOVE(playerRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA);
@@ -969,14 +969,16 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move (Items)")
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);
         VAR_SET(TESTING_VAR_TRAINER_SLIDES, TRAINER_SLIDE_Z_MOVE);
         TIE_BREAK_TARGET(TARGET_TIE_LO, 0);
-        MULTI_PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
-        MULTI_PARTNER(SPECIES_WOBBUFFET) { Speed(2); Items(ITEM_PECHA_BERRY, ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); Items(ITEM_PECHA_BERRY, ITEM_NORMALIUM_Z); }
-        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Items(ITEM_PECHA_BERRY, ITEM_NORMALIUM_Z); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PARTNER(SPECIES_WOBBUFFET) { Speed(2); Items(ITEM_PECHA_BERRY, ITEM_NORMALIUM_Z); }
+        OPPONENT_A(SPECIES_WOBBUFFET) { Speed(3); Items(ITEM_PECHA_BERRY, ITEM_NORMALIUM_Z); }
+        OPPONENT_B(SPECIES_WOBBUFFET) { Speed(1); Items(ITEM_PECHA_BERRY, ITEM_NORMALIUM_Z); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft); 
+        TURN { 
+            EXPECT_MOVE(opponentLeft, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); 
             MOVE(playerRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: opponentLeft); 
-            EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE, target: playerLeft); }
+            EXPECT_MOVE(opponentRight, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); 
+        }
     } SCENE {
         MESSAGE("Trainer A: This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
         MESSAGE("The opposing Wobbuffet surrounded itself with its Z-Power!");

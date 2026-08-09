@@ -228,3 +228,21 @@ SINGLE_BATTLE_TEST("First Impression fails if it's called via Instruct")
     }
 }
 
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Fake Out fails if it's called via Instruct (Traits)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ORANGURU) { Ability(ABILITY_TELEPATHY); Innates(ABILITY_INNER_FOCUS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FAKE_OUT); MOVE(opponent, MOVE_INSTRUCT); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Fake Out!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, player);
+        NONE_OF { MESSAGE("The opposing Oranguru flinched and couldn't move!"); }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_INSTRUCT, opponent);
+        MESSAGE("Wobbuffet used Fake Out!");
+        NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, player); }
+    }
+}
+#endif

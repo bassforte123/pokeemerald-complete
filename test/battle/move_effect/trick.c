@@ -272,7 +272,7 @@ SINGLE_BATTLE_TEST("Trick succeeds if only the target has an item (Items)")
 
 SINGLE_BATTLE_TEST("Trick fails if either item is Mail (Items)")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
 
     ASSUME(ItemIsMail(ITEM_ORANGE_MAIL));
     PARAMETRIZE { atkItem = ITEM_ORANGE_MAIL; defItem = ITEM_NONE; }
@@ -293,7 +293,7 @@ SINGLE_BATTLE_TEST("Trick fails if either item is Mail (Items)")
 
 SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal (Items)")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
 
     ASSUME(GetItemHoldEffect(ITEM_FIGHTINIUM_Z) == HOLD_EFFECT_Z_CRYSTAL);
     PARAMETRIZE { atkItem = ITEM_FIGHTINIUM_Z; defItem = ITEM_NONE; }
@@ -314,7 +314,7 @@ SINGLE_BATTLE_TEST("Trick fails if either item is a Z-Crystal (Items)")
 
 SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone (Items)")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
     u16 atkSpecies = SPECIES_WOBBUFFET, defSpecies = SPECIES_WOBBUFFET;
 
     PARAMETRIZE { atkSpecies = SPECIES_BLAZIKEN; atkItem = ITEM_BLAZIKENITE; defSpecies = SPECIES_WOBBUFFET; defItem = ITEM_SITRUS_BERRY; }
@@ -335,7 +335,7 @@ SINGLE_BATTLE_TEST("Trick fails if either battler holds a Mega Stone (Items)")
 
 SINGLE_BATTLE_TEST("Trick fails if an item changes the holder's form (Items)")
 {
-    u16 atkItem = ITEM_NONE, defItem = ITEM_NONE;
+    enum Item atkItem = ITEM_NONE, defItem = ITEM_NONE;
 
     PARAMETRIZE { atkItem = ITEM_GRISEOUS_CORE; defItem = ITEM_SITRUS_BERRY; }
     PARAMETRIZE { atkItem = ITEM_SITRUS_BERRY; defItem = ITEM_GRISEOUS_CORE; }
@@ -376,7 +376,7 @@ SINGLE_BATTLE_TEST("Trick fails against Sticky Hold (Items)")
     } WHEN {
         TURN { MOVE(player, MOVE_TRICK); }
     } SCENE {
-        MESSAGE("The opposing Wobbuffet's Sticky Hold made Trick ineffective!");
+        MESSAGE("The opposing Wobbuffet's item cannot be removed!");
     } THEN {
         EXPECT(player->items[1]== ITEM_SITRUS_BERRY);
         EXPECT(opponent->items[1]== ITEM_LUM_BERRY);

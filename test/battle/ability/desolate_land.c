@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves")
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_WEATHER);
+        ASSUME(GetMoveEffect(move) == EFFECT_WEATHER);
         ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
         ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
         ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
@@ -182,7 +182,8 @@ SINGLE_BATTLE_TEST("Desolate Land can be replaced by Primordial Sea")
 #if MAX_MON_TRAITS > 1
 SINGLE_BATTLE_TEST("Desolate Land prevents other weather abilities (Traits)")
 {
-    u16 ability, species;
+    enum Ability ability;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
     PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
@@ -305,7 +306,7 @@ SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves (Items)")
     PARAMETRIZE { move = MOVE_SNOWSCAPE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_WEATHER);
+        ASSUME(GetMoveEffect(move) == EFFECT_WEATHER);
         ASSUME(GetMoveWeatherType(MOVE_SUNNY_DAY) == BATTLE_WEATHER_SUN);
         ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
         ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
@@ -324,7 +325,8 @@ SINGLE_BATTLE_TEST("Desolate Land blocks weather-setting moves (Items)")
 
 SINGLE_BATTLE_TEST("Desolate Land prevents other weather abilities (Items)")
 {
-    u16 ability, species;
+    enum Ability ability;
+    enum Species species;
     PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
     PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
     PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
@@ -346,11 +348,10 @@ SINGLE_BATTLE_TEST("Desolate Land prevents other weather abilities (Items)")
 SINGLE_BATTLE_TEST("Desolate Land can be replaced by Delta Stream (Items)")
 {
     GIVEN {
-        PLAYER(SPECIES_GROUDON) { Items(ITEM_PECHA_BERRY, ITEM_RED_ORB); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_RAYQUAZA) { Ability(ABILITY_DELTA_STREAM); }
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
-        TURN { SWITCH(opponent, 1); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DELTA_STREAM);
         MESSAGE("Mysterious strong winds are protecting Flying-type Pokémon!");

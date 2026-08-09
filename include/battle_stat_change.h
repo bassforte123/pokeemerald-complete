@@ -34,7 +34,7 @@ struct StatChange
 
 extern u32 const sAccurateStatOrder[NUM_BATTLE_STATS];
 
-bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpKind, enum Ability ability);
+bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpKind);
 bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 enum StatChangeResult TryStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 void SetStatChange(enum BattlerId battler, enum Stat stat, s32 stage);

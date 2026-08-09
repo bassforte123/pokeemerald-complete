@@ -217,6 +217,31 @@ SINGLE_BATTLE_TEST("Recoil: No recoil is taken if the move is blocked by Disguis
         EXPECT_EQ(player->hp, player->maxHP);
     }
 }
+
+SINGLE_BATTLE_TEST("Recoil: Flare Blitz still deals recoil damage when boosted by Sheer Force (Traits)")
+{
+    s16 directDamage;
+    s16 recoilDamage;
+    enum Ability ability;
+
+    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; }
+    PARAMETRIZE { ability = ABILITY_INTIMIDATE; }
+
+    GIVEN {
+        ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) == 33);
+        ASSUME(MoveIsAffectedBySheerForce(MOVE_FLARE_BLITZ));
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_INTIMIDATE); Innates(ability); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLARE_BLITZ); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLARE_BLITZ, player);
+        HP_BAR(opponent, captureDamage: &directDamage);
+        HP_BAR(player, captureDamage: &recoilDamage);
+    } THEN {
+        EXPECT_MUL_EQ(directDamage, UQ_4_12(0.33), recoilDamage);
+    }
+}
 #endif
 
 #if MAX_MON_ITEMS > 1

@@ -1300,6 +1300,157 @@ AI_SINGLE_BATTLE_TEST("AI's comparison of damaging moves correctly reads moveset
     }
 }
 
+AI_SINGLE_BATTLE_TEST("Bolt Beak damage will be correctly seen by AI (singles)")
+{
+    u32 playerSpeed, aiSpeed;
+
+    PARAMETRIZE { playerSpeed = 20; aiSpeed = 10; }
+    PARAMETRIZE { playerSpeed = 10; aiSpeed = 20; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_STARMIE) { Speed(playerSpeed); Moves(MOVE_PROTECT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZAPDOS) { Speed(aiSpeed); Moves(MOVE_BOLT_BEAK, MOVE_THUNDER); }
+    } WHEN {
+        if (playerSpeed > aiSpeed) {
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_THUNDER); }
+            TURN { EXPECT_MOVE(opponent, MOVE_THUNDER); }
+        } else {
+            TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_BOLT_BEAK); }
+            TURN { EXPECT_MOVE(opponent, MOVE_BOLT_BEAK); }
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Bolt Beak damage will be correctly seen by AI (doubles)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_PROTECT, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); Moves(MOVE_PROTECT, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZAPDOS)  { Speed(2); Moves(MOVE_BOLT_BEAK, MOVE_THUNDER); }
+        OPPONENT(SPECIES_ZAPDOS)  { Speed(4); Moves(MOVE_BOLT_BEAK, MOVE_THUNDER); }
+        TIE_BREAK_TARGET(TARGET_TIE_HI, 0);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_PROTECT);
+            MOVE(playerRight, MOVE_PROTECT);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_BOLT_BEAK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_BOLT_BEAK, AI_SCORE_DEFAULT,                    target:playerRight);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_THUNDER,   AI_SCORE_DEFAULT,                    target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_THUNDER,   AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
+            SCORE_EQ_VAL(opponentRight, MOVE_BOLT_BEAK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_BOLT_BEAK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
+            SCORE_EQ_VAL(opponentRight, MOVE_THUNDER,   AI_SCORE_DEFAULT,                    target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_THUNDER,   AI_SCORE_DEFAULT,                    target:playerRight);
+            EXPECT_MOVE(opponentLeft,   MOVE_THUNDER,   target:playerRight);
+            EXPECT_MOVE(opponentRight,  MOVE_BOLT_BEAK, target:playerRight);
+        }
+        TURN {
+            SCORE_EQ_VAL(opponentLeft,  MOVE_BOLT_BEAK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_BOLT_BEAK, AI_SCORE_DEFAULT,                    target:playerRight);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_THUNDER,   AI_SCORE_DEFAULT,                    target:playerLeft);
+            SCORE_EQ_VAL(opponentLeft,  MOVE_THUNDER,   AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
+            SCORE_EQ_VAL(opponentRight, MOVE_BOLT_BEAK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_BOLT_BEAK, AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE, target:playerRight);
+            SCORE_EQ_VAL(opponentRight, MOVE_THUNDER,   AI_SCORE_DEFAULT,                    target:playerLeft);
+            SCORE_EQ_VAL(opponentRight, MOVE_THUNDER,   AI_SCORE_DEFAULT,                    target:playerRight);
+            EXPECT_MOVE(opponentLeft,   MOVE_THUNDER,   target:playerRight);
+            EXPECT_MOVE(opponentRight,  MOVE_BOLT_BEAK, target:playerRight);
+        }
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_SELECTED)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_FLAMETHROWER) == TARGET_SELECTED);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_FLAMETHROWER); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_FLAMETHROWER); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_FLAMETHROWER); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_FLAMETHROWER);
+            EXPECT_MOVE(playerRight, MOVE_FLAMETHROWER);
+            EXPECT_MOVE(opponentRight, MOVE_FLAMETHROWER);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLAMETHROWER, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_FOES_AND_ALLY)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_LAVA_PLUME) == TARGET_FOES_AND_ALLY);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_LAVA_PLUME); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_LAVA_PLUME); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_LAVA_PLUME); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_LAVA_PLUME);
+            EXPECT_MOVE(playerRight, MOVE_LAVA_PLUME);
+            EXPECT_MOVE(opponentRight, MOVE_LAVA_PLUME);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LAVA_PLUME, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
+AI_MULTI_BATTLE_TEST("AI does not target itself with selected moves in doubles (TARGET_BOTH)")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SCORE_TIE_DOUBLES_TARGET);
+
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_HEAT_WAVE) == TARGET_BOTH);
+        AI_FLAGS(0);
+        TIE_BREAK_TARGET(TARGET_TIE_CHOSEN, i % 3);
+        PLAYER(SPECIES_TURTONATOR) { Speed(4); }
+        PARTNER(SPECIES_TURTONATOR) { Speed(2); Moves(MOVE_HEAT_WAVE); }
+        OPPONENT_A(SPECIES_TURTONATOR) { Speed(3); Moves(MOVE_HEAT_WAVE); }
+        OPPONENT_B(SPECIES_TURTONATOR) { Speed(1); Moves(MOVE_HEAT_WAVE); }
+    } WHEN {
+        TURN {
+            EXPECT_MOVE(opponentLeft, MOVE_HEAT_WAVE);
+            EXPECT_MOVE(playerRight, MOVE_HEAT_WAVE);
+            EXPECT_MOVE(opponentRight, MOVE_HEAT_WAVE);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, opponentLeft);
+        NOT HP_BAR(opponentLeft);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, playerRight);
+        NOT HP_BAR(playerRight);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HEAT_WAVE, opponentRight);
+        NOT HP_BAR(opponentRight);
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has Contrary (Traits)")
 {
@@ -1315,7 +1466,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
     } WHEN {
             TURN { MOVE(player, MOVE_DEFENSE_CURL); }
             TURN { MOVE(player, MOVE_DEFENSE_CURL);
-                   if (abilityAI == ABILITY_MOLD_BREAKER) { SCORE_EQ(opponent, MOVE_WATER_GUN, MOVE_BUBBLE); }
+                   if (abilityAI == ABILITY_MOLD_BREAKER) { SCORE_GT(opponent, MOVE_BUBBLE, MOVE_WATER_GUN); } // Bubble is a plus effect if contrary is ignored
                    else { SCORE_GT(opponent, MOVE_WATER_GUN, MOVE_BUBBLE); }}
     } SCENE {
         MESSAGE("Shuckle's Defense fell!"); // Contrary activates
@@ -1454,7 +1605,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove, expectedMove2 = MOVE_NONE;
     enum Ability abilityAtk = ABILITY_NONE;
-    u32 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -1490,7 +1641,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb (Traits)")
 {
     enum Ability abilityAtk = ABILITY_NONE;
-    u16 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }
@@ -1678,7 +1829,7 @@ AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player'
 AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware (Traits)")
 {
     GIVEN {
-        MoveHasAdditionalEffectSelf(MOVE_SWORDS_DANCE, MOVE_EFFECT_ATK_PLUS_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
         PLAYER(SPECIES_QUAGSIRE) { Ability(ABILITY_DAMP); Innates(ABILITY_UNAWARE); Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_BODY_SLAM, MOVE_SWORDS_DANCE); }
@@ -1835,7 +1986,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
     enum Move move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     enum Move expectedMove, expectedMove2 = MOVE_NONE;
     enum Ability abilityAtk = ABILITY_NONE;
-    u32 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -1870,7 +2021,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
 AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering Power Herb (Items)")
 {
-    u32 aiItem;
+    enum Item aiItem;
 
     PARAMETRIZE { aiItem = ITEM_POWER_HERB; }
     PARAMETRIZE { aiItem= ITEM_NONE; }
@@ -1888,7 +2039,7 @@ AI_SINGLE_BATTLE_TEST("AI scores KOs with two turn moves correctly, considering 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb (Items)")
 {
     enum Ability abilityAtk = ABILITY_NONE;
-    u16 holdItemAtk = ITEM_NONE;
+    enum Item holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
     PARAMETRIZE { holdItemAtk = ITEM_POWER_HERB; }

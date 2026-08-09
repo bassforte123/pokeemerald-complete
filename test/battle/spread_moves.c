@@ -531,13 +531,35 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails in order of ally, left foe, r
     }
 }
 
+DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails due to accuracy in order of ally, left foe, right foe")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(1); Item(ITEM_BRIGHTPOWDER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Item(ITEM_BRIGHTPOWDER); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(3); Item(ITEM_BRIGHTPOWDER); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE, hit: FALSE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        MESSAGE("Wynaut avoided the attack!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        MESSAGE("The opposing Wynaut avoided the attack!");
+    }
+}
+
 #if MAX_MON_TRAITS > 1
 DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move (Traits)")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
+        ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_COVERT_CLOAK); }
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); };
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU);
@@ -568,17 +590,19 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by stron
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RAYQUAZA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_AIR_LOCK); }
         PLAYER(SPECIES_RALTS);
-        OPPONENT(SPECIES_ZAPDOS)
+        OPPONENT(SPECIES_ZAPDOS);
         OPPONENT(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponentRight, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { SWITCH(playerRight, 2); MOVE(opponentRight, MOVE_CELEBRATE); MOVE(playerLeft, MOVE_ROCK_SLIDE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_SUPER_EFFECTIVE); // SE on rayquaza
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE);
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
     } THEN {
@@ -618,12 +642,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will be weakened by stron
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and Lightning Rod (left) (Traits)")
 {
     GIVEN {
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_MIMIKYU);
+        PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_STATIC); Innates(ABILITY_LIGHTNING_ROD); }
-        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_VOLT_ABSORB); HP(1); }
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_VOLT_ABSORB); HP(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
     } SCENE {
@@ -637,12 +662,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (right) and 
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and Lightning Rod (right) (Traits)")
 {
     GIVEN {
+        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         ASSUME(GetMoveTarget(MOVE_DISCHARGE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_MIMIKYU);
-        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_ILLUMINATE); Innates(ABILITY_VOLT_ABSORB); HP(1); }
-        OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_STATIC); Innates(ABILITY_LIGHTNING_ROD); }
+        PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_STATIC); Innates(ABILITY_VOLT_ABSORB); HP(1); }
+        OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LIGHTNING_ROD); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
     } SCENE {
@@ -655,20 +681,32 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Disguise, Volt Absorb (left) and L
 
 DOUBLE_BATTLE_TEST("Spread Moves: AOE move vs Eiscue and Mimikyu (Based on vanilla games) (Traits)")
 {
+    s16 disguiseDamage;
+
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_EISCUE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ICE_FACE); }
-        OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_MIMIKYU) { Ability(ABILITY_STATIC); Innates(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_EISCUE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ICE_FACE); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_DISGUISE);
+        HP_BAR(opponentLeft, captureDamage: &disguiseDamage);
         ABILITY_POPUP(playerRight, ABILITY_ICE_FACE);
         ABILITY_POPUP(opponentRight, ABILITY_ICE_FACE);
+        NONE_OF {
+            HP_BAR(playerRight);
+            HP_BAR(opponentRight);
+        }
+    } THEN {
+        EXPECT_EQ(disguiseDamage, opponentLeft->maxHP / 8);
+        EXPECT_EQ(opponentLeft->species, SPECIES_MIMIKYU_BUSTED);
+        EXPECT_EQ(playerRight->species, SPECIES_EISCUE_NOICE);
+        EXPECT_EQ(opponentRight->species, SPECIES_EISCUE_NOICE);
     }
 }
 
@@ -677,6 +715,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_RAZOR_LEAF) == TARGET_BOTH);
         ASSUME(GetMoveCategory(MOVE_RAZOR_LEAF) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
         OPPONENT(SPECIES_MIMIKYU) { Speed(20); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DISGUISE); Item(ITEM_EJECT_BUTTON); }
@@ -697,6 +736,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE ground type move vs Levitate and Air Ballo
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_LEVITATE); }
@@ -735,10 +775,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails in order of ally, left foe, r
 DOUBLE_BATTLE_TEST("Spread Moves: Ability and Item effects activate correctly after a multi target move (Items)")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY, ITEM_LUM_BERRY); }
-        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY, ITEM_COVERT_CLOAK); }
-        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); };
-        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_ORAN_BERRY, ITEM_EJECT_BUTTON); }
+        ASSUME(gItemsInfo[ITEM_LUM_BERRY].holdEffect == HOLD_EFFECT_CURE_STATUS);
+        ASSUME(gItemsInfo[ITEM_COVERT_CLOAK].holdEffect == HOLD_EFFECT_COVERT_CLOAK);
+        ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_LUM_BERRY); }
+        PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_COVERT_CLOAK); }
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(260); HP(131); }
+        OPPONENT(SPECIES_WOBBUFFET) { Items(ITEM_GREAT_BALL, ITEM_EJECT_BUTTON); }
         OPPONENT(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU);
     } WHEN {
@@ -765,24 +808,28 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
     s16 opponentRightDmg[2];
 
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffectParam == TYPE_NORMAL);
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RALTS);
-        OPPONENT(SPECIES_RAICHU) { Items(ITEM_ORAN_BERRY, ITEM_CHILAN_BERRY); }
-        OPPONENT(SPECIES_SANDSLASH) { Items(ITEM_ORAN_BERRY, ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_RAICHU) { Items(ITEM_GREAT_BALL, ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_SANDSLASH) { Items(ITEM_GREAT_BALL, ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentLeft);
         MESSAGE("The Chilan Berry weakened the damage to the opposing Raichu!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[0]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[0]);
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        EFFECTIVENESS_SE(opponentLeft, SE_EFFECTIVE); // effective against both
         HP_BAR(opponentLeft, captureDamage: &opponentLeftDmg[1]);
         HP_BAR(opponentRight, captureDamage: &opponentRightDmg[1]);
     } THEN {
@@ -797,15 +844,17 @@ DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist
     s16 opponentRightDmg[2];
 
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffectParam == TYPE_NORMAL);
         PLAYER(SPECIES_GARDEVOIR);
         PLAYER(SPECIES_RALTS);
         OPPONENT(SPECIES_RAICHU)
-        OPPONENT(SPECIES_SANDSLASH) { Items(ITEM_ORAN_BERRY, ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_SANDSLASH) { Items(ITEM_GREAT_BALL, ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponentRight);
         MESSAGE("The Chilan Berry weakened the damage to the opposing Sandslash!");
 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
@@ -825,10 +874,13 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move, Gem Boosted, vs Resist Berries (I
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Items(ITEM_ORAN_BERRY, ITEM_NORMAL_GEM); }
+        ASSUME(gItemsInfo[ITEM_NORMAL_GEM].holdEffect == HOLD_EFFECT_GEMS);
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffectParam == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Items(ITEM_GREAT_BALL, ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Items(ITEM_ORAN_BERRY, ITEM_CHILAN_BERRY); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); Items(ITEM_ORAN_BERRY, ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Items(ITEM_GREAT_BALL, ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); Items(ITEM_GREAT_BALL, ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPER_VOICE); }
     } SCENE {
@@ -845,20 +897,23 @@ DOUBLE_BATTLE_TEST("Spread Moves: Explosion, Gem Boosted, vs Resist Berries (Ite
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EXPLOSION) == TARGET_FOES_AND_ALLY);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Items(ITEM_ORAN_BERRY, ITEM_NORMAL_GEM); }
+        ASSUME(gItemsInfo[ITEM_NORMAL_GEM].holdEffect == HOLD_EFFECT_GEMS);
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffectParam == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(40); Items(ITEM_GREAT_BALL, ITEM_NORMAL_GEM); }
         PLAYER(SPECIES_MISDREAVUS) { Speed(30); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Items(ITEM_ORAN_BERRY, ITEM_CHILAN_BERRY); }
-        OPPONENT(SPECIES_WYNAUT) { Speed(10); Items(ITEM_ORAN_BERRY, ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Items(ITEM_GREAT_BALL, ITEM_CHILAN_BERRY); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); Items(ITEM_GREAT_BALL, ITEM_CHILAN_BERRY); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
+        MESSAGE("It doesn't affect Misdreavus…");
         MESSAGE("The Normal Gem strengthened Wobbuffet's power!");
         MESSAGE("The Chilan Berry weakened the damage to the opposing Wobbuffet!");
         MESSAGE("The Chilan Berry weakened the damage to the opposing Wynaut!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
         HP_BAR(opponentLeft);
         HP_BAR(opponentRight);
-        MESSAGE("It doesn't affect Misdreavus…");
     }
 }
 
@@ -867,10 +922,11 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_RAZOR_LEAF) == TARGET_BOTH);
         ASSUME(GetMoveCategory(MOVE_RAZOR_LEAF) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(gItemsInfo[ITEM_EJECT_BUTTON].holdEffect == HOLD_EFFECT_EJECT_BUTTON);
         PLAYER(SPECIES_WOBBUFFET) { Speed(40); }
         PLAYER(SPECIES_WYNAUT) { Speed(30); }
-        OPPONENT(SPECIES_MIMIKYU) { Speed(20); Items(ITEM_ORAN_BERRY, ITEM_EJECT_BUTTON); }
-        OPPONENT(SPECIES_EISCUE) { Speed(10); }
+        OPPONENT(SPECIES_MIMIKYU) { Speed(20); Ability(ABILITY_DISGUISE); Items(ITEM_GREAT_BALL, ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_EISCUE) { Speed(10); Ability(ABILITY_ICE_FACE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_RAZOR_LEAF); SEND_OUT(opponentLeft, 2); }
@@ -885,10 +941,11 @@ DOUBLE_BATTLE_TEST("Spread Moves: Spread move vs Eiscue and Mimikyu with 1 Eject
 DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly (Items)")
 {
     GIVEN {
+        ASSUME(gItemsInfo[ITEM_FOCUS_SASH].holdEffect == HOLD_EFFECT_FOCUS_SASH);
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WYNAUT) { HP(2); MaxHP(2); Items(ITEM_ORAN_BERRY, ITEM_FOCUS_SASH); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(2); MaxHP(2); Items(ITEM_ORAN_BERRY, ITEM_FOCUS_SASH); }
-        OPPONENT(SPECIES_WYNAUT) { HP(2); MaxHP(2); Items(ITEM_ORAN_BERRY, ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { HP(2); MaxHP(2); Items(ITEM_GREAT_BALL, ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(2); MaxHP(2); Items(ITEM_GREAT_BALL, ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { HP(2); MaxHP(2); Items(ITEM_GREAT_BALL, ITEM_FOCUS_SASH); }
     } WHEN {
         TURN { MOVE(playerRight, MOVE_HYPER_VOICE); MOVE(playerLeft, MOVE_EXPLOSION); }
     } SCENE {
@@ -907,10 +964,11 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE ground type move vs Levitate and Air Ballo
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
         ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(gItemsInfo[ITEM_AIR_BALLOON].holdEffect == HOLD_EFFECT_AIR_BALLOON);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_FLYGON) { Ability(ABILITY_LEVITATE); }
-        OPPONENT(SPECIES_WYNAUT) { Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        OPPONENT(SPECIES_WYNAUT) { Items(ITEM_GREAT_BALL, ITEM_AIR_BALLOON); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_EARTHQUAKE); }
     } SCENE {
@@ -918,6 +976,25 @@ DOUBLE_BATTLE_TEST("Spread Moves: AOE ground type move vs Levitate and Air Ballo
         MESSAGE("It doesn't affect the opposing Wynaut…");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
         HP_BAR(playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Spread Moves: Earthquake fails due to accuracy in order of ally, left foe, right foe (Items)")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveCategory(MOVE_EARTHQUAKE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        PLAYER(SPECIES_WYNAUT) { Speed(1); Items(ITEM_GREAT_BALL, ITEM_BRIGHTPOWDER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); Items(ITEM_GREAT_BALL, ITEM_BRIGHTPOWDER); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(3); Items(ITEM_GREAT_BALL, ITEM_BRIGHTPOWDER); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EARTHQUAKE, hit: FALSE); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, playerLeft);
+        MESSAGE("Wynaut avoided the attack!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+        MESSAGE("The opposing Wynaut avoided the attack!");
     }
 }
 #endif

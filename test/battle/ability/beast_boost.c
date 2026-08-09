@@ -451,7 +451,7 @@ SINGLE_BATTLE_TEST("Beast Boost considers Speed Swap (Traits)")
 SINGLE_BATTLE_TEST("Beast Boost doesn't consider stat stages (Traits)")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_NIHILEGO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_BEAST_BOOST); Attack(100); Defense(60); SpAttack(150); SpDefense(60); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);

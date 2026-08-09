@@ -141,21 +141,45 @@ SINGLE_BATTLE_TEST("Rapid Spin and Mortal Spin will remove hazards if the target
     }
 }
 
-SINGLE_BATTLE_TEST("Rapid Spin and Mortal Spin remove Leech Seed")
+#if MAX_MON_TRAITS > 1
+SINGLE_BATTLE_TEST("Rapid Spin activates after Toxic Debris (Traits)")
 {
-    enum Move move;
-
-    PARAMETRIZE { move = MOVE_RAPID_SPIN; }
-    PARAMETRIZE { move = MOVE_MORTAL_SPIN; }
-
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
+        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        PLAYER(SPECIES_GLIMMORA) { Ability(ABILITY_CORROSION); Innates(ABILITY_TOXIC_DEBRIS); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_LEECH_SEED); MOVE(player, move); }
+        TURN { MOVE(opponent, MOVE_RAPID_SPIN); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, move, player);
-        MESSAGE("Wobbuffet was freed from Leech Seed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, opponent);
+        ABILITY_POPUP(player, ABILITY_TOXIC_DEBRIS);
+        MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
     }
 }
+
+SINGLE_BATTLE_TEST("Rapid Spin doesn't blow away Wrap, hazards or raise Speed when Sheer Force boosted (Gen 9+) (Traits)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        #if B_SPEED_BUFFING_RAPID_SPIN >= GEN_8
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_RAPID_SPIN, self: TRUE, speed: 1);
+        #endif
+        PLAYER(SPECIES_TAUROS) { Ability(ABILITY_CUD_CHEW); Innates(ABILITY_SHEER_FORCE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WRAP); }
+        TURN { MOVE(opponent, MOVE_STEALTH_ROCK); MOVE(player, MOVE_RAPID_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
+        NONE_OF {
+        #if B_SPEED_BUFFING_RAPID_SPIN >= GEN_8
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            MESSAGE("Tauros's Speed rose!");
+        #endif
+            MESSAGE("Tauros was freed from Wrap!");
+            MESSAGE("The pointed stones disappeared from around your team!");
+        }
+    }
+}
+#endif
