@@ -133,7 +133,7 @@ bool32 CanUseZMove(enum BattlerId battler)
         return FALSE;
 
     // Check if battler isn't holding a Z-Crystal.
-    if (!BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
+    if (!BattlerHasHoldItemEffectIgnoreAbility(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
         return FALSE;
 
     // All checks passed!
@@ -142,9 +142,9 @@ bool32 CanUseZMove(enum BattlerId battler)
 
 enum Move GetUsableZMove(enum BattlerId battler, enum Move move)
 {
-    if (BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
+    if (BattlerHasHoldItemEffectIgnoreAbility(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
     {
-        u32 item = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE);
+        u32 item = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE);
         enum Move zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
         if (zMove != MOVE_NONE)
             return zMove;  // Signature z move exists
@@ -183,9 +183,9 @@ bool32 IsViableZMove(enum BattlerId battler, enum Move move)
     }
 
     // Check for signature Z-Move or type-based Z-Move.
-    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
+    if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE))
     {
-        u32 item = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE);
+        u32 item = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_Z_CRYSTAL, FALSE);
         enum Move zMove = GetSignatureZMove(move, gBattleMons[battler].species, item);
         if (zMove != MOVE_NONE)
             return TRUE;

@@ -259,7 +259,7 @@ bool32 AI_IsBattlerAsleepOrComatose(enum BattlerId battlerId);
 // ability logic
 bool32 HasMoxieTypeAbility(enum BattlerId battler);
 bool32 DoesAbilityRaiseStatsWhenLowered(enum BattlerId battler);
-bool32 DoesIntimidateRaiseStats(enum Ability ability);
+bool32 DoesIntimidateRaiseStats(enum BattlerId battler);
 bool32 ShouldTriggerAbility(enum BattlerId battlerAtk, enum BattlerId battlerDef);
 bool32 CanEffectChangeAbility(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, struct AiLogicData *aiData);
 void AbilityChangeScore(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move, s32 *score, struct AiLogicData *aiData);

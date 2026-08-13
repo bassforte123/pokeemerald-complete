@@ -84,7 +84,7 @@ static enum ItemEffect TryRoomService(enum BattlerId battler)
     if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && CompareStat(battler, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN))
     {
         gEffectBattler = gBattleScripting.battler = battler;
-        gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_ROOM_SERVICE, TRUE);
+        gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_ROOM_SERVICE, TRUE);
         SetStatChange(battler, STAT_SPEED, -1);
         BattleScriptCall(BattleScript_ConsumableItemStatRaise);
         return ITEM_STATS_CHANGE;
@@ -203,7 +203,7 @@ static enum ItemEffect TryKingsRock(enum BattlerId battlerAtk, enum BattlerId ba
 
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        item = GetSlotHeldItem(battlerAtk, i, TRUE);
+        item = GetSlotHoldItem(battlerAtk, i, TRUE);
         
         if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_FLINCH && (holdEffectParam == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
             holdEffectParam += (100 - holdEffectParam) * GetItemHoldEffectParam(item) / 100; // Multiplicitive effect (2 Kings Rocks = 19% flinch chance)
@@ -258,7 +258,7 @@ static enum ItemEffect TryRockyHelmet(enum BattlerId battlerDef, enum BattlerId 
 
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            item = GetSlotHeldItem(battlerDef, i, TRUE);
+            item = GetSlotHoldItem(battlerDef, i, TRUE);
 
             if (GetBattlerItemHoldEffect(battlerDef, item) == HOLD_EFFECT_ROCKY_HELMET && (damage == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
             {
@@ -301,7 +301,7 @@ static enum ItemEffect TrySnowball(enum BattlerId battlerDef)
      && GetBattleMoveType(gCurrentMove) == TYPE_ICE)
     {
         SetStatChange(battlerDef, STAT_ATK, 1);
-        BattleScriptCall(BattleScript_ItemStatChange_Snowball);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -316,7 +316,7 @@ static enum ItemEffect TryLuminousMoss(enum BattlerId battlerDef)
      && GetBattleMoveType(gCurrentMove) == TYPE_WATER)
     {
         SetStatChange(battlerDef, STAT_SPDEF, 1);
-        BattleScriptCall(BattleScript_ItemStatChange_Luminous_Moss);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -331,7 +331,7 @@ static enum ItemEffect TryCellBattery(enum BattlerId battlerDef)
      && GetBattleMoveType(gCurrentMove) == TYPE_ELECTRIC)
     {
         SetStatChange(battlerDef, STAT_ATK, 1);
-        BattleScriptCall(BattleScript_ItemStatChange_Cell_Battery);
+        BattleScriptCall(BattleScript_ItemStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -560,7 +560,7 @@ static enum ItemEffect TryLifeOrbShellBell(enum BattlerId battlerAtk)
 
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        item = GetSlotHeldItem(battlerAtk, i, TRUE);
+        item = GetSlotHoldItem(battlerAtk, i, TRUE);
 
         if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_SHELL_BELL && (firstShell || GetConfig(B_ALLOW_HELD_DUPES))
         && gBattleScripting.savedDmg > 0
@@ -570,7 +570,7 @@ static enum ItemEffect TryLifeOrbShellBell(enum BattlerId battlerAtk)
         && !IsBattlerAtMaxHp(battlerAtk)
         && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))
         {
-            if (EmergencyExitCanBeTriggered(battlerAtk, GetBattlerAbility(battlerAtk)))
+            if (EmergencyExitCanBeTriggered(battlerAtk))
                 gSpecialStatuses[battlerAtk].shellBellEmergencyExit = TRUE;
             firstShell = FALSE;
             hpValue2 = gBattleScripting.savedDmg / GetBattlerItemHoldEffectParam(battlerAtk, item);
@@ -582,7 +582,7 @@ static enum ItemEffect TryLifeOrbShellBell(enum BattlerId battlerAtk)
         if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(B_ALLOW_HELD_DUPES))
         && !gBattleStruct->unableToUseMove
         && !gBattleStruct->battlerState[battlerAtk].redCardSwitched
-        && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
+        && (IsAnyTargetTurnDamaged(battlerAtk, INCLUDING_SUBSTITUTES) || gBattleScripting.savedDmg > 0)
         && !IsAbilityAndRecord(battlerAtk, ABILITY_MAGIC_GUARD))
         {
             firstOrb = FALSE;
@@ -618,7 +618,7 @@ static enum ItemEffect TryLifeOrbShellBell(enum BattlerId battlerAtk)
 static enum ItemEffect TryStickyBarbOnTargetHit(enum BattlerId battlerDef, enum BattlerId battlerAtk, enum Item item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u8 barbSlot = GetBattlerHeldItemSlotWithEffect(battlerDef, HOLD_EFFECT_STICKY_BARB, TRUE);
+    u8 barbSlot = GetBattlerHoldItemSlotWithEffect(battlerDef, HOLD_EFFECT_STICKY_BARB, TRUE);
 
     if (IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
      && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, gCurrentMove)
@@ -694,7 +694,7 @@ static enum ItemEffect TryLeftoversBlackSludge(enum BattlerId battler)
 
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        itemEffect = GetSlotHeldItemEffect(battler, i, TRUE);
+        itemEffect = GetSlotHoldItemEffect(battler, i, TRUE);
 
         if (gBattleMons[battler].hp < gBattleMons[battler].maxHP
         && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battler].volatiles.healBlock))
@@ -727,9 +727,9 @@ static enum ItemEffect TryLeftoversBlackSludge(enum BattlerId battler)
     if (hpValue > 0) //If aded hp is positive
     {
         if (!firstSludge && IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE); //Black Sludge gets priority message prompt if available
+            gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE); //Black Sludge gets priority message prompt if available
         else if (!firstLeftover)
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE);
+            gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE);
         SetHealAmount(battler, hpValue);
         BattleScriptCall(BattleScript_ItemHealHP_Ret);
         effect = ITEM_HP_CHANGE;
@@ -737,7 +737,7 @@ static enum ItemEffect TryLeftoversBlackSludge(enum BattlerId battler)
     else if (hpValue < 0) //If added HP is negative
     {
         if (!firstSludge)
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE);
+            gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE);
         SetPassiveDamageAmount(battler, -hpValue);
         BattleScriptCall(BattleScript_ItemHurtWithAnim);
         effect = ITEM_HP_CHANGE;
@@ -1132,11 +1132,11 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId sec
         //Air Balloon will pop here before any other on hit effect as an example
         if (timing == IsOnTargetHitActivation)
         {
-            if (BattlerHasHeldItemEffect(itemBattler, HOLD_EFFECT_AIR_BALLOON, TRUE))
+            if (BattlerHasHoldItemEffect(itemBattler, HOLD_EFFECT_AIR_BALLOON, TRUE))
             {
                 effect = TryAirBalloon(itemBattler, timing);
                 if (effect != ITEM_NO_EFFECT)
-                    item = GetBattlerHeldItemWithEffect(itemBattler, HOLD_EFFECT_AIR_BALLOON, TRUE);
+                    item = GetBattlerHoldItemWithEffect(itemBattler, HOLD_EFFECT_AIR_BALLOON, TRUE);
                 break;
             }
         }
@@ -1338,7 +1338,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId sec
         {
             effect = TryAirBalloon(itemBattler, timing);
             if (effect != ITEM_NO_EFFECT)
-                gLastUsedItem = item = GetBattlerHeldItemWithEffect(itemBattler, HOLD_EFFECT_AIR_BALLOON, TRUE);
+                gLastUsedItem = item = GetBattlerHoldItemWithEffect(itemBattler, HOLD_EFFECT_AIR_BALLOON, TRUE);
         }
     }
     if (timing == IsOnTargetHitActivation && effect == ITEM_NO_EFFECT)
@@ -1347,7 +1347,7 @@ enum ItemEffect ItemBattleEffects(enum BattlerId itemBattler, enum BattlerId sec
         {
             effect = TryRockyHelmet(itemBattler, secondaryBattler);
             if (effect != ITEM_NO_EFFECT)
-                gLastUsedItem = item = GetBattlerHeldItemWithEffect(itemBattler, HOLD_EFFECT_ROCKY_HELMET, TRUE);
+                gLastUsedItem = item = GetBattlerHoldItemWithEffect(itemBattler, HOLD_EFFECT_ROCKY_HELMET, TRUE);
         }
     }
 

@@ -1339,7 +1339,7 @@ void CreateEnemyEventMon(void)
         heldItem[0] = itemId;
         heldItem[1] = itemId >> 8;
 
-        slot = GetMonNextEmptySlot(&gEnemyParty[0], itemId);
+        slot = GetMonNextEmptySlot(&gParties[B_TRAINER_OPPONENT_A][0], itemId);
         
         if (slot != MAX_MON_ITEMS)
             SetMonData(&gParties[B_TRAINER_OPPONENT_A][0], MON_DATA_HELD_ITEM + slot, heldItem);  //leaving as one item to not mess with the specialVar (Multi)
@@ -6121,6 +6121,26 @@ enum Species GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum Fo
 enum Species GetFormChangeTargetSpecies(struct Pokemon *mon, enum FormChanges method)
 {
     return GetFormChangeTargetSpeciesBoxMon(&mon->box, method);
+}
+
+u32 FormChangeHasItem(struct FormChangeContext ctx, enum Item item)
+{
+    for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (ctx.heldItems[i] == item)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+u32 FormChangeHasTrait(struct FormChangeContext ctx, enum Ability ability)
+{
+    for (u32 i = 0; i < MAX_MON_TRAITS; i++)
+    {
+        if (ctx.traits[i] == ability)
+            return TRUE;
+    }
+    return FALSE;
 }
 
 enum Species GetFormChangeTargetSpecies_Internal(struct FormChangeContext ctx)

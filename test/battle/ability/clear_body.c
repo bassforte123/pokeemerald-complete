@@ -586,7 +586,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent s
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
     GIVEN {
-        ASSUME(MoveHasAdditionalEffectSelf(MOVE_SUPERPOWER, MOVE_EFFECT_ATK_DEF_DOWN) == TRUE);
+        ASSUME_MOVE_EFFECT_STAT_CHANGE(MOVE_SUPERPOWER, self: TRUE, attack: -1, defense: -1);
         PLAYER(SPECIES_WOBBUFFET)
         OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
     } WHEN {
@@ -634,13 +634,13 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
     }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
-        ASSUME(GetMoveEffect(MOVE_LEER) == EFFECT_DEFENSE_DOWN);
-        ASSUME(GetMoveEffect(MOVE_CONFIDE) == EFFECT_SPECIAL_ATTACK_DOWN);
-        ASSUME(GetMoveEffect(MOVE_FAKE_TEARS) == EFFECT_SPECIAL_DEFENSE_DOWN_2);
+        ASSUME_STAT_CHANGE(MOVE_GROWL, attack: -1);
+        ASSUME_STAT_CHANGE(MOVE_LEER, defense: -1);
+        ASSUME_STAT_CHANGE(MOVE_CONFIDE, spAtk: -1);
+        ASSUME_STAT_CHANGE(MOVE_FAKE_TEARS, spDef: -2);
         ASSUME_STAT_CHANGE(MOVE_SCARY_FACE, speed: -2);
-        ASSUME(GetMoveEffect(MOVE_SWEET_SCENT) == (B_UPDATED_MOVE_DATA >= GEN_6 ? EFFECT_EVASION_DOWN_2 : EFFECT_EVASION_DOWN));
-        ASSUME(GetMoveEffect(MOVE_SAND_ATTACK) == EFFECT_ACCURACY_DOWN);
+        ASSUME_STAT_CHANGE(MOVE_SWEET_SCENT, evasion: B_UPDATED_MOVE_DATA >= GEN_6 ? -2 : -1);
+        ASSUME_STAT_CHANGE(MOVE_SAND_ATTACK, accuracy: -1);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); Innates(breakerAbility); }
         OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
     } WHEN {

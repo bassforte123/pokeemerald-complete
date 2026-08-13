@@ -221,7 +221,7 @@ bool32 SetUpFieldMove_Cut(void)
             }
         }
 
-        if (!MonHasTrait(&gPlayerParty[GetCursorSelectionMonId()], ABILITY_HYPER_CUTTER))
+        if (!MonHasTrait(&gParties[B_TRAINER_PLAYER][GetCursorSelectionMonId()], ABILITY_HYPER_CUTTER))
         {
             if (ret == TRUE)
             {

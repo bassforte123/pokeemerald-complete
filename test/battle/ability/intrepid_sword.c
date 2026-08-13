@@ -225,7 +225,7 @@ SINGLE_BATTLE_TEST("Intrepid Sword and Dauntless Shield do not proc at max stage
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        ASSUME(GetMoveEffect(MOVE_IRON_DEFENSE) == EFFECT_DEFENSE_UP_2);
+        ASSUME_STAT_CHANGE(MOVE_IRON_DEFENSE, defense: +2);
         ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_ZAMAZENTA) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DAUNTLESS_SHIELD); }

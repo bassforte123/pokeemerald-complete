@@ -46,8 +46,9 @@ void RecordAbilityBattle(enum BattlerId battlerId, enum Ability abilityId)
 
 void RecordItemEffectBattle(enum BattlerId battlerId, enum HoldEffect itemEffect)
 {
-    gBattleHistory->itemEffects[battlerId] = itemEffect;
-    gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect = itemEffect;
+    u32 slot = GetHoldItemSlot(battlerId, GetBattlerHoldItemWithEffect(battlerId, itemEffect, FALSE), FALSE);
+    gBattleHistory->itemEffects[battlerId][slot] = itemEffect;
+    gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffects[slot] = itemEffect;
 }
 
 void ClearBattlerAbilityHistory(enum BattlerId battlerId)
@@ -64,5 +65,6 @@ void ClearBattlerMoveHistory(enum BattlerId battlerId)
 
 void ClearBattlerItemEffectHistory(enum BattlerId battlerId)
 {
-    gBattleHistory->itemEffects[battlerId] = HOLD_EFFECT_NONE;
+    for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+        gBattleHistory->itemEffects[battlerId][i] = HOLD_EFFECT_NONE;
 }

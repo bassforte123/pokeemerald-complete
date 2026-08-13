@@ -159,7 +159,6 @@ static bool32 DoesBattlerBenefitFromWeather(u32 battler, u32 weather)
      || SearchTraits(AIBattlerTraits, ABILITY_ICE_FACE)
      || SearchTraits(AIBattlerTraits, ABILITY_SNOW_CLOAK)
      || SearchTraits(AIBattlerTraits, ABILITY_SLUSH_RUSH))
-    case ABILITY_SLUSH_RUSH:
         return (weather & B_WEATHER_ICY_ANY);
     if (SearchTraits(AIBattlerTraits, ABILITY_DRY_SKIN)
      || SearchTraits(AIBattlerTraits, ABILITY_HYDRATION)

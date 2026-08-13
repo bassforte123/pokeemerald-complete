@@ -7710,8 +7710,8 @@ void AnimTask_PurpleFlamesOnTarget(u8 taskId)
 
 void AnimTask_TechnoBlast(u8 taskId)
 {
-    if (BattlerHasHeldItemEffect(gBattleAnimAttacker, HOLD_EFFECT_DRIVE, TRUE))
-        gBattleAnimArgs[0] = GetItemSecondaryId(GetBattlerHeldItemWithEffect(gBattleAnimAttacker, HOLD_EFFECT_DRIVE, TRUE));
+    if (BattlerHasHoldItemEffect(gBattleAnimAttacker, HOLD_EFFECT_DRIVE, TRUE))
+        gBattleAnimArgs[0] = GetItemSecondaryId(GetBattlerHoldItemWithEffect(gBattleAnimAttacker, HOLD_EFFECT_DRIVE, TRUE));
     else
         gBattleAnimArgs[0] = 0;
     DestroyAnimVisualTask(taskId);
@@ -7738,9 +7738,9 @@ static void SpriteCB_TwinkleOnBattler(struct Sprite *sprite)
 
 void AnimTask_PrimalReversion(u8 taskId)
 {
-    if (BattlerHasHeldItem(gBattleAnimAttacker, ITEM_RED_ORB, FALSE))
+    if (BattlerHasHoldItem(gBattleAnimAttacker, ITEM_RED_ORB, FALSE))
         gBattleAnimArgs[0] = ITEM_RED_ORB;
-    else if (BattlerHasHeldItem(gBattleAnimAttacker, ITEM_BLUE_ORB, FALSE))
+    else if (BattlerHasHoldItem(gBattleAnimAttacker, ITEM_BLUE_ORB, FALSE))
         gBattleAnimArgs[0] = ITEM_BLUE_ORB;
     else
         gBattleAnimArgs[0] = 0;

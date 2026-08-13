@@ -1,4 +1,5 @@
 #include "global.h"
+#include "battle.h"
 #include "battle_setup.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"

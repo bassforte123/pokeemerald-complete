@@ -1081,7 +1081,7 @@ static void Cmd_accuracycheck(void)
     if (DoesMoveMissTarget(&cv))
     {
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-        if (BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_BLUNDER_POLICY, TRUE))
+        if (BattlerHasHoldItemEffect(gBattlerAttacker, HOLD_EFFECT_BLUNDER_POLICY, TRUE))
             gBattleStruct->blunderPolicy = TRUE;
     }
 
@@ -1234,9 +1234,9 @@ static void Cmd_multihitresultmessage(void)
         else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
         {
             if (IsBattlerAtMaxHp(gBattlerTarget))
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
+                gLastUsedItem = GetBattlerHoldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
             if (gLastUsedItem == ITEM_NONE)
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
+                gLastUsedItem = GetBattlerHoldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
             gPotentialItemEffectBattler = gBattlerTarget;
             gBattleStruct->moveResultFlags[gBattlerTarget] &= ~(MOVE_RESULT_STURDIED | MOVE_RESULT_FOE_HUNG_ON);
             BattleScriptCall(BattleScript_HangedOnMsg);
@@ -1327,7 +1327,7 @@ static inline bool32 TryActivateWeaknessBerry(enum BattlerId battlerDef)
             if (GetItemHoldEffect(gBattleMons[battlerDef].items[i]) == HOLD_EFFECT_RESIST_BERRY
              && (GetBattlerItemHoldEffectParam(battlerDef, gBattleMons[battlerDef].items[i]) == gSpecialStatuses[battlerDef].berryReducedType))
             {
-                itemDef = GetSlotHeldItem(battlerDef, i, TRUE);
+                itemDef = GetSlotHoldItem(battlerDef, i, TRUE);
                 break;
             }
         }
@@ -1923,9 +1923,9 @@ static void Cmd_resultmessage(void)
             break;
         case MOVE_RESULT_FOE_HUNG_ON:
             if (IsBattlerAtMaxHp(gBattlerTarget))
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
+                gLastUsedItem = GetBattlerHoldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
             if (gLastUsedItem == ITEM_NONE)
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
+                gLastUsedItem = GetBattlerHoldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
             gPotentialItemEffectBattler = gBattlerTarget;
             *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
             BattleScriptCall(BattleScript_HangedOnMsg);
@@ -1953,9 +1953,9 @@ static void Cmd_resultmessage(void)
             }
             else if (*moveResultFlags & MOVE_RESULT_FOE_HUNG_ON)
             {
-                gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
+                gLastUsedItem = GetBattlerHoldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_SASH, TRUE);
                     if (gLastUsedItem == ITEM_NONE)
-                        gLastUsedItem = GetBattlerHeldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
+                        gLastUsedItem = GetBattlerHoldItemWithEffect(gBattlerTarget, HOLD_EFFECT_FOCUS_BAND, TRUE);
                 gPotentialItemEffectBattler = gBattlerTarget;
                 *moveResultFlags &= ~(MOVE_RESULT_FOE_ENDURED | MOVE_RESULT_FOE_HUNG_ON);
                 BattleScriptCall(BattleScript_HangedOnMsg);
@@ -2125,7 +2125,7 @@ static inline bool32 TrySetReflect(enum BattlerId battler)
 
         for (u32 i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetSlotHeldItemEffect(battler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
+            if (GetSlotHoldItemEffect(battler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
              && (gSideTimers[side].reflectTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                 gSideTimers[side].reflectTimer += 3;
         }
@@ -2150,7 +2150,7 @@ static inline bool32 TrySetLightScreen(enum BattlerId battler)
 
         for (u32 i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetSlotHeldItemEffect(battler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
+            if (GetSlotHoldItemEffect(battler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
              && (gSideTimers[side].lightscreenTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                 gSideTimers[side].lightscreenTimer += 3;
         }
@@ -2182,8 +2182,6 @@ static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId e
         if (CanSetNonVolatileStatus(
                 effectBattler,
                 battlerAtk,
-                effectAbility,
-                GetBattlerAbility(battlerAtk),
                 effect,
                 CHECK_TRIGGER))
         {
@@ -2332,8 +2330,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
     bool32 primary = effectFlags & EFFECT_PRIMARY;
     bool32 certain = effectFlags & EFFECT_CERTAIN;
     bool32 affectsUser = (battlerAtk == effectBattler);
-    bool32 mirrorArmorReflected = (BattlerHasTrait(gBattlerTarget, ABILITY_MIRROR_ARMOR));
-    union StatChangeFlags flags = {0};
+
     u32 index, slot, targetableSlots[MAX_MON_ITEMS];
 
     if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
@@ -2506,7 +2503,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         else
         {
-            SetWrapTurns(effectBattler, GetBattlerHoldEffect(battlerAtk));
+            SetWrapTurns(effectBattler);
             gBattleMons[effectBattler].volatiles.wrapped = TRUE;
             gBattleMons[effectBattler].volatiles.wrappedMove = gCurrentMove;
             gBattleMons[effectBattler].volatiles.wrappedBy = battlerAtk;
@@ -2666,8 +2663,8 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
         for (i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (((gBattleMons[effectBattler].items[i].pocket == POCKET_BERRIES) //Gather all valid item slots
-             || (B_INCINERATE_GEMS >= GEN_6 && BattlerHasHeldItemEffect(effectBattler, HOLD_EFFECT_GEMS, FALSE)))
+            if (((gItemsInfo[gBattleMons[effectBattler].items[i]].pocket == POCKET_BERRIES) //Gather all valid item slots
+             || (B_INCINERATE_GEMS >= GEN_6 && BattlerHasHoldItemEffect(effectBattler, HOLD_EFFECT_GEMS, FALSE)))
              && !BattlerHasTrait(effectBattler, ABILITY_STICKY_HOLD))
         {
                 if (targetableSlots[0] != MAX_MON_ITEMS)
@@ -2999,7 +2996,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
         }
         break;
     case MOVE_EFFECT_FLING:
-        if (CanFling(battlerAtk, abilities[battlerAtk]) || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED)
+        if (CanFling(battlerAtk) || gBattleStruct->flungItem == FLUNG_ITEM_REMOVED)
         {
             enum Item item = ITEM_NONE;
 
@@ -3018,7 +3015,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
             enum HoldEffect holdEffect = GetItemHoldEffect(item);
 
-            if (IsMoveEffectBlockedByTarget(abilities[effectBattler]))
+            if (IsMoveEffectBlockedByTarget())
             {
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_FlingBlockedByShieldDust;
@@ -3054,7 +3051,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 break;
             case HOLD_EFFECT_MENTAL_HERB:
             case HOLD_EFFECT_WHITE_HERB:
-                ItemBattleEffects(effectBattler, 0, holdEffect, IsOnFlingActivation);
+                ItemBattleEffects(effectBattler, 0, IsOnFlingActivation);
                 break;
             default:
                 break;
@@ -3212,7 +3209,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
 
             for (i = 0; i < MAX_MON_ITEMS; i++)
             {
-                if (GetSlotHeldItemEffect(effectBattler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
+                if (GetSlotHoldItemEffect(effectBattler, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
                  && (gSideTimers[GetBattlerSide(effectBattler)].auroraVeilTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                     gSideTimers[GetBattlerSide(effectBattler)].auroraVeilTimer += 3;
             }
@@ -3846,7 +3843,7 @@ static void Cmd_jumpifstatignorecontrary(void)
     u8 value = cmd->value;
     u8 comparison = cmd->comparison;
 
-    ret = CompareStatIgnoreContrary(battler, stat, value, comparison);
+    ret = CompareStat(battler, stat, value, comparison);
 
     if (ret)
         gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -4009,8 +4006,8 @@ static void Cmd_getexp(void)
         {
             bool32 wasSentOut = (gBattleStruct->expSentInMons & (1u << *expMonId)) != 0;
 
-            if ((!MonHasItemHoldEffect(&gPlayerParty[*expMonId], HOLD_EFFECT_EXP_SHARE) && !wasSentOut && !IsGen6ExpShareEnabled())
-             || GetMonData(&gPlayerParty[*expMonId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
+            if ((!MonHasItemHoldEffect(&gParties[B_TRAINER_PLAYER][*expMonId], HOLD_EFFECT_EXP_SHARE) && !wasSentOut && !IsGen6ExpShareEnabled())
+             || GetMonData(&gParties[B_TRAINER_PLAYER][*expMonId], MON_DATA_SPECIES_OR_EGG) == SPECIES_EGG)
             {
                 gBattleScripting.getexpState = 5;
                 gBattleStruct->battlerExpReward = 0;
@@ -4044,7 +4041,7 @@ static void Cmd_getexp(void)
                     else
                         gBattleStruct->battlerExpReward = 0;
 
-                    if ((MonHasItemHoldEffect(&gPlayerParty[*expMonId], HOLD_EFFECT_EXP_SHARE) || IsGen6ExpShareEnabled())
+                    if ((MonHasItemHoldEffect(&gParties[B_TRAINER_PLAYER][*expMonId], HOLD_EFFECT_EXP_SHARE) || IsGen6ExpShareEnabled())
                         && (B_SPLIT_EXP < GEN_6 || gBattleStruct->battlerExpReward == 0)) // only give exp share bonus in later gens if the mon wasn't sent out
                     {
                         gBattleStruct->battlerExpReward += GetSoftLevelCapExpValue(gParties[B_TRAINER_PLAYER][*expMonId].level, gBattleStruct->expShareExpValue);
@@ -4097,7 +4094,7 @@ static void Cmd_getexp(void)
                     PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
                     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleStruct->battlerExpReward);
 
-                    if (wasSentOut || MonHasItemHoldEffect(&gPlayerParty[*expMonId], HOLD_EFFECT_EXP_SHARE))
+                    if (wasSentOut || MonHasItemHoldEffect(&gParties[B_TRAINER_PLAYER][*expMonId], HOLD_EFFECT_EXP_SHARE))
                     {
                         PrepareStringBattle(STRINGID_PKMNGAINEDEXP, gBattleStruct->expGetterBattlerId);
                     }
@@ -4963,7 +4960,7 @@ static void Cmd_trainerslidein(void)
 
 static inline bool32 IsProtectivePadsProtected(enum BattlerId battler)
 {
-    if (!BattlerHasHeldItemEffect(battler, HOLD_EFFECT_PROTECTIVE_PADS, TRUE))
+    if (!BattlerHasHoldItemEffect(battler, HOLD_EFFECT_PROTECTIVE_PADS, TRUE))
         return FALSE;
 
     RecordItemEffectBattle(battler, HOLD_EFFECT_PROTECTIVE_PADS);
@@ -5181,7 +5178,7 @@ static void Cmd_jumpifcantswitch(void)
     CMD_ARGS(u8 battler:7, u8 ignoreEscapePrevention:1, const u8 *jumpInstr);
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    if (!cmd->ignoreEscapePrevention && !CanBattlerEscape(battler) && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE))
+    if (!cmd->ignoreEscapePrevention && !CanBattlerEscape(battler) && !BattlerHasHoldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE))
     {
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
@@ -6272,10 +6269,10 @@ static void Cmd_removeitemwitheffect(void)
     }
     else
     {
-        itemId = GetBattlerHeldItemWithEffect(battler, holdEffect, TRUE);
+        itemId = GetBattlerHoldItemWithEffect(battler, holdEffect, TRUE);
     }
 
-    slot = GetHeldItemSlot(battler, itemId, TRUE);
+    slot = GetHoldItemSlot(battler, itemId, TRUE);
 
     // Skip if slot not found
     if (slot == MAX_MON_ITEMS)
@@ -6309,8 +6306,8 @@ static void Cmd_removeitemwitheffect(void)
     MarkBattlerForControllerExec(battler);
 
     ClearBattlerItemEffectHistory(battler);
-    scriptQueued = TrySymbiosis(battler, itemId, cmd->nextInstr);
-    if (TryCheekPouch(battler, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
+    scriptQueued = TrySymbiosis(battler, cmd->nextInstr);
+    if (TryCheekPouch(battler, itemId, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
         scriptQueued = TRUE;
     if (!scriptQueued)
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -8756,7 +8753,7 @@ static void Cmd_recoverbasedonsunlight(void)
         {
             if (attackerWeather & B_WEATHER_SUN)
                 recoverAmount = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
-            else if (!(healingWeather & B_WEATHER_ANY) || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
+            else if (!(healingWeather & B_WEATHER_ANY) || BattlerHasHoldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else // not sunny weather
                 recoverAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
@@ -8786,15 +8783,12 @@ static void Cmd_recoverbasedonsunlight(void)
                 break;
             }
 
-            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
-                recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-            else if (gBattleWeather & B_WEATHER_SUN)
+            if (attackerWeather & B_WEATHER_SUN)
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
-            else if (!(healingWeather & B_WEATHER_ANY) || GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA)
+            else if (!(healingWeather & B_WEATHER_ANY) || BattlerHasHoldItemEffect(gBattlerAttacker, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE))
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
             else // not sunny weather
                 recoverAmount = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
-
         }
 
         SetHealAmount(gBattlerAttacker, recoverAmount);
@@ -9121,12 +9115,12 @@ static void Cmd_tryswapitems(void)
 
 static bool32 CanAbilityShieldActivateForBattler(enum BattlerId battler)
 {
-    if (!BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
+    if (!BattlerHasHoldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
         return FALSE;
 
     RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
     gBattlerAbility = battler;
-    gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_ABILITY_SHIELD, FALSE);
+    gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_ABILITY_SHIELD, FALSE);
     return TRUE;
 }
 
@@ -9210,7 +9204,7 @@ static void Cmd_setgastroacid(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (BattlerHasHeldItemEffectIgnoreAbility(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
+    else if (BattlerHasHoldItemEffectIgnoreAbility(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
     {
         RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -9673,7 +9667,7 @@ static void Cmd_settypebasedhalvers(void)
         gBattlescriptCurrInstr = cmd->failInstr;
 }
 
-bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Ability abilityAtk, enum Move move)
+bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
     if (!gBattleMons[battlerDef].volatiles.substitute)
         return FALSE;
@@ -9693,7 +9687,7 @@ bool32 IsSubstituteProtected(enum BattlerId battlerAtk, enum BattlerId battlerDe
 
 bool32 DoesSubstituteBlockMove(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum Move move)
 {
-    return IsSubstituteProtected(battlerAtk, battlerDef, GetBattlerAbility(battlerAtk), move);
+    return IsSubstituteProtected(battlerAtk, battlerDef, move);
 }
 
 bool32 DoesDisguiseBlockMove(enum BattlerId battler, enum Move move)
@@ -10997,12 +10991,6 @@ static void Cmd_trystatchanges(void)
         .move = MOVE_NONE,
     };
 
-    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
-
     struct StatChange st = {0};
 
     SetStatChangeFlags(&st, cmd->statChangeFlags);
@@ -11068,12 +11056,6 @@ static void Cmd_trybattlerstatchange(void)
 
     struct BattleCalcValues cv = {0};
     cv.battlerAtk = cv.battlerDef = GetBattlerForBattleScript(cmd->battler);
-
-    for (enum BattlerId battler = B_BATTLER_0; battler < gBattlersCount; battler++)
-    {
-        cv.abilities[battler] = GetBattlerAbility(battler);
-        cv.holdEffects[battler] = GetBattlerHoldEffect(battler);
-    }
 
     struct StatChange st = {0};
 
@@ -12146,7 +12128,7 @@ void BS_TryWindRiderPower(void)
     {
         if (BattlerHasTrait(battler, ABILITY_WIND_RIDER))
         {
-            AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ABILITY_WIND_RIDER, MOVE_NONE, TRUE);
+            AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, MOVE_NONE, TRUE);
         }
         else if (BattlerHasTrait(battler, ABILITY_WIND_POWER))
         {
@@ -12630,7 +12612,7 @@ void BS_TryBoosterEnergy(void)
     for (u32 orderNum = 0; orderNum < gBattlersCount; orderNum++)
     {
         enum BattlerId battler = gBattlerByTurnOrder[orderNum];
-        if (!BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BOOSTER_ENERGY, TRUE))
+        if (!BattlerHasHoldItemEffect(battler, HOLD_EFFECT_BOOSTER_ENERGY, TRUE))
             continue;
 
         if (!(BattlerHasTrait(battler, ABILITY_PROTOSYNTHESIS) && cmd->onFieldStatus != ON_TERRAIN)
@@ -12657,7 +12639,7 @@ void BS_JumpIfAbilityCantBeReactivated(void)
         return;
     }
 
-    if (BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
+    if (BattlerHasHoldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
     {
         gBattlescriptCurrInstr = cmd->jumpInstr;
         return;
@@ -12694,7 +12676,7 @@ void BS_TryActivateAbilityShield(void)
 
     if (GetBattlerAbilityNoAbilityShield(battler) != ability)
     {
-        gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
+        gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
         RecordItemEffectBattle(battler, GetItemHoldEffect(gLastUsedItem));
         BattleScriptCall(BattleScript_AbilityShieldProtects);
     }
@@ -12732,16 +12714,16 @@ void BS_JumpIfHoldEffect(void)
 {
     NATIVE_ARGS(u8 battler, u32 holdEffect, const u8 *jumpInstr, u8 equal);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    if (BattlerHasHeldItemEffect(battler, cmd->holdEffect, TRUE) == cmd->equal)
+    if (BattlerHasHoldItemEffect(battler, cmd->holdEffect, TRUE) == cmd->equal)
     {
         if (cmd->equal)
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, cmd->holdEffect, TRUE); // For B_LAST_USED_ITEM
+            gLastUsedItem = GetBattlerHoldItemWithEffect(battler, cmd->holdEffect, TRUE); // For B_LAST_USED_ITEM
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
     else
     {
         if (!cmd->equal)
-            gLastUsedItem = GetBattlerHeldItemWithEffect(battler, cmd->holdEffect, TRUE); // For B_LAST_USED_ITEM
+            gLastUsedItem = GetBattlerHoldItemWithEffect(battler, cmd->holdEffect, TRUE); // For B_LAST_USED_ITEM
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -12770,10 +12752,10 @@ void BS_SetLastUsedItem(void)
 
     if (holdEffect == HOLD_EFFECT_NONE)
     {
-        slot = GetHeldItemSlot(battler, gLastUsedItem, TRUE);
+        slot = GetHoldItemSlot(battler, gLastUsedItem, TRUE);
 
         if (slot != MAX_MON_ITEMS) // If no effect specified, use lastuseditem if battler has it
-            gLastUsedItem = GetSlotHeldItem(battler, slot, TRUE);
+            gLastUsedItem = GetSlotHoldItem(battler, slot, TRUE);
         else // If no effect specified and battler does not have lastuseditem, select an item from the battler
         {
             for (i = 0; i < MAX_MON_ITEMS; i++)
@@ -12790,16 +12772,16 @@ void BS_SetLastUsedItem(void)
             {
                 slot = gLastItemSlot = GetSlot(targetableSlots, index);
                         
-                gLastUsedItem = GetSlotHeldItem(battler, slot, TRUE); // For B_LAST_USED_ITEM
+                gLastUsedItem = GetSlotHoldItem(battler, slot, TRUE); // For B_LAST_USED_ITEM
                 
             }
         }
     } 
     else // If an effect is specified
     {
-        slot = GetBattlerHeldItemSlotWithEffect(battler, holdEffect, TRUE);
+        slot = GetBattlerHoldItemSlotWithEffect(battler, holdEffect, TRUE);
         if (slot != MAX_MON_ITEMS) // Set lastuseditem if battler has an item with the effect
-            gLastUsedItem = GetSlotHeldItem(battler, slot, TRUE); // For B_LAST_USED_ITEM
+            gLastUsedItem = GetSlotHoldItem(battler, slot, TRUE); // For B_LAST_USED_ITEM
         else // If battler does not have an item with the effect, set lastuseditem to none
             gLastUsedItem = ITEM_NONE;
     }
@@ -12851,7 +12833,7 @@ void BS_SetLastUsedItemCorrosiveFling(void)
     {
         //slot = gLastItemSlot= targetableSlots[0]; // Proper order selection
         slot = gLastItemSlot = GetSlot(targetableSlots, index); // B_MULTI_ITEM_ORDER order
-        gLastUsedItem = GetSlotHeldItem(battler, slot, TRUE);
+        gLastUsedItem = GetSlotHoldItem(battler, slot, TRUE);
         gBattleStruct->flingItem = gLastUsedItem;
     }
     else
@@ -12967,7 +12949,6 @@ void BS_TryFriskMessage(void)
             }
         }
     }
-    gBattleStruct->friskedBattler = 0;
     gBattleStruct->friskedAbility = FALSE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -13385,7 +13366,7 @@ void BS_TryActivateReceiver(void)
 
     if (IsBattlerAlive(receiverBattler)
      && (receiverAbility == ABILITY_RECEIVER || receiverAbility == ABILITY_POWER_OF_ALCHEMY) // Should not be Innates (Multi)
-     && !BattlerHasHeldItemEffectIgnoreAbility(receiverBattler, HOLD_EFFECT_ABILITY_SHIELD, TRUE)
+     && !BattlerHasHoldItemEffectIgnoreAbility(receiverBattler, HOLD_EFFECT_ABILITY_SHIELD, TRUE)
      && !gAbilitiesInfo[gBattleMons[faintedBattler].ability].cantBeCopied)
     {
         gBattlerAbility = receiverBattler;
@@ -13918,7 +13899,7 @@ void BS_SetAuroraVeil(void)
 
         for (u32 i = 0; i < MAX_MON_ITEMS; i++)
         {
-            if (GetSlotHeldItemEffect(gBattlerAttacker, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
+            if (GetSlotHoldItemEffect(gBattlerAttacker, i, TRUE) == HOLD_EFFECT_LIGHT_CLAY
              && (gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer == 5 || GetConfig(B_ALLOW_HELD_DUPES)))
                 gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer += 3;
         }
@@ -13971,7 +13952,7 @@ void BS_TryRoomService(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *failInstr);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_ROOM_SERVICE, TRUE) && ItemBattleEffects(battler, 0, IsOnEffectActivation))
+    if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_ROOM_SERVICE, TRUE) && ItemBattleEffects(battler, 0, IsOnEffectActivation))
         return;
 
     gBattlescriptCurrInstr = cmd->failInstr;
@@ -13981,7 +13962,7 @@ void BS_TryTerrainSeed(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *failInstr);
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_TERRAIN_SEED, TRUE) && ItemBattleEffects(battler, 0, IsOnEffectActivation))
+    if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_TERRAIN_SEED, TRUE) && ItemBattleEffects(battler, 0, IsOnEffectActivation))
         return;
 
     gBattlescriptCurrInstr = cmd->failInstr;
@@ -14206,7 +14187,7 @@ void BS_TryResetNegativeStatStages(void)
 void BS_SaveBattlerItem(void)
 {
     NATIVE_ARGS();
-    u8 itemslot = GetHeldItemSlot(gBattlerTarget, gLastUsedItem, TRUE);
+    u8 itemslot = GetHoldItemSlot(gBattlerTarget, gLastUsedItem, TRUE);
     if (itemslot != MAX_MON_ITEMS)
         gBattleHistory->heldItem[gBattlerTarget][itemslot] = gBattleMons[gBattlerTarget].items[itemslot];
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -14215,7 +14196,7 @@ void BS_SaveBattlerItem(void)
 void BS_RestoreBattlerItem(void)
 {
     NATIVE_ARGS();
-    u8 itemslot = GetHeldItemSlot(gBattlerTarget, gLastUsedItem, TRUE);
+    u8 itemslot = GetHoldItemSlot(gBattlerTarget, gLastUsedItem, TRUE);
     if (itemslot != MAX_MON_ITEMS)
         gBattleMons[gBattlerTarget].items[itemslot] = gBattleHistory->heldItem[gBattlerTarget][itemslot];
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -14247,8 +14228,8 @@ void BS_TryActivateAbilityWithAbilityShield(void)
 
     if (cmd->switchedItems)
     {
-        bool32 attackerHasAbilityShield = BattlerHasHeldItemEffectIgnoreAbility(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
-        bool32 targetHasAbilityShield = BattlerHasHeldItemEffectIgnoreAbility(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
+        bool32 attackerHasAbilityShield = BattlerHasHoldItemEffectIgnoreAbility(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
+        bool32 targetHasAbilityShield = BattlerHasHoldItemEffectIgnoreAbility(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD, TRUE);
 
         if (attackerHasAbilityShield == targetHasAbilityShield) // both or neither has Ability Shield
             return;
@@ -14260,7 +14241,7 @@ void BS_TryActivateAbilityWithAbilityShield(void)
     }
     else
     {
-        if (!BattlerHasHeldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
+        if (!BattlerHasHoldItemEffectIgnoreAbility(battler, HOLD_EFFECT_ABILITY_SHIELD, TRUE))
             return;
     }
 
@@ -14372,14 +14353,14 @@ void BS_TryDefiantRattled(void)
         {
             defiantCompetitive = TRUE;
             PushTraitStack(gBattlerTarget, ABILITY_DEFIANT);
-            SET_STATCHANGER(STAT_ATK, 2, FALSE);
+            SetStatChange2(battler, STAT_ATK, 2);
             RecordAbilityBattle(battler, ABILITY_DEFIANT);
         }
         if (SearchTraits(battlerTraits, ABILITY_COMPETITIVE))
         {
             defiantCompetitive = TRUE;
             PushTraitStack(gBattlerTarget, ABILITY_COMPETITIVE);
-            SET_STATCHANGER(STAT_SPATK, 2, FALSE);
+            SetStatChange2(battler, STAT_SPATK, 2);
             RecordAbilityBattle(battler, ABILITY_COMPETITIVE);
         }
 
@@ -14415,7 +14396,7 @@ void BS_TryAdrenalineOrb(void)
 
     if (gBattleStruct->intimidateActivated
      && !gBattleStruct->adrenalineOrbActivated // there might be a better way to solve this
-     && BattlerHasHeldItemEffect(battler, HOLD_EFFECT_ADRENALINE_ORB, TRUE))
+     && BattlerHasHoldItemEffect(battler, HOLD_EFFECT_ADRENALINE_ORB, TRUE))
     {
         gBattleStruct->adrenalineOrbActivated = TRUE;
         SetStatChange2(battler, STAT_SPEED, 1);
@@ -14482,7 +14463,7 @@ void BS_LastUsedItemToBattlerBerry(void) //For Stuff Cheeks
     if (targetableSlots[0] != MAX_MON_ITEMS)
     {    
         slot = gLastItemSlot = GetSlot(targetableSlots, index);
-        gLastUsedItem = GetSlotHeldItem(battler, slot, TRUE);
+        gLastUsedItem = GetSlotHoldItem(battler, slot, TRUE);
     }
     else
         gLastUsedItem = ITEM_NONE;

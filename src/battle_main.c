@@ -3101,7 +3101,7 @@ static void BattleStartClearSetData(void)
         {
             for (j = 0; j < MAX_MON_ITEMS; j++)
             {
-                gBattleStruct->partyState[trainer][i].usedHeldItem[j] = ITEM_NONE;
+                gBattleStruct->partyState[trainer][i].usedHeldItems[j] = ITEM_NONE;
                 gBattleStruct->itemLost[trainer][i][j].originalItem = GetMonData(&gParties[trainer][i], MON_DATA_HELD_ITEM + j);
                 gPartyCriticalHits[i] = 0;
             }
@@ -4002,7 +4002,7 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
         return BATTLE_RUN_FORBIDDEN;
     }
 
-    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CAN_ALWAYS_RUN, TRUE))
+    if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_CAN_ALWAYS_RUN, TRUE))
         return BATTLE_RUN_SUCCESS;
     if (GetConfig(B_GHOSTS_ESCAPE) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return BATTLE_RUN_SUCCESS;
@@ -4262,11 +4262,11 @@ static void HandleTurnActionSelectionState(void)
                     gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
                     if (gBattleTypeFlags & BATTLE_TYPE_ARENA
                         || gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE
-                        || (!CanBattlerEscape(battler) && !BattlerHasHeldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE)))
+                        || (!CanBattlerEscape(battler) && !BattlerHasHoldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE)))
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, PARTY_ACTION_CANT_SWITCH, PARTY_SIZE, ABILITY_NONE, 0, gBattleStruct->battlerPartyOrders[battler]);
                     }
-                    else if (!BattlerHasHeldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE)
+                    else if (!BattlerHasHoldItemEffect(battler, HOLD_EFFECT_SHED_SHELL, TRUE)
                       && (i = IsAbilityPreventingEscape(battler)))   // must be last to keep i value integrity
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, PARTY_ACTION_ABILITY_PREVENTS, PARTY_SIZE, gBattleMons[i - 1].ability, i - 1, gBattleStruct->battlerPartyOrders[battler]);
@@ -4437,7 +4437,7 @@ static void HandleTurnActionSelectionState(void)
                             gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
                             if (IsBattleMoveStatus(gChosenMoveByBattler[battler]) && BattlerHasTrait(battler, ABILITY_MYCELIUM_MIGHT))
                                 gProtectStructs[battler].myceliumMight = TRUE;
-                            if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LAGGING_TAIL, TRUE))
+                            if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_LAGGING_TAIL, TRUE))
                                 gProtectStructs[battler].laggingTail = TRUE;
 
                             // Check to see if any gimmicks need to be prepared.
@@ -4756,7 +4756,7 @@ u32 GetBattlerTotalSpeedStat(enum BattlerId battler)
 
     for (i = 0; i < MAX_MON_ITEMS; i++)
     {
-        itemEffect = GetSlotHeldItemEffect(battler, i, TRUE);
+        itemEffect = GetSlotHoldItemEffect(battler, i, TRUE);
 
         if ((itemEffect == HOLD_EFFECT_MACHO_BRACE) && (firstMach || GetConfig(B_ALLOW_HELD_DUPES)))
             {
@@ -5065,7 +5065,7 @@ static void SetActionsAndBattlersTurnOrder(void)
                 {
                     for (u32 i = 0; i < MAX_MON_ITEMS; i++)
                     {
-                        item = GetSlotHeldItem(battler, i, TRUE);
+                        item = GetSlotHoldItem(battler, i, TRUE);
 
                         if (GetBattlerItemHoldEffect(battler, item) == HOLD_EFFECT_QUICK_CLAW && (quickChance == 0 || GetConfig(B_ALLOW_HELD_DUPES)))
                             quickChance += (100 - quickChance) * GetItemHoldEffectParam(item) / 100;
@@ -5266,8 +5266,8 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
         gProtectStructs[battler1].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler1].quickDraw
-     && ((BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_QUICK_CLAW, TRUE)  && quickClawRandom[battler1]) 
-     || (BattlerHasHeldItemEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler1, 4, GetBattlerHeldItemWithEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE)))))
+     && ((BattlerHasHoldItemEffect(battler1, HOLD_EFFECT_QUICK_CLAW, TRUE)  && quickClawRandom[battler1]) 
+     || (BattlerHasHoldItemEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler1, 4, GetBattlerHoldItemWithEffect(battler1, HOLD_EFFECT_CUSTAP_BERRY, TRUE)))))
         gProtectStructs[battler1].usedCustapBerry = TRUE;
 
     // Battler 2
@@ -5276,8 +5276,8 @@ static void TryChangingTurnOrderEffects(struct BattleCalcValues *calcValues, u32
         gProtectStructs[battler2].quickDraw = TRUE;
     // Quick Claw and Custap Berry
     if (!gProtectStructs[battler2].quickDraw
-     && ((BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_QUICK_CLAW,   TRUE) && quickClawRandom[battler2])
-      || (BattlerHasHeldItemEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler2, 4, GetBattlerHeldItemWithEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE)))))
+     && ((BattlerHasHoldItemEffect(battler2, HOLD_EFFECT_QUICK_CLAW,   TRUE) && quickClawRandom[battler2])
+      || (BattlerHasHoldItemEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE) && HasEnoughHpToEatBerry(battler2, 4, GetBattlerHoldItemWithEffect(battler2, HOLD_EFFECT_CUSTAP_BERRY, TRUE)))))
         gProtectStructs[battler2].usedCustapBerry = TRUE;
 }
 
@@ -5300,11 +5300,11 @@ static void CheckChangingTurnOrderEffects(void)
             {
                 if (gProtectStructs[battler].usedCustapBerry)
                 {
-                    gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_QUICK_CLAW, FALSE);
+                    gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_QUICK_CLAW, FALSE);
                     PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
-                    if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CUSTAP_BERRY, FALSE))
+                    if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_CUSTAP_BERRY, FALSE))
                     {
-                        gLastUsedItem = GetBattlerHeldItemWithEffect(battler, HOLD_EFFECT_CUSTAP_BERRY, FALSE);
+                        gLastUsedItem = GetBattlerHoldItemWithEffect(battler, HOLD_EFFECT_CUSTAP_BERRY, FALSE);
                         PREPARE_ITEM_BUFFER(gBattleTextBuff1, gLastUsedItem);
                         // don't record berry since its gone now
                         BattleScriptExecute(BattleScript_CustapBerryActivation);
@@ -5852,6 +5852,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
     enum Species species;
     enum Type types[3];
     enum Gimmick gimmick = GIMMICK_NONE;
+    bool32 utilityUmbrellaAffected = FALSE;
 
     if (state == MON_IN_BATTLE)
     {
@@ -5861,6 +5862,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         species = gBattleMons[battler].species;
         GetBattlerTypes(battler, FALSE, types);
         gimmick = GetActiveGimmick(battler);
+        utilityUmbrellaAffected = BattlerHasHoldItemEffect(battler, HOLD_EFFECT_UTILITY_UMBRELLA, TRUE);
     }
     else
     {
@@ -5868,6 +5870,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         types[0] = GetSpeciesType(species, 0);
         types[1] = GetSpeciesType(species, 1);
         types[2] = TYPE_MYSTERY;
+        utilityUmbrellaAffected = MonHasItemHoldEffect(mon, HOLD_EFFECT_UTILITY_UMBRELLA);
     }
 
     switch (moveEffect)
@@ -5889,7 +5892,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         }
         else
         {
-            if (ability == ABILITY_MEGA_SOL)
+            if (MonHasTrait(mon, ABILITY_MEGA_SOL))
                 return TYPE_FIRE;
             switch (gWeatherPtr->currWeather)
             {
@@ -5945,8 +5948,8 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
         }
         break;
     case EFFECT_CHANGE_TYPE_ON_ITEM:
-        if (BattlerHasHeldItemEffect(battler, GetMoveEffectArg_HoldEffect(move), TRUE))
-            return GetItemSecondaryId(GetBattlerHeldItemWithEffect(battler, GetMoveEffectArg_HoldEffect(move), TRUE));
+        if (BattlerHasHoldItemEffect(battler, GetMoveEffectArg_HoldEffect(move), TRUE))
+            return GetItemSecondaryId(GetBattlerHoldItemWithEffect(battler, GetMoveEffectArg_HoldEffect(move), TRUE));
         break;
     case EFFECT_REVELATION_DANCE:
         if (gimmick != GIMMICK_Z_MOVE)
@@ -6009,7 +6012,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, enum Move move, enum BattlerId
             else
             {
                 if (GetItemPocket(GetMonData(mon, MON_DATA_HELD_ITEM + i)) == POCKET_BERRIES)
-                    return gNaturalGiftTable[GetMonData(mon, MON_DATA_HELD_ITEM + i)].type;
+                    return gBerries[ItemIdToBerryType(GetMonData(mon, MON_DATA_HELD_ITEM + i))].naturalGiftType;
             }
         }
         return moveType;

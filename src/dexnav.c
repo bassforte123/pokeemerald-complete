@@ -1181,7 +1181,7 @@ static void DexNavUpdateSearchWindow(u8 proximity, u8 searchLevel)
 static void CreateDexNavWildMon(enum Species species, u8 potential, u8 level, u8 abilityNum, enum Item item, enum Move *moves)
 {
     struct Pokemon *mon = &gParties[B_TRAINER_OPPONENT_A][0];
-    u8 i, slot;
+    u8 slot;
 
     CreateWildMon(species, level);  // shiny rate bonus handled in CreateBoxMon
     SetBoxMonPerfectIVs(&mon->box, min(3, potential)); // Will not exceed 3 Perfect IVs

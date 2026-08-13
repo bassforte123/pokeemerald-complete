@@ -28,8 +28,8 @@ static bool32 IsMirrorArmorReflected(struct BattleCalcValues *cv, struct StatCha
 
 // Utitily
 static void AdjustStatStage(struct BattleCalcValues *cv, struct StatChange *st);
-static bool32 CanAbilityPreventStatLoss(enum Ability ability);
-static bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat);
+static bool32 CanAbilityPreventStatLoss(enum BattlerId battler);
+static bool32 AbilityPreventsSpecificStatDrop(enum BattlerId battler, u32 stat);
 static u32 GetNumPositiveStats(struct StatChange *st);
 static u32 GetNumNegativeStats(struct StatChange *st);
 static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct StatChange *st);
@@ -115,7 +115,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
         }
         break;
     case EFFECT_ROTOTILLER:
-        if (!IsBattlerGrounded(cv->battlerDef, )
+        if (!IsBattlerGrounded(cv->battlerDef)
          || !IS_BATTLER_OF_TYPE(cv->battlerDef, TYPE_GRASS))
         {
             if (!st->onlyChecking)
@@ -444,7 +444,7 @@ static enum StatChangeResult IncreaseStat(struct BattleCalcValues *cv, struct St
                     PushTraitStack(battler, ABILITY_OPPORTUNIST);
                     gProtectStructs[battler].activateOpportunist = TRUE;
                 }
-                if (BattlerHasHeldItemEffect(index, HOLD_EFFECT_MIRROR_HERB, TRUE) && !st->mirrorHerbActivation)
+                if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_MIRROR_HERB, TRUE) && !st->mirrorHerbActivation)
                     gProtectStructs[battler].eatMirrorHerb = TRUE;
 
                 if (gProtectStructs[battler].activateOpportunist || gProtectStructs[battler].eatMirrorHerb)
@@ -647,7 +647,7 @@ static bool32 IsClearAmuletBlocked(struct BattleCalcValues *cv, struct StatChang
     if (st->certain)
         return FALSE;
 
-    if (cv->holdEffects[cv->battlerDef] != HOLD_EFFECT_CLEAR_AMULET)
+    if (!BattlerHasHoldItemEffect(cv->battlerDef, HOLD_EFFECT_CLEAR_AMULET, TRUE))
         return FALSE;
 
     if (!st->onlyChecking)
@@ -836,36 +836,31 @@ static void AdjustStatStage(struct BattleCalcValues *cv, struct StatChange *st)
     }
 }
 
-static bool32 CanAbilityPreventStatLoss(enum Ability ability)
+static bool32 CanAbilityPreventStatLoss(enum BattlerId battler)
 {
-    switch (ability)
-    {
-    case ABILITY_CLEAR_BODY:
-    case ABILITY_FULL_METAL_BODY:
-    case ABILITY_WHITE_SMOKE:
+    if (BattlerHasTrait(battler, ABILITY_CLEAR_BODY)
+     || BattlerHasTrait(battler, ABILITY_FULL_METAL_BODY)
+     || BattlerHasTrait(battler, ABILITY_WHITE_SMOKE))
         return TRUE;
-    default:
+    else
         return FALSE;
-    }
 }
 
-static bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat)
+static bool32 AbilityPreventsSpecificStatDrop(enum BattlerId battler, u32 stat)
 {
-    switch (ability)
-    {
-    case ABILITY_ILLUMINATE:
-        if (B_ILLUMINATE_EFFECT < GEN_9)
-            return FALSE;
-    case ABILITY_KEEN_EYE:
-    case ABILITY_MINDS_EYE:
-        return stat == STAT_ACC;
-    case ABILITY_HYPER_CUTTER:
-        return stat == STAT_ATK;
-    case ABILITY_BIG_PECKS:
-        return stat == STAT_DEF;
-    default:
+    if (stat == STAT_ACC
+     && ((BattlerHasTrait(battler, ABILITY_ILLUMINATE) && B_ILLUMINATE_EFFECT >= GEN_9)
+     || BattlerHasTrait(battler, ABILITY_KEEN_EYE)
+     || BattlerHasTrait(battler, ABILITY_MINDS_EYE)))
+        return TRUE;
+    else if (stat == STAT_ATK
+     && BattlerHasTrait(battler, ABILITY_HYPER_CUTTER))
+        return TRUE;
+    else if (stat == STAT_DEF
+     && BattlerHasTrait(battler, ABILITY_BIG_PECKS))
+        return TRUE;
+    else
         return FALSE;
-    }
 }
 
 u32 GetStatStage(u32 stat, const struct AdditionalEffect *additionalEffect)

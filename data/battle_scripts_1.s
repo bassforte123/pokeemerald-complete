@@ -174,7 +174,7 @@ BattleScript_DefiantActivates::
 BattleScript_AdrenalineOrbActivates::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE
-	removeitem BS_SCRIPTING
+	removeitemwitheffect BS_SCRIPTING HOLD_EFFECT_NONE @ gLastUsedItem
 	return
 
 BattleScript_MoveEffectStatChange::
@@ -184,7 +184,7 @@ BattleScript_MoveEffectStatChange::
 BattleScript_ItemStatChange::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM
-	removeitem BS_SCRIPTING
+	removeitemwitheffect BS_SCRIPTING HOLD_EFFECT_NONE @ gLastUsedItem
 	return
 
 BattleScript_ConsumableBerryStatRaise::
@@ -201,7 +201,7 @@ BattleScript_ConsumableBerryStatRaiseRipen::
 BattleScript_ConsumableItemStatRaise::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_ITEM | STAT_CHANGE_CERTAIN
-	removeitem BS_SCRIPTING
+	removeitemwitheffect BS_SCRIPTING HOLD_EFFECT_NONE @ gLastUsedItem
 	return
 
 BattleScript_MirrorArmorReflect::
@@ -584,7 +584,7 @@ BattleScript_EffectFlingConsumeBerry::
 	consumeberry BS_TARGET, FALSE
 	setbyte sBERRY_OVERRIDE, 0
 BattleScript_FlingEnd:
-	removeitem BS_ATTACKER @ fallback if a beryy could not be consumed
+	removeitemwitheffect BS_ATTACKER HOLD_EFFECT_NONE @ gLastUsedItem fallback if a berry could not be consumed
 	trysymbiosis BS_ATTACKER
 	return
 
@@ -5236,16 +5236,10 @@ BattleScript_CuriousMedicineActivates::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_PasteVeilActivates::
-	call BattleScript_AbilityPopUp
-	printstring STRINGID_PASTELVEILENTERS
-	waitmessage B_WAIT_TIME_LONG
-	return
-
 BattleScript_HurtAttackerItem:
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
-	printfromtable gHurtByStringIdsITEM
+	printfromtable gHurtByStringIds
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	return
@@ -5253,7 +5247,7 @@ BattleScript_HurtAttackerItem:
 BattleScript_HurtAttackerAbility:
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
-	printstring STRINGID_PKMNHURTSWITHABILITY
+	printfromtable gHurtByStringIds
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	return
@@ -5304,23 +5298,6 @@ BattleScript_CuteCharmActivates::
 
 BattleScript_AbilityStatusEffect::
 	waitstate
-	call BattleScript_AbilityPopUp
-	swapattackerwithtarget  @ for defiant, mirror armor
-	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_SPD_MINUS_1
-	swapattackerwithtarget
-BattleScript_TanglingHairActivatesRet:
-	return
-
-BattleScript_AbilityStatusEffectAtk::
-	waitstate
-	copybyte gEffectBattler, gBattlerTarget
-	call BattleScript_AbilityPopUp
-	setnonvolatilestatus TRIGGER_ON_ABILITY
-	return
-
-BattleScript_AbilityStatusEffectDef::
-	waitstate
-	copybyte gEffectBattler, gBattlerAttacker
 	call BattleScript_AbilityPopUp
 	setnonvolatilestatus TRIGGER_ON_ABILITY
 	return
@@ -6056,7 +6033,7 @@ BattleScript_PastelVeilCurePoison:
 	call BattleScript_AbilityPopUp
 	setbyte gBattleCommunication + 1, 1
 BattleScript_PastelVeilCurePoisonNoPopUp: @ Only show Pastel Veil pop up once if it cures two mons
-	printstring STRINGID_PASTELVEILENTERS
+	printfromtable gSwitchInAbilityStringIds
 	waitmessage B_WAIT_TIME_LONG
 	curestatus BS_TARGET
 	updatestatusicon BS_TARGET

@@ -1723,7 +1723,7 @@ const u32 gSummaryScreen_Gfx[]                = INCGFX_U32("graphics/summary_scr
 const u16 gSummaryScreen_Pal[]                = INCGFX_U16("graphics/summary_screen/tiles.png", ".gbapal");
 const u32 gSummaryPage_Info_Tilemap[]         = INCGFX_U32("graphics/summary_screen/page_info.bin", ".smolTM");
 #if MAX_MON_ITEMS <= 1
-	const u32 gSummaryPage_Skills_Tilemap[]       = INCBIN_U32("graphics/summary_screen/page_skills_default.bin", ".smolTM");
+	const u32 gSummaryPage_Skills_Tilemap[]       = INCGFX_U32("graphics/summary_screen/page_skills_default.bin", ".smolTM");
 #else
     const u32 gSummaryPage_Skills_Tilemap[]       = INCGFX_U32("graphics/summary_screen/page_skills_helditems.bin", ".smolTM");
 #endif
@@ -2138,5 +2138,5 @@ const u16 gGhostPalette[] = INCGFX_U16("graphics/pokemon/ghost/front.png", ".gba
 const u32 gGhostFrontPic[] = INCGFX_U32("graphics/pokemon/ghost/front.png", ".4bpp.smol");
 //New Summary Pages
 #if MAX_MON_TRAITS > 1
-    const u32 gSummaryPage_Traits_Tilemap[]      = INCBIN_U32("graphics/summary_screen/page_traits.bin", ".smolTM");
+    const u32 gSummaryPage_Traits_Tilemap[]      = INCGFX_U32("graphics/summary_screen/page_traits.bin", ".smolTM");
 #endif

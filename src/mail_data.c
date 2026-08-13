@@ -121,6 +121,7 @@ u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail)
 {
     enum Item itemId = mail->itemId;    
     u8 mailId = GiveMailToMonByItemId(mon, itemId);
+    u16 slot = GetMonNextEmptySlot(mon, itemId);
 
     if (mailId == MAIL_NONE || slot == MAX_MON_ITEMS)
         return MAIL_NONE;

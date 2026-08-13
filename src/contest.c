@@ -2872,15 +2872,15 @@ void CreateContestMonFromParty(u8 partyIndex)
     cute   = gContestMons[gContestPlayerMonIndex].cute;
     smart  = gContestMons[gContestPlayerMonIndex].smart;
     tough  = gContestMons[gContestPlayerMonIndex].tough;
-    if (MonHasItem(&gPlayerParty[partyIndex], ITEM_RED_SCARF))
+    if (MonHasItem(&gParties[B_TRAINER_PLAYER][partyIndex], ITEM_RED_SCARF))
         cool += 20;
-    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_BLUE_SCARF))
+    else if (MonHasItem(&gParties[B_TRAINER_PLAYER][partyIndex], ITEM_BLUE_SCARF))
         beauty += 20;
-    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_PINK_SCARF))
+    else if (MonHasItem(&gParties[B_TRAINER_PLAYER][partyIndex], ITEM_PINK_SCARF))
         cute += 20;
-    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_GREEN_SCARF))
+    else if (MonHasItem(&gParties[B_TRAINER_PLAYER][partyIndex], ITEM_GREEN_SCARF))
         smart += 20;
-    else if (MonHasItem(&gPlayerParty[partyIndex], ITEM_YELLOW_SCARF))
+    else if (MonHasItem(&gParties[B_TRAINER_PLAYER][partyIndex], ITEM_YELLOW_SCARF))
         tough += 20;
     if (cool > 255)
         cool = 255;

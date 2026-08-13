@@ -970,9 +970,9 @@ u32 GetItemSellPrice(enum Item itemId)
 
 bool32 BattlerHasHoldEffectChoice(enum BattlerId battler)
 {
-    return (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_BAND, TRUE)
-         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SCARF, TRUE)
-         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_CHOICE_SPECS, TRUE));
+    return (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_CHOICE_BAND, TRUE)
+         || BattlerHasHoldItemEffect(battler, HOLD_EFFECT_CHOICE_SCARF, TRUE)
+         || BattlerHasHoldItemEffect(battler, HOLD_EFFECT_CHOICE_SPECS, TRUE));
 }
 
 ShopCriteriaFunc GetItemShopCriteriaFunc(u32 itemId)

@@ -8,6 +8,7 @@
 #include "battle_stat_change.h"
 #include "battle_gimmick.h"
 #include "battle_scripts.h"
+#include "test_runner.h"
 #include "constants/battle.h"
 #include "constants/battle_string_ids.h"
 #include "constants/abilities.h"
@@ -149,7 +150,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
          && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-         && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
+         && !BattlerHasHoldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
          && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -172,7 +173,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-             && !BattlerHasHeldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
+             && !BattlerHasHoldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
              && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD))
             {
                 SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
@@ -421,15 +422,13 @@ static bool32 HandleEndTurnFirstEventBlock(enum BattlerId battler)
         break;
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
-    {
-        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
-         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
+        if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_LEFTOVERS, TRUE)
+         || BattlerHasHoldItemEffect(battler, HOLD_EFFECT_BLACK_SLUDGE, TRUE))
             if (ItemBattleEffects(battler, 0, IsLeftoversActivation))
                 effect = TRUE;
         gBattleStruct->eventState.endTurnBlock = 0;
         gBattleStruct->eventState.endTurnBattler++;
         break;
-    }
     }
 
     return effect;
@@ -1356,13 +1355,13 @@ static bool32 HandleEndTurnThirdEventBlock(enum BattlerId battler)
     case THIRD_EVENT_BLOCK_ITEMS:
     {
 
-        if ((BattlerHasHeldItemEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
-         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
-         || BattlerHasHeldItemEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
+        if ((BattlerHasHoldItemEffect(battler, HOLD_EFFECT_FLAME_ORB, TRUE)
+         || BattlerHasHoldItemEffect(battler, HOLD_EFFECT_STICKY_BARB, TRUE)
+         || BattlerHasHoldItemEffect(battler, HOLD_EFFECT_TOXIC_ORB, TRUE))
          && ItemBattleEffects(battler, 0, IsOrbsActivation))
                 effect = TRUE;
 
-        if (BattlerHasHeldItemEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE)
+        if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_WHITE_HERB, TRUE)
          && ItemBattleEffects(battler, 0, IsWhiteHerbEndTurnActivation))
                 effect = TRUE;
 
