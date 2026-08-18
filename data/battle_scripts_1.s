@@ -5288,6 +5288,18 @@ BattleScript_BanefulBunkerEffect::
 	setmoveresultflags MOVE_RESULT_MISSED
 	return
 
+BattleScript_GooeyActivates::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_ATTACKER, STAT_SPEED, 1, TRUE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_TanglingHairActivates::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_ATTACKER, STAT_SPEED, 1, TRUE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
 BattleScript_CuteCharmActivates::
 	call BattleScript_AbilityPopUp
 	volatileanimation BS_ATTACKER, VOLATILE_INFATUATION

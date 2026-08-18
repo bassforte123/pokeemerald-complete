@@ -1885,7 +1885,6 @@ u32 SwitchinChangeBattleTerrain(u32 newTerrain, u32 fieldStatus)
 
 u32 AI_GetSwitchinFieldStatus(enum BattlerId battler)
 {
-    enum Ability ability = gBattleMons[battler].ability;
     u32 startingFieldStatus = gFieldStatuses;
     // Switchin will introduce new terrain
 

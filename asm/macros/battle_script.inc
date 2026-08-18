@@ -713,6 +713,14 @@
 	.4byte \failInstr
 	.endm
 
+	.macro statbuffchange battler:req, flags:req, failInstr:req, stats=0
+	.byte B_SCR_OP_STATBUFFCHANGE
+	.byte \battler
+	.2byte \flags
+	.4byte \failInstr
+	.byte \stats
+	.endm
+
 	.macro normalisebuffs
 	.byte B_SCR_OP_NORMALISEBUFFS
 	.endm
@@ -1538,6 +1546,14 @@
     .macro restorestatchangequeue
     callnative BS_RestoreStatChangeQueue
     .endm
+
+	.macro setstatchangeability battler:req, stat:req, stages:req, down:req
+	callnative BS_SetStatChangeAbility
+	.byte \battler
+	.byte \stat
+	.byte \stages
+	.byte \down
+	.endm
 
 @ helpful macros
 	.macro setmoveeffect effect:req

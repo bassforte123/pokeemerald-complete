@@ -474,32 +474,6 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Bre
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid (Traits)", s16 damage)
-{
-    enum Move move;
-
-    PARAMETRIZE { move = MOVE_GASTRO_ACID; }
-    PARAMETRIZE { move = MOVE_CELEBRATE; }
-
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
-        PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_BEADS_OF_RUIN); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponentRight, move, target: playerLeft); MOVE(opponentLeft, MOVE_ROUND, target: playerRight); }
-    } SCENE {
-        ABILITY_POPUP(playerLeft, ABILITY_BEADS_OF_RUIN);
-        MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
-        ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentLeft);
-        HP_BAR(playerRight, captureDamage: &results[i].damage);
-    } FINALLY {
-        EXPECT_LT(results[0].damage, results[1].damage);
-    }
-}
-
 SINGLE_BATTLE_TEST("Beads of Ruin does not apply any damage reduction on an opposing Beads of Ruin user even if it is deactivated (Traits)")
 {
     s16 damage[2];

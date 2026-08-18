@@ -14433,6 +14433,23 @@ void BS_RestoreStatChangeQueue(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_SetStatChangeAbility(void)
+{
+    NATIVE_ARGS(u8 battler, u8 stat, u8 stage, bool8 down);
+
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Stat stat = cmd->stat;
+    u8 stage = cmd->stage;
+    bool32 down = cmd->down;
+    
+    if (down)
+        stage = stage * -1;
+
+    gSpecialStatuses[battler].statStageQueue[gSpecialStatuses[battler].statStageAmount].stat = stat;
+    gSpecialStatuses[battler].statStageQueue[gSpecialStatuses[battler].statStageAmount].stage = stage;
+    gSpecialStatuses[battler].statStageAmount++;
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
 
 // Multi
 void BS_PushTraitStack(void)

@@ -3080,7 +3080,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
          && !IsOpposingSideEmpty(battler))
         {
             PushTraitStack(battler, ABILITY_INTIMIDATE);
-            SaveBattlerAttacker(gBattlerAttacker);
             gBattlerAttacker = battler;
             effect += CommonSwitchInAbilities(battler, ABILITY_INTIMIDATE, traitCheck, BattleScript_IntimidateActivates);
         }
@@ -3089,7 +3088,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
          && !GetBattlerPartyState(battler)->supersweetSyrup
          && !IsOpposingSideEmpty(battler))
         {
-            SaveBattlerAttacker(gBattlerAttacker);
             gBattlerAttacker = battler;
             GetBattlerPartyState(battler)->supersweetSyrup = TRUE;
             effect += CommonSwitchInAbilities(battler, ABILITY_SUPERSWEET_SYRUP, traitCheck, BattleScript_SupersweetSyrupActivates);
@@ -3414,25 +3412,25 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
          && shouldAbilityTrigger)
         {
             gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
-            effect += CommonSwitchInAbilities(battler, ABILITY_VESSEL_OF_RUIN, traitCheck, BattleScript_WeatherAbilityActivates);
+            effect += CommonSwitchInAbilities(battler, ABILITY_VESSEL_OF_RUIN, traitCheck, BattleScript_RuinAbilityActivatesVessel);
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SWORD_OF_RUIN)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger)
         {
             gBattleMons[battler].volatiles.swordOfRuin = TRUE;
-            effect += CommonSwitchInAbilities(battler, ABILITY_SWORD_OF_RUIN, traitCheck, BattleScript_WeatherAbilityActivates);
+            effect += CommonSwitchInAbilities(battler, ABILITY_SWORD_OF_RUIN, traitCheck, BattleScript_RuinAbilityActivatesSword);
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_TABLETS_OF_RUIN)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger)
         {
             gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
-            effect += CommonSwitchInAbilities(battler, ABILITY_TABLETS_OF_RUIN, traitCheck, BattleScript_WeatherAbilityActivates);
+            effect += CommonSwitchInAbilities(battler, ABILITY_TABLETS_OF_RUIN, traitCheck, BattleScript_RuinAbilityActivatesTablets);
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_BEADS_OF_RUIN)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger)
         {
             gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
-            effect += CommonSwitchInAbilities(battler, ABILITY_BEADS_OF_RUIN, traitCheck, BattleScript_WeatherAbilityActivates);
+            effect += CommonSwitchInAbilities(battler, ABILITY_BEADS_OF_RUIN, traitCheck, BattleScript_RuinAbilityActivatesBeads);
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_SUPREME_OVERLORD)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger)
@@ -3565,7 +3563,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 {
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItems[itemTraitSlot];
                     PushTraitStack(battler, ABILITY_HARVEST);
-                    BattleScriptExecute(BattleScript_HarvestActivates);
+                    BattleScriptCall(BattleScript_HarvestActivates);
                     effect++;
                     break;
                 }
@@ -3589,7 +3587,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     MarkBattlerForControllerExec(battler);
                     gHasFetchedBall = TRUE;
                     PushTraitStack(battler, ABILITY_BALL_FETCH);
-                    BattleScriptExecute(BattleScript_BallFetch);
+                    BattleScriptCall(BattleScript_BallFetch);
                     effect++;
                     break;
                 }
@@ -3622,7 +3620,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     SetHealAmount(battler, GetNonDynamaxMaxHP(battler) * (0.187)); // Rain Dish + Dry Skin
                     gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_DRY_SKIN) - 1] = TRUE;
                 }
-                BattleScriptExecute(BattleScript_AbilityHpHeal);
+                BattleScriptCall(BattleScript_AbilityHpHeal);
                 effect++;
                 break;
             }
@@ -3638,7 +3636,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4); // Solar Power + Dry Skin
                     gSpecialStatuses[battler].endTurnTraitDone[SearchTraits(battlerTraits, ABILITY_DRY_SKIN) - 1] = TRUE;
                 }
-                BattleScriptExecute(BattleScript_SolarPowerActivates);
+                BattleScriptCall(BattleScript_SolarPowerActivates);
                 effect++;
                 break;
             }
@@ -3649,7 +3647,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                     PushTraitStack(battler, ABILITY_DRY_SKIN);
                     SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-                    BattleScriptExecute(BattleScript_SolarPowerActivates);
+                    BattleScriptCall(BattleScript_SolarPowerActivates);
                     effect++;
                     break;
                 }
@@ -3658,7 +3656,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                     PushTraitStack(battler, ABILITY_DRY_SKIN);
                     SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
-                    BattleScriptExecute(BattleScript_AbilityHpHeal);
+                    BattleScriptCall(BattleScript_AbilityHpHeal);
                     effect++;
                     break;
                 }
@@ -3744,7 +3742,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
                 gSpecialStatuses[battler].endTurnTraitDone[traitCheck - 1] = TRUE;
                 PushTraitStack(battler, ABILITY_MOODY);
-                BattleScriptExecute(BattleScript_AbilityStatChange);
+                BattleScriptCall(BattleScript_AbilityStatChange);
                 effect++;
                 break;
             }
@@ -4055,9 +4053,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (TryStatChange(&cv, &st) == STAT_CHANGE_WORKED || BattlerHasTrait(gBattlerAttacker, ABILITY_MIRROR_ARMOR))
                 {
                     gEffectBattler = gBattlerAbility = gBattlerTarget;
-                    SetStatChange(gBattlerAttacker, STAT_SPEED, -1);
                     PushTraitStack(battler, ABILITY_GOOEY);
-                    BattleScriptCall(BattleScript_AbilityStatChange);
+                    BattleScriptCall(BattleScript_GooeyActivates);
                     effect++;
                 }
             }
@@ -4089,9 +4086,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 if (TryStatChange(&cv2, &st2) == STAT_CHANGE_WORKED || BattlerHasTrait(gBattlerAttacker, ABILITY_MIRROR_ARMOR))
                 {
                     gEffectBattler = gBattlerAbility = gBattlerTarget;
-                    SetStatChange(gBattlerAttacker, STAT_SPEED, -1);
-                    PushTraitStack(battler, ABILITY_GOOEY);
-                    BattleScriptCall(BattleScript_AbilityStatChange);
+                    PushTraitStack(battler, ABILITY_TANGLING_HAIR);
+                    BattleScriptCall(BattleScript_TanglingHairActivates);
                     effect++;
                 }
             }
@@ -9177,28 +9173,28 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
      && gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON | STATUS1_TOXIC_COUNTER))
     {
         PushTraitStack(battler, ABILITY_IMMUNITY);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_POISON;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_PASTEL_VEIL)
      && gBattleMons[battler].status1 & (STATUS1_POISON | STATUS1_TOXIC_POISON | STATUS1_TOXIC_COUNTER))
     {
         PushTraitStack(battler, ABILITY_PASTEL_VEIL);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_POISON;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_OWN_TEMPO)
      && gBattleMons[battler].volatiles.confusionTurns > 0)
     {
         PushTraitStack(battler, ABILITY_OWN_TEMPO);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_CONFUSION;
         outcome = IMMUNITY_CONFUSION_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_LIMBER)
      && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
     {
         PushTraitStack(battler, ABILITY_LIMBER);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_ParalysisJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PARALYSIS;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_INSOMNIA)
@@ -9207,7 +9203,7 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
         TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
         gBattleMons[battler].volatiles.nightmare = FALSE;
         PushTraitStack(battler, ABILITY_INSOMNIA);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_SLEEP;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_VITAL_SPIRIT)
@@ -9216,47 +9212,57 @@ enum ImmunityHealStatusOutcome TryImmunityAbilityHealStatus(enum BattlerId battl
         TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
         gBattleMons[battler].volatiles.nightmare = FALSE;
         PushTraitStack(battler, ABILITY_VITAL_SPIRIT);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_SLEEP;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_WATER_VEIL)
      && gBattleMons[battler].status1 & STATUS1_BURN)
     {
         PushTraitStack(battler, ABILITY_WATER_VEIL);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_BURN;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_WATER_BUBBLE)
      && gBattleMons[battler].status1 & STATUS1_BURN)
     {
         PushTraitStack(battler, ABILITY_WATER_BUBBLE);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_BURN;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_THERMAL_EXCHANGE)
      && gBattleMons[battler].status1 & STATUS1_BURN)
     {
         PushTraitStack(battler, ABILITY_THERMAL_EXCHANGE);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_BurnJpn);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_BURN;
         outcome = IMMUNITY_STATUS_CLEARED;
     }
     else if (SearchTraits(battlerTraits, ABILITY_MAGMA_ARMOR)
      && gBattleMons[battler].status1 & STATUS1_ICY_ANY)
     {
         PushTraitStack(battler, ABILITY_MAGMA_ARMOR);
-        StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
-        outcome = IMMUNITY_STATUS_CLEARED;
+        if (gBattleMons[battler].status1 & STATUS1_FREEZE)
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FREEZE;
+            outcome = IMMUNITY_STATUS_CLEARED;
+        }
+        else if (gBattleMons[battler].status1 & STATUS1_FROSTBITE)
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_FROSTBITE;
+            outcome = IMMUNITY_STATUS_CLEARED;
+        }
     }
     else if (SearchTraits(battlerTraits, ABILITY_OBLIVIOUS))
     {
         if (gBattleMons[battler].volatiles.infatuation)
         {
             PushTraitStack(battler, ABILITY_OBLIVIOUS);
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_INFATUATION;
             outcome = IMMUNITY_INFATUATION_CLEARED;
         }
         else if (GetConfig(B_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0)
         {
             PushTraitStack(battler, ABILITY_OBLIVIOUS);
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_TAUNT;
             outcome = IMMUNITY_TAUNT_CLEARED;
         }
     }

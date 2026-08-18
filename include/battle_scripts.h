@@ -184,6 +184,8 @@ extern const u8 BattleScript_StickyHoldActivatesRet[];
 extern const u8 BattleScript_ColorChangeActivates[];
 extern const u8 BattleScript_RoughSkinActivates[];
 extern const u8 BattleScript_IronBarbsActivates[];
+extern const u8 BattleScript_GooeyActivates[];
+extern const u8 BattleScript_TanglingHairActivates[];
 extern const u8 BattleScript_CuteCharmActivates[];
 extern const u8 BattleScript_AbilityStatusEffect[];
 extern const u8 BattleScript_SynchronizeActivates[];
