@@ -158,7 +158,7 @@ static u32 PickLowest(const struct Trainer *trainer, u8 *poolIndexArray, u32 par
 
 static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u32 partyIndex, u32 monsCount, u32 battleTypeFlags, struct PoolRules *rules, struct PickFunctions pickFunctions)
 {
-    u32 i,j,k;
+    u32 j,k;
     u32 monIndex = POOL_SLOT_DISABLED;
     //  Pick Lead
     if (monIndex == POOL_SLOT_DISABLED)

@@ -3192,6 +3192,7 @@ static enum MoveEndResult MoveEndBouncedMove(struct BattleCalcValues *cv)
             {
                 gBattlerAbility = bounceBattler;
                 gBattlescriptCurrInstr = GetMoveBattleScript(gCurrentMove);
+                PushTraitStack(bounceBattler, ABILITY_MAGIC_BOUNCE);
                 BattleScriptCall(BattleScript_MagicBounce);
             }
             else if (gBattleStruct->magicCoatPending & 1u << bounceBattler)
@@ -4715,7 +4716,7 @@ static enum MoveResult StatChangeMirrorArmor(struct BattleCalcValues *cv)
          || cv->battlerAtk == battler)
             continue;
 
-        if (GetBattlerAbility(battler) == ABILITY_MIRROR_ARMOR)
+        if (BattlerHasTrait(battler, ABILITY_MIRROR_ARMOR))
             gBattleStruct->moveResultFlags[battler] = MOVE_RESULT_MIRROR_ARMOR_PENDING;
     }
 

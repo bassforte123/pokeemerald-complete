@@ -166,6 +166,65 @@ BattleScript_AbilityStatChange::
 	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
 	return
 
+BattleScript_AbilityStatChange3::
+	call BattleScript_AbilityPopUp
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF3
+	return
+
+BattleScript_AbilityStatChangeATK::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_ATK, 1, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeDEF::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_DEF, 1, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeDEF2::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_DEF, 2, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeSPATK::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_SPATK, 1, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeSPDEF::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_SPDEF, 1, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeSPEED::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_SPEED, 1, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeSPEED6::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_SPEED, 6, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeAttackerSpeedDown::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_ATTACKER, STAT_SPEED, 1, TRUE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeAngerPoint::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_EFFECT_BATTLER, STAT_ATK, 12, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
 BattleScript_DefiantActivates::
 	call BattleScript_AbilityPopUp
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE
@@ -4674,7 +4733,7 @@ BattleScript_IntimidateWontDecrease:
 BattleScript_SupersweetSyrupActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_SUPERSWEETAROMAWAFTS
-	trystatchanges BS_ATTACKER, STAT_CHANGE_NO_FLAGS
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_INTIMIDATE
 	destroyabilitypopup
 	return
 
@@ -5286,18 +5345,6 @@ BattleScript_BanefulBunkerEffect::
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
 	setnonvolatilestatus TRIGGER_ON_PROTECT
 	setmoveresultflags MOVE_RESULT_MISSED
-	return
-
-BattleScript_GooeyActivates::
-	call BattleScript_AbilityPopUp
-	setstatchangeability BS_ATTACKER, STAT_SPEED, 1, TRUE
-	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
-	return
-
-BattleScript_TanglingHairActivates::
-	call BattleScript_AbilityPopUp
-	setstatchangeability BS_ATTACKER, STAT_SPEED, 1, TRUE
-	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
 	return
 
 BattleScript_CuteCharmActivates::
@@ -6045,7 +6092,7 @@ BattleScript_PastelVeilCurePoison:
 	call BattleScript_AbilityPopUp
 	setbyte gBattleCommunication + 1, 1
 BattleScript_PastelVeilCurePoisonNoPopUp: @ Only show Pastel Veil pop up once if it cures two mons
-	printfromtable gSwitchInAbilityStringIds
+	printstring STRINGID_PKMNHEALEDPOISON
 	waitmessage B_WAIT_TIME_LONG
 	curestatus BS_TARGET
 	updatestatusicon BS_TARGET

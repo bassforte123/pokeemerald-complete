@@ -39,7 +39,9 @@ bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 enum StatChangeResult TryStatChange(struct BattleCalcValues *cv, struct StatChange *st);
 void SetStatChange(enum BattlerId battler, enum Stat stat, s32 stage);
 void SetStatChange2(enum BattlerId battler, enum Stat stat, s32 stage);
+void SetStatChange3(enum BattlerId battler, enum Stat stat, s32 stage); // Used for abilities that could overlap with SetStatChange
 void ClearStatChangeValues(void);
+void ClearStatChangeValues3(void);
 void ClearOtherStatChangeValues(enum BattlerId battler);
 void ClearBothStatChangeQueues(void);
 enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct StatChange *st);
