@@ -405,7 +405,7 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger even if Shell Bell heals user ba
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, opponent);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
@@ -747,7 +747,7 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger even if Shell Bell heals user ba
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, opponent);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }
@@ -877,7 +877,7 @@ SINGLE_BATTLE_TEST("Emergency Exit will trigger even if Shell Bell heals user ba
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MIND_BLOWN, opponent);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }

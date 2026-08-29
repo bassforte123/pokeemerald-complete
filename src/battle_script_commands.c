@@ -2170,8 +2170,7 @@ static void TrySynchronizeActivation(enum BattlerId battlerAtk, enum BattlerId e
     if (battlerAtk == effectBattler || gBattleStruct->synchronizeState == SYNCH_STATE_SET_STATUS)
         return;
 
-    enum Ability effectAbility = GetBattlerAbility(effectBattler);
-    if (effectAbility != ABILITY_SYNCHRONIZE)
+    if (!BattlerHasTrait(effectBattler, ABILITY_SYNCHRONIZE))
         return;
 
     if (effect == MOVE_EFFECT_POISON
@@ -10889,6 +10888,7 @@ static void Cmd_trysynchronize(void)
     case SYNCH_STATE_START:
         synchStatus = GetMoveEffectFromStatus(gBattlerAbility);
         RecordAbilityBattle(gBattlerAbility, ABILITY_SYNCHRONIZE);
+        PushTraitStack(gBattlerAbility, ABILITY_SYNCHRONIZE);
 
         if (GetConfig(B_SYNCHRONIZE_TOXIC) < GEN_5 && synchStatus == MOVE_EFFECT_TOXIC)
             synchStatus = MOVE_EFFECT_POISON;
@@ -10902,6 +10902,7 @@ static void Cmd_trysynchronize(void)
         break;
     case SYNCH_STATE_SHOW_ABILITY_POPUP: // Synchronize ability pop up still shows up even if status fails
         gBattleStruct->synchronizeState = SYNCH_STATE_END;
+        PushTraitStack(gBattlerAbility, ABILITY_SYNCHRONIZE);
         BattleScriptCall(BattleScript_AbilityPopUp);
         break;
     case SYNCH_STATE_SET_STATUS: // Extra step to skip trysynchronize for battler the status is inflicted on, so gEffectBattler isn't assigned to early
@@ -12141,13 +12142,16 @@ void BS_TryWindRiderPower(void)
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     if (IsBattlerAlive(battler) && IsBattlerAlly(battler, gBattlerAttacker))
     {
+        
         if (BattlerHasTrait(battler, ABILITY_WIND_RIDER))
         {
+            PushTraitStack(battler, ABILITY_WIND_RIDER);
             AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, MOVE_NONE, TRUE);
         }
         else if (BattlerHasTrait(battler, ABILITY_WIND_POWER))
         {
             gBattlerAbility = battler;
+            PushTraitStack(battler, ABILITY_WIND_POWER);
             BattleScriptCall(BattleScript_WindPowerActivates);
         }
     }

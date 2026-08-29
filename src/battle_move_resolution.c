@@ -3570,6 +3570,7 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
         {
             PushTraitStack(battlerDef, ABILITY_STICKY_HOLD);
             BattleScriptCall(BattleScript_StickyHoldActivatesRet);
+            gBattlerAbility = battlerDef;
             gLastUsedAbility = ABILITY_STICKY_HOLD;
             RecordAbilityBattle(battlerDef, ABILITY_STICKY_HOLD);
             result = MOVEEND_RESULT_RUN_SCRIPT;
@@ -3580,15 +3581,15 @@ static enum MoveEndResult MoveEndMoveBlock(struct BattleCalcValues *cv)
 
             StealTargetItem(cv->battlerAtk, battlerDef, slot);  // Attacker steals target item
 
-                if (!(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
-                 && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
-                {
-                    gBattleMons[gBattlerAttacker].items[slot] = gLastUsedItem; // Stolen item to be assigned later
-                }
-                BattleScriptCall(BattleScript_ItemSteal);
-                return MOVEEND_RESULT_RUN_SCRIPT;
+            if (!(GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
+                && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))))
+            {
+                gBattleMons[gBattlerAttacker].items[slot] = gLastUsedItem; // Stolen item to be assigned later
             }
-            break;
+            BattleScriptCall(BattleScript_ItemSteal);
+            return MOVEEND_RESULT_RUN_SCRIPT;
+        }
+        break;
         case EFFECT_HIT_SWITCH_TARGET:
             battlerDef = gBattlerTarget;
             if (IsBattlerTurnDamaged(battlerDef , EXCLUDING_SUBSTITUTES)

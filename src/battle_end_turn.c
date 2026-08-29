@@ -150,7 +150,7 @@ static bool32 HandleEndTurnWeatherDamage(enum BattlerId battler)
          && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-         && !BattlerHasHoldItemEffect(gBattlerAttacker, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
+         && !BattlerHasHoldItemEffect(battler, HOLD_EFFECT_SAFETY_GOGGLES, TRUE)
          && !IsAbilityAndRecord(battler, ABILITY_MAGIC_GUARD))
         {
             SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);

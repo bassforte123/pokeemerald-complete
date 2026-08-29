@@ -233,7 +233,7 @@ BattleScript_DefiantActivates::
 BattleScript_AdrenalineOrbActivates::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	trybattlerstatchange BS_SCRIPTING, STAT_CHANGE_SECOND_QUEUE
-	removeitemwitheffect BS_SCRIPTING HOLD_EFFECT_NONE @ gLastUsedItem
+	removeitemwitheffect BS_SCRIPTING HOLD_EFFECT_ADRENALINE_ORB
 	return
 
 BattleScript_MoveEffectStatChange::
@@ -4692,8 +4692,8 @@ BattleScript_SolarPowerActivates::
 
 BattleScript_HealerActivates::
 	call BattleScript_AbilityPopUp
-	curestatus BS_SCRIPTING_PARTNER
-	updatestatusicon BS_SCRIPTING_PARTNER
+	curestatus BS_SCRIPTING
+	updatestatusicon BS_SCRIPTING
 	printfromtable gCureStatusStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
