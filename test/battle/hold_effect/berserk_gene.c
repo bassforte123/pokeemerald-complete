@@ -274,7 +274,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
         MESSAGE("Wobbuffet snapped out of its confusion!");
     } THEN {
@@ -675,7 +675,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items (Items
     } WHEN {
         TURN { USE_ITEM(player, item, partyIndex: 0); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
         MESSAGE("Wobbuffet had its status healed!");
     } THEN {

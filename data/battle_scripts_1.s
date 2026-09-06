@@ -5185,6 +5185,7 @@ BattleScript_FriskMsg2::
 	waitmessage B_WAIT_TIME_LONG
 	printstring STRINGID_FRISKACTIVATES2
 	waitmessage B_WAIT_TIME_LONG
+	addbyte sBATTLER, 1
 	return
 
 BattleScript_FriskMsgWithPopup3::
@@ -5201,7 +5202,7 @@ BattleScript_FriskMsg3::
 	return
 
 BattleScript_FriskActivates::
-	call BattleScript_AbilityPopUp
+	copybyte gBattlerAttacker, sBATTLER
 	setbyte sBATTLER, 0
 	tryfriskmessage
 	return
@@ -5306,17 +5307,12 @@ BattleScript_HurtAttackerItem:
 BattleScript_HurtAttackerAbility:
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
-	printfromtable gHurtByStringIds
+	printstring STRINGID_AFTERMATHDMG
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	return
 
 BattleScript_RoughSkinActivates::
-	call BattleScript_AbilityPopUp
-	call BattleScript_HurtAttackerAbility
-	return
-
-BattleScript_IronBarbsActivates::
 	call BattleScript_AbilityPopUp
 	call BattleScript_HurtAttackerAbility
 	return

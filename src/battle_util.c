@@ -2994,17 +2994,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
     switch (caseID)
     {
     case ABILITYEFFECT_ON_FORM_CHANGE:
-        switch (gLastUsedAbility)
+        if(BattlerHasTrait(battler, ABILITY_TERAFORM_ZERO))
         {
-        case ABILITY_TERAFORM_ZERO:
             if (gBattleWeather != WEATHER_NONE || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
             {
+                PushTraitStack(battler, ABILITY_TERAFORM_ZERO);
                 BattleScriptCall(BattleScript_ActivateTeraformZero);
                 effect++;
             }
-            break;
-        default:
-            break;
         }
         break;
     case ABILITYEFFECT_ON_SWITCHIN:
@@ -3158,7 +3155,18 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_FRISK)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger)
         {
-            effect += CommonSwitchInAbilities(battler, ABILITY_FRISK, traitCheck, BattleScript_FriskActivates);
+            enum BattlerId battlerDef = B_BATTLER_0;
+
+            for (battlerDef = B_BATTLER_0; battlerDef < gBattlersCount; battlerDef++)
+            {
+                if (IsBattlerAlly(battler, battlerDef) || !IsBattlerAlive(battlerDef))
+                    continue;
+                if (!BattlerHasHoldItem(battlerDef, ITEM_NONE, FALSE))
+                    break;
+            }
+
+            if (!(battlerDef == gBattlersCount))
+                 effect += CommonSwitchInAbilities(battler, ABILITY_FRISK, traitCheck, BattleScript_FriskActivates);
         }
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_FOREWARN)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger && !IsOpposingSideEmpty(battler))
@@ -3319,10 +3327,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_AIR_LOCK)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger)
             effect += CommonSwitchInAbilities(battler, ABILITY_AIR_LOCK, traitCheck, BattleScript_AnnounceAirLockCloudNine);
-
-        if ((traitCheck = SearchTraits(battlerTraits, ABILITY_TERAFORM_ZERO)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
-         && shouldAbilityTrigger && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
-            effect += CommonSwitchInAbilities(battler, ABILITY_TERAFORM_ZERO, traitCheck, BattleScript_ActivateTeraformZero);
 
         if ((traitCheck = SearchTraits(battlerTraits, ABILITY_INTREPID_SWORD)) && !gSpecialStatuses[battler].switchInTraitDone[traitCheck - 1]
          && shouldAbilityTrigger && !GetBattlerPartyState(battler)->intrepidSwordBoost)
@@ -3776,19 +3780,19 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
          && HadMoreThanHalfHpNowDoesnt(battler))
         {
             gEffectBattler = gBattlerAbility = battler;
-                if (CompareStat(battler, STAT_DEF, MIN_STAT_STAGE, CMP_GREATER_THAN))
+                if (CompareStatIgnoreContrary(battler, STAT_DEF, MIN_STAT_STAGE, CMP_GREATER_THAN))
                     SetStatChange(battler, STAT_DEF, -1);
 
-                if (CompareStat(battler, STAT_SPDEF, MIN_STAT_STAGE, CMP_GREATER_THAN))
+                if (CompareStatIgnoreContrary(battler, STAT_SPDEF, MIN_STAT_STAGE, CMP_GREATER_THAN))
                     SetStatChange(battler, STAT_SPDEF, -1);
 
-                if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+                if (CompareStatIgnoreContrary(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                     SetStatChange(battler, STAT_ATK, 1);
 
-                if (CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+                if (CompareStatIgnoreContrary(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                     SetStatChange(battler, STAT_SPATK, 1);
 
-                if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+                if (CompareStatIgnoreContrary(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
                     SetStatChange(battler, STAT_SPEED, 1);
 
             PushTraitStack(battler, ABILITY_ANGER_SHELL);
@@ -3903,7 +3907,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             {
                 RemoveAbilityFlags(gBattlerAttacker);
                 gLastUsedAbility = gBattleMons[gBattlerAttacker].ability;
-                gBattleMons[gBattlerAttacker].ability = gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = ABILITY_MUMMY;
+                gBattleMons[gBattlerAttacker].ability = gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = lingeringAbility;
                 PushTraitStack(gBattlerAttacker, gLastUsedAbility);
                 PushTraitStack(battler, lingeringAbility);
                 BattleScriptCall(BattleScript_MummyActivates);
@@ -4061,7 +4065,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 returnDamage += (GetNonDynamaxMaxHP(gBattlerAttacker) / (B_ROUGH_SKIN_DMG >= GEN_4 ? 8 : 16));
                 gLastUsedAbility = ABILITY_IRON_BARBS;
                 PushTraitStack(battler, ABILITY_IRON_BARBS);
-                BattleScriptCall(BattleScript_IronBarbsActivates);
+                BattleScriptCall(BattleScript_RoughSkinActivates);
             }
             else
             {
@@ -4538,12 +4542,11 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
 
                 for (enum BattlerId battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
                 {
-                    if (battlerDef != battler
-                     && !BattlerHasHoldItem(battlerDef, ITEM_NONE, FALSE) // Skip battler early if no items to check (Multi)
+                    if (!BattlerHasHoldItem(battlerDef, ITEM_NONE, FALSE) // Skip battler early if no items to check (Multi)
+                     && battlerDef != battler
                      && IsBattlerTurnDamaged(battlerDef, EXCLUDING_SUBSTITUTES)
                      && !GetBattlerPartyState(battlerDef)->isKnockedOff
-                     && !DoesSubstituteBlockMove(battler, battlerDef, move)
-                     && (!BattlerHasTrait(battlerDef, ABILITY_STICKY_HOLD) || !IsBattlerAlive(battlerDef)))
+                     && !DoesSubstituteBlockMove(battler, battlerDef, move))
                     {
                         if (IsBattlerAlly(battler, battlerDef))
                         {
@@ -4578,6 +4581,12 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                     if (!(magicianTargets & 1u << targetBattler))
                         continue;
 
+                    if (BattlerHasTrait(targetBattler, ABILITY_STICKY_HOLD) && IsBattlerAlive(targetBattler))
+                    {
+                        effect = FALSE;
+                        break;
+                    }
+
                     for (j = 0; j < MAX_MON_ITEMS; j++)
                         targetableSlots[j] = MAX_MON_ITEMS; //clear targetableSlots for each battler
 
@@ -4603,6 +4612,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                         BattleScriptCall(BattleScript_MagicianActivates);
                         effect = TRUE;
                     }
+                    
                 }
             }
         }
@@ -6139,7 +6149,7 @@ bool32 IsBattlerGrounded(enum BattlerId battler)
 
     // Regular ability check split out here as the AI switching logic uses battle context to figure out the Ability instead. (Multi)
     hasLevitate = gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battler, ABILITY_LEVITATE) : BattlerHasTrait(battler, ABILITY_LEVITATE);
-
+    
     return IsBattlerGroundedInverseCheck(battler, NOT_INVERSE_BATTLE, FALSE, hasLevitate, FALSE);
 }
 
@@ -8001,6 +8011,10 @@ static inline s32 DoFutureSightAttackDamageCalc(struct DamageContext *ctx)
     gBattleMons[ctx->battlerAtk].volatiles.swordOfRuin = swordOfRuin;
     gBattleMons[ctx->battlerAtk].volatiles.beadsOfRuin = beadsOfRuin;
 
+    // Future Sight ignores items if user swapped out
+    for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+        gBattleMons[ctx->battlerAtk].items[i] = ITEM_NONE;
+
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
     ctx->isCrit = IsCriticalHit(ctx);
 
@@ -8438,6 +8452,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
 
     bool32 isPresentHealing = GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0;
     bool32 ignoreTypeCalc = isPresentHealing || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS;
+    bool32 hasLevitate = SearchTraits(battlerTraits, ABILITY_LEVITATE) && (!HasMoldBreakerTypeAbility(ctx->battlerAtk) || Ai_BattlerHasHoldEffect(ctx->battlerDef, HOLD_EFFECT_ABILITY_SHIELD, gAiLogicData));
     if (ignoreTypeCalc && ctx->move != MOVE_THUNDER_WAVE)
     {
         modifier = UQ_4_12(1.0);
@@ -8445,7 +8460,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
             modifier = UQ_4_12(0.0);
     }
     else if (ctx->moveType == TYPE_GROUND 
-     && !IsBattlerGroundedInverseCheck(ctx->battlerDef, INVERSE_BATTLE, ctx->isAnticipation, SearchTraits(battlerTraits, ABILITY_LEVITATE), FALSE)
+     && !IsBattlerGroundedInverseCheck(ctx->battlerDef, INVERSE_BATTLE, ctx->isAnticipation, hasLevitate, FALSE)
      && !MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)
      && !(BattlerHasHoldItemEffect(ctx->battlerDef, HOLD_EFFECT_RING_TARGET, TRUE) && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING) && !IsBattlerUngroundedByAbilityItemOrEffect(ctx->battlerDef, SearchTraits(battlerTraits, ABILITY_LEVITATE))))
     {
@@ -8481,7 +8496,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         && ctx->moveType == TYPE_GROUND
         && BattlerHasHoldItemEffect(ctx->battlerDef, HOLD_EFFECT_IRON_BALL, TRUE)
         && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING)
-        && !IsBattlerGroundedInverseCheck(ctx->battlerDef, NOT_INVERSE_BATTLE, FALSE, BattlerHasTrait(ctx->battlerDef, ABILITY_LEVITATE), TRUE) // We want to ignore Iron Ball so skip item check // We want to ignore Iron Ball so skip item check
+        && !IsBattlerGroundedInverseCheck(ctx->battlerDef, NOT_INVERSE_BATTLE, FALSE, BattlerHasTrait(ctx->battlerDef, ABILITY_LEVITATE), TRUE) // We want to ignore Iron Ball so skip item check
         && !FlagGet(B_FLAG_INVERSE_BATTLE))
     {
         modifier = UQ_4_12(1.0);

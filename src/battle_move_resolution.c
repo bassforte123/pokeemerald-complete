@@ -5391,7 +5391,7 @@ static void UpdateStallMons(void)
 
 static bool32 TryBellyDrum(enum BattlerId battler)
 {
-    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL))
+    if (CompareStatIgnoreContrary(battler, STAT_ATK, MAX_STAT_STAGE, CMP_EQUAL))
         return FALSE;
 
     u32 halfHp = GetNonDynamaxMaxHP(battler) / 2;

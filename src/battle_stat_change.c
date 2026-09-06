@@ -97,7 +97,7 @@ static bool32 CheckSpecificMoveCondition(struct BattleCalcValues *cv, struct Sta
         }
         break;
     case EFFECT_STRENGTH_SAP:
-        if (CompareStat(cv->battlerDef, STAT_ATK, MIN_STAT_STAGE, CMP_EQUAL))
+        if (CompareStatIgnoreContrary(cv->battlerDef, STAT_ATK, MIN_STAT_STAGE, CMP_EQUAL))
         {
             if (!st->onlyChecking)
             {
@@ -214,7 +214,7 @@ bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st)
                 continue;
 
             // Workaround for contrary
-            if (cv->moveEffect == EFFECT_BELLY_DRUM && !CompareStat(cv->battlerDef, st->stat, MAX_STAT_STAGE, CMP_EQUAL))
+            if (cv->moveEffect == EFFECT_BELLY_DRUM && !CompareStatIgnoreContrary(cv->battlerDef, st->stat, MAX_STAT_STAGE, CMP_EQUAL))
             {
                 canAnyStatChange = TRUE;
                 continue;
@@ -222,12 +222,12 @@ bool32 CanAnyStatChange(struct BattleCalcValues *cv, struct StatChange *st)
 
             if (st->stage < 0)
             {
-                if (CompareStat(cv->battlerDef, st->stat, MIN_STAT_STAGE, CMP_EQUAL))
+                if (CompareStatIgnoreContrary(cv->battlerDef, st->stat, MIN_STAT_STAGE, CMP_EQUAL))
                     continue;
             }
             else
             {
-                if (CompareStat(cv->battlerDef, st->stat, MAX_STAT_STAGE, CMP_EQUAL))
+                if (CompareStatIgnoreContrary(cv->battlerDef, st->stat, MAX_STAT_STAGE, CMP_EQUAL))
                     continue;
             }
 
@@ -316,12 +316,14 @@ enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct St
 
 static enum StatChangeResult CanDecreaseStat(struct BattleCalcValues *cv, struct StatChange *st)
 {
+    bool32 ignoreAbilityChecks = DoesBattlerIgnoreAbilityChecks(cv->battlerAtk, GetIncomingMove(cv->battlerAtk, cv->battlerDef, gAiLogicData));
+
     if (IsMistProtected(cv, st)
      || IsIntimidateBlocked(cv, st)
      || IsFlowerVeilBlocked(cv, st)
      || IsClearAmuletBlocked(cv, st)
-     || IsAbilityBlocked(cv, st)
-     || IsMirrorArmorReflected(cv, st))
+     || (IsAbilityBlocked(cv, st) && !ignoreAbilityChecks)
+     || (IsMirrorArmorReflected(cv, st) && !ignoreAbilityChecks))
         return STAT_CHANGE_DIDNT_WORK;
     return STAT_CHANGE_WORKED;
 }
@@ -875,6 +877,7 @@ static bool32 AbilityPreventsSpecificStatDrop(enum BattlerId battler, u32 stat)
 
     if (battlerAbility != ABILITY_NONE)
     {
+        DebugPrintf("Ability prevents stat loss: %d", battlerAbility);
         PushTraitStack(battler, battlerAbility);
         return TRUE;
     }
@@ -1042,6 +1045,42 @@ bool32 CompareStat(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpK
     return ret;
 }
 
+bool32 CompareStatIgnoreContrary(enum BattlerId battler, enum Stat statId, u32 cmpTo, u32 cmpKind)
+{
+    bool32 ret = FALSE;
+    u32 statValue = gBattleMons[battler].statStages[statId];
+
+    switch (cmpKind)
+    {
+    case CMP_EQUAL:
+        if (statValue == cmpTo)
+            ret = TRUE;
+        break;
+    case CMP_NOT_EQUAL:
+        if (statValue != cmpTo)
+            ret = TRUE;
+        break;
+    case CMP_GREATER_THAN:
+        if (statValue > cmpTo)
+            ret = TRUE;
+        break;
+    case CMP_LESS_THAN:
+        if (statValue < cmpTo)
+            ret = TRUE;
+        break;
+    case CMP_COMMON_BITS:
+        if (statValue & cmpTo)
+            ret = TRUE;
+        break;
+    case CMP_NO_COMMON_BITS:
+        if (!(statValue & cmpTo))
+            ret = TRUE;
+        break;
+    }
+
+    return ret;
+}
+
 static void SetAdditionalEffectsOnStatChange(struct BattleCalcValues *cv, struct StatChange *st)
 {
     switch (cv->moveEffect)
@@ -1102,7 +1141,7 @@ bool32 CanStatChange(struct BattleCalcValues *cv, struct StatChange *st)
         if (cv->battlerAtk != cv->battlerDef && st->stat == STAT_SPEED && st->stage < 0 && BattlerHasTrait(cv->battlerDef, ABILITY_SPEED_BOOST))
             return FALSE;
 
-        if (CompareStat(cv->battlerDef, st->stat, MIN_STAT_STAGE, CMP_EQUAL))
+        if (CompareStatIgnoreContrary(cv->battlerDef, st->stat, MIN_STAT_STAGE, CMP_EQUAL))
             return FALSE;
 
         if (st->stage < 0 && CanDecreaseStat(cv, st) == STAT_CHANGE_DIDNT_WORK)
@@ -1110,7 +1149,7 @@ bool32 CanStatChange(struct BattleCalcValues *cv, struct StatChange *st)
     }
     else
     {
-        if (CompareStat(cv->battlerDef, st->stat, MAX_STAT_STAGE, CMP_EQUAL))
+        if (CompareStatIgnoreContrary(cv->battlerDef, st->stat, MAX_STAT_STAGE, CMP_EQUAL))
             return FALSE;
     }
 

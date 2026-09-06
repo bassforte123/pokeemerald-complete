@@ -581,6 +581,7 @@ static enum ItemEffect TryLifeOrbShellBell(enum BattlerId battlerAtk)
 
         if (GetBattlerItemHoldEffect(battlerAtk, item) == HOLD_EFFECT_LIFE_ORB && (firstOrb || GetConfig(B_ALLOW_HELD_DUPES))
         && !gBattleStruct->unableToUseMove
+        && GetMoveEffect(gCurrentMove) != EFFECT_FUTURE_SIGHT
         && !gBattleStruct->battlerState[battlerAtk].redCardSwitched
         && (IsAnyTargetTurnDamaged(battlerAtk, INCLUDING_SUBSTITUTES) || gBattleScripting.savedDmg > 0)
         && !IsAbilityAndRecord(battlerAtk, ABILITY_MAGIC_GUARD))

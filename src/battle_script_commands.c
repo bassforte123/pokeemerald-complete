@@ -2085,7 +2085,8 @@ void StealTargetItem(enum BattlerId battlerStealer, enum BattlerId itemBattler, 
 {
     gLastUsedItem = gBattleMons[itemBattler].items[slot];
     gBattleMons[itemBattler].items[slot] = ITEM_NONE;
-
+    gBattleMons[itemBattler].item = ITEM_NONE;
+    
     if (GetConfig(B_STEAL_WILD_ITEMS) >= GEN_9
      && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
      && GetMoveEffect(gCurrentMove) == EFFECT_STEAL_ITEM
@@ -3002,8 +3003,48 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
             switch (gBattleStruct->flungItem)
             {
             case FLUNG_ITEM_NONE:
+                u32 i;
+                u32 targetableSlots[MAX_MON_ITEMS];
+                u32 index = 0;
+                u32 slot = MAX_MON_ITEMS;
+
+                targetableSlots[0] = MAX_MON_ITEMS; // Invalid value for first slot if no valid slots found
+                
+                // Fling should prioritize non-berry items. Makes a list of non berry items first and if none are found, makes a list of berries (Multi)
+                for (i = 0; i < MAX_MON_ITEMS; i++)
+                {
+                    if (gBattleMons[battlerAtk].items[i] != ITEM_NONE && GetItemPocket(gBattleMons[battlerAtk].items[i]) != POCKET_BERRIES && CanBattlerGetOrLoseItem(battlerAtk, effectBattler, gBattleMons[battlerAtk].items[i]))
+                    {
+                        if (targetableSlots[0] != MAX_MON_ITEMS)
+                            index++;
+                        targetableSlots[index] = i;
+                    }
+                }
+                // Rerun selection if no non-berry items found to make a berry list.
+                if (targetableSlots[0] == MAX_MON_ITEMS)
+                {
+                    for (i = 0; i < MAX_MON_ITEMS; i++)
+                    {
+                        if (gBattleMons[battlerAtk].items[i] != ITEM_NONE && CanBattlerGetOrLoseItem(battlerAtk, battlerAtk, gBattleMons[battlerAtk].items[i]))
+                        {
+                            if (targetableSlots[0] != MAX_MON_ITEMS)
+                                index++;
+                            targetableSlots[index] = i;
+                        }
+                    }
+                }
+
+                if (targetableSlots[0] != MAX_MON_ITEMS)
+                {
+                    //slot = gLastItemSlot = targetableSlots[0]; // Proper order selection
+                    slot = gLastItemSlot = GetSlot(targetableSlots, index); // B_MULTI_ITEM_ORDER order
+                    gLastUsedItem = GetSlotHoldItem(battlerAtk, slot, TRUE);
+                }
+                else
+                    gLastUsedItem = ITEM_NONE;
+
                 gBattleStruct->flungItem = FLUNG_ITEM_REMOVE;
-                item = gLastUsedItem = gBattleStruct->flingItem = gBattleMons[battlerAtk].item;
+                item = gBattleStruct->flingItem = gLastUsedItem;
                 break;
             case FLUNG_ITEM_REMOVE:
             case FLUNG_ITEM_REMOVED:
@@ -3026,7 +3067,7 @@ void SetMoveEffect(enum BattlerId battlerAtk, enum BattlerId effectBattler, enum
                 BattleScriptPush(battleScript);
                 gBattlescriptCurrInstr = BattleScript_EffectFlingConsumeBerry;
                 break;
-            }
+            } 
 
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_RemoveItem;
@@ -3842,7 +3883,7 @@ static void Cmd_jumpifstatignorecontrary(void)
     u8 value = cmd->value;
     u8 comparison = cmd->comparison;
 
-    ret = CompareStat(battler, stat, value, comparison);
+    ret = CompareStatIgnoreContrary(battler, stat, value, comparison);
 
     if (ret)
         gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -6241,7 +6282,7 @@ static void Cmd_removeitemwitheffect(void)
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
     bool32 scriptQueued;
-    u32 holdEffect;
+    u32 holdEffect = cmd->holdEffect;
     enum Item itemId = ITEM_NONE;
     u8 slot = MAX_MON_ITEMS;
 
@@ -6258,11 +6299,8 @@ static void Cmd_removeitemwitheffect(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
-
-    battler = GetBattlerForBattleScript(cmd->battler);
-    holdEffect = cmd->holdEffect;
-
-    if(holdEffect == HOLD_EFFECT_NONE){
+    else if(holdEffect == HOLD_EFFECT_NONE)
+    {
         itemId = gLastUsedItem;
         holdEffect = GetItemHoldEffect(gLastUsedItem);
     }
@@ -6294,7 +6332,7 @@ static void Cmd_removeitemwitheffect(void)
         }
     #endif
     
-    //DebugPrintf("Removing item %d from slot %d", itemId, slot);
+    //DebugPrintf("Removing item %S from slot %d", gItemsInfo[itemId].name, slot);
 
     gBattleMons[battler].items[slot] = ITEM_NONE;
     gBattleStruct->battlerState[battler].canPickupItem = TRUE;
@@ -12893,15 +12931,14 @@ void BS_TryFriskMessage(void)
     u16 friskedItem = ITEM_NONE;
 
     //Accounts for up to 3 item slots without needing modification
-
-
     while (gBattleScripting.battler < gBattlersCount)
     {
+        gBattlerTarget = gBattleScripting.battler;
         enum BattlerId battler = gBattleScripting.battler;
         friskcount = 0;
         if (!IsBattlerAlly(gBattlerAttacker, battler)
             && IsBattlerAlive(battler))
-        {
+        {       
             for (int i = 0; i < MAX_MON_ITEMS; i++)
             {
                 if (gBattleMons[battler].items[i] != ITEM_NONE)
@@ -12952,7 +12989,7 @@ void BS_TryFriskMessage(void)
                         BattleScriptCall(BattleScript_FriskMsgWithPopup2);
                     }
                 }
-                else if (friskcount == 3) //For MAX_MON_ITEMS = 3
+                else if (friskcount >= 3) //For MAX_MON_ITEMS = 3
                 {
                     if (gBattleStruct->friskedAbility)
                     {
@@ -12967,6 +13004,7 @@ void BS_TryFriskMessage(void)
                 return;
             }
         }
+            gBattleScripting.battler++;
     }
     gBattleStruct->friskedAbility = FALSE;
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -14399,6 +14437,7 @@ void BS_TryDefiantRattled(void)
         {
             SetStatChange2(battler, STAT_SPEED, 1);
             gBattlerAbility = battler;
+            PushTraitStack(battler, ABILITY_RATTLED);
             RecordAbilityBattle(battler, ABILITY_RATTLED);
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_DefiantActivates;
