@@ -6281,7 +6281,7 @@ static void Cmd_removeitemwitheffect(void)
     CMD_ARGS(u8 battler, u32 holdEffect);
 
     enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    bool32 scriptQueued;
+    bool32 scriptQueued = FALSE;
     u32 holdEffect = cmd->holdEffect;
     enum Item itemId = ITEM_NONE;
     u8 slot = MAX_MON_ITEMS;
@@ -6343,7 +6343,8 @@ static void Cmd_removeitemwitheffect(void)
     MarkBattlerForControllerExec(battler);
 
     ClearBattlerItemEffectHistory(battler);
-    scriptQueued = TrySymbiosis(battler, cmd->nextInstr);
+    if (holdEffect != HOLD_EFFECT_EJECT_BUTTON && holdEffect != HOLD_EFFECT_EJECT_PACK)
+        scriptQueued = TrySymbiosis(battler, cmd->nextInstr);
     if (TryCheekPouch(battler, itemId, scriptQueued ? gBattlescriptCurrInstr : cmd->nextInstr))
         scriptQueued = TRUE;
     if (!scriptQueued)

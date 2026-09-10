@@ -33,7 +33,7 @@ bool32 AI_MoldBreakerNegates(enum BattlerId battlerAtk, enum BattlerId battlerDe
     if (MoveIgnoresTargetAbility(move))
         return TRUE;
 
-    if (Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_ABILITY_SHIELD, gAiLogicData) && HasMoldBreakerTypeAbility(battlerAtk))
+    if (!Ai_BattlerHasHoldEffect(battlerDef, HOLD_EFFECT_ABILITY_SHIELD, gAiLogicData) && HasMoldBreakerTypeAbility(battlerAtk))
         return TRUE;
 
     return FALSE;

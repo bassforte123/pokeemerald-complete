@@ -4018,15 +4018,17 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
                 }
             }
         }
-        s32 returnDamage = 0;
+        s32 returnDamage = -1; // -1 meaning no return damage ability has activated (Multi)
         if (SearchTraits(battlerTraits, ABILITY_INNARDS_OUT)
          && !IsBattlerUnaffectedByMove(gBattlerTarget)
          && !IsBattlerAlive(gBattlerTarget)
          && !gSpecialStatuses[gBattlerAttacker].attackerInParty
          && IsBattlerAlive(gBattlerAttacker))
          {
+            if (returnDamage == -1)
+                returnDamage = 0;
             if (gBattleStruct->innardsOutHpLost[gBattlerTarget] != 0)
-                returnDamage += (gBattleStruct->moveDamage[gBattlerTarget]);
+                returnDamage += (gBattleStruct->innardsOutHpLost[gBattlerTarget]);
             PushTraitStack(battler, ABILITY_INNARDS_OUT);
             BattleScriptCall(BattleScript_InnardsOutDmg);
             effect++;
@@ -4048,6 +4050,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             else
             {
+                if (returnDamage == -1)
+                    returnDamage = 0;
                 returnDamage += (GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
                 PushTraitStack(battler, ABILITY_AFTERMATH);
                 BattleScriptCall(BattleScript_AftermathDmg);
@@ -4056,12 +4060,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         if (SearchTraits(battlerTraits, ABILITY_IRON_BARBS)
          && IsBattlerAlive(gBattlerAttacker)
-         && !gBattleStruct->unableToUseMove
+         && !gSpecialStatuses[gBattlerAttacker].attackerInParty
          && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
          && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, move))
         {
             if (!IsAbilityAndRecord(gBattlerAttacker, ABILITY_MAGIC_GUARD))
             {
+                if (returnDamage == -1)
+                    returnDamage = 0;
                 returnDamage += (GetNonDynamaxMaxHP(gBattlerAttacker) / (B_ROUGH_SKIN_DMG >= GEN_4 ? 8 : 16));
                 gLastUsedAbility = ABILITY_IRON_BARBS;
                 PushTraitStack(battler, ABILITY_IRON_BARBS);
@@ -4076,12 +4082,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
         }
         if (SearchTraits(battlerTraits, ABILITY_ROUGH_SKIN)
          && IsBattlerAlive(gBattlerAttacker)
-         && !gBattleStruct->unableToUseMove
+         && !gSpecialStatuses[gBattlerAttacker].attackerInParty
          && IsBattlerTurnDamaged(gBattlerTarget, EXCLUDING_SUBSTITUTES)
          && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, move))
         {
             if (!IsAbilityAndRecord(gBattlerAttacker, ABILITY_MAGIC_GUARD))
             {
+                if (returnDamage == -1)
+                    returnDamage = 0;
                 returnDamage += (GetNonDynamaxMaxHP(gBattlerAttacker) / (B_ROUGH_SKIN_DMG >= GEN_4 ? 8 : 16));
                 gLastUsedAbility = ABILITY_ROUGH_SKIN;
                 PushTraitStack(battler, ABILITY_ROUGH_SKIN);
@@ -4094,7 +4102,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, enum BattlerId battler, enum
             }
             effect++;
         }
-        if (returnDamage > 0)
+        if (returnDamage >= 0)
         {
             SetPassiveDamageAmount(gBattlerAttacker, returnDamage); // Set combined passive damage of damage returning abilities
         }
@@ -5141,25 +5149,13 @@ u32 IsAbilityPreventingEscape(enum BattlerId battler)
             continue;
 
         if (BattlerHasTrait(battlerDef, ABILITY_SHADOW_TAG) && (B_SHADOW_TAG_ESCAPE <= GEN_3 || !BattlerHasTrait(battler, ABILITY_SHADOW_TAG)))
-        {
-            //PushTraitStack(battlerDef, ABILITY_SHADOW_TAG);
-            //gDisplayAbility = ABILITY_SHADOW_TAG;
             return battlerDef + 1;
 
-        }
         if (BattlerHasTrait(battlerDef, ABILITY_ARENA_TRAP) && isBattlerGrounded)
-        {
-            //PushTraitStack(battlerDef, ABILITY_ARENA_TRAP);
-            //gDisplayAbility = ABILITY_ARENA_TRAP;
             return battlerDef + 1;
 
-        }
         if (BattlerHasTrait(battlerDef, ABILITY_MAGNET_PULL) && IS_BATTLER_OF_TYPE(battler, TYPE_STEEL))
-        {
-            //PushTraitStack(battlerDef, ABILITY_MAGNET_PULL);
-            //gDisplayAbility = ABILITY_MAGNET_PULL;
             return battlerDef + 1;
-        }
     }
 
     return 0;
@@ -7781,7 +7777,14 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageContext *ctx)
             }
             if (ctx->aiCalc && AI_DAMAGES_THROUGH_BERRIES)
                 ctx->aiCheckBerryModifier = TRUE;
-            return (BattlerHasTrait(ctx->battlerDef, ABILITY_RIPEN)) ? UQ_4_12(0.25) : UQ_4_12(0.5);
+            
+            if (BattlerHasTrait(ctx->battlerDef, ABILITY_RIPEN))
+                {
+                    PushTraitStack(ctx->battlerDef, ABILITY_RIPEN);
+                    return UQ_4_12(0.25); 
+                }
+            else
+               return UQ_4_12(0.5);
         }
     }
     return UQ_4_12(1.0);
@@ -8452,7 +8455,12 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
 
     bool32 isPresentHealing = GetMoveEffect(ctx->move) == EFFECT_PRESENT && gBattleStruct->presentBasePower == 0;
     bool32 ignoreTypeCalc = isPresentHealing || GetMoveCategory(ctx->move) == DAMAGE_CATEGORY_STATUS;
-    bool32 hasLevitate = SearchTraits(battlerTraits, ABILITY_LEVITATE) && (!HasMoldBreakerTypeAbility(ctx->battlerAtk) || Ai_BattlerHasHoldEffect(ctx->battlerDef, HOLD_EFFECT_ABILITY_SHIELD, gAiLogicData));
+    bool32 hasLevitate = SearchTraits(battlerTraits, ABILITY_LEVITATE);
+
+    // Apply Mold Breaker if AI is unaware of Ability Shield
+    if (gAiLogicData->aiCalcInProgress && AI_MoldBreakerNegates(ctx->battlerAtk, ctx->battlerDef, ctx->move))
+        hasLevitate = FALSE;
+
     if (ignoreTypeCalc && ctx->move != MOVE_THUNDER_WAVE)
     {
         modifier = UQ_4_12(1.0);
@@ -8462,7 +8470,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
     else if (ctx->moveType == TYPE_GROUND 
      && !IsBattlerGroundedInverseCheck(ctx->battlerDef, INVERSE_BATTLE, ctx->isAnticipation, hasLevitate, FALSE)
      && !MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)
-     && !(BattlerHasHoldItemEffect(ctx->battlerDef, HOLD_EFFECT_RING_TARGET, TRUE) && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING) && !IsBattlerUngroundedByAbilityItemOrEffect(ctx->battlerDef, SearchTraits(battlerTraits, ABILITY_LEVITATE))))
+     && !(BattlerHasHoldItemEffect(ctx->battlerDef, HOLD_EFFECT_RING_TARGET, TRUE) && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING) && !IsBattlerUngroundedByAbilityItemOrEffect(ctx->battlerDef, hasLevitate)))
     {
         modifier = UQ_4_12(0.0);
         if (ctx->updateFlags && SearchTraits(battlerTraits, ABILITY_LEVITATE))
@@ -10158,10 +10166,8 @@ void ClearDamageCalcResults(void)
     gBattleStruct->attackAnimPlayed = FALSE;
     gBattleStruct->preAttackEffectHappened = FALSE;
     gBattleScripting.savedDmg = 0;
-    if (gCurrentMove != MOVE_NONE)
+    if (gCurrentMove != MOVE_NONE)  //Removed flag clear on blank moves since some AI checks conflict (Multi)
         gBattleStruct->moldBreakerActive = HasMoldBreakerTypeAbility(gBattlerAttacker) || MoveIgnoresTargetAbility(gCurrentMove);
-    else
-        gBattleStruct->moldBreakerActive = FALSE;
 }
 
 bool32 DoesDestinyBondFail(enum BattlerId battler)
@@ -10701,12 +10707,11 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
 
     // Attacker's hold effect
     if(BattlerHasHoldItemEffect(battlerAtk, HOLD_EFFECT_WIDE_LENS, TRUE))
-        calc = (calc * (100 + GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHoldItemWithEffect(battlerAtk, HOLD_EFFECT_ZOOM_LENS, TRUE)))) / 100;
-
+        calc = (calc * (100 + GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHoldItemWithEffect(battlerAtk, HOLD_EFFECT_WIDE_LENS, TRUE)))) / 100;
     if(BattlerHasHoldItemEffect(battlerAtk, HOLD_EFFECT_ZOOM_LENS, TRUE)
      && HasBattlerActedThisTurn(battlerDef) && gBattleStruct->battlerState[battlerDef].isFirstTurn != 2)
     {
-        calc = (calc * (100 + GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHoldItemWithEffect(battlerAtk, HOLD_EFFECT_WIDE_LENS, TRUE)))) / 100;
+        calc = (calc * (100 + GetBattlerItemHoldEffectParam(battlerAtk, GetBattlerHoldItemWithEffect(battlerAtk, HOLD_EFFECT_ZOOM_LENS, TRUE)))) / 100;
     }
 
     // Target's hold effect
@@ -10718,7 +10723,10 @@ u32 GetTotalAccuracy(enum BattlerId battlerAtk, enum BattlerId battlerDef, enum 
     {
         // TODO: Is this true?
         if ((gAiLogicData->aiCalcInProgress ? AI_BATTLER_HAS_TRAIT(battlerAtk, ABILITY_RIPEN) : BattlerHasTrait(battlerAtk, ABILITY_RIPEN)))
+        {
+            PushTraitStack(battlerAtk, ABILITY_RIPEN);    
             calc = (calc * 140) / 100;  // ripen gives 40% acc boost
+        }
         else
             calc = (calc * 120) / 100;  // 20% acc boost
     }
@@ -11097,18 +11105,23 @@ void SetWrapTurns(enum BattlerId battler)
                 if (gBattleMons[battler].volatiles.wrapTurns == 0)
                 {
                     gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? B_WRAP_TURNS : normalWrapTurns;
-                    gBattleMons[battler].volatiles.wrappedBindingBand = FALSE;
+                    gBattleMons[battler].volatiles.wrappedBindingBand = 0;
                 }
-                else if (GetConfig(B_ALLOW_HELD_DUPES))
+                else if (GetConfig(B_ALLOW_HELD_DUPES)) // Set additonal Grip Claws to increase turn count by 2
                     gBattleMons[battler].volatiles.wrapTurns += 2;
             }
         }
     }
     if (gBattleMons[battler].volatiles.wrapTurns == 0)
-    {
         gBattleMons[battler].volatiles.wrapTurns = GetConfig(B_BINDING_TURNS) >= GEN_5 ? RandomUniform(RNG_WRAP, 4, normalWrapTurns) : RandomUniform(RNG_WRAP, 2, normalWrapTurns);
-        if (BattlerHasHoldItemEffect(battler, HOLD_EFFECT_BINDING_BAND, TRUE))
-            gBattleMons[battler].volatiles.wrappedBindingBand = TRUE;
+    
+    for (u32 i = 0; i < MAX_MON_ITEMS; i++)
+    {
+        if (GetSlotHoldItemEffect(gBattlerAttacker, i, TRUE) == HOLD_EFFECT_BINDING_BAND
+         && (GetConfig(B_ALLOW_HELD_DUPES) || gBattleMons[battler].volatiles.wrappedBindingBand == 0))
+        {
+            gBattleMons[battler].volatiles.wrappedBindingBand++;
+        }
     }
 }
 
@@ -11586,6 +11599,9 @@ bool32 BattlerHasHoldItemEffectInternal(enum BattlerId battler, enum HoldEffect 
     }
 
     if (holdEffect == HOLD_EFFECT_NONE)
+        return FALSE;
+
+    if (gBattleStruct->battlerState[battler].notOnField)
         return FALSE;
 
     if (checkNegating)

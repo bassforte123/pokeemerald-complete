@@ -4023,6 +4023,8 @@ u8 IsRunningFromBattleImpossible(enum BattlerId battler)
         if ((BattlerHasTrait(i - 1, ABILITY_MAGNET_PULL)) && IS_BATTLER_OF_TYPE(battler, TYPE_STEEL))
             ability = ABILITY_MAGNET_PULL;
 
+        if (GetMoveEffect(gCurrentMove) == EFFECT_TELEPORT) // Only prepare ability popup if blocking an escape move (Multi)
+            PushTraitStack(i - 1, ability);
         gBattleScripting.battler = i - 1;
         gLastUsedAbility = ability;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PREVENTS_ESCAPE;

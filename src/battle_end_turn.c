@@ -668,8 +668,9 @@ static bool32 HandleEndTurnWrap(enum BattlerId battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptCall(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (gBattleMons[battler].volatiles.wrappedBindingBand)
-                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+            if (gBattleMons[battler].volatiles.wrappedBindingBand > 0)
+                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 - (gBattleMons[battler].volatiles.wrappedBindingBand - 1)
+                                                                                      : 8 - (gBattleMons[battler].volatiles.wrappedBindingBand - 1));
             else
                 bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
             SetPassiveDamageAmount(battler, bindDamage);

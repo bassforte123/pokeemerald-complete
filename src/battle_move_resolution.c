@@ -872,9 +872,15 @@ static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum Move
         {
             cv->battlerDef = gBattlerByTurnOrder[redirectorOrderNum];
             if (BattlerHasTrait(cv->battlerDef, ABILITY_LIGHTNING_ROD))
+            {
+                PushTraitStack(cv->battlerDef, ABILITY_LIGHTNING_ROD);
                 RecordAbilityBattle(cv->battlerDef, ABILITY_LIGHTNING_ROD);
+            }
             else if (BattlerHasTrait(cv->battlerDef, ABILITY_STORM_DRAIN))
+            {
+                PushTraitStack(cv->battlerDef, ABILITY_STORM_DRAIN);    
                 RecordAbilityBattle(cv->battlerDef, ABILITY_STORM_DRAIN);
+            }
             gSpecialStatuses[cv->battlerDef].abilityRedirected = TRUE;
             gBattlerTarget = battler;
             return TRUE;

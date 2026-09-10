@@ -366,7 +366,10 @@ static enum ItemEffect TryJabocaBerry(enum BattlerId battlerDef, enum BattlerId 
     {
         s32 jabocaDamage = GetNonDynamaxMaxHP(battlerAtk) / 8;
         if (BattlerHasTrait(battlerDef, ABILITY_RIPEN))
-            jabocaDamage *= 2;
+            {
+                PushTraitStack(battlerDef, ABILITY_RIPEN);
+                jabocaDamage *= 2;
+            }
         SetPassiveDamageAmount(battlerAtk, jabocaDamage);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HURT_BY_ITEM;
         BattleScriptCall(BattleScript_JabocaRowapBerryActivates);
@@ -390,7 +393,10 @@ static enum ItemEffect TryRowapBerry(enum BattlerId battlerDef, enum BattlerId b
     {
         s32 rowapDamage = GetNonDynamaxMaxHP(battlerAtk) / 8;
         if (BattlerHasTrait(battlerDef, ABILITY_RIPEN))
+        {
+            PushTraitStack(battlerDef, ABILITY_RIPEN);
             rowapDamage *= 2;
+        }
         SetPassiveDamageAmount(battlerAtk, rowapDamage);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HURT_BY_ITEM;
         BattleScriptCall(BattleScript_JabocaRowapBerryActivates);
@@ -412,7 +418,10 @@ static enum ItemEffect TrySetEnigmaBerry(enum BattlerId battlerDef, enum Battler
     {
         s32 healAmount = gBattleMons[battlerDef].maxHP * 25 / 100;
         if (BattlerHasTrait(battlerDef, ABILITY_RIPEN))
+        {
+            PushTraitStack(battlerDef, ABILITY_RIPEN);
             healAmount *= 2;
+        }
         SetHealAmount(battlerDef, healAmount);
         BattleScriptCall(BattleScript_ItemHealHP_RemoveBerry);
         effect = ITEM_HP_CHANGE;
@@ -534,6 +543,7 @@ static enum ItemEffect DamagedStatBoostBerryEffect(enum BattlerId battlerDef, en
     {
         if (BattlerHasTrait(battlerDef, ABILITY_RIPEN))
         {
+            PushTraitStack(battlerDef, ABILITY_RIPEN);
             SetStatChange(battlerDef, statId, 2);
             BattleScriptCall(BattleScript_ConsumableBerryStatRaiseRipen);
         }
@@ -927,7 +937,10 @@ static u32 ItemHealHp(enum BattlerId battler, enum Item itemId, enum HealAmount 
             healAmount = GetItemHoldEffectParam(itemId);
 
         if (BattlerHasTrait(battler, ABILITY_RIPEN) && GetItemPocket(itemId) == POCKET_BERRIES)
+        {
+            PushTraitStack(battler, ABILITY_RIPEN);
             healAmount *= 2;
+        }
 
         SetHealAmount(battler, healAmount);
         if (GetItemPocket(itemId) == POCKET_BERRIES)
@@ -983,6 +996,7 @@ static u32 ItemRestorePp(enum BattlerId battler, enum Item itemId)
 
         if (BattlerHasTrait(battler, ABILITY_RIPEN))
         {
+            PushTraitStack(battler, ABILITY_RIPEN);
             ppRestored *= 2;
             gBattlerAbility = battler;
         }
@@ -1014,7 +1028,10 @@ static enum ItemEffect HealConfuseBerry(enum BattlerId battler, enum Item itemId
     {
         s32 healAmount = GetNonDynamaxMaxHP(battler) / GetItemHoldEffectParam(itemId);
         if (BattlerHasTrait(battler, ABILITY_RIPEN))
+        {
+            PushTraitStack(battler, ABILITY_RIPEN);
             healAmount *= 2;
+        }
         SetHealAmount(battler, healAmount);
         if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
             BattleScriptCall(BattleScript_BerryConfuseHeal);
@@ -1036,6 +1053,7 @@ static enum ItemEffect StatRaiseBerry(enum BattlerId battler, enum Item itemId, 
         gEffectBattler = gBattleScripting.battler = battler;
         if (BattlerHasTrait(battler, ABILITY_RIPEN))
         {
+            PushTraitStack(battler, ABILITY_RIPEN);
             SetStatChange(battler, statId, 2);
             BattleScriptCall(BattleScript_ConsumableBerryStatRaiseRipen);
         }
@@ -1090,6 +1108,7 @@ static enum ItemEffect RandomStatRaiseBerry(enum BattlerId battler, enum Item it
 
         if (BattlerHasTrait(battler, ABILITY_RIPEN))
         {
+            PushTraitStack(battler, ABILITY_RIPEN);
             BattleScriptCall(BattleScript_ConsumableBerryStatRaiseRipen);
             SetStatChange(battler, stat, 4);
         }

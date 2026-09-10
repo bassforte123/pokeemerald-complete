@@ -316,15 +316,23 @@ enum StatChangeResult TrySingleStatChange(struct BattleCalcValues *cv, struct St
 
 static enum StatChangeResult CanDecreaseStat(struct BattleCalcValues *cv, struct StatChange *st)
 {
-    bool32 ignoreAbilityChecks = DoesBattlerIgnoreAbilityChecks(cv->battlerAtk, GetIncomingMove(cv->battlerAtk, cv->battlerDef, gAiLogicData));
+    enum BattlerId storeBattler = gBattlerAttacker;; 
+ 
+    // Some AI checks might not have the gBattlerAttacker set to the cv->battlerAtk (Multi)
+    if(gAiLogicData->aiCalcInProgress && gBattlerAttacker != cv->battlerAtk)
+        gBattlerAttacker = cv->battlerAtk;
 
     if (IsMistProtected(cv, st)
      || IsIntimidateBlocked(cv, st)
      || IsFlowerVeilBlocked(cv, st)
      || IsClearAmuletBlocked(cv, st)
-     || (IsAbilityBlocked(cv, st) && !ignoreAbilityChecks)
-     || (IsMirrorArmorReflected(cv, st) && !ignoreAbilityChecks))
+     || (IsAbilityBlocked(cv, st))
+     || (IsMirrorArmorReflected(cv, st)))
+     {
+        gBattlerAttacker = storeBattler;
         return STAT_CHANGE_DIDNT_WORK;
+     }
+    gBattlerAttacker = storeBattler;
     return STAT_CHANGE_WORKED;
 }
 
@@ -877,7 +885,6 @@ static bool32 AbilityPreventsSpecificStatDrop(enum BattlerId battler, u32 stat)
 
     if (battlerAbility != ABILITY_NONE)
     {
-        DebugPrintf("Ability prevents stat loss: %d", battlerAbility);
         PushTraitStack(battler, battlerAbility);
         return TRUE;
     }
