@@ -863,25 +863,6 @@ DOUBLE_BATTLE_TEST("Pursuited mon correctly switches out after it got hit and ac
     }
 }
 
-SINGLE_BATTLE_TEST("Pursuit doesn't cause mon with Emergency Exit to switch twice (Traits)")
-{
-    GIVEN {
-        PLAYER(SPECIES_GOLISOPOD) { HP(101); MaxHP(200); Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_VOLTORB);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 2); }
-    } SCENE {
-        SWITCH_OUT_MESSAGE("Golisopod");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PURSUIT, opponent);
-        ABILITY_POPUP(player, ABILITY_EMERGENCY_EXIT);
-        SEND_IN_MESSAGE("Voltorb");
-    } THEN {
-        EXPECT_EQ(player->species, SPECIES_VOLTORB);
-    }
-}
-
 // Extrapolated from the previous test's mechanic
 SINGLE_BATTLE_TEST("Pursuit doesn't trigger a switching mon's Eject Pack (Traits)")
 {

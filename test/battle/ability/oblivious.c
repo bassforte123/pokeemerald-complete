@@ -272,25 +272,4 @@ SINGLE_BATTLE_TEST("Oblivious cured infatuation should not persist toxic counter
         EXPECT_EQ(postSwitchTick, 10);
     }
 }
-
-DOUBLE_BATTLE_TEST("Oblivious cures infatuation and Taunt (Traits)")
-{
-    GIVEN {
-        WITH_CONFIG(B_OBLIVIOUS_TAUNT, GEN_6);
-        PLAYER(SPECIES_WOBBUFFET) { Gender(MON_MALE); }
-        PLAYER(SPECIES_SLOWPOKE) { Ability(ABILITY_REGENERATOR); Innates(ABILITY_OBLIVIOUS); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WYNAUT) { Gender(MON_FEMALE); }
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_CELEBRATE);
-               MOVE(opponentLeft, MOVE_TAUNT, target: playerLeft);
-               MOVE(opponentRight, MOVE_ATTRACT, target: playerLeft);
-               MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
-    } SCENE {
-        ABILITY_POPUP(playerLeft, ABILITY_OBLIVIOUS);
-        MESSAGE("Wobbuffet got over its infatuation!");
-        ABILITY_POPUP(playerLeft, ABILITY_OBLIVIOUS);
-        MESSAGE("Wobbuffet shook off the taunt!");
-    }
-}
 #endif

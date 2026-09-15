@@ -474,7 +474,9 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect (Traits)")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_RECOVER, moveTarget);
     }
 }
+#endif
 
+#if MAX_MON_ITEMS > 1
 DOUBLE_BATTLE_TEST("Aroma Veil protects the Pokémon's side from Destiny Knot infatuation (Items)")
 {
     struct BattlePokemon *moveTarget = NULL;

@@ -1822,14 +1822,9 @@ static inline bool32 AI_WeatherHasEffect(void)
 
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
-        switch (gAiLogicData->abilities[battler])
-        {
-        case ABILITY_CLOUD_NINE:
-        case ABILITY_AIR_LOCK:
+        if (AI_BATTLER_HAS_TRAIT(battler, ABILITY_CLOUD_NINE)
+         || AI_BATTLER_HAS_TRAIT(battler, ABILITY_AIR_LOCK))
             return FALSE;
-        default:
-            break;
-        }
     }
 
     return TRUE;

@@ -431,7 +431,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
         }
         else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Spinda's Attack sharply rose!");
+            MESSAGE("The opposing Spinda's Attack rose sharply!");
         }
 
         // MESSAGE("The opposing Spinda used Scratch!");

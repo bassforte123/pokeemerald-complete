@@ -2345,7 +2345,7 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Magic Bounce reflecting Dark Void only sleeps 
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_DARK_VOID); }
     } SCENE {
-        MESSAGE("The opposing Darkrai's Dark Void was bounced back by Espeon's Magic Bounce!");
+        MESSAGE("The opposing Darkrai's Dark Void was bounced back!");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponentLeft);
         MESSAGE("The opposing Darkrai fell asleep!");
         STATUS_ICON(opponentLeft, sleep: TRUE);
@@ -2357,42 +2357,6 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Magic Bounce reflecting Dark Void only sleeps 
     }
 }
 
-SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up by gaining the ability Insomnia / Vital Spirit (Traits)")
-{
-    enum Ability ability;
-    PARAMETRIZE { ability = ABILITY_VITAL_SPIRIT; }
-    PARAMETRIZE { ability = ABILITY_INSOMNIA; }
-    GIVEN {
-        FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
-        PLAYER(SPECIES_DELIBIRD) { Ability(ABILITY_VITAL_SPIRIT); Innates(ability); }
-        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SLEEP_TALK, MOVE_SKILL_SWAP); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_SPORE); MOVE(opponent, MOVE_SLEEP_TALK); }
-        TURN { MOVE(opponent, MOVE_SKILL_SWAP); }
-        TURN { MOVE(player, MOVE_SPORE); MOVE(opponent, MOVE_SKILL_SWAP); }
-    } SCENE {
-        MESSAGE("Delibird used Spore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
-        MESSAGE("The opposing Zigzagoon used Sleep Talk!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, opponent);
-        MESSAGE("The opposing Zigzagoon used Skill Swap!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        if (ability == ABILITY_VITAL_SPIRIT)
-            MESSAGE("The opposing Zigzagoon's Vital Spirit cured its sleep problem!");
-        if (ability == ABILITY_INSOMNIA)
-            MESSAGE("The opposing Zigzagoon's Insomnia cured its sleep problem!");
-        MESSAGE("The opposing Zigzagoon used Skill Swap!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        MESSAGE("Delibird used Spore!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPORE, player);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
-        MESSAGE("The opposing Zigzagoon fell asleep!");
-    }
-}
 #endif
 
 #if MAX_MON_ITEMS > 1

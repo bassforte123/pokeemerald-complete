@@ -855,7 +855,6 @@ static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum Move
         enum BattlerId battler;
         for (battler = 0; battler < gBattlersCount; battler++)
         {
-
             if ((B_REDIRECT_ABILITY_ALLIES >= GEN_4 || !IsBattlerAlly(cv->battlerAtk, battler))
                 && battler != cv->battlerAtk
                 && battler != cv->battlerDef
@@ -865,6 +864,7 @@ static bool32 HandleMoveTargetRedirection(struct BattleCalcValues *cv, enum Move
                 && !IsAbilityAndRecord(cv->battlerAtk, ABILITY_PROPELLER_TAIL)
                 && !IsAbilityAndRecord(cv->battlerAtk, ABILITY_STALWART))
             {
+                DebugPrintf("Redirector: %d\n", battler);
                 redirectorOrderNum = GetBattlerTurnOrderNum(battler);
             }
         }

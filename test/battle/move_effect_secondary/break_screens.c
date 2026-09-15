@@ -262,7 +262,7 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove screens i
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_NINETALES_ALOLA) Ability(ABILITY_SNOW_WARNING);
+        OPPONENT(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SNOW_WARNING); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_REFLECT); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_LIGHT_SCREEN); MOVE(player, MOVE_CELEBRATE); }
@@ -289,7 +289,7 @@ SINGLE_BATTLE_TEST("Brick Break, Psychic Fangs, and Raging Bull remove screens i
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_NINETALES_ALOLA) Ability(ABILITY_SNOW_CLOAK); Innates(ABILITY_SNOW_WARNING);
+        OPPONENT(SPECIES_NINETALES_ALOLA) { Ability(ABILITY_SNOW_CLOAK); Innates(ABILITY_SNOW_WARNING); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_REFLECT); MOVE(player, MOVE_CELEBRATE); }
         TURN { MOVE(opponent, MOVE_LIGHT_SCREEN); MOVE(player, MOVE_CELEBRATE); }

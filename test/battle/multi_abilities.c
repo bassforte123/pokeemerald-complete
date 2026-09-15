@@ -151,6 +151,7 @@ SINGLE_BATTLE_TEST("Multi - Contrary Intimidate still triggers Rattled")
             ABILITY_POPUP(player, ABILITY_INTIMIDATE);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("Ekans's Intimidate cuts the opposing Snivy's Attack!");
+            MESSAGE("The opposing Snivy's Attack fell!");
         }
         else if (ability1 == ABILITY_INTIMIDATE && ability2 == ABILITY_CONTRARY)
         {
@@ -189,7 +190,7 @@ SINGLE_BATTLE_TEST("Multi - Sleep protection abilities trigger specific protecti
 
     PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; innate1 = ABILITY_SWEET_VEIL; innate2 = ABILITY_LIGHT_METAL; innate3 = ABILITY_LIGHT_METAL;} // Sweet Veil
     PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; innate1 = ABILITY_SWEET_VEIL; innate2 = ABILITY_VITAL_SPIRIT; innate3 = ABILITY_LIGHT_METAL;} // Vital Spirit
-        PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; innate1 = ABILITY_SWEET_VEIL; innate2 = ABILITY_VITAL_SPIRIT; innate3 = ABILITY_INSOMNIA;} // Insomnia
+    PARAMETRIZE { ability = ABILITY_PURIFYING_SALT; innate1 = ABILITY_SWEET_VEIL; innate2 = ABILITY_VITAL_SPIRIT; innate3 = ABILITY_INSOMNIA;} // Insomnia
     PARAMETRIZE { ability = ABILITY_GOOD_AS_GOLD; innate1 = ABILITY_SWEET_VEIL; innate2 = ABILITY_VITAL_SPIRIT; innate3 = ABILITY_INSOMNIA;} // Good as Gold
 
     GIVEN {
@@ -225,6 +226,7 @@ SINGLE_BATTLE_TEST("Multi - Sleep protection abilities trigger specific protecti
                 STATUS_ICON(opponent, sleep: TRUE);
                 MESSAGE("It doesn't affect the opposing Komala…");
             }
+            MESSAGE("The opposing Komala made it ineffective!");
         }
         else if (innate2 == ABILITY_VITAL_SPIRIT)
         {
@@ -236,8 +238,9 @@ SINGLE_BATTLE_TEST("Multi - Sleep protection abilities trigger specific protecti
                 ABILITY_POPUP(opponent, ABILITY_COMATOSE);
                 ABILITY_POPUP(opponent, ABILITY_PURIFYING_SALT);
                 STATUS_ICON(opponent, sleep: TRUE);
+                MESSAGE("It doesn't affect the opposing Komala…");
             }
-            MESSAGE("The opposing Komala's Vital Spirit made it ineffective!");
+            MESSAGE("The opposing Komala made it ineffective!");
         }
         else if (innate1 == ABILITY_SWEET_VEIL)
         {
@@ -457,8 +460,8 @@ SINGLE_BATTLE_TEST("Multi - Attack boosting abilities can stack", s16 damage6)
 SINGLE_BATTLE_TEST("Multi - Switch-In abilities display text correctly 1")
 {
     GIVEN {
-        PLAYER(SPECIES_RESHIRAM) { Ability(ABILITY_TERAVOLT); Innates(ABILITY_SUPERSWEET_SYRUP, ABILITY_COMATOSE, ABILITY_INTIMIDATE); } 
-        OPPONENT(SPECIES_ZEKROM) { Ability(ABILITY_TURBOBLAZE); Innates(ABILITY_SLOW_START, ABILITY_UNNERVE, ABILITY_PRESSURE); }
+        PLAYER(SPECIES_RESHIRAM) { Ability(ABILITY_TURBOBLAZE); Innates(ABILITY_SUPERSWEET_SYRUP, ABILITY_COMATOSE, ABILITY_INTIMIDATE); } 
+        OPPONENT(SPECIES_ZEKROM) { Ability(ABILITY_TERAVOLT); Innates(ABILITY_SLOW_START, ABILITY_UNNERVE, ABILITY_PRESSURE); }
     } WHEN {
         TURN { }
     } SCENE {
@@ -466,21 +469,21 @@ SINGLE_BATTLE_TEST("Multi - Switch-In abilities display text correctly 1")
         MESSAGE("Your team is too nervous to eat Berries!");
         ABILITY_POPUP(player, ABILITY_COMATOSE);
         MESSAGE("Reshiram is drowsing!");
-        ABILITY_POPUP(player, ABILITY_TERAVOLT);
-        MESSAGE("Reshiram is radiating a bursting aura!");
+        ABILITY_POPUP(player, ABILITY_TURBOBLAZE);
+        MESSAGE("Reshiram is radiating a blazing aura!");
         ABILITY_POPUP(player, ABILITY_SUPERSWEET_SYRUP);
         MESSAGE("A supersweet aroma is wafting from the syrup covering Reshiram!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Zekrom's evasiveness fell!");
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Reshiram's Intimidate cuts the opposing Zekrom's Attack!");
+        MESSAGE("The opposing Zekrom's Attack fell!");
         ABILITY_POPUP(opponent, ABILITY_PRESSURE);
         MESSAGE("The opposing Zekrom is exerting its pressure!");
         ABILITY_POPUP(opponent, ABILITY_SLOW_START);
         MESSAGE("The opposing Zekrom is slow to get going!");
-        ABILITY_POPUP(opponent, ABILITY_TURBOBLAZE);
-        MESSAGE("The opposing Zekrom is radiating a blazing aura!");
+        ABILITY_POPUP(opponent, ABILITY_TERAVOLT);
+        MESSAGE("The opposing Zekrom is radiating a bursting aura!");
     }
 }
 
@@ -499,9 +502,9 @@ SINGLE_BATTLE_TEST("Multi - Switch-In abilities display text correctly 2")
         MESSAGE("The opposing team is too nervous to eat Berries!");
         ABILITY_POPUP(player, ABILITY_FAIRY_AURA);
         MESSAGE("Xerneas is radiating a fairy aura!");
-        ABILITY_POPUP(player, ABILITY_DOWNLOAD);
+        ABILITY_POPUP(player, ABILITY_DOWNLOAD);        
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Xerneas's Download raised its Attack!");
+        MESSAGE("Xerneas's Attack rose!");
         ABILITY_POPUP(player, ABILITY_PASTEL_VEIL);
         MESSAGE("Xerneas was cured of its poisoning!");
         ABILITY_POPUP(opponent, ABILITY_DARK_AURA);
@@ -538,7 +541,7 @@ SINGLE_BATTLE_TEST("Multi - Guard Dog gets priority over Intimidate negation abi
         else
         {
             ABILITY_POPUP(player, ABILITY_INNER_FOCUS);
-            MESSAGE("Mabosstiff's Inner Focus prevents stat loss!");
+            MESSAGE("Mabosstiff's Attack was not lowered!");
         }
     }
 }
@@ -561,7 +564,6 @@ SINGLE_BATTLE_TEST("Multi - Dry Skin, Rain Dish, and Solar Power can stack")
         if (innate1 == ABILITY_LEVITATE && species == SPECIES_KYOGRE)
         {
             ABILITY_POPUP(player, ABILITY_DRY_SKIN);
-            MESSAGE("Parasect's Dry Skin restored its HP a little!");
             HP_BAR(player, damage: -100 / 8);
             
         }
@@ -569,19 +571,16 @@ SINGLE_BATTLE_TEST("Multi - Dry Skin, Rain Dish, and Solar Power can stack")
         {
             ABILITY_POPUP(player, ABILITY_DRY_SKIN);
             HP_BAR(player, damage: 100 / 8);
-            MESSAGE("Parasect's Dry Skin takes its toll!");
         }
         else if (innate1 == ABILITY_RAIN_DISH)
         {
             ABILITY_POPUP(player, ABILITY_RAIN_DISH);
-            MESSAGE("Parasect's Rain Dish restored its HP a little!");
             HP_BAR(player, damage: -300 / 16); // 1/16 + 1/8
         }
         else if (innate1 == ABILITY_SOLAR_POWER)
         {
             ABILITY_POPUP(player, ABILITY_SOLAR_POWER);
             HP_BAR(player, damage: 200 / 8); // 1/8 + 1/8
-            MESSAGE("Parasect's Solar Power takes its toll!");
         }
     }
 }
@@ -621,11 +620,11 @@ SINGLE_BATTLE_TEST("Multi - Return damage abilities stack correctly", s16 damage
     } SCENE {
         ABILITY_POPUP(player, ABILITY_ROUGH_SKIN);
         HP_BAR(opponent, captureDamage: &results[i].damage7);
-        MESSAGE("The opposing Infernape was hurt by Ferroseed's Rough Skin!");
+        MESSAGE("The opposing Infernape was hurt!");
         if (innate1 == ABILITY_IRON_BARBS)
         {
             ABILITY_POPUP(player, ABILITY_IRON_BARBS);
-            MESSAGE("The opposing Infernape was hurt by Ferroseed's Iron Barbs!");
+            MESSAGE("The opposing Infernape was hurt!");
         }
         if (innate2 == ABILITY_AFTERMATH)
         {
@@ -659,7 +658,7 @@ SINGLE_BATTLE_TEST("Multi - Status ailment abilities don't conflict with each ot
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, player);
-        MESSAGE("The opposing Breloom's Effect Spore made Wobbuffet sleep!");
+        MESSAGE("Wobbuffet fell asleep!");
         STATUS_ICON(player, sleep: TRUE);
     }
 }
@@ -679,7 +678,7 @@ SINGLE_BATTLE_TEST("Multi - Status ailment abilities don't conflict with each ot
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-        MESSAGE("The opposing Breloom's Effect Spore paralyzed Wobbuffet, so it may be unable to move!");
+        MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
@@ -699,7 +698,7 @@ SINGLE_BATTLE_TEST("Multi - Status ailment abilities don't conflict with each ot
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_STATIC);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PRZ, player);
-        MESSAGE("The opposing Breloom's Static paralyzed Wobbuffet, so it may be unable to move!");
+        MESSAGE("Wobbuffet is paralyzed, so it may be unable to move!");
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
@@ -719,7 +718,7 @@ SINGLE_BATTLE_TEST("Multi - Status ailment abilities don't conflict with each ot
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_BRN, player);
-        MESSAGE("The opposing Breloom's Flame Body burned Wobbuffet!");
+        MESSAGE("Wobbuffet was burned!");
         STATUS_ICON(player, burn: TRUE);
     }
 }
@@ -739,7 +738,7 @@ SINGLE_BATTLE_TEST("Multi - Status ailment abilities don't conflict with each ot
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_POISON_POINT);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
-        MESSAGE("Wobbuffet was poisoned by the opposing Breloom's Poison Point!");
+        MESSAGE("Wobbuffet was poisoned!");
         STATUS_ICON(player, poison: TRUE);
     }
 }
@@ -802,10 +801,10 @@ SINGLE_BATTLE_TEST("Multi - Intrepid Sword and Dauntless Shield don't conflict")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DAUNTLESS_SHIELD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Dauntless Shield raised its Defense!");
+        MESSAGE("The opposing Zacian's Defense rose!");
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Zacian's Intrepid Sword raised its Attack!");
+        MESSAGE("The opposing Zacian's Attack rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
         EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 1);
@@ -823,16 +822,16 @@ SINGLE_BATTLE_TEST("Multi - Embody Aspect can raise multiple stats")
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Ogerpon's Embody Aspect raised its Defense!");
+        MESSAGE("The opposing Ogerpon's Defense rose!");
         ABILITY_POPUP(opponent, ABILITY_EMBODY_ASPECT_WELLSPRING_MASK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Ogerpon's Embody Aspect raised its Sp. Def!");
+        MESSAGE("The opposing Ogerpon's Sp. Def rose!");
         ABILITY_POPUP(opponent, ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Ogerpon's Embody Aspect raised its Attack!");
+        MESSAGE("The opposing Ogerpon's Attack rose!");
         ABILITY_POPUP(opponent, ABILITY_EMBODY_ASPECT_TEAL_MASK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("The opposing Ogerpon's Embody Aspect raised its Speed!");
+        MESSAGE("The opposing Ogerpon's Speed rose!");
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
@@ -970,13 +969,13 @@ SINGLE_BATTLE_TEST("Multi - Stat raising abilities do not conflict")
     } SCENE {
         ABILITY_POPUP(player, ABILITY_DOWNLOAD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Porygon's Download raised its Sp. Atk!");
+        MESSAGE("Porygon's Sp. Atk rose!");
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Porygon's Intimidate cuts the opposing Wobbuffet's Attack!");
+        MESSAGE("The opposing Wobbuffet's Attack fell!");
         ABILITY_POPUP(player, ABILITY_SPEED_BOOST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Porygon's Speed Boost raised its Speed!");
+        MESSAGE("Porygon's Speed rose!");
         ABILITY_POPUP(player, ABILITY_MOODY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         NONE_OF {
@@ -997,15 +996,15 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ON_SWITCHIN abilities do not conflict 
         MESSAGE("The opposing team is too nervous to eat Berries!");
         ABILITY_POPUP(player, ABILITY_DOWNLOAD);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Ditto's Download raised its Sp. Atk!");
+        MESSAGE("Ditto's Sp. Atk rose!");
         ABILITY_POPUP(player, ABILITY_MOLD_BREAKER);
         MESSAGE("Ditto breaks the mold!");
         ABILITY_POPUP(player, ABILITY_IMPOSTER);
-        MESSAGE("Ditto transformed into the opposing Mewtwo using Imposter!");
+        MESSAGE("Ditto transformed into the opposing Mewtwo!");
         ABILITY_POPUP(opponent, ABILITY_PSYCHIC_SURGE);
         MESSAGE("The battlefield got weird!");
         ABILITY_POPUP(opponent, ABILITY_DRIZZLE);
-        MESSAGE("The opposing Mewtwo's Drizzle made it rain!");
+        MESSAGE("It started to rain!");
         ABILITY_POPUP(opponent, ABILITY_DARK_AURA);
         MESSAGE("The opposing Mewtwo is radiating a dark aura!");
         ABILITY_POPUP(opponent, ABILITY_PRESSURE);
@@ -1034,9 +1033,6 @@ DOUBLE_BATTLE_TEST("Multi - ABILITYEFFECT_ON_SWITCHIN abilities do not conflict 
         MESSAGE("Your team is too nervous to eat Berries!");
         ABILITY_POPUP(opponentRight, ABILITY_CURIOUS_MEDICINE);
         MESSAGE("The opposing Scolipede's stat changes were removed!");
-        ABILITY_POPUP(opponentRight, ABILITY_INTIMIDATE);
-        MESSAGE("The opposing Slowking's Intimidate cuts Wobbuffet's Attack!");
-        MESSAGE("The opposing Slowking's Intimidate cuts Wobbuffet's Attack!");
         ABILITY_POPUP(opponentRight, ABILITY_HOSPITALITY);
         MESSAGE("The opposing Scolipede drank down all the matcha that the opposing Slowking made!");
         HP_BAR(opponentLeft);
@@ -1059,15 +1055,15 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN abilities do not conflict")
     } WHEN {
         TURN { }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_HARVEST);
         MESSAGE("Blaziken harvested its Oran Berry!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, player);
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_SPEED_BOOST);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Blaziken's Speed Boost raised its Speed!");
+        MESSAGE("Blaziken's Speed rose!");
         ABILITY_POPUP(player, ABILITY_MOODY);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
@@ -1089,16 +1085,9 @@ DOUBLE_BATTLE_TEST("Multi - ABILITYEFFECT_ENDTURN_STATUS_CURE abilities do not c
     } WHEN {
         TURN { }
     } SCENE {
-        if (ability == ABILITY_HYDRATION)
-        {
-            MESSAGE("The opposing Chansey's Hydration cured its burn problem!");
-        }
-        else
-        {
-            MESSAGE("The opposing Chansey's Shed Skin cured its burn problem!");
-        }
+        MESSAGE("The opposing Chansey's burn was cured!");
         ABILITY_POPUP(opponentRight, ABILITY_HEALER);
-        MESSAGE("The opposing Chansey's Healer cured the opposing Kyogre's problem!");
+        MESSAGE("The opposing Kyogre's burn was cured!");
         NONE_OF {
             STATUS_ICON(opponentLeft, burn: TRUE);
             STATUS_ICON(opponentRight, burn: TRUE);
@@ -1157,12 +1146,12 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_MOVE_END abilities do not conflict 1")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Dugtrio's Speed fell!");
         ABILITY_POPUP(player, ABILITY_CURSED_BODY);
-        MESSAGE("The opposing Dugtrio's Scratch was disabled by Mudsdale's Cursed Body!");
+        MESSAGE("The opposing Dugtrio's Scratch was disabled!");
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Mudsdale's Weak Armor lowered its Defense!");
+        MESSAGE("Mudsdale's Defense fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Mudsdale's Weak Armor sharply raised its Speed!");
+        MESSAGE("Mudsdale's Speed rose sharply!");
         ABILITY_POPUP(player, ABILITY_STAMINA);
         MESSAGE("Mudsdale's Defense rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
@@ -1170,10 +1159,10 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_MOVE_END abilities do not conflict 1")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Mudsdale's Speed fell!");
         ABILITY_POPUP(opponent, ABILITY_FLAME_BODY);
-        MESSAGE("The opposing Dugtrio's Flame Body burned Mudsdale!");
+        MESSAGE("Mudsdale was burned!");
         STATUS_ICON(player, burn: TRUE);
         ABILITY_POPUP(opponent, ABILITY_IRON_BARBS);
-        MESSAGE("Mudsdale was hurt by the opposing Dugtrio's Iron Barbs!");
+        MESSAGE("Mudsdale was hurt!");
         ABILITY_POPUP(opponent, ABILITY_TANGLING_HAIR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Mudsdale's Speed fell!");
@@ -1193,7 +1182,7 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_MOVE_END abilities do not conflict 2")
         ABILITY_POPUP(player, ABILITY_SEED_SOWER);
         MESSAGE("Grass grew to cover the battlefield!");
         ABILITY_POPUP(player, ABILITY_CUTE_CHARM);
-        MESSAGE("Nidoqueen's Cute Charm infatuated the opposing Ditto!");
+        MESSAGE("The opposing Ditto fell in love!");
         ABILITY_POPUP(player, ABILITY_RATTLED);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Nidoqueen's Speed rose!");
@@ -1207,7 +1196,7 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_MOVE_END abilities do not conflict 2")
         MESSAGE("The opposing Zoroark's illusion wore off!");
         ABILITY_POPUP(opponent, ABILITY_ROUGH_SKIN);
         HP_BAR(player);
-        MESSAGE("Nidoqueen was hurt by the opposing Zoroark's Rough Skin!");
+        MESSAGE("Nidoqueen was hurt!");
         MESSAGE("The opposing Zoroark swapped Abilities with its target!");
     }
 }
@@ -1224,23 +1213,26 @@ SINGLE_BATTLE_TEST("Multi - ABILITYEFFECT_COLOR_CHANGE abilities do not conflict
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
         MESSAGE("It's super effective!");
         ABILITY_POPUP(player, ABILITY_COLOR_CHANGE);
-        MESSAGE("Charizard's Color Change made it the Water type!");
+        MESSAGE("Charizard's type changed to Water!");
         ABILITY_POPUP(player, ABILITY_ANGER_SHELL);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Charizard's Defense fell!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Charizard's Sp. Def fell!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Charizard's Attack rose!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Charizard's Sp. Atk rose!");
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Charizard's Speed rose!");
         ABILITY_POPUP(player, ABILITY_BERSERK);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Charizard's Sp. Atk rose!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
         MESSAGE("It's not very effective…");
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(player->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 1);
     }
 }
 

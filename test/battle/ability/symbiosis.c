@@ -348,6 +348,9 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner bestows its item (Traits)")
 DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item (Traits)")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); Item(ITEM_FLAME_ORB); }
         PLAYER(SPECIES_ORANGURU) { Speed(75); Ability(ABILITY_TELEPATHY); Innates(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_STARAVIA) { Speed(50); }
@@ -355,13 +358,12 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item (Traits)")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FLING, target: opponentLeft); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, playerLeft);
         MESSAGE("The opposing Staravia was burned!");
         STATUS_ICON(opponentLeft, STATUS1_BURN);
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
-        MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
+        MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
@@ -375,6 +377,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_CHILAN_BERRY); }
         PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_TELEPATHY); Innates(ABILITY_SYMBIOSIS); Item(ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -382,7 +385,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
@@ -600,6 +603,9 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner bestows its item (Items)")
 DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item (Items)")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
+        ASSUME(gItemsInfo[ITEM_FLAME_ORB].holdEffect == HOLD_EFFECT_FLAME_ORB);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); Items(ITEM_NONE, ITEM_FLAME_ORB); }
         PLAYER(SPECIES_ORANGURU) { Speed(75); Ability(ABILITY_SYMBIOSIS); Items(ITEM_NONE, ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_STARAVIA) { Speed(50); }
@@ -607,13 +613,12 @@ DOUBLE_BATTLE_TEST("Symbiosis triggers after partner flings its item (Items)")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_FLING, target: opponentLeft); }
     } SCENE {
-        MESSAGE("Wobbuffet used Fling!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, playerLeft);
         MESSAGE("The opposing Staravia was burned!");
         STATUS_ICON(opponentLeft, STATUS1_BURN);
         // symbiosis triggers
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
-        MESSAGE("Oranguru passed its Toxic Orb to Wobbuffet through Symbiosis!");
+        MESSAGE("Oranguru shared its Toxic Orb with Wobbuffet!");
         // end of turn, wobb gets poisoned
         MESSAGE("Wobbuffet was badly poisoned!");
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);
@@ -627,6 +632,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_CHILAN_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(gItemsInfo[ITEM_TOXIC_ORB].holdEffect == HOLD_EFFECT_TOXIC_ORB);
         PLAYER(SPECIES_WOBBUFFET) { Items(ITEM_PECHA_BERRY, ITEM_CHILAN_BERRY); }
         PLAYER(SPECIES_ORANGURU) { Ability(ABILITY_SYMBIOSIS); Items(ITEM_PECHA_BERRY, ITEM_TOXIC_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -634,7 +640,7 @@ DOUBLE_BATTLE_TEST("Symbiosis transfers its item to an ally after it consumes a 
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_BERRY, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         ABILITY_POPUP(playerRight, ABILITY_SYMBIOSIS);
         STATUS_ICON(playerLeft, STATUS1_TOXIC_POISON);

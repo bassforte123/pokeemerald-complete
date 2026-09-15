@@ -11023,8 +11023,6 @@ static void Cmd_trystatchanges(void)
 {
     CMD_ARGS(u8 battler, u16 statChangeFlags);
 
-    bool32 noFlag3 = cmd->statChangeFlags & STAT_CHANGE_NO_FLAGS3;
-    bool32 ignore3 = cmd->statChangeFlags & STAT_CHANGE_IGNORE_SELF3;
     if (gBattleControllerExecFlags)
         return;
 
@@ -11042,28 +11040,21 @@ static void Cmd_trystatchanges(void)
         gBattleStruct->ignoreDefiant = FALSE;
         cv.battlerDef = GetTargetBySlot(cv.battlerAtk, gBattleStruct->statChangeBattler);
 
-        if (!IsBattlerAlive(cv.battlerDef) || (gSpecialStatuses[cv.battlerDef].statStageAmount == 0 && !ignore3)
-         || (gSpecialStatuses[cv.battlerDef].statStageAmount3 == 0 && (noFlag3 || ignore3)))
+        if (!IsBattlerAlive(cv.battlerDef) || (gSpecialStatuses[cv.battlerDef].statStageAmount == 0))
         {
             gBattleStruct->statChangeBattler++;
             continue;
         }
-        if (cmd->statChangeFlags & STAT_CHANGE_IGNORE_SELF || ignore3)
+
+        if (cmd->statChangeFlags & STAT_CHANGE_IGNORE_SELF)
             st.certain = cv.battlerAtk == cv.battlerDef;
 
         bool32 goToNextInstr = FALSE; // Prevents an addtional stat change call
         bool32 runScript = FALSE;
 
-        if (noFlag3 || ignore3)
-        {
-            st.statStageQueue = gSpecialStatuses[cv.battlerDef].statStageQueue3;
-            st.statStageAmount = gSpecialStatuses[cv.battlerDef].statStageAmount3;
-        }
-        else
-        {
-            st.statStageQueue = gSpecialStatuses[cv.battlerDef].statStageQueue;
-            st.statStageAmount = gSpecialStatuses[cv.battlerDef].statStageAmount;
-        }
+        st.statStageQueue = gSpecialStatuses[cv.battlerDef].statStageQueue;
+        st.statStageAmount = gSpecialStatuses[cv.battlerDef].statStageAmount;
+
         if (TryStatChange(&cv, &st) != STAT_CHANGE_DIDNT_WORK)
             runScript = TRUE;
 
@@ -11081,10 +11072,7 @@ static void Cmd_trystatchanges(void)
         {
             if (goToNextInstr)
             {   
-                if (noFlag3 || ignore3)
-                    ClearStatChangeValues3();
-                else
-                    ClearStatChangeValues();
+                ClearStatChangeValues();
                 BattleScriptPush(cmd->nextInstr);
                 gBattlescriptCurrInstr = st.script;
             }
@@ -11095,10 +11083,8 @@ static void Cmd_trystatchanges(void)
             return;
         }
     }
-    if (noFlag3 || ignore3)
-        ClearStatChangeValues3();
-    else
-        ClearStatChangeValues();
+
+    ClearStatChangeValues();
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -14495,24 +14481,6 @@ void BS_RestoreStatChangeQueue(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_SetStatChangeAbility(void)
-{
-    NATIVE_ARGS(u8 battler, u8 stat, u8 stage, bool8 down);
-
-    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
-    enum Stat stat = cmd->stat;
-    u8 stage = cmd->stage;
-    bool32 down = cmd->down;
-    
-    if (down)
-        stage = stage * -1;
-
-    gSpecialStatuses[battler].statStageQueue[gSpecialStatuses[battler].statStageAmount].stat = stat;
-    gSpecialStatuses[battler].statStageQueue[gSpecialStatuses[battler].statStageAmount].stage = stage;
-    gSpecialStatuses[battler].statStageAmount++;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 // Multi
 void BS_PushTraitStack(void)
 {
@@ -14547,5 +14515,86 @@ void BS_LastUsedItemToBattlerBerry(void) //For Stuff Cheeks
     else
         gLastUsedItem = ITEM_NONE;
 
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_SetStatChangeAbility(void)
+{
+    NATIVE_ARGS(u8 battler, u8 stat, u8 stage, bool8 down);
+
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Stat stat = cmd->stat;
+    u32 stage = cmd->stage;
+    bool32 down = cmd->down;
+
+    if (down)
+        stage = stage * -1;
+
+    gSpecialStatuses[battler].statStageQueue[gSpecialStatuses[battler].statStageAmount].stat = stat;
+    gSpecialStatuses[battler].statStageQueue[gSpecialStatuses[battler].statStageAmount].stage = stage;
+    gSpecialStatuses[battler].statStageAmount++;
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_QueueStatChangeValues(void)
+{
+    NATIVE_ARGS(u8 battler, u8 stat, s8 stage, bool8 down, bool8 party);
+
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+    enum Stat stat = cmd->stat;
+    u32 stage = cmd->stage;
+    bool32 down = cmd->down;
+    bool32 party = cmd->party;
+
+    if (down)
+        stage = stage * -1;
+
+    for (enum BattlerId i = 0; i < gBattlersCount; i++)
+    {
+        if ((!party && IsBattlerAlly(battler, i))  
+         || (party && battler == i)
+         || !IsBattlerAlive(i))
+            continue;
+
+        SetStatChange(i, stat, stage);
+    }
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_SetStatChangeAngerShell(void)
+{
+    NATIVE_ARGS(u8 battler);
+
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+
+    if (CompareStat(battler, STAT_DEF, MIN_STAT_STAGE, CMP_GREATER_THAN))
+        SetStatChange(battler, STAT_DEF, -1);
+
+    if (CompareStat(battler, STAT_SPDEF, MIN_STAT_STAGE, CMP_GREATER_THAN))
+        SetStatChange(battler, STAT_SPDEF, -1);
+
+    if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+        SetStatChange(battler, STAT_ATK, 1);
+
+    if (CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+        SetStatChange(battler, STAT_SPATK, 1);
+
+    if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+        SetStatChange(battler, STAT_SPEED, 1);
+
+    if (gSpecialStatuses[battler].statStageAmount > 0)
+        gBattlescriptCurrInstr = BattleScript_AngerShellActivates;
+    else // Not sure if there is an actual ability popup in this case
+        gBattlescriptCurrInstr = BattleScript_AbilityPopUp;
+}
+
+void BS_SetStatChangeBeastBoost(void)
+{
+    NATIVE_ARGS(u8 battler);
+
+    enum BattlerId battler = GetBattlerForBattleScript(cmd->battler);
+
+    SetStatChange(battler, GetHighestStatId(battler), NumFaintedBattlersByAttacker(battler));
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

@@ -148,7 +148,9 @@ struct SpecialStatus
     bool8 endTurnTraitDone[MAX_MON_TRAITS];
     u8 berryReducedType; // Catch for multiple berries and hidden power(multi)
     struct StatStages statStageQueue3[NUM_BATTLE_STATS];
+    struct StatStages statStageQueue4[NUM_BATTLE_STATS];
     u8 statStageAmount3:4;
+    u8 statStageAmount4:4;
 };
 
 struct SideTimer

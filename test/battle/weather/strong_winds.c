@@ -271,25 +271,6 @@ SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active (Traits
     }
 }
 
-SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active - Inverse Battle (Traits)")
-{
-    GIVEN {
-        FLAG_SET(B_FLAG_INVERSE_BATTLE);
-        ASSUME(GetMoveType(MOVE_BUG_BITE) == TYPE_BUG);
-        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
-        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
-        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ANTICIPATION); Moves(MOVE_BUG_BITE, MOVE_SKILL_SWAP); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-    }
-}
-
 SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities (Traits)")
 {
     enum Ability ability;
@@ -313,64 +294,6 @@ SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities (Traits)")
     }
 }
 
-SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active (Traits)")
-{
-    GIVEN {
-        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
-        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
-        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ANTICIPATION); Moves(MOVE_ROCK_THROW, MOVE_SKILL_SWAP); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-    }
-}
-
-SINGLE_BATTLE_TEST("Anticipation still triggers with Strong Winds active - Inverse Battle (Traits)")
-{
-    GIVEN {
-        FLAG_SET(B_FLAG_INVERSE_BATTLE);
-        ASSUME(GetMoveType(MOVE_BUG_BITE) == TYPE_BUG);
-        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
-        ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);
-        ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_EEVEE) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_ANTICIPATION); Moves(MOVE_BUG_BITE, MOVE_SKILL_SWAP); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_SKILL_SWAP); }
-    } SCENE {
-        ABILITY_POPUP(player, ABILITY_DELTA_STREAM);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, opponent);
-        ABILITY_POPUP(player, ABILITY_ANTICIPATION);
-    }
-}
-
-SINGLE_BATTLE_TEST("Strong winds prevent other weather abilities (Traits)")
-{
-    enum Ability ability;
-    enum Species species;
-    PARAMETRIZE { ability = ABILITY_DROUGHT;      species = SPECIES_NINETALES; }
-    PARAMETRIZE { ability = ABILITY_DRIZZLE;      species = SPECIES_POLITOED; }
-    PARAMETRIZE { ability = ABILITY_SAND_STREAM;  species = SPECIES_HIPPOWDON; }
-    PARAMETRIZE { ability = ABILITY_SNOW_WARNING; species = SPECIES_ABOMASNOW; }
-
-    GIVEN {
-        PLAYER(SPECIES_RAYQUAZA) { Moves(MOVE_DRAGON_ASCENT, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET);
-        OPPONENT(species) { Ability(ABILITY_LIGHT_METAL); Innates(ability); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
-        TURN { SWITCH(opponent, 1); }
-    } SCENE {
-        ABILITY_POPUP(opponent, ability);
-    } THEN {
-        EXPECT(gBattleWeather & B_WEATHER_STRONG_WINDS);
-    }
-}
 #endif
 
 #if MAX_MON_ITEMS > 1

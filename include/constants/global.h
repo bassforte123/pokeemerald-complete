@@ -141,7 +141,7 @@ enum FrontierLevelMode
 #define MAX_MON_ITEMS_INTERNAL 2 // Max number of Items that pokemon can have in code, currently minimum 2 to accomodate minimum multi item variable definitions.
 
 // ---Traits and Items customization settings---
-#define MAX_MON_INNATES 0 // (Minimum 0, Max 3 (MAX_MON_INNATES_INTERNAL)) The max number of Innates that are enabled in gameplay. Could be altered in game if you add an option for it.
+#define MAX_MON_INNATES 3 // (Minimum 0, Max 3 (MAX_MON_INNATES_INTERNAL)) The max number of Innates that are enabled in gameplay. Could be altered in game if you add an option for it.
 #define MAX_MON_ITEMS 1 // (Minimum 1, Max 2 (MAX_MON_ITEMS_INTERNAL)) Number of items that can be held by a pokemon during gameplay
 
 enum ContestCategories

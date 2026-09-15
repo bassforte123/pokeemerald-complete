@@ -457,4 +457,5 @@ u32 GetSlot(u32 *availableSlots, u32 size);
 enum HoldEffect GetBattlerItemHoldEffect(enum BattlerId battler, enum Item item);
 bool32 BattlerHasBerry(enum BattlerId battler);
 bool32 GetBattlerBerrySlot(enum BattlerId battler);
+u32 NumFaintedBattlersByAttacker(enum BattlerId battlerAtk);
 #endif // GUARD_BATTLE_UTIL_H

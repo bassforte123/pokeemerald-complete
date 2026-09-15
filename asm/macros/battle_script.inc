@@ -1539,14 +1539,6 @@
     callnative BS_RestoreStatChangeQueue
     .endm
 
-	.macro setstatchangeability battler:req, stat:req, stages:req, down:req
-	callnative BS_SetStatChangeAbility
-	.byte \battler
-	.byte \stat
-	.byte \stages
-	.byte \down
-	.endm
-
 @ helpful macros
 	.macro setmoveeffect effect:req
 	sethword sMOVE_EFFECT, \effect
@@ -2139,3 +2131,30 @@
 	.byte \battler
 	.2byte \ability
 	.endm
+
+	.macro setstatchangeability battler:req, stat:req, stages:req, down:req
+	callnative BS_SetStatChangeAbility
+	.byte \battler
+	.byte \stat
+	.byte \stages
+	.byte \down
+	.endm
+
+	.macro queuestatchangevalues battler:req, stat:req, stage:req, down:req, party:req
+    callnative BS_QueueStatChangeValues
+    .byte \battler
+    .byte \stat
+    .byte \stage 
+	.byte \down
+	.byte \party
+    .endm
+
+	.macro setstatchangeangershell battler:req
+    callnative BS_SetStatChangeAngerShell
+    .byte \battler
+    .endm
+
+	.macro setstatchangebeastboost battler:req
+    callnative BS_SetStatChangeBeastBoost
+    .byte \battler
+    .endm

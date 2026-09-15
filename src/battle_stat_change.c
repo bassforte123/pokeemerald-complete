@@ -326,8 +326,8 @@ static enum StatChangeResult CanDecreaseStat(struct BattleCalcValues *cv, struct
      || IsIntimidateBlocked(cv, st)
      || IsFlowerVeilBlocked(cv, st)
      || IsClearAmuletBlocked(cv, st)
-     || (IsAbilityBlocked(cv, st))
-     || (IsMirrorArmorReflected(cv, st)))
+     || IsAbilityBlocked(cv, st)
+     || IsMirrorArmorReflected(cv, st))
      {
         gBattlerAttacker = storeBattler;
         return STAT_CHANGE_DIDNT_WORK;
@@ -683,7 +683,7 @@ static bool32 IsIntimidateBlocked(struct BattleCalcValues *cv, struct StatChange
 
     if (SearchTraits(battlerTraits, ABILITY_GUARD_DOG))
         ability = ABILITY_GUARD_DOG;
-    if (SearchTraits(battlerTraits, ABILITY_INNER_FOCUS))
+    else if (SearchTraits(battlerTraits, ABILITY_INNER_FOCUS))
         ability = ABILITY_INNER_FOCUS;
     else if (SearchTraits(battlerTraits, ABILITY_SCRAPPY))
         ability = ABILITY_SCRAPPY;
@@ -831,7 +831,7 @@ static void AdjustStatStage(struct BattleCalcValues *cv, struct StatChange *st)
         st->stage = -1 * st->stage;
         if (!st->onlyChecking)
         {
-            PushTraitStack(cv->battlerDef, ABILITY_CONTRARY);
+            //PushTraitStack(cv->battlerDef, ABILITY_CONTRARY);
             RecordAbilityBattle(cv->battlerDef, ABILITY_CONTRARY);
         }
     }
@@ -945,32 +945,12 @@ void SetStatChange2(enum BattlerId battler, enum Stat stat, s32 stage)
     gSpecialStatuses[battler].statStageAmount2++;
 }
 
-// Used to separate overlapping stat changes with SetStatChange
-void SetStatChange3(enum BattlerId battler, enum Stat stat, s32 stage)
-{
-    gSpecialStatuses[battler].statStageQueue3[gSpecialStatuses[battler].statStageAmount3].stat = stat;
-    gSpecialStatuses[battler].statStageQueue3[gSpecialStatuses[battler].statStageAmount3].stage = stage;
-    gSpecialStatuses[battler].statStageAmount3++;
-}
-
 void ClearStatChangeValues(void)
 {
     for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
     {
         memset(gSpecialStatuses[battler].statStageQueue, 0, sizeof(gSpecialStatuses[battler].statStageQueue));
         gSpecialStatuses[battler].statStageAmount = 0;
-    }
-    gBattleStruct->negativeAnimPlayed = 0;
-    gBattleStruct->positiveAnimPlayed = 0;
-    gBattleStruct->statChangeBattler  = 0;
-}
-
-void ClearStatChangeValues3(void)
-{
-    for (enum BattlerId battler = 0; battler < gBattlersCount; battler++)
-    {
-        memset(gSpecialStatuses[battler].statStageQueue3, 0, sizeof(gSpecialStatuses[battler].statStageQueue3));
-        gSpecialStatuses[battler].statStageAmount3 = 0;
     }
     gBattleStruct->negativeAnimPlayed = 0;
     gBattleStruct->positiveAnimPlayed = 0;
@@ -993,8 +973,10 @@ void ClearBothStatChangeQueues(void)
         gSpecialStatuses[battler].statStageAmount2 = 0;
         memset(gSpecialStatuses[battler].statStageQueue, 0, sizeof(gSpecialStatuses[battler].statStageQueue));
         gSpecialStatuses[battler].statStageAmount = 0;
-        memset(gSpecialStatuses[battler].statStageQueue3, 0, sizeof(gSpecialStatuses[battler].statStageQueue3));
+        memset(gSpecialStatuses[battler].statStageQueue3, 0, sizeof(gSpecialStatuses[battler].statStageQueue4));
         gSpecialStatuses[battler].statStageAmount3 = 0;
+        memset(gSpecialStatuses[battler].statStageQueue4, 0, sizeof(gSpecialStatuses[battler].statStageQueue4));
+        gSpecialStatuses[battler].statStageAmount4 = 0;
     }
     gBattleStruct->negativeAnimPlayed = 0;
     gBattleStruct->positiveAnimPlayed = 0;

@@ -2107,11 +2107,9 @@ static inline bool32 IsFreeSwitch(enum SwitchType switchType, enum BattlerId bat
             return TRUE;
         if (gAiLogicData->ejectPackSwitch)
         {
-            enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler];
-            u32 species = gBattleMons[opposingBattler].species;
             // If faster, not a free switch; likely lowered own stats
-            if (!movedSecond && (opposingAbility != ABILITY_INTIMIDATE && !SpeciesHasInnate(species, ABILITY_INTIMIDATE))
-             && opposingAbility != ABILITY_SUPERSWEET_SYRUP && !SpeciesHasInnate(species, ABILITY_SUPERSWEET_SYRUP)) // Intimidate triggers switches before turn starts
+            if (!movedSecond && !AI_BATTLER_HAS_TRAIT(opposingBattler, ABILITY_INTIMIDATE)
+             && !AI_BATTLER_HAS_TRAIT(opposingBattler, ABILITY_SUPERSWEET_SYRUP)) // Intimidate triggers switches before turn starts
                 return FALSE;
             // Otherwise, free switch
             return TRUE;

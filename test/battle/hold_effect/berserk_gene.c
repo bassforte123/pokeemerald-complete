@@ -401,7 +401,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop (Traits)")
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Using Berserk Gene, the Attack of the opposing Wobbuffet rose sharply!");
+        MESSAGE("The Berserk Gene sharply boosted the opposing Wobbuffet's Attack!");
     }
 }
 #endif
@@ -650,7 +650,7 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop (Items)")
         TURN { MOVE(player, MOVE_BESTOW); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Using Berserk Gene, the Attack of the opposing Wobbuffet rose sharply!");
+        MESSAGE("The Berserk Gene sharply boosted the opposing Wobbuffet's Attack!");
     }
 }
 

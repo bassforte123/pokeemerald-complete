@@ -587,7 +587,7 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and 
         ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
         ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
         // Air Balloon is ignored once the battler leaves the field
-        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); MaxHP(263); HP(132); Item(ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(132); Item(ITEM_AIR_BALLOON); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -613,7 +613,7 @@ DOUBLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and bat
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE));
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
-        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(160); Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(160); Status1(STATUS1_POISON); }
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -903,6 +903,35 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp 
         HP_BAR(opponent);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
+// This is a real interaction according to jpwiki, despite Golisopod not being on the field anymore
+DOUBLE_BATTLE_TEST("Emergency Exit activates when taking Sea of Fire damage and can be healed by Grassy Terrain after leaving the field (Items)")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FIRE_PLEDGE) == EFFECT_PLEDGE);
+        ASSUME(GetMoveEffect(MOVE_GRASS_PLEDGE) == EFFECT_PLEDGE);
+        ASSUME(GetMoveEffect(MOVE_GRASSY_TERRAIN) == EFFECT_GRASSY_TERRAIN);
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        // Air Balloon is ignored once the battler leaves the field
+        PLAYER(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(132); Items(ITEM_PECHA_BERRY, ITEM_AIR_BALLOON); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_FIRE_PLEDGE, target: playerRight);
+               MOVE(opponentRight, MOVE_GRASS_PLEDGE, target: playerRight);
+               MOVE(playerRight, MOVE_GRASSY_TERRAIN);
+               SEND_OUT(playerLeft, 2); 
+               }
+    } SCENE {
+        HP_BAR(playerLeft);
+        ABILITY_POPUP(playerLeft, ABILITY_EMERGENCY_EXIT);
+        MESSAGE("Golisopod is healed by the grassy terrain!");
+        HP_BAR(playerLeft);
+        SEND_IN_MESSAGE("Wobbuffet");
     }
 }
 

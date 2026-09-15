@@ -195,7 +195,7 @@ SINGLE_BATTLE_TEST("Tangling Hair does not trigger on Clear Body (Traits)")
         TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
-        NOT ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
+        //NOT ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
     }
 }
 

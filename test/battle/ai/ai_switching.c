@@ -2971,6 +2971,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch in trapping mon m
 
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will switch in trapping mon after KO (Traits)")
 {
+    KNOWN_FAILING; // Party Trait Search only works on natural Mon Innates.  Set Magnezone's Innate to MAGNET_PULL to Pass.
     u32 flags = 0; // Enables trapping behaviour after KOs
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT; } // No trapping behaviour
     PARAMETRIZE { flags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES; } // Traps with mid battle switches

@@ -1888,7 +1888,7 @@ AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect (Tr
         ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_WEATHER);
         ASSUME(GetMoveWeatherType(MOVE_RAIN_DANCE) == BATTLE_WEATHER_RAIN);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
-        PLAYER(SPECIES_GOLDUCK) { Ability(ABILITY_SWIFT_SWIM); Innates(ability); Moves(MOVE_SCRATCH); }
+        PLAYER(SPECIES_GOLDUCK) { Ability(ABILITY_DAMP); Innates(ability); Moves(MOVE_SCRATCH); }
         OPPONENT(SPECIES_KABUTOPS) { Ability(ABILITY_SHELL_ARMOR); Innates(ABILITY_SWIFT_SWIM); Moves(MOVE_RAIN_DANCE, MOVE_POUND); }
     } WHEN {
         if (ability == ABILITY_CLOUD_NINE)

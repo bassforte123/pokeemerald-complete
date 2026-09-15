@@ -1010,6 +1010,7 @@ DOUBLE_BATTLE_TEST("Dancer triggers from fastest to slowest including modifiers 
 DOUBLE_BATTLE_TEST("Dancer triggers from slowest to fastest Raw Speed (Gen 7) (Traits)")
 {
     GIVEN {
+        WITH_CONFIG(B_DANCER_ORDER, GEN_7);
         ASSUME(IsDanceMove(MOVE_DRAGON_DANCE));
         PLAYER(SPECIES_ORICORIO) { Ability(ABILITY_LIGHT_METAL); Innates(ABILITY_DANCER); Speed(10); }
         PLAYER(SPECIES_WYNAUT) { Speed(50); }

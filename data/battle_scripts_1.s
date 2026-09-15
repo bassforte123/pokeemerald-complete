@@ -166,11 +166,6 @@ BattleScript_AbilityStatChange::
 	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
 	return
 
-BattleScript_AbilityStatChange3::
-	call BattleScript_AbilityPopUp
-	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF3
-	return
-
 BattleScript_AbilityStatChangeATK::
 	call BattleScript_AbilityPopUp
 	setstatchangeability BS_EFFECT_BATTLER, STAT_ATK, 1, FALSE
@@ -221,8 +216,40 @@ BattleScript_AbilityStatChangeAttackerSpeedDown::
 
 BattleScript_AbilityStatChangeAngerPoint::
 	call BattleScript_AbilityPopUp
-	setstatchangeability BS_EFFECT_BATTLER, STAT_ATK, 12, FALSE
+	setstatchangeability BS_TARGET, STAT_ATK, 12, FALSE
+	trystatchanges BS_TARGET, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeAngerShell::
+	call BattleScript_AbilityPopUp
+	setstatchangeangershell BS_TARGET
+BattleScript_AngerShellActivates::
+	trystatchanges BS_TARGET, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeWeakArmor::
+	call BattleScript_AbilityPopUp
+	setstatchangeability BS_TARGET STAT_DEF, 1, TRUE
+	jumpifgenconfiglowerthan CONFIG_B_WEAK_ARMOR_SPEED, GEN_7, BattleScript_WeakArmorSetSpeedGen6
+	setstatchangeability BS_TARGET STAT_SPEED, 2, FALSE
+	goto BattleScript_WeakArmorDoSpeed
+BattleScript_WeakArmorSetSpeedGen6:
+	setstatchangeability BS_TARGET STAT_SPEED, 1, FALSE
+BattleScript_WeakArmorDoSpeed:
+	trystatchanges BS_TARGET, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_AbilityStatChangeBeastBoost::
+	call BattleScript_AbilityPopUp
+	setstatchangebeastboost BS_EFFECT_BATTLER
 	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	return
+
+BattleScript_CottonDownActivates::
+	call BattleScript_AbilityPopUp
+	queuestatchangevalues BS_EFFECT_BATTLER, STAT_SPEED, 1, TRUE, TRUE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_IGNORE_SELF
+	destroyabilitypopup
 	return
 
 BattleScript_DefiantActivates::
@@ -4722,6 +4749,7 @@ BattleScript_ActivateWeatherAbilities_Loop:
 
 BattleScript_IntimidateActivates::
 	call BattleScript_AbilityPopUp
+	queuestatchangevalues BS_EFFECT_BATTLER, STAT_ATK, 1, TRUE, FALSE
 	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_INTIMIDATE
 	destroyabilitypopup
 	return
@@ -4733,7 +4761,8 @@ BattleScript_IntimidateWontDecrease:
 BattleScript_SupersweetSyrupActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_SUPERSWEETAROMAWAFTS
-	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_INTIMIDATE
+	queuestatchangevalues BS_EFFECT_BATTLER, STAT_EVASION, 1, TRUE, FALSE
+	trystatchanges BS_EFFECT_BATTLER, STAT_CHANGE_NO_FLAGS
 	destroyabilitypopup
 	return
 
@@ -5351,8 +5380,16 @@ BattleScript_CuteCharmActivates::
 	call BattleScript_TryDestinyKnotTarget
 	return
 
-BattleScript_AbilityStatusEffect::
+BattleScript_AbilityStatusEffectAtk::
 	waitstate
+	copybyte gEffectBattler, gBattlerTarget
+	call BattleScript_AbilityPopUp
+	setnonvolatilestatus TRIGGER_ON_ABILITY
+	return
+
+BattleScript_AbilityStatusEffectDef::
+	waitstate
+	copybyte gEffectBattler, gBattlerAttacker
 	call BattleScript_AbilityPopUp
 	setnonvolatilestatus TRIGGER_ON_ABILITY
 	return

@@ -200,23 +200,24 @@ SINGLE_BATTLE_TEST("Mirror Herb copies the boost gained by an ability (Traits)")
 SINGLE_BATTLE_TEST("Mirror Herb activates with Contrary if stat is at +6 (Traits)")
 {
     GIVEN {
-        ASSUME_STAT_CHANGE(MOVE_SWORDS_DANCE, attack: +2);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MIRROR_HERB); }
-        OPPONENT(SPECIES_SNIVY) { Ability(ABILITY_OVERGROW); Innates(ABILITY_CONTRARY); }
+        ASSUME_STAT_CHANGE(MOVE_ACID_ARMOR, defense: +2);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SNIVY) { Item(ITEM_MIRROR_HERB); Ability(ABILITY_OVERGROW); Innates(ABILITY_CONTRARY); }
     } WHEN {
-        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
-        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
-        TURN { MOVE(player, MOVE_SWORDS_DANCE); }
-        TURN { MOVE(player, MOVE_SKILL_SWAP); MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SCREECH); }
+        TURN { MOVE(player, MOVE_SCREECH); }
+        TURN { MOVE(player, MOVE_SCREECH); }
+        TURN { MOVE(player, MOVE_ACID_ARMOR); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SKILL_SWAP, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ACID_ARMOR, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Snivy used its Mirror Herb to mirror its opponent's stat changes!");
+        MESSAGE("The Mirror Herb harshly lowered the opposing Snivy's Defense!");
     } THEN {
-        EXPECT_EQ(player->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 4);
+        EXPECT_EQ(opponent->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 4);
     }
 }
 #endif
